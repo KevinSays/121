@@ -17,9 +17,11 @@ paper (changed 2026-09-03, at the user's request).
   category from Module 1: MO, tools of the trade, countermeasure, threat
   level, and a cross-reference back to Session 1.
 - `bastion-attack-log.html` — Dossier board, same component. One card per
-  foundational-protocol attack from Module 3: ARP spoofing, IP spoofing,
-  ICMP abuse, TCP SYN flood, DNS cache poisoning, DHCP spoofing/starvation —
-  cross-referenced back to Session 2.
+  Module 3 attack technique: IP spoofing, ICMP abuse, TCP SYN flood —
+  cross-referenced back to Session 2. ARP spoofing, DNS cache poisoning, and
+  DHCP spoofing/starvation are real content too, but they're Module 4 (Week
+  3), not Module 3 — hold them for when that session is filed, don't add
+  them back here early.
 
 ## Design system
 
@@ -57,9 +59,9 @@ paper posters).
 **Threat actors (filed on the Threat Board):** Script Kiddie · Hacktivist ·
 Organized Crime · Nation-State / APT · Insider Threat.
 
-**Foundational-protocol attacks (filed on the Attack Log):** ARP Spoofing ·
-IP Spoofing · ICMP Abuse · TCP SYN Flood · DNS Cache Poisoning · DHCP
-Spoofing/Starvation.
+**Module 3 attack techniques (filed on the Attack Log):** IP Spoofing ·
+ICMP Abuse · TCP SYN Flood. **Module 4 techniques (not yet filed — hold for
+Week 3):** ARP Spoofing · DNS Cache Poisoning · DHCP Spoofing/Starvation.
 
 **Recurring mentor (not yet introduced):** the Shift Lead — planned for the
 first episode script, will walk a case from alert to resolution the way

@@ -325,9 +325,9 @@
       <thead><tr><th>Type</th><th>How it works</th><th>Real-world example</th></tr></thead>
       <tbody>
         <tr><td style="font-weight:700;">Virus</td><td>Attaches to a host file; needs user action to spread</td><td>File infectors</td></tr>
-        <tr><td style="font-weight:700;">Worm</td><td>Self-replicating, spreads across networks alone</td><td>WannaCry</td></tr>
+        <tr><td style="font-weight:700;">Worm</td><td>Self-replicating, spreads across networks alone</td><td>Conficker</td></tr>
         <tr><td style="font-weight:700;">Trojan horse</td><td>Disguised as legit software; doesn't self-replicate</td><td>Fake "free" downloads</td></tr>
-        <tr><td style="font-weight:700;">Ransomware</td><td>Encrypts files/systems; demands payment</td><td>Hospital EHR locks (availability!)</td></tr>
+        <tr><td style="font-weight:700;">Ransomware</td><td>Encrypts files/systems; demands payment</td><td>Hospital EHR locks (availability!) — WannaCry (a self-spreading "cryptoworm" — worm delivery, ransomware payload) is the classic example</td></tr>
         <tr><td style="font-weight:700;">Spyware / adware</td><td>Covertly monitors, or floods with ads</td><td>Browser hijackers</td></tr>
         <tr><td style="font-weight:700;">Rootkit</td><td>Hides deep in the OS for privileged, undetected access</td><td>Bootkit infections</td></tr>
         <tr><td style="font-weight:700;">Keylogger</td><td>Captures keystrokes to steal credentials</td><td>Credential theft</td></tr>
@@ -336,7 +336,7 @@
     </table>
 
     <div class="callout">
-      <b>Virus vs. worm:</b> a virus needs you to open the infected file; a worm spreads across the network with no user action at all. That self-replication is what made WannaCry so devastating.
+      <b>Virus vs. worm:</b> a virus needs you to open the infected file; a worm spreads across the network with no user action at all. WannaCry is both at once — a worm for propagation, ransomware for payload — which is why it doesn't sit cleanly in just one row of this table.
     </div>
   </section>
 
@@ -351,11 +351,24 @@
     <table class="model-table">
       <thead><tr><th>Technique</th><th>What it is</th></tr></thead>
       <tbody>
-        <tr><td style="font-weight:700;">Phishing</td><td>Mass impersonation email/message to steal credentials or install malware. <em>Spear-phishing</em> targets a specific person; <em>whaling</em> targets executives.</td></tr>
+        <tr><td style="font-weight:700;">Phishing</td><td>Mass impersonation email/message to steal credentials or install malware. <em>Spear-phishing</em> targets a specific person; <em>whaling</em> targets executives. <em>Vishing</em> does it by phone; <em>smishing</em> does it by text.</td></tr>
         <tr><td style="font-weight:700;">Pretexting</td><td>Fabricating a scenario/identity to extract info</td></tr>
         <tr><td style="font-weight:700;">Baiting</td><td>Leaving infected media (USB drop) or an enticing offer</td></tr>
+        <tr><td style="font-weight:700;">Scareware</td><td>Coaxes a victim into installing fake antivirus/security software by frightening them into believing they're already infected</td></tr>
         <tr><td style="font-weight:700;">Tailgating / piggybacking</td><td>Following someone through a secured door</td></tr>
         <tr><td style="font-weight:700;">Shoulder surfing</td><td>Visual theft of credentials/PINs</td></tr>
+        <tr><td style="font-weight:700;">Dumpster diving</td><td>Retrieving discarded information from the trash — not just paper, but electronic media left on old drives too</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Hacker ethics: White, Gray, and Black Hat</h3>
+    <p>A separate axis from motivation — this one's about legality and consent. The same skill set, sorted by whether the hacker had permission and what they did with what they found.</p>
+    <table class="model-table">
+      <thead><tr><th>Type</th><th>What defines them</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">White hat</td><td>Breaks into systems with authorization to find and report weaknesses — a penetration tester or bug-bounty researcher</td></tr>
+        <tr><td style="font-weight:700;">Gray hat</td><td>Finds a vulnerability without authorization but discloses it rather than exploiting it — technically illegal, not malicious</td></tr>
+        <tr><td style="font-weight:700;">Black hat</td><td>Exploits vulnerabilities without authorization for personal gain or harm — this is the "attacker" in every other table on this page</td></tr>
       </tbody>
     </table>
 
@@ -504,9 +517,12 @@
     {t:"Attack vector", d:"The specific path or method an attacker uses to gain access — a phishing email, a USB drive, an unpatched service."},
     {t:"Availability", d:"The 'A' in the CIA triad — systems and data accessible when authorized users need them. Broken by DoS, ransomware, hardware failure."},
     {t:"Baiting", d:"A social engineering technique that lures a victim with something enticing — a free download, a USB drive labeled 'Payroll 2026' left in a parking lot."},
+    {t:"Black hat", d:"A hacker who exploits vulnerabilities without authorization for personal gain or harm — the malicious attacker in every other table on this page."},
     {t:"CIA triad", d:"The three goals of security: Confidentiality, Integrity, Availability. Most attacks can be described as breaking one of these three."},
     {t:"Confidentiality", d:"The 'C' in the CIA triad — only authorized people/systems can view the data. Broken by data breaches, eavesdropping, weak access control."},
+    {t:"Dumpster diving", d:"Retrieving discarded information from the trash — not just paper like sticky notes, but electronic media (old drives, USB sticks) too."},
     {t:"Exploit", d:"The specific mechanism or code that takes advantage of a vulnerability to actually carry out an attack."},
+    {t:"Gray hat", d:"A hacker who finds a vulnerability without authorization but discloses it rather than exploiting it — technically illegal access, not malicious intent."},
     {t:"Hacktivist", d:"A threat actor motivated by a political or social message — typically website defacement or leaked data rather than financial theft."},
     {t:"Insider threat", d:"A threat from someone with legitimate access — an employee or contractor — whether malicious or simply careless."},
     {t:"Integrity", d:"The 'I' in the CIA triad — data is accurate and unaltered except by authorized action. Broken by tampering or man-in-the-middle edits."},
@@ -520,8 +536,10 @@
     {t:"Ransomware", d:"Malware that encrypts a victim's files or systems and demands payment for the decryption key — a direct attack on availability."},
     {t:"Risk", d:"The likelihood that a threat will successfully exploit a vulnerability, combined with the impact if it does."},
     {t:"Rootkit", d:"Malware designed to hide deep in the operating system, maintaining privileged, hard-to-detect access."},
+    {t:"Scareware", d:"Software that frightens a victim into believing their system is already infected, coaxing them into installing fake antivirus software (which is itself the malware)."},
     {t:"Script kiddie", d:"A low-skill threat actor who uses existing tools and canned exploits, often for bragging rights rather than a specific goal."},
     {t:"Shoulder surfing", d:"Visually stealing information — a password or PIN — by looking over someone's shoulder."},
+    {t:"Smishing", d:"Phishing conducted over SMS text message instead of email."},
     {t:"Social engineering", d:"Manipulating people, rather than technology, into breaking normal security procedure."},
     {t:"Spyware / Adware", d:"Software that covertly monitors user activity (spyware) or floods the system with unwanted advertising (adware)."},
     {t:"Tailgating / Piggybacking", d:"Following an authorized person through a secured door without using your own credentials."},
@@ -529,8 +547,10 @@
     {t:"Threat actor", d:"The entity behind an attack, categorized by motivation and skill: script kiddie, hacktivist, organized crime, nation-state/APT, insider."},
     {t:"Trojan horse", d:"Malware disguised as legitimate software. Unlike a virus or worm, it doesn't self-replicate — it relies on the user installing it."},
     {t:"Virus", d:"Malware that attaches to a host file and requires user action (like opening the file) to spread."},
+    {t:"Vishing", d:"Phishing conducted over a phone call instead of email."},
     {t:"Vulnerability", d:"A weakness that could be exploited — unpatched software, a weak password policy, an untrained employee."},
-    {t:"Worm", d:"Self-replicating malware that spreads across a network on its own, without needing a user to do anything (e.g., WannaCry)."},
+    {t:"White hat", d:"A hacker who breaks into systems with authorization to find and report weaknesses — a penetration tester or bug-bounty researcher."},
+    {t:"Worm", d:"Self-replicating malware that spreads across a network on its own, without needing a user to do anything (e.g., Conficker)."},
   ];
 
   const QUIZ = [
@@ -598,6 +618,18 @@
       choices:["Worm","Keylogger","Rootkit","Logic bomb"],
       correct:2,
       explain:"A rootkit hides deep in the OS to maintain privileged, hard-to-detect access. It was delivered via a trojan-like disguise."
+    },
+    {
+      q:"A pop-up claims a user's computer is 'infected with 5 viruses' and pressures them to download a 'security tool' to fix it — which is itself malware. This technique is:",
+      choices:["Scareware","Baiting","Tailgating","Dumpster diving"],
+      correct:0,
+      explain:"Scareware uses fear — a fabricated infection warning — to talk the victim into installing the actual malware themselves."
+    },
+    {
+      q:"A researcher finds a vulnerability in a company's app with no authorization to test it, but reports it to the company instead of exploiting it. This makes them a:",
+      choices:["Black hat","White hat","Gray hat","Script kiddie"],
+      correct:2,
+      explain:"Gray hat: the access itself was unauthorized (not white hat), but the intent was disclosure, not exploitation (not black hat)."
     },
   ];
 

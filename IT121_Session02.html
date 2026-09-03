@@ -149,9 +149,9 @@
   <div class="wrap">
     <p class="eyebrow">IT121 · Session 2</p>
     <h1>Securing Networks &amp; Attacking the Foundation</h1>
-    <p class="lede">Session 1 gave you the vocabulary. This session gives you the terrain — how a network is actually organized and defended, then how the protocols underneath everything (IP, TCP/UDP, ARP, DNS, DHCP) get attacked in the first place.</p>
+    <p class="lede">Session 1 gave you the vocabulary. This session gives you the terrain — the current threat landscape and how hacking itself has evolved, then how the protocols everything else runs on top of (IP, TCP, UDP) get attacked in the first place. None of these protocols were designed with an attacker in mind, and that gap is the whole story.</p>
     <div class="factrow">
-      <span class="fact"><b>Covers</b> Module 2 &middot; Module 3</span>
+      <span class="fact"><b>Covers</b> Module 2 (2.1–2.2) &middot; Module 3 (3.1–3.3)</span>
     </div>
   </div>
 </header>
@@ -160,12 +160,11 @@
   <div class="wrap">
     <a href="index.html" class="toc-link">↩ Contents</a>
     <a href="#overview">Overview</a>
-    <a href="#domains">Security Domains</a>
-    <a href="#zones">Zones &amp; Defense</a>
-    <a href="#policy">Policy &amp; BCP</a>
+    <a href="#landscape">Threat Landscape</a>
+    <a href="#actors">Who's Attacking?</a>
+    <a href="#pdu">IP PDU Details</a>
     <a href="#ip">IP Attacks</a>
     <a href="#tcpudp">TCP/UDP Attacks</a>
-    <a href="#arpdns">ARP/DNS/DHCP</a>
     <a href="#flashcards">Flashcards</a>
     <a href="#quiz">Quiz</a>
     <a href="#examples">Examples</a>
@@ -180,127 +179,112 @@
     <div class="section-head">
       <p class="kicker">Overview</p>
       <h2>What Session 2 covers</h2>
-      <p>Two modules, one throughline: first, how a network is organized and defended at a structural level (domains, zones, policy); then, how the foundational protocols everything else runs on top of — IP, TCP/UDP, ARP, DNS, DHCP — get attacked. None of these protocols were designed with an attacker in mind, and that gap is the whole story.</p>
+      <p>Two modules, one throughline: first, why networks are targets and how the people attacking them have changed over time; then, the header structure and protocol behavior that IP, TCP, and UDP attacks actually exploit. Session 3 picks up where this leaves off — ARP, DNS, and DHCP attacks belong to Module 4, next week's material.</p>
     </div>
     <ul class="obj-list">
-      <li>Name the major cybersecurity domains and what each one is responsible for</li>
-      <li>Explain security zones (trusted, untrusted, DMZ) and defense in depth</li>
-      <li>Distinguish a Business Continuity Plan from a Disaster Recovery Plan, and RTO from RPO</li>
-      <li>Explain how IP, ICMP, TCP, and UDP get abused — spoofing, floods, amplification, hijacking</li>
-      <li>Identify ARP, DNS, and DHCP attacks and why each protocol is vulnerable by design</li>
+      <li>Explain why networks are attractive targets and distinguish internal from external threats</li>
+      <li>Distinguish "hacker" from "threat actor" and describe how hacking has evolved over time</li>
+      <li>Explain the IPv4 and IPv6 header structure and which fields matter for security</li>
+      <li>Explain how IP and ICMP vulnerabilities enable network attacks — spoofing, amplification, reflection</li>
+      <li>Explain how TCP and UDP vulnerabilities enable network attacks — SYN floods, hijacking, UDP floods</li>
     </ul>
   </section>
 
-  <!-- ── SECURITY DOMAINS ── -->
-  <section id="domains">
+  <!-- ── THREAT LANDSCAPE (2.1) ── -->
+  <section id="landscape">
     <div class="section-head">
-      <p class="kicker">Concept 1</p>
-      <h2>Security Domains</h2>
-      <p>"Cybersecurity" isn't one job — it's several overlapping specialties. An alert doesn't announce which domain it belongs to; figuring that out is half the work.</p>
+      <p class="kicker">Concept 1 · Module 2.1</p>
+      <h2>The Current Threat Landscape</h2>
+      <p>Before defending a network, it helps to know why it's a target in the first place — and that not every threat comes from outside it.</p>
     </div>
 
+    <p>Networks are targets because of what they connect to: money (financial systems, payment data), identity (personal records), and operations (the systems a business or hospital can't run without). As networks have grown to include cloud services, remote workers, and IoT devices, the attack surface has grown right along with them — more entry points to defend, not just more data to protect.</p>
+
+    <h3>Internal vs. external threats</h3>
     <table class="model-table">
-      <thead><tr><th>Domain</th><th>What it covers</th><th>Example control</th></tr></thead>
+      <thead><tr><th>Type</th><th>Who</th><th>Why it matters</th></tr></thead>
       <tbody>
-        <tr><td style="font-weight:700;">Network security</td><td>The network itself — traffic, segmentation, the perimeter</td><td>Firewalls, VPNs, network segmentation</td></tr>
-        <tr><td style="font-weight:700;">Endpoint security</td><td>Individual devices — laptops, servers, mobile</td><td>Antivirus/EDR, patch management</td></tr>
-        <tr><td style="font-weight:700;">Application security</td><td>Software, before it ever reaches a network</td><td>Secure coding, input validation, WAFs</td></tr>
-        <tr><td style="font-weight:700;">Data security</td><td>Data at rest, in transit, and in use</td><td>Encryption, DLP, backups</td></tr>
-        <tr><td style="font-weight:700;">Identity &amp; access management (IAM)</td><td>Who can do what, and proving it</td><td>MFA, least privilege, access reviews</td></tr>
-        <tr><td style="font-weight:700;">Cloud security</td><td>Workloads and data hosted off-premises</td><td>Shared responsibility model, cloud IAM</td></tr>
+        <tr><td style="font-weight:700;">Internal threat</td><td>An employee, contractor, or anyone already inside the network's trust boundary</td><td>Can be intentional or purely accidental — and often causes more damage than an external attacker because they already have direct access</td></tr>
+        <tr><td style="font-weight:700;">External threat</td><td>An attacker with no authorized access at all</td><td>Has to find a way in first — through a vulnerability, a phish, or an exposed service — before doing anything else</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Where data actually walks out the door</h3>
+    <table class="model-table">
+      <thead><tr><th>Vector</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Email / messaging</td><td>Sensitive files attached and sent outside the organization, by mistake or on purpose</td></tr>
+        <tr><td style="font-weight:700;">Unencrypted devices</td><td>A stolen or lost laptop/phone with no disk encryption hands over everything on it</td></tr>
+        <tr><td style="font-weight:700;">Cloud storage</td><td>A misconfigured, publicly-shared cloud folder or bucket</td></tr>
+        <tr><td style="font-weight:700;">Removable media</td><td>A USB drive that leaves the building with a copy of a database</td></tr>
+        <tr><td style="font-weight:700;">Improper access control</td><td>Someone can see data they were never supposed to have access to in the first place</td></tr>
       </tbody>
     </table>
 
     <div class="callout">
-      <b>A SOC analyst rotates across most of these in a single shift.</b> A phishing email touches identity and endpoint; a misconfigured S3 bucket touches cloud and data. Real incidents rarely respect the boundary between domains.
+      <b>Data loss isn't always an "attack."</b> An unencrypted laptop left in a taxi and a hacker exfiltrating a database cause the same outcome — data in the wrong hands — through very different mechanisms. Both matter to a SOC.
     </div>
   </section>
 
-  <!-- ── ZONES & DEFENSE IN DEPTH ── -->
-  <section id="zones">
+  <!-- ── WHO IS ATTACKING OUR NETWORK (2.2) ── -->
+  <section id="actors">
     <div class="section-head">
-      <p class="kicker">Concept 2</p>
-      <h2>Security Zones &amp; Defense in Depth</h2>
-      <p>No single control stops every attack, so real networks layer several — and separate what's exposed to the internet from what isn't.</p>
+      <p class="kicker">Concept 2 · Module 2.2</p>
+      <h2>Who Is Attacking Our Network?</h2>
+      <p>Session 1 covered threat actors by motivation. This is about how "who's attacking" has changed shape over the decades — and one word that gets used loosely.</p>
     </div>
 
-    <figure>
-      <svg viewBox="0 0 480 440" role="img" aria-label="Defense in depth shown as narrowing layers: internet, perimeter, network, host, application, and data at the center.">
-        <g font-family="IBM Plex Mono" font-weight="700" font-size="13">
-          <rect x="20" y="18" width="440" height="42" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
-          <text x="240" y="44" text-anchor="middle" fill="var(--danger)">INTERNET — UNTRUSTED</text>
+    <div class="callout">
+      <b>Hacker vs. threat actor:</b> "hacker" is historically a neutral term for someone skilled at exploring and manipulating systems — it says nothing about intent. "Threat actor" specifically means someone using that skill to cause harm. Every threat actor could be called a hacker; not every hacker is a threat actor.
+    </div>
 
-          <rect x="55" y="72" width="370" height="42" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
-          <text x="240" y="98" text-anchor="middle" fill="var(--accent)">PERIMETER — firewall, DMZ</text>
+    <h3>How hacking has evolved</h3>
+    <table class="model-table">
+      <thead><tr><th>Era</th><th>What defined it</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Early days</td><td>Individuals driven by curiosity and bragging rights — exploring systems, early viruses, phone network exploration</td></tr>
+        <tr><td style="font-weight:700;">Rise of cybercrime</td><td>Attacks shift toward money — credit card theft, early malware-for-profit, the first organized groups</td></tr>
+        <tr><td style="font-weight:700;">Today</td><td>Professionalized, blended, and often state-backed — ransomware-as-a-service, supply-chain compromise, attacks combining social engineering, malware, and protocol abuse in a single campaign</td></tr>
+      </tbody>
+    </table>
 
-          <rect x="90" y="126" width="300" height="42" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
-          <text x="240" y="152" text-anchor="middle" font-size="12">NETWORK — segmentation, IDS/IPS</text>
+    <div class="callout xref">
+      Full motivation-based threat actor breakdown (script kiddie, hacktivist, organized crime, nation-state/APT, insider) is in <a href="IT121_Session01.html#actors">Session 1</a>, with dossiers on the <a href="bastion-security-kit/bastion-threat-board.html">Bastion Security Threat Board</a>.
+    </div>
+  </section>
 
-          <rect x="125" y="180" width="230" height="54" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
-          <text x="240" y="203" text-anchor="middle">HOST</text>
-          <text x="240" y="221" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">endpoint protection, patching</text>
-
-          <rect x="160" y="246" width="160" height="54" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
-          <text x="240" y="269" text-anchor="middle">APPLICATION</text>
-          <text x="240" y="287" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">secure code, WAF</text>
-
-          <rect x="185" y="312" width="110" height="54" fill="var(--correct-soft)" stroke="var(--correct)" stroke-width="1.5"/>
-          <text x="240" y="335" text-anchor="middle" fill="var(--correct)">DATA</text>
-          <text x="240" y="353" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">encryption, backups</text>
-        </g>
-        <text x="240" y="418" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--muted)">An attacker has to get through every layer — a defender only has to hold one</text>
-      </svg>
-      <figcaption>Defense in depth: layered controls narrowing toward the data that actually matters, so no single failure exposes everything.</figcaption>
-    </figure>
+  <!-- ── IP PDU DETAILS (3.1) ── -->
+  <section id="pdu">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 3.1</p>
+      <h2>IP PDU Details</h2>
+      <p>Before you can understand how IP gets attacked, you need to know what's actually in an IP packet's header — and how much IPv6 simplified it.</p>
+    </div>
 
     <table class="model-table">
-      <thead><tr><th>Zone</th><th>Trust level</th><th>Example</th></tr></thead>
+      <thead><tr><th>IPv4 header field</th><th>What it does</th></tr></thead>
       <tbody>
-        <tr><td style="font-weight:700;">Untrusted</td><td>None</td><td>The internet</td></tr>
-        <tr><td style="font-weight:700;">DMZ (demilitarized zone)</td><td>Semi-trusted</td><td>Public web server, mail relay</td></tr>
-        <tr><td style="font-weight:700;">Trusted</td><td>High</td><td>Internal LAN, employee workstations</td></tr>
+        <tr><td style="font-weight:700;">Version</td><td>Identifies the IP version (4) — always the first thing read</td></tr>
+        <tr><td style="font-weight:700;">Header Length (IHL)</td><td>How long the header is — variable, because of the optional Options field</td></tr>
+        <tr><td style="font-weight:700;">Total Length</td><td>Size of the whole packet, header plus data</td></tr>
+        <tr><td style="font-weight:700;">Identification / Flags / Fragment Offset</td><td>Used to fragment a packet across multiple pieces and reassemble it correctly at the destination — a mechanism some attacks abuse</td></tr>
+        <tr><td style="font-weight:700;">TTL (Time to Live)</td><td>Decremented by every router a packet crosses; discarded at zero — prevents packets from looping forever, and is what makes traceroute work</td></tr>
+        <tr><td style="font-weight:700;">Protocol</td><td>Tells the destination which upper-layer protocol (TCP, UDP, ICMP) the payload belongs to</td></tr>
+        <tr><td style="font-weight:700;">Header Checksum</td><td>Basic error-check on the header itself, recalculated at every hop</td></tr>
+        <tr><td style="font-weight:700;">Source / Destination Address</td><td>The addressing everything downstream trusts — and the field IP spoofing forges</td></tr>
+        <tr><td style="font-weight:700;">Options</td><td>Rarely-used optional field, part of why the IPv4 header is variable length</td></tr>
       </tbody>
     </table>
 
     <div class="callout">
-      <b>A DMZ exists so that if a public-facing server gets popped, the attacker lands in a fenced yard, not the living room.</b> It's isolated from the trusted internal network even though it's reachable from the untrusted one.
+      <b>IPv6 drops the excess weight.</b> The IPv6 header is fixed at 40 bytes — no Options field, no header checksum (upper layers already check for errors), and no in-network fragmentation (routers no longer fragment packets; the sending host does, using extension headers instead). Fewer fields for a router to process means faster forwarding, but the security-relevant ones — source/destination address, a TTL equivalent called Hop Limit, and a Next Header field doing the Protocol field's job — all carry over.
     </div>
   </section>
 
-  <!-- ── POLICY & BCP ── -->
-  <section id="policy">
-    <div class="section-head">
-      <p class="kicker">Concept 3</p>
-      <h2>Security Policies &amp; Business Continuity</h2>
-      <p>Controls are technical; policy is the paperwork that says what's allowed and what happens when something breaks anyway.</p>
-    </div>
-
-    <table class="model-table">
-      <thead><tr><th>Policy / plan</th><th>Purpose</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Acceptable Use Policy (AUP)</td><td>Defines what employees are and aren't allowed to do with company systems</td></tr>
-        <tr><td style="font-weight:700;">Incident response policy</td><td>What happens the moment something goes wrong</td></tr>
-        <tr><td style="font-weight:700;">Remote access policy</td><td>Rules for connecting to the network from outside it</td></tr>
-        <tr><td style="font-weight:700;">Business Continuity Plan (BCP)</td><td>Keeps critical operations running during a disruption</td></tr>
-        <tr><td style="font-weight:700;">Disaster Recovery Plan (DRP)</td><td>Restores systems and data after a disruption — a subset of BCP</td></tr>
-      </tbody>
-    </table>
-
-    <h3>Two numbers every recovery plan needs</h3>
-    <ul style="line-height:1.7;">
-      <li><strong>RTO (Recovery Time Objective)</strong> — how long can we be down before it's unacceptable?</li>
-      <li><strong>RPO (Recovery Point Objective)</strong> — how much recent data can we afford to lose?</li>
-    </ul>
-
-    <div class="callout">
-      <b>BCP keeps the business running; DRP gets the systems back.</b> A hospital's BCP might mean switching to paper charts during an outage, while its DRP is the separate process of actually restoring the EHR.
-    </div>
-  </section>
-
-  <!-- ── IP ATTACKS ── -->
+  <!-- ── IP ATTACKS (3.2) ── -->
   <section id="ip">
     <div class="section-head">
-      <p class="kicker">Concept 4 · Module 3</p>
+      <p class="kicker">Concept 4 · Module 3.2</p>
       <h2>IP Vulnerabilities &amp; Attacks</h2>
       <p>IP has no built-in way to verify a source address. Everything in this section exploits that one trust gap.</p>
     </div>
@@ -318,12 +302,16 @@
     <div class="callout">
       <b>Spoofing is the common thread.</b> Once the source address can't be trusted, an attacker can hide behind it, redirect blame to an innocent host, or turn a third-party server into an unwitting weapon.
     </div>
+
+    <div class="callout xref">
+      Dossiers on IP spoofing, ICMP abuse, and TCP SYN flooding are filed in the <a href="bastion-security-kit/bastion-attack-log.html">Bastion Security Attack Log</a>. ARP, DNS, and DHCP attacks get their own dossiers once Module 4 is filed.
+    </div>
   </section>
 
-  <!-- ── TCP/UDP ATTACKS ── -->
+  <!-- ── TCP/UDP ATTACKS (3.3) ── -->
   <section id="tcpudp">
     <div class="section-head">
-      <p class="kicker">Concept 5</p>
+      <p class="kicker">Concept 5 · Module 3.3</p>
       <h2>TCP &amp; UDP Vulnerabilities</h2>
       <p>TCP's handshake is a feature for reliability and a liability for availability — every half-open connection ties up a resource somewhere.</p>
     </div>
@@ -400,34 +388,6 @@
     </table>
   </section>
 
-  <!-- ── ARP / DNS / DHCP ── -->
-  <section id="arpdns">
-    <div class="section-head">
-      <p class="kicker">Concept 6</p>
-      <h2>ARP, DNS &amp; DHCP Attacks</h2>
-      <p>ARP, DNS, and DHCP all exist to make networking convenient. None of them require proof of identity by default — which is exactly what these attacks abuse.</p>
-    </div>
-
-    <table class="model-table">
-      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">ARP spoofing (poisoning)</td><td>Fake ARP replies redirect local traffic through the attacker — a classic man-in-the-middle</td></tr>
-        <tr><td style="font-weight:700;">DNS cache poisoning</td><td>Injects a false name-to-address mapping into a resolver's cache</td></tr>
-        <tr><td style="font-weight:700;">DNS tunneling</td><td>Smuggles data inside DNS queries and responses, often past firewalls that implicitly trust DNS traffic</td></tr>
-        <tr><td style="font-weight:700;">DHCP starvation</td><td>Exhausts a DHCP server's address pool with a flood of fake lease requests</td></tr>
-        <tr><td style="font-weight:700;">DHCP spoofing (rogue DHCP)</td><td>An attacker's own DHCP server answers first, handing out a malicious gateway or DNS server</td></tr>
-      </tbody>
-    </table>
-
-    <div class="callout">
-      <b>Notice the pattern:</b> ARP trusts the last reply it heard, DNS resolvers trust the first response that beats the real one back, and DHCP clients trust whichever server answers fastest. Speed, not identity, wins by default in all three.
-    </div>
-
-    <div class="callout xref">
-      Full dossiers on all six foundational-protocol attacks are filed in the <a href="bastion-security-kit/bastion-attack-log.html">Bastion Security Attack Log</a>.
-    </div>
-  </section>
-
   <!-- ── FLASHCARDS ── -->
   <section id="flashcards">
     <div class="section-head">
@@ -464,13 +424,50 @@
     </div>
 
     <div class="example">
-      <span class="tag">Zones</span>
-      <h3>Which zone, and why?</h3>
-      <p>A university publishes a web server that's reachable from the internet, but it sits on its own isolated segment with no direct path to the internal grading and registration systems.</p>
+      <span class="tag">Internal vs. external</span>
+      <h3>Which threat, and why?</h3>
+      <p>Scenario A: a departing employee copies the customer database to a personal USB drive the week before their last day. Scenario B: someone outside the company scans its public IP range looking for open, unpatched services.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
-          <p><strong>Answer:</strong> That segment is a DMZ — semi-trusted, reachable from the untrusted internet, but deliberately isolated from the trusted internal network. If the web server is compromised, the attacker doesn't automatically reach grading or registration.</p>
+          <p><strong>Scenario A:</strong> Internal threat — the employee already had legitimate access; no "break-in" was required.</p>
+          <p><strong>Scenario B:</strong> External threat — the attacker has no access yet and is still looking for a way in.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Evolution of hackers</span>
+      <h3>Then vs. now</h3>
+      <p>In the early days of hacking, a teenager might deface a website purely for bragging rights among peers. Today, a similarly-skilled group runs a ransomware-as-a-service operation complete with a support line for victims paying the ransom.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Answer:</strong> This is the arc described in "How hacking has evolved" — from individual curiosity and bragging rights toward professionalized, financially-motivated, business-like cybercrime. The skill required didn't necessarily increase; the organization and motive did.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">IP PDU</span>
+      <h3>Read the traceroute</h3>
+      <p>A traceroute shows a packet's TTL hitting zero at hop 14, and the router at that hop sends back an ICMP "Time Exceeded" message. Why does this happen, and what is TTL actually protecting against?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Answer:</strong> Every router that forwards the packet decrements its TTL by 1. When TTL hits 0, the packet is discarded and the router that dropped it reports back. TTL exists to prevent a misrouted or looping packet from circulating the network forever — traceroute exploits this defensive mechanism to map the path itself, sending packets with deliberately low TTLs.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Amplification</span>
+      <h3>Do the math</h3>
+      <p>An attacker sends a 60-byte DNS query with a spoofed source address (the victim's IP). The DNS server responds with a 4,000-byte answer — sent to the victim, who never made the request.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Answer:</strong> This is an amplification/reflection attack. The amplification factor here is roughly 4000 ÷ 60 ≈ 67× — every byte the attacker sends becomes ~67 bytes hitting the victim, all while the legitimate DNS server does the actual "attacking" without knowing it.</p>
         </div>
       </details>
     </div>
@@ -483,46 +480,6 @@
         <summary>Show answer</summary>
         <div class="solbody">
           <p><strong>Answer:</strong> SYN flood. The attacker sends SYNs (often with spoofed source addresses) and never sends the final ACK, so every half-open connection sits in the server's connection table until it's full — starving out real traffic.</p>
-        </div>
-      </details>
-    </div>
-
-    <div class="example">
-      <span class="tag">ARP vs. DNS</span>
-      <h3>Same symptom, different cause</h3>
-      <p>Scenario A: everyone on the third floor suddenly has their traffic silently rerouted through a laptop that just joined the network. Scenario B: employees type the correct company URL but land on a fake login page.</p>
-      <details class="solution">
-        <summary>Show answer</summary>
-        <div class="solbody">
-          <p><strong>Scenario A:</strong> ARP spoofing — a local device sent fake ARP replies to reroute traffic through itself.</p>
-          <p><strong>Scenario B:</strong> DNS cache poisoning — a false name-to-address mapping sent visitors to the wrong (attacker-controlled) server, even though they typed the right name.</p>
-        </div>
-      </details>
-    </div>
-
-    <div class="example">
-      <span class="tag">BCP vs. DRP</span>
-      <h3>Which plan is which?</h3>
-      <p>During a ransomware outage, a hospital immediately switches to paper charts so patient care can continue. Separately, its IT team works to restore the electronic health record system from backups.</p>
-      <details class="solution">
-        <summary>Show answer</summary>
-        <div class="solbody">
-          <p><strong>Paper charts:</strong> Business Continuity Plan (BCP) — keeping critical operations (patient care) running during the disruption.</p>
-          <p><strong>Restoring the EHR:</strong> Disaster Recovery Plan (DRP) — the technical process of getting systems and data back.</p>
-        </div>
-      </details>
-    </div>
-
-    <div class="example">
-      <span class="tag">RTO vs. RPO</span>
-      <h3>Name the number</h3>
-      <p>A company's disaster recovery documentation states two limits: the backup system can restore data from no more than 4 hours before an incident, and critical systems must be back online within 1 hour of an outage being declared.</p>
-      <details class="solution">
-        <summary>Show answer</summary>
-        <div class="solbody">
-          <p><strong>4 hours of acceptable data loss:</strong> RPO (Recovery Point Objective).</p>
-          <p><strong>1 hour to be back online:</strong> RTO (Recovery Time Objective).</p>
-          <p>RPO looks backward at how much you can afford to lose; RTO looks forward at how fast you have to recover.</p>
         </div>
       </details>
     </div>
@@ -553,65 +510,81 @@
 <script>
   const TERMS = [
     {t:"Amplification / reflection attack", d:"A small, spoofed request (often to DNS or NTP) triggers a much larger response sent to the victim instead of the attacker."},
-    {t:"ARP spoofing (ARP poisoning)", d:"Sending fake ARP replies so local traffic gets rerouted through the attacker's device before continuing to its real destination."},
-    {t:"AUP (Acceptable Use Policy)", d:"A policy defining what employees are and aren't allowed to do with company systems and networks."},
-    {t:"BCP (Business Continuity Plan)", d:"A plan for keeping critical business operations running during a disruption — may not involve restoring any technology at all."},
-    {t:"Cloud security", d:"The security domain covering workloads and data hosted off-premises, governed by the shared responsibility model between provider and customer."},
-    {t:"Defense in depth", d:"Layering multiple, independent security controls so that no single failure exposes the whole system."},
-    {t:"DHCP spoofing (rogue DHCP)", d:"An attacker's own DHCP server answers client requests first, handing out a malicious default gateway or DNS server."},
-    {t:"DHCP starvation", d:"Flooding a DHCP server with fake lease requests until its address pool is exhausted, denying service to real clients."},
-    {t:"DMZ (demilitarized zone)", d:"A semi-trusted network segment, reachable from the internet but isolated from the trusted internal network — where public-facing servers live."},
-    {t:"DNS cache poisoning", d:"Injecting a false name-to-address mapping into a DNS resolver's cache, redirecting anyone who looks up that name."},
-    {t:"DNS tunneling", d:"Smuggling data inside DNS queries and responses, often bypassing firewalls that implicitly trust DNS traffic."},
-    {t:"DRP (Disaster Recovery Plan)", d:"The technical plan for restoring systems and data after a disruption — a subset of a larger BCP."},
-    {t:"Endpoint security", d:"The security domain covering individual devices — laptops, servers, mobile — rather than the network connecting them."},
-    {t:"IAM (Identity and Access Management)", d:"The security domain covering who can do what, and how that identity is proven — MFA, least privilege, access reviews."},
+    {t:"Blended threat", d:"A modern attack that combines multiple techniques — malware, social engineering, protocol abuse — in a single campaign rather than relying on just one."},
+    {t:"Data exfiltration", d:"The unauthorized transfer of data out of a network — the mechanism half of 'data loss.'"},
+    {t:"External threat", d:"An attacker with no legitimate access to the network, who must first find a way in from outside before doing anything else."},
+    {t:"Hacker", d:"Historically a neutral term for someone skilled at exploring and manipulating systems — distinguished from 'threat actor' by intent, not skill."},
+    {t:"Header Checksum", d:"An IPv4 header field that error-checks the header itself, recalculated at every router hop. Dropped entirely in IPv6."},
     {t:"ICMP redirect", d:"A forged ICMP message that tricks a host into routing its traffic through an attacker-controlled path."},
     {t:"ICMP reconnaissance", d:"Using ping sweeps and similar ICMP traffic to map which hosts are alive before an attack."},
-    {t:"Incident response policy", d:"A policy defining what happens — who does what, in what order — the moment a security incident is detected."},
+    {t:"Internal threat", d:"A threat from someone already inside the network's trust boundary — an employee or contractor — intentional or accidental, often more damaging than an external threat because of direct access."},
     {t:"IP spoofing", d:"Forging the source IP address on a packet so the traffic, or the blame for it, appears to come from somewhere else."},
-    {t:"RPO (Recovery Point Objective)", d:"The maximum acceptable amount of recent data loss, measured backward in time from the moment of failure."},
-    {t:"RTO (Recovery Time Objective)", d:"The maximum acceptable amount of downtime before normal operations must be restored."},
-    {t:"Security zone", d:"A network segment grouped by trust level — untrusted (internet), DMZ (semi-trusted), or trusted (internal)."},
+    {t:"IPv4 header", d:"The variable-length header (20+ bytes) carried by every IPv4 packet, including fields like TTL, Protocol, and an optional Options field."},
+    {t:"IPv6 header", d:"The simplified, fixed 40-byte header carried by every IPv6 packet — no header checksum, no in-network fragmentation, optional features moved to extension headers."},
+    {t:"PDU (Protocol Data Unit)", d:"The unit of data at a given layer, defined by its header plus payload. At Layer 3, the PDU is the IP packet."},
     {t:"SYN flood", d:"A DoS attack that opens many TCP connections and never completes the handshake, filling the target's connection table with half-open sessions."},
     {t:"TCP reset attack", d:"Sending a forged RST packet to forcibly terminate someone else's legitimate TCP connection."},
     {t:"TCP session hijacking", d:"Predicting or stealing TCP sequence numbers to take over a session that someone else already authenticated into."},
+    {t:"TTL (Time to Live)", d:"An IPv4 header field decremented by every router a packet crosses, discarded at zero — prevents infinite routing loops and is what makes traceroute work."},
     {t:"UDP flood", d:"A DoS attack that overwhelms a target with connectionless UDP traffic, which is cheap to send and costly to process."},
   ];
 
   const QUIZ = [
     {
-      q:"Which security domain is primarily concerned with protecting individual devices like laptops and servers?",
-      choices:["Network security","Endpoint security","Application security","Cloud security"],
+      q:"Compared to an external attacker, an internal threat is often more damaging primarily because:",
+      choices:["They are always more technically skilled","They already have legitimate access to the network and its data","They only ever act by accident","They cannot be detected by logging"],
       correct:1,
-      explain:"Endpoint security focuses on the devices themselves, as opposed to network security (the traffic between them) or application security (the software running on them)."
+      explain:"The defining trait of an internal threat is direct, already-authorized access — the attack isn't 'getting in,' since they're already in."
     },
     {
-      q:"A company's public web server sits on a segment reachable from the internet but isolated from the internal LAN. This segment is a:",
-      choices:["Trusted zone","Untrusted zone","DMZ","VPN tunnel"],
-      correct:2,
-      explain:"A DMZ is semi-trusted — exposed to the untrusted internet, but deliberately walled off from the fully trusted internal network."
+      q:"A former employee uses VPN credentials that haven't been revoked yet to copy files after their last day. This is best classified as:",
+      choices:["An external threat","An internal threat","An amplification attack","A PDU violation"],
+      correct:1,
+      explain:"They're using legitimate (if stale) credentials from inside the trust boundary — that's an internal threat, regardless of current employment status."
     },
     {
-      q:"'Defense in depth' means:",
+      q:"The key difference between a 'hacker' and a 'threat actor' is:",
+      choices:["Skill level","Intent","Which tools they use","Whether they work alone or in groups"],
+      correct:1,
+      explain:"'Hacker' is historically neutral — about skill at exploring/manipulating systems. 'Threat actor' specifically implies malicious intent."
+    },
+    {
+      q:"Which best describes how cyberattacks have evolved since the early days of hacking?",
       choices:[
-        "Buying the single most expensive firewall available",
-        "Layering multiple independent controls so no one failure exposes everything",
-        "Trusting all internal traffic by default",
-        "Relying entirely on endpoint antivirus"
+        "From organized crime toward individual curiosity",
+        "From individual curiosity and bragging rights toward organized, professionalized, often blended attacks",
+        "Attacks have stayed essentially the same since the 1980s",
+        "Attacks have become exclusively state-sponsored"
       ],
       correct:1,
-      explain:"It's about layered, independent controls — perimeter, network, host, application, data — so a failure at one layer doesn't mean total compromise."
+      explain:"The arc runs from lone, curiosity-driven exploits toward financially- or politically-motivated groups running blended, business-like operations."
     },
     {
-      q:"Which recovery metric answers 'how much recent data can we afford to lose?'",
-      choices:["RTO","RPO","AUP","BCP"],
+      q:"Which IPv4 header field limits how many router hops a packet can traverse before being discarded?",
+      choices:["Header Checksum","Total Length","TTL (Time to Live)","Identification"],
+      correct:2,
+      explain:"TTL is decremented at every hop; when it reaches zero the packet is dropped. This is also what makes traceroute work."
+    },
+    {
+      q:"Compared to IPv4, the IPv6 header is:",
+      choices:[
+        "Variable length, with more optional fields",
+        "Fixed length and simplified — no header checksum, no in-network fragmentation",
+        "Identical in every field",
+        "Missing a source and destination address"
+      ],
       correct:1,
-      explain:"RPO (Recovery Point Objective) looks backward at acceptable data loss. RTO (Recovery Time Objective) looks forward at acceptable downtime."
+      explain:"IPv6 fixes the header at 40 bytes, drops the header checksum (handled at other layers) and in-network fragmentation, moving optional features to extension headers instead."
+    },
+    {
+      q:"An attacker forges the source IP address on a packet so the security team traces the attack back to an uninvolved third party. This is:",
+      choices:["ICMP redirect","IP spoofing","TCP session hijacking","A blended threat"],
+      correct:1,
+      explain:"IP spoofing forges the source address — attackers use it to hide their real origin or frame someone else."
     },
     {
       q:"An attacker sends a small, spoofed DNS query so a large response floods the victim instead of the attacker. This is:",
-      choices:["ARP spoofing","DHCP starvation","Amplification/reflection attack","TCP session hijacking"],
+      choices:["ICMP reconnaissance","An internal threat","Amplification/reflection attack","TCP reset attack"],
       correct:2,
       explain:"Amplification/reflection abuses a legitimate third-party server (like DNS) to turn a small spoofed request into a large flood aimed at the real victim."
     },
@@ -620,35 +593,17 @@
       choices:[
         "Completing handshakes as fast as possible to overload CPU",
         "Sending SYNs and never completing the handshake, filling the connection table with half-open sessions",
-        "Poisoning the ARP cache of every host on the segment",
-        "Forging DNS responses to redirect traffic"
+        "Forging the TTL field to bypass routers",
+        "Sending a forged RST packet to a legitimate connection"
       ],
       correct:1,
       explain:"The attacker never sends the final ACK, so every half-open connection sits in the table consuming resources until nothing is left for real users."
     },
     {
-      q:"Which attack lets someone on the local network intercept traffic by sending fake ARP replies?",
-      choices:["DNS tunneling","ARP spoofing","DHCP starvation","UDP flood"],
-      correct:1,
-      explain:"ARP spoofing (poisoning) exploits the fact that ARP trusts the most recent reply it received, with no built-in verification."
-    },
-    {
-      q:"A rogue DHCP server answers client requests before the real one can, handing out itself as the default gateway. This is:",
-      choices:["DHCP starvation","DHCP spoofing","DNS cache poisoning","ICMP redirect"],
-      correct:1,
-      explain:"DHCP spoofing (rogue DHCP) relies on speed — whichever DHCP server answers first wins, with no authentication of the server's identity."
-    },
-    {
-      q:"Which document defines what employees are and are not allowed to do with company systems?",
-      choices:["AUP","DRP","RPO","DMZ"],
-      correct:0,
-      explain:"The Acceptable Use Policy (AUP) sets the rules for how company systems and networks may be used."
-    },
-    {
-      q:"During a ransomware outage, a hospital switches to paper charts to keep treating patients while IT works separately to restore the EHR from backups. The switch to paper charts is an example of:",
-      choices:["Disaster Recovery Plan (DRP) execution","Business Continuity Plan (BCP) execution","An RPO violation","DNS tunneling"],
-      correct:1,
-      explain:"Keeping critical operations running during a disruption — even without restoring any technology — is the BCP's job. Restoring the EHR itself is the DRP."
+      q:"An attacker predicts a valid TCP sequence number and injects packets into an already-authenticated session. This is:",
+      choices:["TCP reset attack","UDP flood","TCP session hijacking","ICMP redirect"],
+      correct:2,
+      explain:"TCP session hijacking takes over a session someone else already authenticated into, by predicting or stealing its sequence numbers."
     },
   ];
 

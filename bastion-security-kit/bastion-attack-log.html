@@ -193,28 +193,10 @@
   <header class="masthead">
     <span class="eyebrow">FILED FROM THE PACKET CAPTURE ROOM</span>
     <h1>BASTION SECURITY ATTACK LOG</h1>
-    <p class="subtitle">Six techniques that show up every time the foundational protocols get abused. None of these need a software bug — just a protocol that trusts the last thing it heard.</p>
+    <p class="subtitle">Three techniques from the IP and TCP/UDP layer that show up every time the foundational protocols get abused. None of these need a software bug — just a protocol that trusts the last thing it heard. ARP, DNS, and DHCP dossiers are filed once Module 4 lands next week.</p>
   </header>
 
   <div class="board-grid">
-
-    <article class="poster">
-      <div class="pin"></div>
-      <div class="wanted-word">FILED</div>
-      <h2 class="actor-name">ARP Spoofing</h2>
-      <p class="alias">AKA: ARP Cache Poisoning</p>
-      <span class="case-tag">LAYER: LOCAL SEGMENT</span>
-      <div class="mugshot">
-        <svg viewBox="0 0 24 24"><path d="M4 4l16 16M4 20L20 4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-      </div>
-      <dl class="case-stats">
-        <div><dt>MO</dt><dd>Broadcasts fake ARP replies so nearby traffic gets rerouted through the attacker's machine before continuing to its real destination.</dd></div>
-        <div><dt>Tools of the trade</dt><dd>ARP cache poisoning tools, any laptop on the same local segment</dd></div>
-        <div><dt>Countermeasure</dt><dd>Dynamic ARP Inspection, static ARP entries on critical hosts</dd></div>
-      </dl>
-      <div class="threat-row">THREAT LEVEL: INTERMEDIATE <span class="dots">●●●○○</span></div>
-      <div class="reward">NOTE: <strong>no login required</strong> — ARP has no authentication at all. Being on the segment is the only prerequisite.</div>
-    </article>
 
     <article class="poster">
       <div class="pin"></div>
@@ -252,7 +234,7 @@
       <div class="reward">NOTE: <strong>often the opening move</strong>, not the payload — this is how an attacker learns the network before doing anything louder.</div>
     </article>
 
-    <article class="poster">
+    <article class="poster" style="grid-column:1/-1; max-width:460px; justify-self:center;">
       <div class="pin"></div>
       <div class="wanted-word">FILED</div>
       <h2 class="actor-name">TCP SYN Flood</h2>
@@ -270,46 +252,10 @@
       <div class="reward">NOTE: <strong>find it fast</strong> in a stack of connections stuck at SYN_RECEIVED with no matching ACK.</div>
     </article>
 
-    <article class="poster">
-      <div class="pin"></div>
-      <div class="wanted-word">FILED</div>
-      <h2 class="actor-name">DNS Cache Poisoning</h2>
-      <p class="alias">AKA: The Wrong Address</p>
-      <span class="case-tag">LAYER: APPLICATION / SERVICE</span>
-      <div class="mugshot">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
-      </div>
-      <dl class="case-stats">
-        <div><dt>MO</dt><dd>Slips a false name-to-address mapping into a resolver's cache, so everyone who asks gets sent to the wrong, attacker-controlled address.</dd></div>
-        <div><dt>Tools of the trade</dt><dd>Spoofed DNS responses, racing the real authoritative answer back to the resolver</dd></div>
-        <div><dt>Countermeasure</dt><dd>DNSSEC, randomized query IDs and source ports</dd></div>
-      </dl>
-      <div class="threat-row">THREAT LEVEL: INTERMEDIATE&ndash;ADVANCED <span class="dots">●●●●○</span></div>
-      <div class="reward">NOTE: <strong>the URL bar lies</strong> — the victim typed the right name; the name just points to the wrong place now.</div>
-    </article>
-
-    <article class="poster" style="grid-column:1/-1; max-width:460px; justify-self:center;">
-      <div class="pin"></div>
-      <div class="wanted-word">FILED</div>
-      <h2 class="actor-name">DHCP Spoofing / Starvation</h2>
-      <p class="alias">AKA: The Fake Front Desk</p>
-      <span class="case-tag">LAYER: LOCAL SEGMENT</span>
-      <div class="mugshot">
-        <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
-      </div>
-      <dl class="case-stats">
-        <div><dt>MO</dt><dd>Either floods the real DHCP server's address pool dry (starvation), or answers client requests first with a rogue server handing out a malicious gateway (spoofing).</dd></div>
-        <div><dt>Tools of the trade</dt><dd>Rogue DHCP server, automated lease-request flooders</dd></div>
-        <div><dt>Countermeasure</dt><dd>DHCP snooping, port security on access switches</dd></div>
-      </dl>
-      <div class="threat-row">THREAT LEVEL: NOVICE&ndash;INTERMEDIATE <span class="dots">●●○○○</span></div>
-      <div class="reward">NOTE: <strong>whoever answers first wins</strong> — DHCP has no built-in way to check whether the server handing out addresses is the real one.</div>
-    </article>
-
   </div>
 
   <footer>
-    <p>Cross-reference: each dossier corresponds to the IP/TCP/UDP/ARP/DNS/DHCP attacks section of <a href="../IT121_Session02.html#arpdns">Session 2</a>.</p>
+    <p>Cross-reference: each dossier corresponds to the IP Vulnerabilities &amp; Attacks and TCP &amp; UDP Vulnerabilities sections of <a href="../IT121_Session02.html#ip">Session 2</a>.</p>
     <p class="fineprint">Posted for staff awareness. Photocopy freely for classroom use.</p>
   </footer>
 
