@@ -16,12 +16,12 @@ paper (changed 2026-09-03, at the user's request).
 - `bastion-threat-board.html` — Dossier board. One card per threat actor
   category from Module 1: MO, tools of the trade, countermeasure, threat
   level, and a cross-reference back to Session 1.
-- `bastion-attack-log.html` — Dossier board, same component. One card per
-  Module 3 attack technique: IP spoofing, ICMP abuse, TCP SYN flood —
-  cross-referenced back to Session 2. ARP spoofing, DNS cache poisoning, and
-  DHCP spoofing/starvation are real content too, but they're Module 4 (Week
-  3), not Module 3 — hold them for when that session is filed, don't add
-  them back here early.
+- `bastion-attack-log.html` — Dossier board, same component. Six cards:
+  Module 3 (IP spoofing, ICMP abuse, TCP SYN flood, cross-referenced to
+  Session 2) plus Module 4 (ARP cache poisoning, DNS cache poisoning, DHCP
+  spoofing/starvation, cross-referenced to Session 3, filed once that
+  session existed — don't add a module's dossiers before its session is
+  actually built).
 
 ## Design system
 
@@ -59,9 +59,9 @@ paper posters).
 **Threat actors (filed on the Threat Board):** Script Kiddie · Hacktivist ·
 Organized Crime · Nation-State / APT · Insider Threat.
 
-**Module 3 attack techniques (filed on the Attack Log):** IP Spoofing ·
-ICMP Abuse · TCP SYN Flood. **Module 4 techniques (not yet filed — hold for
-Week 3):** ARP Spoofing · DNS Cache Poisoning · DHCP Spoofing/Starvation.
+**Attack techniques (filed on the Attack Log):** Module 3 — IP Spoofing ·
+ICMP Abuse · TCP SYN Flood. Module 4 — ARP Cache Poisoning · DNS Cache
+Poisoning · DHCP Spoofing/Starvation.
 
 **Recurring mentor (not yet introduced):** the Shift Lead — planned for the
 first episode script, will walk a case from alert to resolution the way
@@ -73,4 +73,6 @@ IT131's NOC character does for ARP spoofing.
   intel, DFIR, GRC) not yet built; natural pairing is once those modules
   (20–22, 24, 27) are filed.
 - Episode 01 not yet written — strongest first case is a phishing incident,
-  since Session 1 already covers social engineering and threat actors.
+  since Session 1 already covers social engineering and threat actors. Note
+  `../labs/phishing-triage.html` covers similar ground as a worksheet, not
+  a narrative episode — the two aren't a substitute for each other.

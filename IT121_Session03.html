@@ -1,0 +1,759 @@
+<title>IT121 Session 3 – Attacking What We Do &amp; Wireless Communication</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
+    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
+    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
+    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
+    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
+    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
+    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Orbitron', sans-serif;
+    --sans:'Rajdhani', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:125%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 3</p>
+    <h1>Attacking What We Do &amp; Wireless Communication</h1>
+    <p class="lede">Session 2 covered IP, TCP, and UDP — the protocols under everything. This session moves up a layer: the services people actually use (DHCP, DNS, HTTP, email, databases) and the wireless connections most of them use to get there, plus how each one gets attacked and mitigated.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 4 (4.1–4.3) &middot; Module 5 (5.1–5.3)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#ipservices">IP Services</a>
+    <a href="#enterprise">Enterprise Services</a>
+    <a href="#mitigating">Mitigating Attacks</a>
+    <a href="#wireless">Wireless Basics</a>
+    <a href="#wlanthreats">WLAN Threats</a>
+    <a href="#securewlan">Secure WLANs</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 3 covers</h2>
+      <p>Two modules: first, the everyday network services — ARP, DHCP, DNS on one side, HTTP/email/databases on the other — and how each gets abused, plus the basic mitigations for common attacks in general. Then wireless: how 802.11 actually works, the threats specific to a network with no cable to unplug, and what actually secures one.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Explain how ARP, DHCP, and DNS get exploited at the IP-services layer</li>
+      <li>Explain how HTTP, email, and database-backed applications get exploited at the enterprise-services layer</li>
+      <li>Recommend basic mitigations for common attacks, including the four-phase worm response</li>
+      <li>Explain how 802.11 wireless communication works and what's unique about WLAN threats</li>
+      <li>Compare WEP, WPA, WPA2, and WPA3, and Personal vs. Enterprise authentication</li>
+    </ul>
+  </section>
+
+  <!-- ── IP SERVICES (4.1) ── -->
+  <section id="ipservices">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 4.1</p>
+      <h2>IP Services Attacks</h2>
+      <p>ARP, DHCP, and DNS all trade identity verification for convenience. This is the section where that trade gets exploited.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">ARP cache poisoning</td><td>Manipulates ARP caches on the segment so the attacker's MAC address gets mapped to the default gateway's IP address — a classic man-in-the-middle</td></tr>
+        <tr><td style="font-weight:700;">MAC address spoofing</td><td>Alters the attacking host's MAC address to match a legitimate one, defeating MAC-based access controls</td></tr>
+        <tr><td style="font-weight:700;">DHCP starvation</td><td>Floods a DHCP server with fake DHCPDISCOVER messages until the whole address pool is leased out, denying service to real clients</td></tr>
+        <tr><td style="font-weight:700;">DHCP spoofing</td><td>A rogue DHCP server hands out false DNS server addresses, so a client's later visit to a legitimate site gets silently redirected to a fake one</td></tr>
+        <tr><td style="font-weight:700;">DNS shadowing</td><td>Compromises a legitimate parent domain, then creates malicious subdomains under it to use in further attacks</td></tr>
+        <tr><td style="font-weight:700;">DNS cache poisoning</td><td>Injects falsified information into a resolver's cache, redirecting users from a legitimate site to a malicious one</td></tr>
+        <tr><td style="font-weight:700;">DNS tunneling</td><td>Smuggles data inside DNS queries — a cybersecurity analyst's tell is queries running noticeably longer than average</td></tr>
+        <tr><td style="font-weight:700;">DNS amplification/reflection</td><td>Uses open DNS resolvers to multiply a small spoofed request into a much larger flood aimed at the victim, while hiding the true source</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Notice the DHCP spoofing detail:</b> the goal usually isn't the gateway itself — it's the DNS server address. Control what DNS server a victim uses, and you control where every domain name they type actually takes them.
+    </div>
+
+    <div class="callout xref">
+      Full dossiers on ARP spoofing, DNS cache poisoning, and DHCP spoofing/starvation are filed in the <a href="bastion-security-kit/bastion-attack-log.html">Bastion Security Attack Log</a>, alongside the Module 3 techniques from Session 2.
+    </div>
+  </section>
+
+  <!-- ── ENTERPRISE SERVICES (4.2) ── -->
+  <section id="enterprise">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 4.2</p>
+      <h2>Enterprise Services Attacks</h2>
+      <p>Web applications and email are how most organizations actually do business — and how most organizations actually get breached.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">HTTP 302 cushioning</td><td>Abuses HTTP's own redirect response (302) to quietly bounce a victim toward a malicious site instead of the one they requested</td></tr>
+        <tr><td style="font-weight:700;">Spam</td><td>Bulk unsolicited email flooded to many users — a delivery vector for phishing and malware as much as a nuisance on its own</td></tr>
+        <tr><td style="font-weight:700;">SQL injection</td><td>Injects SQL commands into an insecure input field (often a login form) to manipulate or extract data straight from the backend database</td></tr>
+        <tr><td style="font-weight:700;">Cross-site scripting (XSS)</td><td>Injects malicious script into a trusted site's input fields — exploits the same missing input validation SQL injection does, but targets the browser instead of the database</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>SQL injection and XSS are siblings.</b> Both exist because user input got treated as trusted code instead of untrusted data. One targets what the database executes; the other targets what a victim's browser renders.
+    </div>
+  </section>
+
+  <!-- ── MITIGATING (4.3) ── -->
+  <section id="mitigating">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 4.3</p>
+      <h2>Mitigating Common Network Attacks</h2>
+      <p>A few standard countermeasures, plus the one that gets asked about the most: what actually happens, in order, when a worm is loose on the network.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Threat</th><th>Primary mitigation</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Virus / Trojan horse</td><td>Antivirus software</td></tr>
+        <tr><td style="font-weight:700;">Ping sweep (reconnaissance)</td><td>Block ICMP echo and echo-reply at the network edge</td></tr>
+        <tr><td style="font-weight:700;">Worm outbreak</td><td>The four-phase response below</td></tr>
+      </tbody>
+    </table>
+
+    <figure>
+      <svg viewBox="0 0 480 200" role="img" aria-label="The four phases of worm mitigation: containment, inoculation, quarantine, treatment.">
+        <defs>
+          <marker id="arrowW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+        <g font-family="IBM Plex Mono" font-weight="700" font-size="13">
+          <rect x="10" y="70" width="100" height="60" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="60" y="96" text-anchor="middle">Containment</text>
+          <text x="60" y="114" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="400" fill="var(--muted)">isolate what's not</text>
+          <text x="60" y="126" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="400" fill="var(--muted)">infected yet</text>
+
+          <rect x="130" y="70" width="100" height="60" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="180" y="96" text-anchor="middle">Inoculation</text>
+          <text x="180" y="114" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="400" fill="var(--muted)">patch and scan</text>
+          <text x="180" y="126" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="400" fill="var(--muted)">uninfected systems</text>
+
+          <rect x="250" y="70" width="100" height="60" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="300" y="96" text-anchor="middle">Quarantine</text>
+          <text x="300" y="114" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="400" fill="var(--muted)">find and disconnect</text>
+          <text x="300" y="126" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="400" fill="var(--muted)">infected machines</text>
+
+          <rect x="370" y="70" width="100" height="60" fill="var(--correct-soft)" stroke="var(--correct)" stroke-width="1.5"/>
+          <text x="420" y="96" text-anchor="middle" fill="var(--correct)">Treatment</text>
+          <text x="420" y="114" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="400" fill="var(--muted)">actively disinfect</text>
+          <text x="420" y="126" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="400" fill="var(--muted)">the infected systems</text>
+        </g>
+        <line x1="110" y1="100" x2="128" y2="100" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowW)"/>
+        <line x1="230" y1="100" x2="248" y2="100" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowW)"/>
+        <line x1="350" y1="100" x2="368" y2="100" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowW)"/>
+      </svg>
+      <figcaption>The four phases run roughly in this order, though inoculation of still-healthy systems usually happens in parallel with quarantine and treatment, not strictly after them.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ── WIRELESS COMMUNICATIONS (5.1) ── -->
+  <section id="wireless">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 5.1</p>
+      <h2>Wireless Communications</h2>
+      <p>Before wireless threats make sense, the basics: what band, and what's actually different about a medium with no cable to unplug.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Band</th><th>Used by</th><th>Tradeoff</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">2.4 GHz</td><td>802.11b, 802.11g, and 802.11n (optionally)</td><td>Longer range, better wall penetration — but crowded by Bluetooth, microwaves, cordless phones, and every neighboring WLAN</td></tr>
+        <tr><td style="font-weight:700;">5 GHz</td><td>802.11a, and 802.11n/ac (optionally/typically)</td><td>Shorter range, less interference, more available bandwidth</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>The core difference from wired:</b> a wired attacker needs physical access to a cable or a switch port. A wireless attacker just needs to be within range — the "network edge" isn't a wall anymore, it's a signal boundary that leaks into a parking lot.
+    </div>
+  </section>
+
+  <!-- ── WLAN THREATS (5.2) ── -->
+  <section id="wlanthreats">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 5.2</p>
+      <h2>WLAN Threats</h2>
+      <p>Every threat here exploits the fact that radio waves don't check ID before they let you listen.</p>
+    </div>
+
+    <div class="diagram-grid">
+      <figure>
+        <svg viewBox="0 0 480 240" role="img" aria-label="Rogue access point: an unauthorized AP plugged into a free network port.">
+          <g font-family="IBM Plex Mono" font-weight="700" font-size="13">
+            <rect x="180" y="20" width="120" height="40" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="240" y="45" text-anchor="middle" fill="var(--accent)">Switch</text>
+            <rect x="20" y="100" width="120" height="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="80" y="125" text-anchor="middle">Legit AP</text>
+            <rect x="340" y="100" width="120" height="40" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+            <text x="400" y="125" text-anchor="middle" fill="var(--danger)">Rogue AP</text>
+            <rect x="180" y="180" width="120" height="40" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <text x="240" y="205" text-anchor="middle">Client</text>
+          </g>
+          <line x1="200" y1="60" x2="90" y2="100" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="280" y1="60" x2="390" y2="100" stroke="var(--danger)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="340" y="80" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" fill="var(--danger)">free open port</text>
+          <line x1="90" y1="140" x2="220" y2="180" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="390" y1="140" x2="260" y2="180" stroke="var(--danger)" stroke-width="1.2" stroke-dasharray="4 3"/>
+        </svg>
+        <figcaption>A rogue access point: an attacker (or an unwitting employee) plugs an unauthorized AP into any free switch port, giving wireless clients an unmonitored back door onto the wired network.</figcaption>
+      </figure>
+
+      <figure>
+        <svg viewBox="0 0 480 240" role="img" aria-label="Evil twin: a rogue AP broadcasting the same SSID as the legitimate one, after jamming knocks the client off.">
+          <g font-family="IBM Plex Mono" font-weight="700" font-size="13">
+            <rect x="60" y="20" width="140" height="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="130" y="45" text-anchor="middle">AP "OfficeNet"</text>
+            <rect x="280" y="20" width="140" height="40" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+            <text x="350" y="45" text-anchor="middle" fill="var(--danger)">Evil twin "OfficeNet"</text>
+            <rect x="170" y="170" width="120" height="40" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <text x="230" y="195" text-anchor="middle">Client</text>
+          </g>
+          <line x1="130" y1="60" x2="220" y2="170" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <text x="150" y="110" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" fill="var(--muted)">1. jammed / disassociated</text>
+          <line x1="350" y1="60" x2="250" y2="170" stroke="var(--danger)" stroke-width="1.5"/>
+          <text x="330" y="110" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" fill="var(--danger)">2. reconnects here</text>
+        </svg>
+        <figcaption>Evil twin: same SSID as the real AP. Jamming or a disassociation attack drops the client, which then auto-reconnects to whichever AP answers first — often the attacker's.</figcaption>
+      </figure>
+    </div>
+
+    <table class="model-table" style="margin-top:32px;">
+      <thead><tr><th>Threat</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Jamming</td><td>Transmits noise or another signal on the same frequency to interfere with wireless transmissions — a deliberate DoS</td></tr>
+        <tr><td style="font-weight:700;">Accidental interference</td><td>Non-malicious devices sharing the same band (microwave ovens, cordless phones) degrade WLAN performance without any attacker involved</td></tr>
+        <tr><td style="font-weight:700;">Man-in-the-middle</td><td>Once a client is on a rogue AP or evil twin, the attacker can read or alter its traffic in real time</td></tr>
+        <tr><td style="font-weight:700;">War driving</td><td>Searching for unsecured wireless networks to exploit, often with a directional antenna to pick up signals from farther away than intended</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── SECURE WLANS (5.3) ── -->
+  <section id="securewlan">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 5.3</p>
+      <h2>Secure WLANs</h2>
+      <p>Encryption standards got progressively better; some of the "extra" security measures never really worked at all.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Standard</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">WEP</td><td>The original — badly broken, a static shared key that's straightforward to crack. Do not use.</td></tr>
+        <tr><td style="font-weight:700;">WPA</td><td>An improvement over WEP, but still weaker than what followed it</td></tr>
+        <tr><td style="font-weight:700;">WPA2</td><td>Based on 802.11i, uses AES encryption — the baseline standard for a long time</td></tr>
+        <tr><td style="font-weight:700;">WPA3</td><td>The newest and most secure, with stronger protections than any predecessor</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Personal vs. Enterprise authentication</h3>
+    <table class="model-table">
+      <thead><tr><th>Mode</th><th>How it authenticates</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Personal (PSK)</td><td>Every client uses the same pre-shared key — simple to set up, but the key has to be distributed and kept secret, and doesn't change per-user</td></tr>
+        <tr><td style="font-weight:700;">Enterprise (802.1X)</td><td>Centralized authentication via a RADIUS server, using EAP — each user authenticates with their own credentials, no shared secret to leak</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Two measures that feel like security but mostly aren't:</b> MAC filtering can be defeated by spoofing an allowed client's MAC address — trivial for even an amateur attacker. SSID cloaking just hides the network name from casual view; a determined attacker can still find it. Neither replaces real encryption and authentication.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">DHCP</span>
+      <h3>Two DHCP problems, two different attacks</h3>
+      <p>Scenario A: new employees can't get an IP address all morning — the help desk finds the DHCP server's pool is completely empty. Scenario B: employees are getting IP addresses fine, but everyone's browser is quietly landing on a fake login page for sites they know are legitimate.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Scenario A:</strong> DHCP starvation — the address pool was exhausted by fake DHCPDISCOVER requests, denying real clients a lease.</p>
+          <p><strong>Scenario B:</strong> DHCP spoofing — a rogue DHCP server handed out a malicious DNS server address, redirecting legitimate-looking requests to fake sites.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Enterprise services</span>
+      <h3>Same root cause, two attacks</h3>
+      <p>A company's login page doesn't validate what's typed into its username field. One attacker enters a crafted string that returns the entire user table. Another enters a crafted string that runs a script in the browser of every visitor who views their comment afterward.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>First attacker:</strong> SQL injection — the crafted input was interpreted as a database command.</p>
+          <p><strong>Second attacker:</strong> Cross-site scripting (XSS) — the crafted input was interpreted as executable script by other users' browsers.</p>
+          <p><strong>Root cause for both:</strong> user input was trusted instead of validated.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Worm response</span>
+      <h3>Put the phases in order</h3>
+      <p>A worm is spreading through a company network. The security team isolates the unaffected subnets first, then starts scanning and patching healthy machines while simultaneously tracking down and disconnecting already-infected ones, and finally runs cleanup tools on the machines that got hit.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Order:</strong> Containment (isolate unaffected subnets) → Inoculation (patch/scan healthy machines, running in parallel with what follows) → Quarantine (disconnect infected machines) → Treatment (disinfect them).</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Wireless threats</span>
+      <h3>Rogue AP or evil twin?</h3>
+      <p>Scenario A: IT finds an unauthorized wireless access point plugged into a conference room network jack, put there by an employee who wanted better Wi-Fi in that room. Scenario B: employees' laptops briefly lose connection to "CorpWiFi," then automatically reconnect — but their traffic is now visibly routing through an unfamiliar device.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Scenario A:</strong> Rogue access point — unauthorized, but not necessarily malicious in origin here (a well-meaning employee, not an attacker).</p>
+          <p><strong>Scenario B:</strong> Evil twin — the disconnect/reconnect pattern is the signature of a jamming or disassociation attack forcing clients onto an attacker's AP broadcasting the same SSID.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Secure WLANs</span>
+      <h3>Personal or Enterprise?</h3>
+      <p>A coffee shop gives every customer the same Wi-Fi password printed on a receipt. A hospital instead requires every staff member to log in with their own individual network username and password before their device gets wireless access.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Coffee shop:</strong> Personal (PSK) — one shared key for everyone, simple to distribute, appropriate for low-stakes public access.</p>
+          <p><strong>Hospital:</strong> Enterprise (802.1X) — individual credentials authenticated against a RADIUS server, appropriate where accountability and stronger security matter.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 3 reference — more sessions added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+    {t:"Accidental interference", d:"Non-malicious devices sharing a wireless band — microwave ovens, cordless phones — degrading WLAN performance without any attacker involved."},
+    {t:"ARP cache poisoning", d:"Manipulating ARP caches on a local segment so the attacker's MAC address gets mapped to the default gateway's IP address."},
+    {t:"Containment (worm mitigation)", d:"The first phase of worm response — isolating the parts of the network not yet infected."},
+    {t:"Cross-site scripting (XSS)", d:"Injecting malicious script into a trusted website's input fields, which then executes in other visitors' browsers."},
+    {t:"DHCP spoofing", d:"A rogue DHCP server hands out false DNS server addresses, redirecting a client's later requests to fake sites."},
+    {t:"DHCP starvation", d:"Flooding a DHCP server with fake lease requests until its address pool is exhausted, denying service to real clients."},
+    {t:"DNS amplification/reflection", d:"Using open DNS resolvers to multiply a small spoofed request into a much larger flood aimed at the victim."},
+    {t:"DNS cache poisoning", d:"Injecting falsified information into a DNS resolver's cache, redirecting users from a legitimate site to a malicious one."},
+    {t:"DNS shadowing", d:"Compromising a legitimate parent domain, then creating malicious subdomains under it for further attacks."},
+    {t:"DNS tunneling", d:"Smuggling data inside DNS queries — often detected by queries running noticeably longer than average."},
+    {t:"Enterprise (802.1X) authentication", d:"A wireless authentication mode using a centralized RADIUS server and EAP, giving each user individual credentials instead of a shared key."},
+    {t:"Evil twin", d:"A rogue access point broadcasting the same SSID as a legitimate one, relying on jamming or disassociation to force clients to reconnect to it instead."},
+    {t:"HTTP 302 cushioning", d:"Abusing HTTP's redirect response to quietly bounce a victim toward a malicious site."},
+    {t:"Inoculation (worm mitigation)", d:"The worm-response phase of patching and scanning still-healthy systems, usually run in parallel with quarantine and treatment."},
+    {t:"Jamming", d:"Transmitting noise or another signal on the same wireless frequency to deliberately interfere with transmissions — a DoS attack."},
+    {t:"MAC address spoofing", d:"Altering an attacking host's MAC address to match a legitimate one, defeating MAC-based access controls."},
+    {t:"MAC filtering", d:"Permitting or denying wireless clients by MAC address — weak on its own, since MAC addresses are trivially spoofed."},
+    {t:"Man-in-the-middle (wireless)", d:"Intercepting or altering a victim's traffic after they've connected to a rogue AP or evil twin."},
+    {t:"Personal (PSK) authentication", d:"A wireless authentication mode where every client shares the same pre-shared key."},
+    {t:"Quarantine (worm mitigation)", d:"The worm-response phase of finding and disconnecting already-infected machines."},
+    {t:"Rogue access point", d:"An unauthorized access point plugged into the network — sometimes by an attacker, sometimes just by an employee wanting better coverage."},
+    {t:"SQL injection", d:"Injecting SQL commands into an insecure input field to manipulate or extract data directly from a backend database."},
+    {t:"SSID cloaking", d:"Hiding a wireless network's name from casual discovery — security by obscurity, not a real barrier to a determined attacker."},
+    {t:"Spam", d:"Bulk unsolicited email flooded to many users, often used as a delivery vector for phishing or malware."},
+    {t:"Treatment (worm mitigation)", d:"The final worm-response phase — actively disinfecting infected systems."},
+    {t:"War driving", d:"Searching for unsecured wireless networks to exploit, often using a directional antenna to detect weak or distant signals."},
+    {t:"WEP", d:"The original wireless encryption standard — a static shared key that's straightforward to crack. Considered broken."},
+    {t:"WPA / WPA2 / WPA3", d:"Successive wireless security standards, each stronger than the last; WPA2 introduced AES encryption (based on 802.11i), WPA3 is the current strongest."},
+  ];
+
+  const QUIZ = [
+    {
+      q:"What is the primary objective of a DHCP spoofing attack?",
+      choices:[
+        "To exhaust the DHCP server's address pool",
+        "To provide false DNS server addresses so later requests get redirected to a fake server",
+        "To crack the wireless encryption key",
+        "To flood a server with SYN packets"
+      ],
+      correct:1,
+      explain:"DHCP spoofing hands out a malicious DNS server address — the goal is usually redirecting future domain lookups, not just the initial IP lease."
+    },
+    {
+      q:"A cybersecurity analyst notices DNS queries running noticeably longer than average. This is most associated with:",
+      choices:["DNS shadowing","DNS cache poisoning","DNS tunneling","DNS amplification"],
+      correct:2,
+      explain:"DNS tunneling smuggles data inside DNS traffic, which tends to produce longer, more unusual-looking queries than normal lookups."
+    },
+    {
+      q:"Which two attacks share the same root cause — untrusted user input being treated as trusted code?",
+      choices:["ARP poisoning and DHCP starvation","SQL injection and cross-site scripting","Jamming and war driving","DNS shadowing and HTTP cushioning"],
+      correct:1,
+      explain:"Both SQL injection and XSS exploit missing input validation — one targets the database, the other targets the browser."
+    },
+    {
+      q:"Which HTTP mechanism does an HTTP 302 cushioning attack abuse?",
+      choices:["Cookies","The redirect response","Basic authentication","Chunked transfer encoding"],
+      correct:1,
+      explain:"HTTP 302 cushioning abuses the server's own redirect response to quietly send victims to a malicious site."
+    },
+    {
+      q:"Which is the primary mitigation for virus and Trojan horse attacks?",
+      choices:["Blocking ICMP at the edge","Antivirus software","SSID cloaking","DHCP snooping"],
+      correct:1,
+      explain:"Antivirus software is the standard, primary countermeasure for viruses and Trojan horses specifically."
+    },
+    {
+      q:"During a worm outbreak, disconnecting already-infected machines from the network is which phase?",
+      choices:["Containment","Inoculation","Quarantine","Treatment"],
+      correct:2,
+      explain:"Quarantine is specifically about finding and disconnecting infected machines, distinct from isolating unaffected areas (containment) or disinfecting (treatment)."
+    },
+    {
+      q:"Which two frequency bands does 802.11 wireless primarily use?",
+      choices:["900 MHz and 2.4 GHz","2.4 GHz and 5 GHz","5 GHz and 6 GHz","900 MHz and 5 GHz"],
+      correct:1,
+      explain:"2.4 GHz (802.11b/g, and optionally n) and 5 GHz (802.11a, and typically n/ac) are the two primary bands."
+    },
+    {
+      q:"An attacker sets up an access point broadcasting the exact same SSID as a company's real Wi-Fi, then jams the real signal so clients reconnect to the fake one. This is a:",
+      choices:["Rogue access point","Evil twin","War driving attack","DHCP starvation attack"],
+      correct:1,
+      explain:"Matching SSID plus a jamming/disassociation step to force reconnection is the defining pattern of an evil twin, distinct from a rogue AP (which doesn't need to impersonate anything)."
+    },
+    {
+      q:"Why is MAC filtering considered weak as a standalone wireless security measure?",
+      choices:[
+        "It only works on 5 GHz networks",
+        "MAC addresses can be easily spoofed to match an allowed client",
+        "It requires a RADIUS server",
+        "It's incompatible with WPA2"
+      ],
+      correct:1,
+      explain:"An attacker can simply spoof an allowed client's MAC address, making the filter trivial to bypass — even for an amateur."
+    },
+    {
+      q:"A hospital requires each staff member to authenticate with individual credentials against a RADIUS server before getting wireless access. This is:",
+      choices:["Personal (PSK) authentication","Open authentication","Enterprise (802.1X) authentication","SSID cloaking"],
+      correct:2,
+      explain:"Centralized, per-user authentication via RADIUS and EAP is the defining feature of Enterprise (802.1X) mode, as opposed to Personal mode's single shared key."
+    },
+    {
+      q:"Which wireless security standard introduced AES encryption based on 802.11i?",
+      choices:["WEP","WPA","WPA2","None of them — AES was never used in Wi-Fi"],
+      correct:2,
+      explain:"WPA2 introduced AES encryption based on the 802.11i standard, a major step up from WPA's weaker encryption."
+    },
+    {
+      q:"An attacker drives around a city with a directional antenna, mapping unsecured wireless networks to target later. This is:",
+      choices:["Jamming","War driving","An evil twin attack","DNS tunneling"],
+      correct:1,
+      explain:"War driving is specifically the practice of searching for unsecured wireless networks to exploit, often aided by a directional antenna."
+    },
+  ];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
