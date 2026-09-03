@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bastion Security — Threat Board</title>
+<title>Bastion Security — Attack Log</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -191,9 +191,9 @@
   <a class="back-link" href="../index.html">↩ Contents</a>
 
   <header class="masthead">
-    <span class="eyebrow">POSTED IN THE SOC BREAK ROOM</span>
-    <h1>BASTION SECURITY THREAT BOARD</h1>
-    <p class="subtitle">Five repeat categories, filed by the Shift Lead. Every incident that lands on a Tier-1 desk traces back to one of these. Know the motive before you know the malware.</p>
+    <span class="eyebrow">FILED FROM THE PACKET CAPTURE ROOM</span>
+    <h1>BASTION SECURITY ATTACK LOG</h1>
+    <p class="subtitle">Six techniques that show up every time the foundational protocols get abused. None of these need a software bug — just a protocol that trusts the last thing it heard.</p>
   </header>
 
   <div class="board-grid">
@@ -201,97 +201,115 @@
     <article class="poster">
       <div class="pin"></div>
       <div class="wanted-word">FILED</div>
-      <h2 class="actor-name">Script Kiddie</h2>
-      <p class="alias">AKA: Low-Skill Opportunist</p>
-      <span class="case-tag">MOTIVE: BRAGGING RIGHTS</span>
+      <h2 class="actor-name">ARP Spoofing</h2>
+      <p class="alias">AKA: ARP Cache Poisoning</p>
+      <span class="case-tag">LAYER: LOCAL SEGMENT</span>
       <div class="mugshot">
-        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="1"/><path d="M9 20h6M12 16v4"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 4l16 16M4 20L20 4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
       </div>
       <dl class="case-stats">
-        <div><dt>MO</dt><dd>Downloads a tool someone else built, points it at a target for curiosity or clout — no real strategy behind it.</dd></div>
-        <div><dt>Tools of the trade</dt><dd>Public exploit kits, DDoS booter services, defacement scripts</dd></div>
-        <div><dt>Countermeasure</dt><dd>Basic patching and hardening close most of the doors this actor knows how to open</dd></div>
+        <div><dt>MO</dt><dd>Broadcasts fake ARP replies so nearby traffic gets rerouted through the attacker's machine before continuing to its real destination.</dd></div>
+        <div><dt>Tools of the trade</dt><dd>ARP cache poisoning tools, any laptop on the same local segment</dd></div>
+        <div><dt>Countermeasure</dt><dd>Dynamic ARP Inspection, static ARP entries on critical hosts</dd></div>
       </dl>
-      <div class="threat-row">THREAT LEVEL: NOVICE <span class="dots">●○○○○</span></div>
-      <div class="reward">NOTE: <strong>low sophistication, not low risk</strong> — an unpatched system is just as compromised whether the attacker was a genius or downloaded the tool an hour ago.</div>
+      <div class="threat-row">THREAT LEVEL: INTERMEDIATE <span class="dots">●●●○○</span></div>
+      <div class="reward">NOTE: <strong>no login required</strong> — ARP has no authentication at all. Being on the segment is the only prerequisite.</div>
     </article>
 
     <article class="poster">
       <div class="pin"></div>
       <div class="wanted-word">FILED</div>
-      <h2 class="actor-name">Hacktivist</h2>
-      <p class="alias">AKA: The Statement-Maker</p>
-      <span class="case-tag">MOTIVE: POLITICAL / SOCIAL</span>
+      <h2 class="actor-name">IP Spoofing</h2>
+      <p class="alias">AKA: The Forged Return Address</p>
+      <span class="case-tag">LAYER: NETWORK</span>
       <div class="mugshot">
-        <svg viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-8h6v8"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="7" rx="1"/><rect x="5" y="9" width="14" height="4" rx="1"/><path d="M6 13l-2 8h16l-2-8"/></svg>
       </div>
       <dl class="case-stats">
-        <div><dt>MO</dt><dd>Wants an audience, not a payout — defaces a site or leaks data to make a point, then often takes credit publicly.</dd></div>
-        <div><dt>Tools of the trade</dt><dd>Website defacement kits, leaked-data dumps, coordinated DDoS campaigns</dd></div>
-        <div><dt>Countermeasure</dt><dd>Harden public-facing systems, have an incident-comms plan ready, DDoS mitigation service</dd></div>
+        <div><dt>MO</dt><dd>Forges the source address on outbound packets so replies go somewhere else, or so the traffic's true origin never shows up in a log.</dd></div>
+        <div><dt>Tools of the trade</dt><dd>Crafted packets with a forged source IP</dd></div>
+        <div><dt>Countermeasure</dt><dd>Ingress/egress filtering at the network edge, authenticated routing</dd></div>
       </dl>
-      <div class="threat-row">THREAT LEVEL: NOVICE–INTERMEDIATE <span class="dots">●●○○○</span></div>
-      <div class="reward">NOTE: <strong>visibility is the goal</strong> — a quiet, contained incident is a failed attack from this actor's perspective.</div>
+      <div class="threat-row">THREAT LEVEL: INTERMEDIATE <span class="dots">●●●○○</span></div>
+      <div class="reward">NOTE: <strong>rarely the whole attack</strong> — usually the enabling step for something bigger, like an amplification attack or a session hijack.</div>
     </article>
 
     <article class="poster">
       <div class="pin"></div>
       <div class="wanted-word">FILED</div>
-      <h2 class="actor-name">Organized Crime</h2>
-      <p class="alias">AKA: The Business</p>
-      <span class="case-tag">MOTIVE: MONEY</span>
+      <h2 class="actor-name">ICMP Abuse</h2>
+      <p class="alias">AKA: Recon &amp; Redirect</p>
+      <span class="case-tag">LAYER: NETWORK</span>
       <div class="mugshot">
-        <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/></svg>
       </div>
       <dl class="case-stats">
-        <div><dt>MO</dt><dd>Runs cybercrime like a company — ransomware-as-a-service, stolen card data resold on dark-web markets, help desks for victims paying ransom.</dd></div>
-        <div><dt>Tools of the trade</dt><dd>RaaS kits, phishing infrastructure, card skimmers</dd></div>
-        <div><dt>Countermeasure</dt><dd>Offline-tested backups, endpoint detection and response, security-awareness training</dd></div>
+        <div><dt>MO</dt><dd>Pings the whole subnet to map who's alive before an attack even starts, or sends a forged redirect to reroute a victim's traffic path.</dd></div>
+        <div><dt>Tools of the trade</dt><dd>Ping sweep utilities, crafted ICMP redirect packets</dd></div>
+        <div><dt>Countermeasure</dt><dd>Rate-limit/filter ICMP at the perimeter, disable ICMP redirects on hosts</dd></div>
       </dl>
-      <div class="threat-row">THREAT LEVEL: INTERMEDIATE–ADVANCED <span class="dots">●●●●○</span></div>
-      <div class="reward">NOTE: <strong>well-resourced and patient</strong> — treat every payload like it was tested against your specific defenses, because it might have been.</div>
+      <div class="threat-row">THREAT LEVEL: NOVICE <span class="dots">●●○○○</span></div>
+      <div class="reward">NOTE: <strong>often the opening move</strong>, not the payload — this is how an attacker learns the network before doing anything louder.</div>
     </article>
 
     <article class="poster">
       <div class="pin"></div>
       <div class="wanted-word">FILED</div>
-      <h2 class="actor-name">Nation-State / APT</h2>
-      <p class="alias">AKA: The Long Game</p>
-      <span class="case-tag">MOTIVE: ESPIONAGE / SABOTAGE</span>
+      <h2 class="actor-name">TCP SYN Flood</h2>
+      <p class="alias">AKA: The Half-Open Pileup</p>
+      <span class="case-tag">LAYER: TRANSPORT</span>
+      <div class="mugshot">
+        <svg viewBox="0 0 24 24"><path d="M2 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 13c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>
+      </div>
+      <dl class="case-stats">
+        <div><dt>MO</dt><dd>Opens thousands of connections and never finishes the handshake, until the target's connection table has no room left for real traffic.</dd></div>
+        <div><dt>Tools of the trade</dt><dd>SYN flood traffic generators, botnets</dd></div>
+        <div><dt>Countermeasure</dt><dd>SYN cookies, connection rate limiting</dd></div>
+      </dl>
+      <div class="threat-row">THREAT LEVEL: INTERMEDIATE <span class="dots">●●●○○</span></div>
+      <div class="reward">NOTE: <strong>find it fast</strong> in a stack of connections stuck at SYN_RECEIVED with no matching ACK.</div>
+    </article>
+
+    <article class="poster">
+      <div class="pin"></div>
+      <div class="wanted-word">FILED</div>
+      <h2 class="actor-name">DNS Cache Poisoning</h2>
+      <p class="alias">AKA: The Wrong Address</p>
+      <span class="case-tag">LAYER: APPLICATION / SERVICE</span>
       <div class="mugshot">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
       </div>
       <dl class="case-stats">
-        <div><dt>MO</dt><dd>Backed by a government, extremely well-funded — gets in quietly and stays for months, gathering intelligence or waiting for the right moment to act.</dd></div>
-        <div><dt>Tools of the trade</dt><dd>Custom malware, zero-day exploits, supply-chain compromise</dd></div>
-        <div><dt>Countermeasure</dt><dd>Defense in depth, threat-intel feeds, anomaly-based monitoring over long time windows</dd></div>
+        <div><dt>MO</dt><dd>Slips a false name-to-address mapping into a resolver's cache, so everyone who asks gets sent to the wrong, attacker-controlled address.</dd></div>
+        <div><dt>Tools of the trade</dt><dd>Spoofed DNS responses, racing the real authoritative answer back to the resolver</dd></div>
+        <div><dt>Countermeasure</dt><dd>DNSSEC, randomized query IDs and source ports</dd></div>
       </dl>
-      <div class="threat-row">THREAT LEVEL: SEVERE <span class="dots">●●●●●</span></div>
-      <div class="reward">NOTE: <strong>dwell time is the tell</strong> — the breach you find today may have started months ago. Long, quiet access is the signature, not a smash-and-grab.</div>
+      <div class="threat-row">THREAT LEVEL: INTERMEDIATE&ndash;ADVANCED <span class="dots">●●●●○</span></div>
+      <div class="reward">NOTE: <strong>the URL bar lies</strong> — the victim typed the right name; the name just points to the wrong place now.</div>
     </article>
 
     <article class="poster" style="grid-column:1/-1; max-width:460px; justify-self:center;">
       <div class="pin"></div>
       <div class="wanted-word">FILED</div>
-      <h2 class="actor-name">Insider Threat</h2>
-      <p class="alias">AKA: Already Has The Keys</p>
-      <span class="case-tag">MOTIVE: MONEY, REVENGE, OR AN ACCIDENT</span>
+      <h2 class="actor-name">DHCP Spoofing / Starvation</h2>
+      <p class="alias">AKA: The Fake Front Desk</p>
+      <span class="case-tag">LAYER: LOCAL SEGMENT</span>
       <div class="mugshot">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/><path d="M15 3l2 2-2 2"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
       </div>
       <dl class="case-stats">
-        <div><dt>MO</dt><dd>No break-in required — a legitimate account, used the wrong way, whether it's deliberate sabotage, quiet data theft, or just a careless mistake.</dd></div>
-        <div><dt>Tools of the trade</dt><dd>Valid credentials, authorized access, standard company tools</dd></div>
-        <div><dt>Countermeasure</dt><dd>Least privilege, periodic access reviews, DLP, an off-boarding checklist that actually gets followed</dd></div>
+        <div><dt>MO</dt><dd>Either floods the real DHCP server's address pool dry (starvation), or answers client requests first with a rogue server handing out a malicious gateway (spoofing).</dd></div>
+        <div><dt>Tools of the trade</dt><dd>Rogue DHCP server, automated lease-request flooders</dd></div>
+        <div><dt>Countermeasure</dt><dd>DHCP snooping, port security on access switches</dd></div>
       </dl>
-      <div class="threat-row">THREAT LEVEL: VARIABLE <span class="dots">●●●○○</span></div>
-      <div class="reward">NOTE: <strong>hardest one to profile</strong> — this dossier covers a category, not a signature. The access itself is the risk, malicious or not.</div>
+      <div class="threat-row">THREAT LEVEL: NOVICE&ndash;INTERMEDIATE <span class="dots">●●○○○</span></div>
+      <div class="reward">NOTE: <strong>whoever answers first wins</strong> — DHCP has no built-in way to check whether the server handing out addresses is the real one.</div>
     </article>
 
   </div>
 
   <footer>
-    <p>Cross-reference: each dossier corresponds to the Threat Actors section of <a href="../IT121_Session01.html#actors">Session 1</a>.</p>
+    <p>Cross-reference: each dossier corresponds to the IP/TCP/UDP/ARP/DNS/DHCP attacks section of <a href="../IT121_Session02.html#arpdns">Session 2</a>.</p>
     <p class="fineprint">Posted for staff awareness. Photocopy freely for classroom use.</p>
   </footer>
 

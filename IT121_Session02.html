@@ -1,0 +1,760 @@
+<title>IT121 Session 2 – Securing Networks &amp; Attacking the Foundation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
+    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
+    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
+    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
+    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
+    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
+    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Orbitron', sans-serif;
+    --sans:'Rajdhani', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:125%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 2</p>
+    <h1>Securing Networks &amp; Attacking the Foundation</h1>
+    <p class="lede">Session 1 gave you the vocabulary. This session gives you the terrain — how a network is actually organized and defended, then how the protocols underneath everything (IP, TCP/UDP, ARP, DNS, DHCP) get attacked in the first place.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 2 &middot; Module 3</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#domains">Security Domains</a>
+    <a href="#zones">Zones &amp; Defense</a>
+    <a href="#policy">Policy &amp; BCP</a>
+    <a href="#ip">IP Attacks</a>
+    <a href="#tcpudp">TCP/UDP Attacks</a>
+    <a href="#arpdns">ARP/DNS/DHCP</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 2 covers</h2>
+      <p>Two modules, one throughline: first, how a network is organized and defended at a structural level (domains, zones, policy); then, how the foundational protocols everything else runs on top of — IP, TCP/UDP, ARP, DNS, DHCP — get attacked. None of these protocols were designed with an attacker in mind, and that gap is the whole story.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Name the major cybersecurity domains and what each one is responsible for</li>
+      <li>Explain security zones (trusted, untrusted, DMZ) and defense in depth</li>
+      <li>Distinguish a Business Continuity Plan from a Disaster Recovery Plan, and RTO from RPO</li>
+      <li>Explain how IP, ICMP, TCP, and UDP get abused — spoofing, floods, amplification, hijacking</li>
+      <li>Identify ARP, DNS, and DHCP attacks and why each protocol is vulnerable by design</li>
+    </ul>
+  </section>
+
+  <!-- ── SECURITY DOMAINS ── -->
+  <section id="domains">
+    <div class="section-head">
+      <p class="kicker">Concept 1</p>
+      <h2>Security Domains</h2>
+      <p>"Cybersecurity" isn't one job — it's several overlapping specialties. An alert doesn't announce which domain it belongs to; figuring that out is half the work.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Domain</th><th>What it covers</th><th>Example control</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Network security</td><td>The network itself — traffic, segmentation, the perimeter</td><td>Firewalls, VPNs, network segmentation</td></tr>
+        <tr><td style="font-weight:700;">Endpoint security</td><td>Individual devices — laptops, servers, mobile</td><td>Antivirus/EDR, patch management</td></tr>
+        <tr><td style="font-weight:700;">Application security</td><td>Software, before it ever reaches a network</td><td>Secure coding, input validation, WAFs</td></tr>
+        <tr><td style="font-weight:700;">Data security</td><td>Data at rest, in transit, and in use</td><td>Encryption, DLP, backups</td></tr>
+        <tr><td style="font-weight:700;">Identity &amp; access management (IAM)</td><td>Who can do what, and proving it</td><td>MFA, least privilege, access reviews</td></tr>
+        <tr><td style="font-weight:700;">Cloud security</td><td>Workloads and data hosted off-premises</td><td>Shared responsibility model, cloud IAM</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>A SOC analyst rotates across most of these in a single shift.</b> A phishing email touches identity and endpoint; a misconfigured S3 bucket touches cloud and data. Real incidents rarely respect the boundary between domains.
+    </div>
+  </section>
+
+  <!-- ── ZONES & DEFENSE IN DEPTH ── -->
+  <section id="zones">
+    <div class="section-head">
+      <p class="kicker">Concept 2</p>
+      <h2>Security Zones &amp; Defense in Depth</h2>
+      <p>No single control stops every attack, so real networks layer several — and separate what's exposed to the internet from what isn't.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 480 440" role="img" aria-label="Defense in depth shown as narrowing layers: internet, perimeter, network, host, application, and data at the center.">
+        <g font-family="IBM Plex Mono" font-weight="700" font-size="13">
+          <rect x="20" y="18" width="440" height="42" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+          <text x="240" y="44" text-anchor="middle" fill="var(--danger)">INTERNET — UNTRUSTED</text>
+
+          <rect x="55" y="72" width="370" height="42" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="240" y="98" text-anchor="middle" fill="var(--accent)">PERIMETER — firewall, DMZ</text>
+
+          <rect x="90" y="126" width="300" height="42" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="240" y="152" text-anchor="middle" font-size="12">NETWORK — segmentation, IDS/IPS</text>
+
+          <rect x="125" y="180" width="230" height="54" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="240" y="203" text-anchor="middle">HOST</text>
+          <text x="240" y="221" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">endpoint protection, patching</text>
+
+          <rect x="160" y="246" width="160" height="54" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="240" y="269" text-anchor="middle">APPLICATION</text>
+          <text x="240" y="287" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">secure code, WAF</text>
+
+          <rect x="185" y="312" width="110" height="54" fill="var(--correct-soft)" stroke="var(--correct)" stroke-width="1.5"/>
+          <text x="240" y="335" text-anchor="middle" fill="var(--correct)">DATA</text>
+          <text x="240" y="353" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">encryption, backups</text>
+        </g>
+        <text x="240" y="418" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--muted)">An attacker has to get through every layer — a defender only has to hold one</text>
+      </svg>
+      <figcaption>Defense in depth: layered controls narrowing toward the data that actually matters, so no single failure exposes everything.</figcaption>
+    </figure>
+
+    <table class="model-table">
+      <thead><tr><th>Zone</th><th>Trust level</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Untrusted</td><td>None</td><td>The internet</td></tr>
+        <tr><td style="font-weight:700;">DMZ (demilitarized zone)</td><td>Semi-trusted</td><td>Public web server, mail relay</td></tr>
+        <tr><td style="font-weight:700;">Trusted</td><td>High</td><td>Internal LAN, employee workstations</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>A DMZ exists so that if a public-facing server gets popped, the attacker lands in a fenced yard, not the living room.</b> It's isolated from the trusted internal network even though it's reachable from the untrusted one.
+    </div>
+  </section>
+
+  <!-- ── POLICY & BCP ── -->
+  <section id="policy">
+    <div class="section-head">
+      <p class="kicker">Concept 3</p>
+      <h2>Security Policies &amp; Business Continuity</h2>
+      <p>Controls are technical; policy is the paperwork that says what's allowed and what happens when something breaks anyway.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Policy / plan</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Acceptable Use Policy (AUP)</td><td>Defines what employees are and aren't allowed to do with company systems</td></tr>
+        <tr><td style="font-weight:700;">Incident response policy</td><td>What happens the moment something goes wrong</td></tr>
+        <tr><td style="font-weight:700;">Remote access policy</td><td>Rules for connecting to the network from outside it</td></tr>
+        <tr><td style="font-weight:700;">Business Continuity Plan (BCP)</td><td>Keeps critical operations running during a disruption</td></tr>
+        <tr><td style="font-weight:700;">Disaster Recovery Plan (DRP)</td><td>Restores systems and data after a disruption — a subset of BCP</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Two numbers every recovery plan needs</h3>
+    <ul style="line-height:1.7;">
+      <li><strong>RTO (Recovery Time Objective)</strong> — how long can we be down before it's unacceptable?</li>
+      <li><strong>RPO (Recovery Point Objective)</strong> — how much recent data can we afford to lose?</li>
+    </ul>
+
+    <div class="callout">
+      <b>BCP keeps the business running; DRP gets the systems back.</b> A hospital's BCP might mean switching to paper charts during an outage, while its DRP is the separate process of actually restoring the EHR.
+    </div>
+  </section>
+
+  <!-- ── IP ATTACKS ── -->
+  <section id="ip">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 3</p>
+      <h2>IP Vulnerabilities &amp; Attacks</h2>
+      <p>IP has no built-in way to verify a source address. Everything in this section exploits that one trust gap.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">IP spoofing</td><td>Forges the source IP address so traffic — or the blame for it — appears to come from somewhere else</td></tr>
+        <tr><td style="font-weight:700;">ICMP reconnaissance</td><td>Ping sweeps map which hosts are alive before an attack even starts</td></tr>
+        <tr><td style="font-weight:700;">ICMP redirect</td><td>A forged redirect message tricks a host into routing its traffic through an attacker-controlled path</td></tr>
+        <tr><td style="font-weight:700;">Amplification &amp; reflection</td><td>A small spoofed request (e.g. to a DNS or NTP server) triggers a huge response — sent to the victim, not the attacker</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Spoofing is the common thread.</b> Once the source address can't be trusted, an attacker can hide behind it, redirect blame to an innocent host, or turn a third-party server into an unwitting weapon.
+    </div>
+  </section>
+
+  <!-- ── TCP/UDP ATTACKS ── -->
+  <section id="tcpudp">
+    <div class="section-head">
+      <p class="kicker">Concept 5</p>
+      <h2>TCP &amp; UDP Vulnerabilities</h2>
+      <p>TCP's handshake is a feature for reliability and a liability for availability — every half-open connection ties up a resource somewhere.</p>
+    </div>
+
+    <div class="diagram-grid">
+      <figure>
+        <svg viewBox="0 0 480 260" role="img" aria-label="A normal TCP three-way handshake: SYN, SYN-ACK, ACK, then connection established.">
+          <g font-family="IBM Plex Mono" font-weight="700" font-size="13" fill="currentColor">
+            <rect x="20" y="20" width="90" height="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="65" y="45" text-anchor="middle">Client</text>
+            <rect x="370" y="20" width="90" height="40" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="415" y="45" text-anchor="middle" fill="var(--accent)">Server</text>
+            <line x1="65" y1="60" x2="65" y2="220" stroke="var(--border)" stroke-width="1"/>
+            <line x1="415" y1="60" x2="415" y2="220" stroke="var(--border)" stroke-width="1"/>
+          </g>
+          <g font-family="IBM Plex Sans" font-size="12">
+            <line x1="65" y1="90" x2="415" y2="90" stroke="var(--correct)" stroke-width="1.5" marker-end="url(#arrowS)"/>
+            <text x="240" y="82" text-anchor="middle" fill="var(--correct)">1. SYN</text>
+            <line x1="415" y1="140" x2="65" y2="140" stroke="var(--correct)" stroke-width="1.5" marker-end="url(#arrowS)"/>
+            <text x="240" y="132" text-anchor="middle" fill="var(--correct)">2. SYN-ACK</text>
+            <line x1="65" y1="190" x2="415" y2="190" stroke="var(--correct)" stroke-width="1.5" marker-end="url(#arrowS)"/>
+            <text x="240" y="182" text-anchor="middle" fill="var(--correct)">3. ACK</text>
+          </g>
+          <defs>
+            <marker id="arrowS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--correct)"/>
+            </marker>
+          </defs>
+          <text x="240" y="242" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="var(--muted)">Connection established</text>
+        </svg>
+        <figcaption>The normal three-way handshake — SYN, SYN-ACK, ACK — before any data flows.</figcaption>
+      </figure>
+
+      <figure>
+        <svg viewBox="0 0 480 260" role="img" aria-label="A SYN flood attack: repeated SYNs with no completing ACK fill the server's connection table.">
+          <g font-family="IBM Plex Mono" font-weight="700" font-size="13" fill="currentColor">
+            <rect x="10" y="20" width="100" height="40" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+            <text x="60" y="45" text-anchor="middle" fill="var(--danger)">Attacker</text>
+            <rect x="370" y="20" width="90" height="40" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="415" y="45" text-anchor="middle" fill="var(--accent)">Server</text>
+            <line x1="60" y1="60" x2="60" y2="220" stroke="var(--border)" stroke-width="1"/>
+            <line x1="415" y1="60" x2="415" y2="220" stroke="var(--border)" stroke-width="1"/>
+          </g>
+          <g font-family="IBM Plex Sans" font-size="11" stroke="var(--danger)" stroke-width="1.3" stroke-dasharray="4 3">
+            <line x1="60" y1="82" x2="415" y2="82" marker-end="url(#arrowD)"/>
+            <line x1="60" y1="102" x2="415" y2="102" marker-end="url(#arrowD)"/>
+            <line x1="60" y1="122" x2="415" y2="122" marker-end="url(#arrowD)"/>
+            <line x1="60" y1="142" x2="415" y2="142" marker-end="url(#arrowD)"/>
+          </g>
+          <defs>
+            <marker id="arrowD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/>
+            </marker>
+          </defs>
+          <text x="240" y="75" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">SYN, SYN, SYN, SYN … (×1000s, spoofed sources)</text>
+          <rect x="330" y="160" width="130" height="60" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+          <text x="395" y="180" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="var(--danger)">Conn. table</text>
+          <text x="395" y="196" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="var(--danger)">FULL</text>
+          <text x="395" y="211" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" fill="var(--muted)">all half-open</text>
+          <text x="150" y="240" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--muted)">No ACK ever returns — the handshake never finishes</text>
+        </svg>
+        <figcaption>SYN flood: the attacker never sends the final ACK, so every half-open connection sits in the table until it's full — locking out real users.</figcaption>
+      </figure>
+    </div>
+
+    <table class="model-table" style="margin-top:32px;">
+      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">SYN flood</td><td>Opens thousands of connections and never completes the handshake, until there's no room left for real ones</td></tr>
+        <tr><td style="font-weight:700;">TCP reset attack</td><td>A forged RST packet kills a legitimate, already-established connection</td></tr>
+        <tr><td style="font-weight:700;">TCP session hijacking</td><td>Predicts or steals sequence numbers to take over a session someone else already authenticated into</td></tr>
+        <tr><td style="font-weight:700;">UDP flood</td><td>Overwhelms a target with connectionless UDP traffic — cheap to send, expensive for the target to process</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── ARP / DNS / DHCP ── -->
+  <section id="arpdns">
+    <div class="section-head">
+      <p class="kicker">Concept 6</p>
+      <h2>ARP, DNS &amp; DHCP Attacks</h2>
+      <p>ARP, DNS, and DHCP all exist to make networking convenient. None of them require proof of identity by default — which is exactly what these attacks abuse.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">ARP spoofing (poisoning)</td><td>Fake ARP replies redirect local traffic through the attacker — a classic man-in-the-middle</td></tr>
+        <tr><td style="font-weight:700;">DNS cache poisoning</td><td>Injects a false name-to-address mapping into a resolver's cache</td></tr>
+        <tr><td style="font-weight:700;">DNS tunneling</td><td>Smuggles data inside DNS queries and responses, often past firewalls that implicitly trust DNS traffic</td></tr>
+        <tr><td style="font-weight:700;">DHCP starvation</td><td>Exhausts a DHCP server's address pool with a flood of fake lease requests</td></tr>
+        <tr><td style="font-weight:700;">DHCP spoofing (rogue DHCP)</td><td>An attacker's own DHCP server answers first, handing out a malicious gateway or DNS server</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Notice the pattern:</b> ARP trusts the last reply it heard, DNS resolvers trust the first response that beats the real one back, and DHCP clients trust whichever server answers fastest. Speed, not identity, wins by default in all three.
+    </div>
+
+    <div class="callout xref">
+      Full dossiers on all six foundational-protocol attacks are filed in the <a href="bastion-security-kit/bastion-attack-log.html">Bastion Security Attack Log</a>.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Zones</span>
+      <h3>Which zone, and why?</h3>
+      <p>A university publishes a web server that's reachable from the internet, but it sits on its own isolated segment with no direct path to the internal grading and registration systems.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Answer:</strong> That segment is a DMZ — semi-trusted, reachable from the untrusted internet, but deliberately isolated from the trusted internal network. If the web server is compromised, the attacker doesn't automatically reach grading or registration.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">TCP/UDP</span>
+      <h3>Diagnose the logs</h3>
+      <p>A server's connection logs show thousands of sessions stuck in a half-open state — SYN received, but the handshake never completes. Legitimate users can't connect.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Answer:</strong> SYN flood. The attacker sends SYNs (often with spoofed source addresses) and never sends the final ACK, so every half-open connection sits in the server's connection table until it's full — starving out real traffic.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">ARP vs. DNS</span>
+      <h3>Same symptom, different cause</h3>
+      <p>Scenario A: everyone on the third floor suddenly has their traffic silently rerouted through a laptop that just joined the network. Scenario B: employees type the correct company URL but land on a fake login page.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Scenario A:</strong> ARP spoofing — a local device sent fake ARP replies to reroute traffic through itself.</p>
+          <p><strong>Scenario B:</strong> DNS cache poisoning — a false name-to-address mapping sent visitors to the wrong (attacker-controlled) server, even though they typed the right name.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">BCP vs. DRP</span>
+      <h3>Which plan is which?</h3>
+      <p>During a ransomware outage, a hospital immediately switches to paper charts so patient care can continue. Separately, its IT team works to restore the electronic health record system from backups.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Paper charts:</strong> Business Continuity Plan (BCP) — keeping critical operations (patient care) running during the disruption.</p>
+          <p><strong>Restoring the EHR:</strong> Disaster Recovery Plan (DRP) — the technical process of getting systems and data back.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">RTO vs. RPO</span>
+      <h3>Name the number</h3>
+      <p>A company's disaster recovery documentation states two limits: the backup system can restore data from no more than 4 hours before an incident, and critical systems must be back online within 1 hour of an outage being declared.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>4 hours of acceptable data loss:</strong> RPO (Recovery Point Objective).</p>
+          <p><strong>1 hour to be back online:</strong> RTO (Recovery Time Objective).</p>
+          <p>RPO looks backward at how much you can afford to lose; RTO looks forward at how fast you have to recover.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 2 reference — more sessions added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+    {t:"Amplification / reflection attack", d:"A small, spoofed request (often to DNS or NTP) triggers a much larger response sent to the victim instead of the attacker."},
+    {t:"ARP spoofing (ARP poisoning)", d:"Sending fake ARP replies so local traffic gets rerouted through the attacker's device before continuing to its real destination."},
+    {t:"AUP (Acceptable Use Policy)", d:"A policy defining what employees are and aren't allowed to do with company systems and networks."},
+    {t:"BCP (Business Continuity Plan)", d:"A plan for keeping critical business operations running during a disruption — may not involve restoring any technology at all."},
+    {t:"Cloud security", d:"The security domain covering workloads and data hosted off-premises, governed by the shared responsibility model between provider and customer."},
+    {t:"Defense in depth", d:"Layering multiple, independent security controls so that no single failure exposes the whole system."},
+    {t:"DHCP spoofing (rogue DHCP)", d:"An attacker's own DHCP server answers client requests first, handing out a malicious default gateway or DNS server."},
+    {t:"DHCP starvation", d:"Flooding a DHCP server with fake lease requests until its address pool is exhausted, denying service to real clients."},
+    {t:"DMZ (demilitarized zone)", d:"A semi-trusted network segment, reachable from the internet but isolated from the trusted internal network — where public-facing servers live."},
+    {t:"DNS cache poisoning", d:"Injecting a false name-to-address mapping into a DNS resolver's cache, redirecting anyone who looks up that name."},
+    {t:"DNS tunneling", d:"Smuggling data inside DNS queries and responses, often bypassing firewalls that implicitly trust DNS traffic."},
+    {t:"DRP (Disaster Recovery Plan)", d:"The technical plan for restoring systems and data after a disruption — a subset of a larger BCP."},
+    {t:"Endpoint security", d:"The security domain covering individual devices — laptops, servers, mobile — rather than the network connecting them."},
+    {t:"IAM (Identity and Access Management)", d:"The security domain covering who can do what, and how that identity is proven — MFA, least privilege, access reviews."},
+    {t:"ICMP redirect", d:"A forged ICMP message that tricks a host into routing its traffic through an attacker-controlled path."},
+    {t:"ICMP reconnaissance", d:"Using ping sweeps and similar ICMP traffic to map which hosts are alive before an attack."},
+    {t:"Incident response policy", d:"A policy defining what happens — who does what, in what order — the moment a security incident is detected."},
+    {t:"IP spoofing", d:"Forging the source IP address on a packet so the traffic, or the blame for it, appears to come from somewhere else."},
+    {t:"RPO (Recovery Point Objective)", d:"The maximum acceptable amount of recent data loss, measured backward in time from the moment of failure."},
+    {t:"RTO (Recovery Time Objective)", d:"The maximum acceptable amount of downtime before normal operations must be restored."},
+    {t:"Security zone", d:"A network segment grouped by trust level — untrusted (internet), DMZ (semi-trusted), or trusted (internal)."},
+    {t:"SYN flood", d:"A DoS attack that opens many TCP connections and never completes the handshake, filling the target's connection table with half-open sessions."},
+    {t:"TCP reset attack", d:"Sending a forged RST packet to forcibly terminate someone else's legitimate TCP connection."},
+    {t:"TCP session hijacking", d:"Predicting or stealing TCP sequence numbers to take over a session that someone else already authenticated into."},
+    {t:"UDP flood", d:"A DoS attack that overwhelms a target with connectionless UDP traffic, which is cheap to send and costly to process."},
+  ];
+
+  const QUIZ = [
+    {
+      q:"Which security domain is primarily concerned with protecting individual devices like laptops and servers?",
+      choices:["Network security","Endpoint security","Application security","Cloud security"],
+      correct:1,
+      explain:"Endpoint security focuses on the devices themselves, as opposed to network security (the traffic between them) or application security (the software running on them)."
+    },
+    {
+      q:"A company's public web server sits on a segment reachable from the internet but isolated from the internal LAN. This segment is a:",
+      choices:["Trusted zone","Untrusted zone","DMZ","VPN tunnel"],
+      correct:2,
+      explain:"A DMZ is semi-trusted — exposed to the untrusted internet, but deliberately walled off from the fully trusted internal network."
+    },
+    {
+      q:"'Defense in depth' means:",
+      choices:[
+        "Buying the single most expensive firewall available",
+        "Layering multiple independent controls so no one failure exposes everything",
+        "Trusting all internal traffic by default",
+        "Relying entirely on endpoint antivirus"
+      ],
+      correct:1,
+      explain:"It's about layered, independent controls — perimeter, network, host, application, data — so a failure at one layer doesn't mean total compromise."
+    },
+    {
+      q:"Which recovery metric answers 'how much recent data can we afford to lose?'",
+      choices:["RTO","RPO","AUP","BCP"],
+      correct:1,
+      explain:"RPO (Recovery Point Objective) looks backward at acceptable data loss. RTO (Recovery Time Objective) looks forward at acceptable downtime."
+    },
+    {
+      q:"An attacker sends a small, spoofed DNS query so a large response floods the victim instead of the attacker. This is:",
+      choices:["ARP spoofing","DHCP starvation","Amplification/reflection attack","TCP session hijacking"],
+      correct:2,
+      explain:"Amplification/reflection abuses a legitimate third-party server (like DNS) to turn a small spoofed request into a large flood aimed at the real victim."
+    },
+    {
+      q:"A SYN flood attack works by:",
+      choices:[
+        "Completing handshakes as fast as possible to overload CPU",
+        "Sending SYNs and never completing the handshake, filling the connection table with half-open sessions",
+        "Poisoning the ARP cache of every host on the segment",
+        "Forging DNS responses to redirect traffic"
+      ],
+      correct:1,
+      explain:"The attacker never sends the final ACK, so every half-open connection sits in the table consuming resources until nothing is left for real users."
+    },
+    {
+      q:"Which attack lets someone on the local network intercept traffic by sending fake ARP replies?",
+      choices:["DNS tunneling","ARP spoofing","DHCP starvation","UDP flood"],
+      correct:1,
+      explain:"ARP spoofing (poisoning) exploits the fact that ARP trusts the most recent reply it received, with no built-in verification."
+    },
+    {
+      q:"A rogue DHCP server answers client requests before the real one can, handing out itself as the default gateway. This is:",
+      choices:["DHCP starvation","DHCP spoofing","DNS cache poisoning","ICMP redirect"],
+      correct:1,
+      explain:"DHCP spoofing (rogue DHCP) relies on speed — whichever DHCP server answers first wins, with no authentication of the server's identity."
+    },
+    {
+      q:"Which document defines what employees are and are not allowed to do with company systems?",
+      choices:["AUP","DRP","RPO","DMZ"],
+      correct:0,
+      explain:"The Acceptable Use Policy (AUP) sets the rules for how company systems and networks may be used."
+    },
+    {
+      q:"During a ransomware outage, a hospital switches to paper charts to keep treating patients while IT works separately to restore the EHR from backups. The switch to paper charts is an example of:",
+      choices:["Disaster Recovery Plan (DRP) execution","Business Continuity Plan (BCP) execution","An RPO violation","DNS tunneling"],
+      correct:1,
+      explain:"Keeping critical operations running during a disruption — even without restoring any technology — is the BCP's job. Restoring the EHR itself is the DRP."
+    },
+  ];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
