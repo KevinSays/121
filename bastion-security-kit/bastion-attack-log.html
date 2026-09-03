@@ -177,11 +177,23 @@
   }
   .fineprint{opacity:0.6;font-size:0.75rem;margin-top:6px;}
 
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--paper); border:1.5px solid var(--blue);
+    box-shadow:0 0 0 1px rgba(45,226,230,.15), 0 0 20px rgba(45,226,230,.14);
+    font-family:'Orbitron', sans-serif; font-size:1.4rem; color:var(--blue); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:rgba(45,226,230,.1); }
+  .back-to-top:focus-visible{ outline:2px solid var(--blue); outline-offset:2px; }
+
   @media print{
     body{background:#fff;}
     .poster{box-shadow:none;transform:none !important;break-inside:avoid;page-break-inside:avoid;}
     .eyebrow{background:#fff;}
     a.back-link{display:none;}
+    .back-to-top{display:none;}
   }
 </style>
 </head>
@@ -314,5 +326,15 @@
   </footer>
 
 </div>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
 </body>
 </html>
