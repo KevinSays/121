@@ -204,7 +204,7 @@
     <table class="model-table">
       <thead><tr><th>Type</th><th>Who</th><th>Why it matters</th></tr></thead>
       <tbody>
-        <tr><td style="font-weight:700;">Internal threat</td><td>An employee, contractor, or anyone already inside the network's trust boundary</td><td>Can be intentional or purely accidental — and often causes more damage than an external attacker because they already have direct access</td></tr>
+        <tr><td style="font-weight:700;">Internal threat</td><td>An employee, contractor, or anyone already inside the network's trust boundary</td><td>Can be intentional or purely accidental — and often causes more damage than an external attacker because they already have direct physical access to the building and its infrastructure, not just network access</td></tr>
         <tr><td style="font-weight:700;">External threat</td><td>An attacker with no authorized access at all</td><td>Has to find a way in first — through a vulnerability, a phish, or an exposed service — before doing anything else</td></tr>
       </tbody>
     </table>
@@ -235,7 +235,7 @@
     </div>
 
     <div class="callout">
-      <b>Hacker vs. threat actor:</b> "hacker" is historically a neutral term for someone skilled at exploring and manipulating systems — it says nothing about intent. "Threat actor" specifically means someone using that skill to cause harm. Every threat actor could be called a hacker; not every hacker is a threat actor.
+      <b>Hacker vs. threat actor:</b> "hacker" is historically a neutral term for someone skilled at exploring and manipulating systems — it says nothing about intent. "Threat actor" specifically means someone using that skill to cause harm. Every threat actor could be called a hacker; not every hacker is a threat actor. A <b>vulnerability broker</b> is a specific gray-hat role worth naming: someone who finds exploitable weaknesses and reports or sells them to the affected vendor — sometimes for a reward — rather than exploiting them.
     </div>
 
     <h3>How hacking has evolved</h3>
@@ -517,7 +517,7 @@
     {t:"Header Checksum", d:"An IPv4 header field that error-checks the header itself, recalculated at every router hop. Dropped entirely in IPv6."},
     {t:"ICMP redirect", d:"A forged ICMP message that tricks a host into routing its traffic through an attacker-controlled path."},
     {t:"ICMP reconnaissance", d:"Using ping sweeps and similar ICMP traffic to map which hosts are alive before an attack."},
-    {t:"Internal threat", d:"A threat from someone already inside the network's trust boundary — an employee or contractor — intentional or accidental, often more damaging than an external threat because of direct access."},
+    {t:"Internal threat", d:"A threat from someone already inside the network's trust boundary — an employee or contractor — intentional or accidental, often more damaging than an external threat because of direct physical access to the building and its infrastructure, not just network access."},
     {t:"IP spoofing", d:"Forging the source IP address on a packet so the traffic, or the blame for it, appears to come from somewhere else."},
     {t:"IPv4 header", d:"The variable-length header (20+ bytes) carried by every IPv4 packet, including fields like TTL, Protocol, and an optional Options field."},
     {t:"IPv6 header", d:"The simplified, fixed 40-byte header carried by every IPv6 packet — no header checksum, no in-network fragmentation, optional features moved to extension headers."},
@@ -527,6 +527,7 @@
     {t:"TCP session hijacking", d:"Predicting or stealing TCP sequence numbers to take over a session that someone else already authenticated into."},
     {t:"TTL (Time to Live)", d:"An IPv4 header field decremented by every router a packet crosses, discarded at zero — prevents infinite routing loops and is what makes traceroute work."},
     {t:"UDP flood", d:"A DoS attack that overwhelms a target with connectionless UDP traffic, which is cheap to send and costly to process."},
+    {t:"Vulnerability broker", d:"A gray-hat role: someone who finds an exploitable weakness and reports or sells it to the affected vendor — sometimes for a reward — rather than exploiting it directly."},
   ];
 
   const QUIZ = [
