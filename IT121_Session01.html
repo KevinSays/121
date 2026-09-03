@@ -1,0 +1,709 @@
+<title>IT121 Session 1 – Threats, Vulnerabilities & Attacks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#D9D2C3; --surface:#EDE8DD; --surface-2:#F3E7E2;
+    --text:#1F2421; --muted:#4F4A42; --border:#1F2421;
+    --accent:#2F4858; --accent-soft:rgba(47,72,88,.08);
+    --accent-2:#664526; --accent-2-soft:rgba(176,133,84,.14);
+    --danger:#A23A2E; --danger-soft:rgba(162,58,46,.08);
+    --correct:#2F4858; --correct-soft:rgba(47,72,88,.08);
+    --shadow: 5px 5px 0 rgba(31,36,33,.16);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Special Elite', 'Courier New', monospace;
+    --sans:'IBM Plex Sans', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:125%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(31,36,33,.06) 1px, transparent 1px); background-size:16px 16px; }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:700; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:700; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(31,36,33,.3); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 1</p>
+    <h1>Threats, Vulnerabilities &amp; Attacks</h1>
+    <p class="lede">Every case that lands on a SOC analyst's desk breaks down into the same handful of concepts: what security is actually protecting, who's attacking it, and the two big categories of attack — malicious code and manipulated people. Get this vocabulary locked in now; every later session assumes it.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Course Intro · Module 1</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#cia">CIA Triad</a>
+    <a href="#tver">Threat &times; Risk</a>
+    <a href="#actors">Threat Actors</a>
+    <a href="#malware">Malware</a>
+    <a href="#social">Social Engineering</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 1 covers</h2>
+      <p>Before we can talk about firewalls or forensics, we need a shared vocabulary. This session sets the frame: what security is actually protecting, who's attacking it, and the two big categories of attack — malicious code and manipulated people.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Explain the CIA triad and give a real example of each leg breaking</li>
+      <li>Distinguish threat, vulnerability, exploit, and risk — and how they chain together</li>
+      <li>Categorize threat actors by motivation and sophistication</li>
+      <li>Identify malware types by how they behave, not just their name</li>
+      <li>Recognize social engineering techniques and the psychology they exploit</li>
+    </ul>
+  </section>
+
+  <!-- ── CIA TRIAD ── -->
+  <section id="cia">
+    <div class="section-head">
+      <p class="kicker">Concept 1</p>
+      <h2>The CIA Triad</h2>
+      <p>Security isn't one goal — it's a three-way balance. Every attack can usually be described as breaking one of these three legs.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 480 428" role="img" aria-label="The CIA triad shown as a triangle: Confidentiality, Integrity, and Availability, each with an example of how it breaks.">
+        <polygon points="240,52 70,344 410,344" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/>
+        <circle cx="240" cy="52" r="7" fill="var(--accent)"/>
+        <circle cx="70" cy="344" r="7" fill="var(--accent-2)"/>
+        <circle cx="410" cy="344" r="7" fill="var(--correct)"/>
+        <text x="240" y="32" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="17" fill="currentColor">Confidentiality</text>
+        <text x="240" y="18" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">breaks: data breach, eavesdropping</text>
+        <text x="70" y="372" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="17" fill="currentColor">Integrity</text>
+        <text x="4" y="390" text-anchor="start" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">breaks: tampering, MITM edits</text>
+        <text x="410" y="372" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="17" fill="currentColor">Availability</text>
+        <text x="410" y="390" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">breaks: ransomware, DoS</text>
+      </svg>
+      <figcaption>The CIA triad — security is a balance between confidentiality, integrity, and availability, not a single goal.</figcaption>
+    </figure>
+
+    <table class="model-table">
+      <thead><tr><th>Leg</th><th>What it protects</th><th>How it breaks</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Confidentiality</td><td>Only authorized people/systems can view data</td><td>Data breach, eavesdropping, weak access control</td><td>A hospital leaks patient records — a HIPAA violation</td></tr>
+        <tr><td style="font-weight:700;">Integrity</td><td>Data is accurate and unaltered except by authorized action</td><td>Tampering, man-in-the-middle modification, corruption</td><td>A patient's allergy record is silently changed — wrong dosage risk</td></tr>
+        <tr><td style="font-weight:700;">Availability</td><td>Systems and data are accessible when needed</td><td>DoS/DDoS, ransomware, hardware failure</td><td>Ransomware locks the entire EHR during an emergency</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Hospital example, one data set:</b> patient records can be <em>stolen</em> (confidentiality), <em>altered</em> (integrity), or <em>locked away</em> (availability). Same data, three different kinds of harm — that's why the triad matters.
+    </div>
+  </section>
+
+  <!-- ── T-V-E-R ── -->
+  <section id="tver">
+    <div class="section-head">
+      <p class="kicker">Concept 2</p>
+      <h2>Threat · Vulnerability · Exploit · Risk</h2>
+      <p>Four words that look similar but mean very different things. Learn them in order — they chain together.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 480 420" role="img" aria-label="Flow diagram: a vulnerability enables an exploit, which is wielded by a threat actor, which produces risk.">
+        <defs>
+          <marker id="arrow121" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g font-family="IBM Plex Mono" font-size="14" font-weight="700">
+          <rect x="20" y="40" width="160" height="56" rx="6" fill="var(--surface)" stroke="currentColor"/>
+          <text x="100" y="62" text-anchor="middle" fill="currentColor">Vulnerability</text>
+          <text x="100" y="80" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">a weakness</text>
+
+          <rect x="20" y="150" width="160" height="56" rx="6" fill="var(--surface)" stroke="currentColor"/>
+          <text x="100" y="172" text-anchor="middle" fill="currentColor">Exploit</text>
+          <text x="100" y="190" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">the mechanism</text>
+
+          <rect x="20" y="260" width="160" height="56" rx="6" fill="var(--surface)" stroke="currentColor"/>
+          <text x="100" y="282" text-anchor="middle" fill="currentColor">Threat</text>
+          <text x="100" y="300" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">the danger</text>
+
+          <rect x="290" y="205" width="160" height="60" rx="6" fill="var(--danger-soft)" stroke="var(--danger)"/>
+          <text x="370" y="229" text-anchor="middle" fill="var(--danger)">Risk</text>
+          <text x="370" y="247" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--danger)">likelihood &times; impact</text>
+        </g>
+        <line x1="100" y1="96" x2="100" y2="150" stroke="currentColor" marker-end="url(#arrow121)"/>
+        <text x="112" y="127" font-family="IBM Plex Sans" font-size="11" fill="var(--muted)">enables</text>
+        <line x1="100" y1="206" x2="100" y2="260" stroke="currentColor" marker-end="url(#arrow121)"/>
+        <text x="112" y="238" font-family="IBM Plex Sans" font-size="11" fill="var(--muted)">used by</text>
+        <line x1="180" y1="288" x2="290" y2="245" stroke="var(--danger)" marker-end="url(#arrow121)"/>
+        <text x="200" y="258" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">produces</text>
+      </svg>
+      <figcaption>How a weakness becomes an incident — vulnerability &rarr; exploit &rarr; threat &rarr; risk.</figcaption>
+    </figure>
+
+    <table class="model-table">
+      <thead><tr><th>Term</th><th>Definition</th><th>House analogy</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Vulnerability</td><td>A weakness that could be exploited</td><td>An unlocked door</td></tr>
+        <tr><td style="font-weight:700;">Threat</td><td>Anything that could exploit a vulnerability</td><td>A burglar</td></tr>
+        <tr><td style="font-weight:700;">Exploit</td><td>The specific mechanism/code used to take advantage</td><td>Lock-picking</td></tr>
+        <tr><td style="font-weight:700;">Risk</td><td>Likelihood &times; impact of a threat successfully exploiting a vulnerability</td><td>The chance your house actually gets robbed</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>If there were no vulnerabilities, there'd be no risk to manage.</b> That's why so much of security is about shrinking the attack surface — patching software, enforcing strong passwords, training employees.
+    </div>
+  </section>
+
+  <!-- ── THREAT ACTORS ── -->
+  <section id="actors">
+    <div class="section-head">
+      <p class="kicker">Concept 3</p>
+      <h2>Threat Actors</h2>
+      <p>Who's actually behind the attacks? They differ by motivation and sophistication — and knowing which you're up against changes what you defend first.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Actor</th><th>Motivation</th><th>Sophistication</th><th>Typical behavior</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Script kiddie</td><td>Bragging rights, curiosity</td><td>Low — uses others' tools</td><td>Canned exploits, defacement</td></tr>
+        <tr><td style="font-weight:700;">Hacktivist</td><td>Political / social message</td><td>Low–medium</td><td>Website defacement, data leaks</td></tr>
+        <tr><td style="font-weight:700;">Organized crime</td><td>Money</td><td>High, well-resourced</td><td>Ransomware-as-a-service, card skimming</td></tr>
+        <tr><td style="font-weight:700;">Nation-state / APT</td><td>Espionage, sabotage</td><td>Very high, well-funded</td><td>Long-dwell-time, stealthy access</td></tr>
+        <tr><td style="font-weight:700;">Insider</td><td>Money, revenge, or carelessness</td><td>Varies</td><td>Data theft, sabotage, or accidents</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Insider threats are the hard ones.</b> The person already has legitimate access — so the attack isn't "getting in," it's a person with a valid account doing the wrong thing, whether malicious or just careless.
+    </div>
+
+    <div class="callout xref">
+      Full dossiers on all five — MO, tools, countermeasures — are filed on the <a href="bastion-security-kit/bastion-threat-board.html">Bastion Security Threat Board</a>.
+    </div>
+  </section>
+
+  <!-- ── MALWARE ── -->
+  <section id="malware">
+    <div class="section-head">
+      <p class="kicker">Concept 4</p>
+      <h2>Malware Types</h2>
+      <p>Learn to identify malware by <em>how it behaves</em>, not just its name. The key question is usually: does it need a user, or does it spread on its own?</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Type</th><th>How it works</th><th>Real-world example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Virus</td><td>Attaches to a host file; needs user action to spread</td><td>File infectors</td></tr>
+        <tr><td style="font-weight:700;">Worm</td><td>Self-replicating, spreads across networks alone</td><td>WannaCry</td></tr>
+        <tr><td style="font-weight:700;">Trojan horse</td><td>Disguised as legit software; doesn't self-replicate</td><td>Fake "free" downloads</td></tr>
+        <tr><td style="font-weight:700;">Ransomware</td><td>Encrypts files/systems; demands payment</td><td>Hospital EHR locks (availability!)</td></tr>
+        <tr><td style="font-weight:700;">Spyware / adware</td><td>Covertly monitors, or floods with ads</td><td>Browser hijackers</td></tr>
+        <tr><td style="font-weight:700;">Rootkit</td><td>Hides deep in the OS for privileged, undetected access</td><td>Bootkit infections</td></tr>
+        <tr><td style="font-weight:700;">Keylogger</td><td>Captures keystrokes to steal credentials</td><td>Credential theft</td></tr>
+        <tr><td style="font-weight:700;">Logic bomb</td><td>Triggers on a condition/date</td><td>Insider sabotage</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Virus vs. worm:</b> a virus needs you to open the infected file; a worm spreads across the network with no user action at all. That self-replication is what made WannaCry so devastating.
+    </div>
+  </section>
+
+  <!-- ── SOCIAL ENGINEERING ── -->
+  <section id="social">
+    <div class="section-head">
+      <p class="kicker">Concept 5</p>
+      <h2>Social Engineering</h2>
+      <p>Attacks that exploit human psychology rather than technical flaws. No firewall can block a well-crafted lie.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Technique</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Phishing</td><td>Mass impersonation email/message to steal credentials or install malware. <em>Spear-phishing</em> targets a specific person; <em>whaling</em> targets executives.</td></tr>
+        <tr><td style="font-weight:700;">Pretexting</td><td>Fabricating a scenario/identity to extract info</td></tr>
+        <tr><td style="font-weight:700;">Baiting</td><td>Leaving infected media (USB drop) or an enticing offer</td></tr>
+        <tr><td style="font-weight:700;">Tailgating / piggybacking</td><td>Following someone through a secured door</td></tr>
+        <tr><td style="font-weight:700;">Shoulder surfing</td><td>Visual theft of credentials/PINs</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The psychology levers social engineers use</h3>
+    <ul style="line-height:1.7;">
+      <li><strong>Urgency</strong> — "act within 2 hours or you're locked out"</li>
+      <li><strong>Authority</strong> — "I'm from IT / the IRS / your boss"</li>
+      <li><strong>Fear</strong> — a threat of consequence</li>
+      <li><strong>Curiosity</strong> — "open this attachment"</li>
+      <li><strong>Trust</strong> — impersonating someone the victim knows</li>
+    </ul>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Social engineering</span>
+      <h3>The "IT" email</h3>
+      <p>An employee gets an email that looks like it's from the IT helpdesk: "Your password expires in 2 hours — click here to reset it before you're locked out." The link goes to a page that looks like the company login.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Technique:</strong> Phishing (specifically a credential-harvesting phish) using <strong>pretexting</strong> — it invents a false, urgent scenario ("locked out in 2 hours").</p>
+          <p><strong>Psychological lever:</strong> urgency + authority (appears to come from IT).</p>
+          <p><strong>Vulnerability exploited:</strong> not a software bug — the human tendency to act fast under pressure without verifying the sender.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Malware</span>
+      <h3>Spot the malware type</h3>
+      <p>A hospital's imaging system suddenly displays a message: all patient scan files are encrypted, and a payment is demanded to restore access.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Type:</strong> Ransomware.</p>
+          <p><strong>CIA leg impacted:</strong> Availability — the data may be intact, but it's inaccessible.</p>
+          <p><strong>Why it's dangerous here specifically:</strong> hospitals often pay quickly because availability failures can cost lives, which is exactly why attackers target them.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Threat actors</span>
+      <h3>Who's behind it?</h3>
+      <p>A small local bakery's website gets defaced overnight with a political message, then restored by the host within hours. No data was stolen.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Likely actor:</strong> Hacktivist — motivated by a message, not money or espionage, and low-impact/high-visibility fits the profile.</p>
+          <p><strong>Contrast:</strong> if the same bakery's POS system was quietly skimming card numbers for months, that pattern points to organized crime instead.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Threat · risk</span>
+      <h3>Unlock the chain</h3>
+      <p>A company runs an old, unpatched web server (a known weakness). An attacker finds and downloads a ready-made tool for it and breaks in, forcing the firm offline for a day as it recovers.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Vulnerability:</strong> the unpatched server.</p>
+          <p><strong>Exploit:</strong> the ready-made tool.</p>
+          <p><strong>Threat:</strong> the attacker using that tool.</p>
+          <p><strong>Risk:</strong> the chance of this happening &times; the damage of a day offline.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">CIA triad</span>
+      <h3>Which leg broke?</h3>
+      <p>A user's browser is redirected to a fake banking page for 20 minutes, and a few login credentials are captured on a shared Wi-Fi. Nothing was changed and nothing is permanently unavailable.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Primary leg:</strong> Confidentiality — credentials were viewed by an unauthorized party.</p>
+          <p><strong>Why not the others:</strong> no data was altered (integrity) and the system kept working (availability).</p>
+          <p><strong>Bonus:</strong> this scenario (redirect to a fake page) is a classic man-in-the-middle/social-engineering combo.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 1 reference — more sessions added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+    {t:"APT (Advanced Persistent Threat)", d:"A highly skilled, well-funded attacker (often nation-state) that maintains long-term, stealthy access rather than a quick smash-and-grab."},
+    {t:"Attack surface", d:"Every point where an attacker could try to get in — open ports, exposed forms, employees, physical access. The more you have, the more you have to defend."},
+    {t:"Attack vector", d:"The specific path or method an attacker uses to gain access — a phishing email, a USB drive, an unpatched service."},
+    {t:"Availability", d:"The 'A' in the CIA triad — systems and data accessible when authorized users need them. Broken by DoS, ransomware, hardware failure."},
+    {t:"Baiting", d:"A social engineering technique that lures a victim with something enticing — a free download, a USB drive labeled 'Payroll 2026' left in a parking lot."},
+    {t:"CIA triad", d:"The three goals of security: Confidentiality, Integrity, Availability. Most attacks can be described as breaking one of these three."},
+    {t:"Confidentiality", d:"The 'C' in the CIA triad — only authorized people/systems can view the data. Broken by data breaches, eavesdropping, weak access control."},
+    {t:"Exploit", d:"The specific mechanism or code that takes advantage of a vulnerability to actually carry out an attack."},
+    {t:"Hacktivist", d:"A threat actor motivated by a political or social message — typically website defacement or leaked data rather than financial theft."},
+    {t:"Insider threat", d:"A threat from someone with legitimate access — an employee or contractor — whether malicious or simply careless."},
+    {t:"Integrity", d:"The 'I' in the CIA triad — data is accurate and unaltered except by authorized action. Broken by tampering or man-in-the-middle edits."},
+    {t:"Keylogger", d:"Malware that silently records keystrokes, typically to steal usernames, passwords, and other typed credentials."},
+    {t:"Logic bomb", d:"Malicious code that lies dormant until triggered by a specific condition or date — often planted by an insider."},
+    {t:"Malware", d:"Any software designed to damage, disrupt, or gain unauthorized access to a system."},
+    {t:"Nation-state / APT", d:"A threat actor backed by a government, highly sophisticated and well-funded, focused on espionage or sabotage with long dwell time."},
+    {t:"Organized crime", d:"Financially motivated threat actors — ransomware-as-a-service, card skimming — often well-resourced and professionalized."},
+    {t:"Phishing", d:"An email/message impersonating a trusted source to steal credentials or install malware. Spear-phishing targets a specific person; whaling targets executives."},
+    {t:"Pretexting", d:"Inventing a false scenario or identity to manipulate a victim into giving up information or access."},
+    {t:"Ransomware", d:"Malware that encrypts a victim's files or systems and demands payment for the decryption key — a direct attack on availability."},
+    {t:"Risk", d:"The likelihood that a threat will successfully exploit a vulnerability, combined with the impact if it does."},
+    {t:"Rootkit", d:"Malware designed to hide deep in the operating system, maintaining privileged, hard-to-detect access."},
+    {t:"Script kiddie", d:"A low-skill threat actor who uses existing tools and canned exploits, often for bragging rights rather than a specific goal."},
+    {t:"Shoulder surfing", d:"Visually stealing information — a password or PIN — by looking over someone's shoulder."},
+    {t:"Social engineering", d:"Manipulating people, rather than technology, into breaking normal security procedure."},
+    {t:"Spyware / Adware", d:"Software that covertly monitors user activity (spyware) or floods the system with unwanted advertising (adware)."},
+    {t:"Tailgating / Piggybacking", d:"Following an authorized person through a secured door without using your own credentials."},
+    {t:"Threat", d:"Anything that could exploit a vulnerability — an attacker, a piece of malware, even a natural disaster."},
+    {t:"Threat actor", d:"The entity behind an attack, categorized by motivation and skill: script kiddie, hacktivist, organized crime, nation-state/APT, insider."},
+    {t:"Trojan horse", d:"Malware disguised as legitimate software. Unlike a virus or worm, it doesn't self-replicate — it relies on the user installing it."},
+    {t:"Virus", d:"Malware that attaches to a host file and requires user action (like opening the file) to spread."},
+    {t:"Vulnerability", d:"A weakness that could be exploited — unpatched software, a weak password policy, an untrained employee."},
+    {t:"Worm", d:"Self-replicating malware that spreads across a network on its own, without needing a user to do anything (e.g., WannaCry)."},
+  ];
+
+  const QUIZ = [
+    {
+      q:"A hospital's patient database is altered so a patient's allergy record is silently changed. Which CIA leg was violated?",
+      choices:["Confidentiality","Integrity","Availability","All three equally"],
+      correct:1,
+      explain:"The data wasn't stolen or made inaccessible — it was changed without authorization. That's an integrity violation."
+    },
+    {
+      q:"An attacker leaves a USB drive labeled 'Executive Bonuses' in a company parking lot, hoping an employee plugs it in. This is:",
+      choices:["Phishing","Pretexting","Baiting","Tailgating"],
+      correct:2,
+      explain:"Baiting lures the victim with something enticing — here, curiosity about bonus info — to get them to compromise their own system."
+    },
+    {
+      q:"Which threat actor is best described as highly skilled, well-resourced, and focused on long-term, stealthy access?",
+      choices:["Script kiddie","Hacktivist","APT / nation-state","Insider threat"],
+      correct:2,
+      explain:"APTs (Advanced Persistent Threats) are typically nation-state or nation-state-adjacent, with the funding and patience for long campaigns."
+    },
+    {
+      q:"Malware that self-replicates across a network without any user action is a:",
+      choices:["Virus","Worm","Trojan horse","Rootkit"],
+      correct:1,
+      explain:"Self-replication with no user action is the defining trait of a worm — a virus needs a host file to be opened."
+    },
+    {
+      q:"Put these in the order they actually chain together: Exploit, Vulnerability, Risk.",
+      choices:[
+        "Vulnerability → Exploit → Risk",
+        "Exploit → Vulnerability → Risk",
+        "Risk → Vulnerability → Exploit",
+        "Vulnerability → Risk → Exploit"
+      ],
+      correct:0,
+      explain:"A vulnerability exists first; an exploit is built to take advantage of it; risk is the resulting likelihood/impact if that exploit succeeds."
+    },
+    {
+      q:"A finance employee is quietly selling customer data to a competitor. This is best classified as:",
+      choices:["Hacktivism","An insider threat","A zero-day attack","Tailgating"],
+      correct:1,
+      explain:"An insider threat comes from someone with legitimate access — this is a malicious (not accidental) example of one."
+    },
+    {
+      q:"Which of these is NOT one of the three legs of the CIA triad?",
+      choices:["Confidentiality","Integrity","Authentication","Availability"],
+      correct:2,
+      explain:"Authentication supports security but isn't one of the three CIA triad goals — it's a mechanism, not a goal in itself."
+    },
+    {
+      q:"An employee's browser is redirected to a fake banking page for 20 minutes and a few credentials are captured. No data was changed. Which CIA leg was primarily violated?",
+      choices:["Confidentiality","Integrity","Availability","None of them"],
+      correct:0,
+      explain:"Credentials were viewed by an unauthorized party. Nothing was altered (integrity) and nothing became inaccessible (availability)."
+    },
+    {
+      q:"Which social engineering technique involves fabricating an identity or scenario to extract information?",
+      choices:["Phishing","Pretexting","Baiting","Shoulder surfing"],
+      correct:1,
+      explain:"Pretexting is inventing a story or role — like 'I'm from IT and need your password' — to get the victim to hand over information."
+    },
+    {
+      q:"A webcam-laden 'free video player' a user installed turns out to be malware that hides deep in the OS to keep undetected access. Best classification:",
+      choices:["Worm","Keylogger","Rootkit","Logic bomb"],
+      correct:2,
+      explain:"A rootkit hides deep in the OS to maintain privileged, hard-to-detect access. It was delivered via a trojan-like disguise."
+    },
+  ];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
