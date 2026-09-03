@@ -1,0 +1,272 @@
+<title>IT121 Lab – Phishing Triage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
+    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
+    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
+    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
+    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
+    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
+    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Orbitron', sans-serif;
+    --sans:'Rajdhani', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:125%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  a.back-link{ display:inline-block; margin-bottom:14px; font-family:var(--mono); font-size:.85rem; font-weight:600; color:var(--accent); text-decoration:none; border-bottom:1.5px solid var(--accent); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,4.4vw,3.1rem); line-height:1.05; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .hero p.lede{ max-width:64ch; font-size:1.08rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.1rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+  .fillin{ width:100%; min-width:120px; font-family:var(--mono); font-size:.85rem; padding:.45em .6em; background:var(--surface-2); border:1px solid var(--border); color:var(--text); }
+  .fillin:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  .fillin::placeholder{ color:var(--muted); opacity:.6; }
+
+  .email-mock{ background:var(--surface); border:1px solid var(--border); box-shadow:var(--shadow); margin:24px 0; }
+  .email-mock .em-head{ border-bottom:1px dashed rgba(45,226,230,.25); padding:14px 18px; font-family:var(--mono); font-size:.82rem; }
+  .email-mock .em-head div{ margin-bottom:4px; }
+  .email-mock .em-head .em-label{ color:var(--accent-2); font-weight:600; margin-right:.6em; }
+  .email-mock .em-body{ padding:18px; font-size:.95rem; }
+  .email-mock .em-btn{ display:inline-block; margin-top:10px; padding:.6em 1.2em; background:var(--accent-soft); border:1px solid var(--accent); color:var(--accent); font-family:var(--mono); font-weight:600; font-size:.85rem; }
+  .email-mock .em-tag{ display:inline-block; font-family:var(--mono); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; padding:2px 8px; margin-bottom:10px; border:1px solid var(--border); color:var(--muted); }
+
+  .reflect{ background:var(--surface); border:1px solid var(--border); padding:18px 20px; margin-bottom:14px; box-shadow:var(--shadow); }
+  .reflect .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent-2); margin-right:.5em; }
+  .reflect textarea{ width:100%; margin-top:10px; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:.7em .9em; resize:vertical; min-height:64px; }
+  .reflect textarea:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .obj-list{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+
+  @media print{
+    body{ background:#fff; color:#111; background-image:none; }
+    nav.index, .back-to-top, a.back-link{ display:none; }
+    .callout, .obj-list li, .model-table, .email-mock, .reflect, .fact{ box-shadow:none; }
+    section{ break-inside:avoid; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html">↩ Contents</a>
+    <p class="eyebrow">IT121 · Hands-On Lab</p>
+    <h1>Phishing Triage</h1>
+    <p class="lede">Four messages, flagged by an automated filter and dropped on your desk at Bastion Security's client, Halcyon Logistics. All four are fictional, written for this exercise — but the patterns are real. Your job: decide which ones are actually phishing, and defend the call.</p>
+    <div class="factrow">
+      <span class="fact"><b>Companion to</b> Session 1</span>
+      <span class="fact"><b>Time</b> ~30 min</span>
+      <span class="fact"><b>Difficulty</b> Beginner</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="../index.html" class="toc-link">↩ Contents</a>
+    <a href="#objectives">Objectives</a>
+    <a href="#messages">The Messages</a>
+    <a href="#worksheet">Worksheet</a>
+    <a href="#reflect">Reflection</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OBJECTIVES ── -->
+  <section id="objectives">
+    <div class="section-head">
+      <p class="kicker">Objectives</p>
+      <h2>What you'll do</h2>
+    </div>
+    <ul class="obj-list">
+      <li>Identify sender-domain inconsistencies and other technical tells</li>
+      <li>Name the psychological lever each message relies on, using Session 1's list</li>
+      <li>Practice not flagging a legitimate message just because it landed in the batch</li>
+    </ul>
+    <div class="callout">
+      <b>Not everything here is phishing.</b> Real inboxes are mostly legitimate mail — over-flagging everything is its own failure mode. Read each message the way you'd actually read your own inbox, not the way you'd read a quiz that told you "these are all phishing."
+    </div>
+  </section>
+
+  <!-- ── MESSAGES ── -->
+  <section id="messages">
+    <div class="section-head">
+      <p class="kicker">The Inbox</p>
+      <h2>Four messages</h2>
+      <p>Read each one before looking at the worksheet below. Domains and buttons are illustrative only — nothing here is a real, clickable link.</p>
+    </div>
+
+    <div class="email-mock">
+      <span class="em-tag" style="margin:14px 0 0 18px;">Message 1</span>
+      <div class="em-head">
+        <div><span class="em-label">From</span>IT Helpdesk &lt;it-support@halcyon-it-alerts.net&gt;</div>
+        <div><span class="em-label">To</span>employee@halcyonlogistics.com</div>
+        <div><span class="em-label">Subject</span>URGENT: Your password expires in 2 hours</div>
+      </div>
+      <div class="em-body">
+        <p>Your Halcyon Logistics network password will expire today at 5:00 PM. To avoid being locked out of your account, verify your credentials immediately using the link below. This must be completed within 2 hours or your account will be suspended.</p>
+        <span class="em-btn">Verify My Account →</span>
+        <p style="margin-top:14px;">Sincerely,<br>IT Support Team</p>
+      </div>
+    </div>
+
+    <div class="email-mock">
+      <span class="em-tag" style="margin:14px 0 0 18px;">Message 2</span>
+      <div class="em-head">
+        <div><span class="em-label">From</span>Marcus Reyes &lt;m.reyes@halcyonlogisitcs.com&gt;</div>
+        <div><span class="em-label">To</span>accounting@halcyonlogistics.com</div>
+        <div><span class="em-label">Subject</span>Confidential — need this handled today</div>
+      </div>
+      <div class="em-body">
+        <p>I'm in meetings all day and can't take calls. Need you to process an urgent wire transfer to a new vendor before 3pm — I'll send the account details shortly. Please keep this between us for now, I don't want to alarm the board before the deal is final. Let me know you got this.</p>
+        <p style="margin-top:14px;">— Marcus</p>
+      </div>
+    </div>
+
+    <div class="email-mock">
+      <span class="em-tag" style="margin:14px 0 0 18px;">Message 3</span>
+      <div class="em-head">
+        <div><span class="em-label">From</span>Delivery Notifications &lt;no-reply@swiftparcel-tracking.com&gt;</div>
+        <div><span class="em-label">To</span>employee@halcyonlogistics.com</div>
+        <div><span class="em-label">Subject</span>Your package could not be delivered</div>
+      </div>
+      <div class="em-body">
+        <p>We attempted to deliver your package today but no one was available to receive it. Click below to reschedule delivery, or your package will be returned to sender within 24 hours.</p>
+        <span class="em-btn">Reschedule Delivery →</span>
+      </div>
+    </div>
+
+    <div class="email-mock">
+      <span class="em-tag" style="margin:14px 0 0 18px;">Message 4</span>
+      <div class="em-head">
+        <div><span class="em-label">From</span>HR Team &lt;hr@halcyonlogistics.com&gt;</div>
+        <div><span class="em-label">To</span>all-staff@halcyonlogistics.com</div>
+        <div><span class="em-label">Subject</span>Reminder: open enrollment ends Friday</div>
+      </div>
+      <div class="em-body">
+        <p>Just a reminder that open enrollment for benefits closes this Friday at 5pm. Log into the employee portal — the same one you use every payday — to make any changes. Questions? Reply to this email or stop by HR.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WORKSHEET ── -->
+  <section id="worksheet">
+    <div class="section-head">
+      <p class="kicker">Worksheet</p>
+      <h2>Triage each message</h2>
+      <p>Use Session 1's Social Engineering table and psychology-levers list. "Sender domain" means: does it actually match who it claims to be from?</p>
+    </div>
+    <table class="model-table">
+      <thead><tr><th>Message</th><th>Sender domain OK?</th><th>Psychology lever(s)</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1 — "IT Helpdesk"</td><td><input class="fillin" type="text" placeholder="Yes / No / why"></td><td><input class="fillin" type="text" placeholder="e.g. urgency"></td><td><input class="fillin" type="text" placeholder="Phishing / Legitimate"></td></tr>
+        <tr><td style="font-weight:700;">2 — "Marcus Reyes"</td><td><input class="fillin" type="text" placeholder="Yes / No / why"></td><td><input class="fillin" type="text" placeholder="e.g. authority"></td><td><input class="fillin" type="text" placeholder="Phishing / Legitimate"></td></tr>
+        <tr><td style="font-weight:700;">3 — "Delivery Notifications"</td><td><input class="fillin" type="text" placeholder="Yes / No / why"></td><td><input class="fillin" type="text" placeholder="e.g. curiosity"></td><td><input class="fillin" type="text" placeholder="Phishing / Legitimate"></td></tr>
+        <tr><td style="font-weight:700;">4 — "HR Team"</td><td><input class="fillin" type="text" placeholder="Yes / No / why"></td><td><input class="fillin" type="text" placeholder="none? explain"></td><td><input class="fillin" type="text" placeholder="Phishing / Legitimate"></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>Look closely at Message 2's sender domain, letter by letter.</b> A convincing Business Email Compromise doesn't need a sloppy fake — often just one transposed letter in a domain most people won't check closely under time pressure.
+    </div>
+  </section>
+
+  <!-- ── REFLECTION ── -->
+  <section id="reflect">
+    <div class="section-head">
+      <p class="kicker">Reflection</p>
+      <h2>Write it up</h2>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">1.</span>Which message was hardest to judge, and why? What single piece of information — if you'd had it — would have made the call obvious?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">2.</span>Message 2 never asks for a password or a click — no link, no attachment, no credential harvesting. Why is it still dangerous, and why might it be more dangerous than Message 1?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">3.</span>If Message 4 had been the one flagged as suspicious by an automated filter (false positive), what's the cost of a real employee getting used to ignoring flagged messages?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Hands-on lab — companion to Session 1. All messages are fictional, written for classroom use.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>

@@ -1,0 +1,270 @@
+<title>IT121 Lab – Session 1 Synthesis Review</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
+    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
+    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
+    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
+    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
+    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
+    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Orbitron', sans-serif;
+    --sans:'Rajdhani', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:125%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  a.back-link{ display:inline-block; margin-bottom:14px; font-family:var(--mono); font-size:.85rem; font-weight:600; color:var(--accent); text-decoration:none; border-bottom:1.5px solid var(--accent); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,4.4vw,3.1rem); line-height:1.05; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .hero p.lede{ max-width:64ch; font-size:1.08rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.1rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+
+  .fillin{ width:100%; min-width:120px; font-family:var(--mono); font-size:.85rem; padding:.45em .6em; background:var(--surface-2); border:1px solid var(--border); color:var(--text); }
+  .fillin:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  .fillin::placeholder{ color:var(--muted); opacity:.6; }
+
+  .scenario{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:20px; box-shadow:var(--shadow); }
+  .scenario .snum{ display:inline-block; font-family:var(--mono); font-weight:700; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  .scenario p.stext{ font-size:.98rem; margin:0 0 16px; }
+  .scenario-fields{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+  .scenario-fields label{ display:block; font-family:var(--mono); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+
+  .reflect{ background:var(--surface); border:1px solid var(--border); padding:18px 20px; margin-bottom:14px; box-shadow:var(--shadow); }
+  .reflect .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent-2); margin-right:.5em; }
+  .reflect textarea{ width:100%; margin-top:10px; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:.7em .9em; resize:vertical; min-height:64px; }
+  .reflect textarea:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .obj-list{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+
+  @media print{
+    body{ background:#fff; color:#111; background-image:none; }
+    nav.index, .back-to-top, a.back-link{ display:none; }
+    .callout, .obj-list li, .scenario, .reflect, .fact{ box-shadow:none; }
+    section{ break-inside:avoid; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html">↩ Contents</a>
+    <p class="eyebrow">IT121 · Hands-On Lab</p>
+    <h1>Session 1 Synthesis Review</h1>
+    <p class="lede">Eight short scenarios. Each one gets run through every framework from Session 1 at once — CIA triad, threat/vulnerability/exploit/risk, threat actor, and malware or social-engineering technique where they apply. Some scenarios won't have an answer for every field, on purpose — figuring out when information genuinely isn't there is part of the skill.</p>
+    <div class="factrow">
+      <span class="fact"><b>Companion to</b> Session 1</span>
+      <span class="fact"><b>Time</b> ~35–45 min</span>
+      <span class="fact"><b>Difficulty</b> Review / capstone</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="../index.html" class="toc-link">↩ Contents</a>
+    <a href="#objectives">Objectives</a>
+    <a href="#scenarios">Scenarios</a>
+    <a href="#reflect">Reflection</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OBJECTIVES ── -->
+  <section id="objectives">
+    <div class="section-head">
+      <p class="kicker">Objectives</p>
+      <h2>What you'll do</h2>
+    </div>
+    <ul class="obj-list">
+      <li>Apply the CIA triad, threat/vulnerability/exploit/risk chain, threat actor categories, and malware/social-engineering types to short scenarios</li>
+      <li>Practice classifying an incident using more than one framework at once, the way a real case rarely fits neatly into a single table</li>
+      <li>Recognize when a scenario doesn't give you enough information to answer a field with confidence</li>
+    </ul>
+    <div class="callout">
+      <b>How to use this:</b> for each scenario, fill in every field you can support with something in the text. If a field genuinely isn't answerable — no motive given, no mechanism described — write "not enough information" rather than guessing. That's a legitimate, correct answer here.
+    </div>
+  </section>
+
+  <!-- ── SCENARIOS ── -->
+  <section id="scenarios">
+    <div class="section-head">
+      <p class="kicker">Case Load</p>
+      <h2>Eight scenarios</h2>
+    </div>
+
+    <div class="scenario">
+      <span class="snum">Scenario 1</span>
+      <p class="stext">A hospital's imaging system suddenly displays a ransom note. All patient scan files are encrypted and inaccessible until payment is made.</p>
+      <div class="scenario-fields">
+        <div><label>CIA leg</label><input class="fillin" type="text"></div>
+        <div><label>Malware type</label><input class="fillin" type="text"></div>
+        <div><label>Likely threat actor</label><input class="fillin" type="text"></div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <span class="snum">Scenario 2</span>
+      <p class="stext">An employee, two days from being terminated, uses their still-active account to permanently delete the project files their team has spent the year building.</p>
+      <div class="scenario-fields">
+        <div><label>CIA leg</label><input class="fillin" type="text"></div>
+        <div><label>Threat actor category</label><input class="fillin" type="text"></div>
+        <div><label>Vulnerability exploited</label><input class="fillin" type="text"></div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <span class="snum">Scenario 3</span>
+      <p class="stext">A company runs a web server with a publicly known, unpatched vulnerability. Within hours of the vulnerability's public disclosure, someone downloads a ready-made exploit tool and uses it to break in.</p>
+      <div class="scenario-fields">
+        <div><label>Vulnerability</label><input class="fillin" type="text"></div>
+        <div><label>Exploit</label><input class="fillin" type="text"></div>
+        <div><label>Likely threat actor</label><input class="fillin" type="text"></div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <span class="snum">Scenario 4</span>
+      <p class="stext">A political advocacy group defaces a city government website with a protest message. The site is restored within hours. No data was accessed or stolen.</p>
+      <div class="scenario-fields">
+        <div><label>CIA leg (if any)</label><input class="fillin" type="text"></div>
+        <div><label>Threat actor category</label><input class="fillin" type="text"></div>
+        <div><label>Confidence &amp; why</label><input class="fillin" type="text"></div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <span class="snum">Scenario 5</span>
+      <p class="stext">An employee gets a phone call from someone claiming to be from IT, saying there's an urgent security issue that requires the employee's password to fix immediately.</p>
+      <div class="scenario-fields">
+        <div><label>Social engineering technique</label><input class="fillin" type="text"></div>
+        <div><label>Psychology lever(s)</label><input class="fillin" type="text"></div>
+        <div><label>Vulnerability exploited</label><input class="fillin" type="text"></div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <span class="snum">Scenario 6</span>
+      <p class="stext">A free "photo editor" app, downloaded from an untrusted site, turns out to secretly record everything the user types, including their banking password.</p>
+      <div class="scenario-fields">
+        <div><label>Delivery mechanism (malware type)</label><input class="fillin" type="text"></div>
+        <div><label>Payload (malware type)</label><input class="fillin" type="text"></div>
+        <div><label>CIA leg</label><input class="fillin" type="text"></div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <span class="snum">Scenario 7</span>
+      <p class="stext">A defense contractor discovers that a foreign intelligence service has had quiet, undetected access to their network for over a year, slowly gathering internal documents.</p>
+      <div class="scenario-fields">
+        <div><label>Threat actor category</label><input class="fillin" type="text"></div>
+        <div><label>CIA leg</label><input class="fillin" type="text"></div>
+        <div><label>What tipped you off?</label><input class="fillin" type="text"></div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <span class="snum">Scenario 8</span>
+      <p class="stext">A company's e-commerce site goes offline for six hours after being flooded with traffic from thousands of compromised devices simultaneously.</p>
+      <div class="scenario-fields">
+        <div><label>CIA leg</label><input class="fillin" type="text"></div>
+        <div><label>Attack type</label><input class="fillin" type="text"></div>
+        <div><label>Threat actor category</label><input class="fillin" type="text"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REFLECTION ── -->
+  <section id="reflect">
+    <div class="section-head">
+      <p class="kicker">Reflection</p>
+      <h2>Write it up</h2>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">1.</span>Which scenario(s) did you mark "not enough information" for the threat actor field? What specific piece of missing information would have let you answer confidently?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">2.</span>Scenario 6 has both a delivery mechanism and a separate payload — two different malware types working together. Explain the difference in your own words, using this scenario as the example.</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">3.</span>Scenarios 2 and 7 both involve someone with legitimate or long-standing access. What's actually different about how you'd respond to each one?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Hands-on lab — companion to Session 1. All scenarios are fictional, written for classroom use.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
