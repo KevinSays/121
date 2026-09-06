@@ -1,0 +1,710 @@
+<title>IT121 Session 4 – Network Security Infrastructure &amp; The Windows Operating System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
+    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
+    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
+    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
+    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
+    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
+    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Orbitron', sans-serif;
+    --sans:'Rajdhani', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:125%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 4</p>
+    <h1>Network Security Infrastructure &amp; The Windows Operating System</h1>
+    <p class="lede">Sessions 2 and 3 covered how the network gets attacked. This session flips to defense: the devices and services that stand between an attacker and the network, then a shift to the endpoint itself — how Windows is built, how it's administered, and how it's kept secure, since most of what a Tier-1 analyst investigates day to day is happening on a Windows host.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 6 (6.1–6.2) &middot; Module 7 (7.1–7.4)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#secdevices">Security Devices</a>
+    <a href="#secservices">Security Services</a>
+    <a href="#winhistory">Windows History</a>
+    <a href="#winarch">Windows Architecture</a>
+    <a href="#winconfig">Config &amp; Monitoring</a>
+    <a href="#winsecurity">Windows Security</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 4 covers</h2>
+      <p>Two modules: first, the network security infrastructure itself — the specialized devices that sit in front of traffic, and the services that support them. Then Windows: where it came from, how it's put together internally, the tools an analyst uses to configure and monitor it, and the settings that keep it from being the easiest way into a network.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Explain how specialized devices — firewalls, IPS, VPN, NAC, and dedicated security appliances — enhance network security</li>
+      <li>Explain how services like AAA, logging, and time synchronization enhance network security</li>
+      <li>Describe the history of the Windows operating system, from DOS-based to NT-based releases</li>
+      <li>Explain Windows architecture — kernel vs. user mode, processes, the file system, and the registry</li>
+      <li>Use Windows administrative tools to configure, monitor, and manage system resources</li>
+      <li>Explain how Windows is kept secure — updates, local security policy, and built-in protections</li>
+    </ul>
+  </section>
+
+  <!-- ── SECURITY DEVICES (6.1) ── -->
+  <section id="secdevices">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 6.1</p>
+      <h2>Security Devices</h2>
+      <p>A specialized device does one job at the network boundary — filtering, detecting, tunneling, or gatekeeping — better than a general-purpose router or switch would.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Device</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Firewall</td><td>Filters traffic between a trusted network and an untrusted one, based on a defined rule set — the baseline perimeter control</td></tr>
+        <tr><td style="font-weight:700;">Intrusion Prevention System (IPS)</td><td>Sits inline with traffic and can actively block a detected threat in real time, not just alert on it</td></tr>
+        <tr><td style="font-weight:700;">Intrusion Detection System (IDS)</td><td>Monitors a copy of traffic out-of-band and alerts on suspicious activity, but doesn't sit inline and can't block it directly</td></tr>
+        <tr><td style="font-weight:700;">VPN concentrator / VPN-enabled router</td><td>Terminates encrypted tunnels from remote users or sites, extending the protected network over an untrusted one</td></tr>
+        <tr><td style="font-weight:700;">Network Access Control (NAC)</td><td>Checks a device's security posture (patch level, antivirus status) before granting it network access at all</td></tr>
+        <tr><td style="font-weight:700;">Specialized security appliances</td><td>Purpose-built devices for one traffic type — e.g. an email security appliance filtering spam and phishing, or a web security appliance filtering malicious sites</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>IDS vs. IPS is a placement question as much as a naming one.</b> IDS watches a mirrored copy of traffic — it can alert but never block, and a false positive costs nothing but an alert. IPS sits directly in the traffic path — it can block in real time, but a false positive can drop legitimate traffic.
+    </div>
+  </section>
+
+  <!-- ── SECURITY SERVICES (6.2) ── -->
+  <section id="secservices">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 6.2</p>
+      <h2>Security Services</h2>
+      <p>Devices filter and block; services do the supporting work that makes filtering, blocking, and investigating possible in the first place.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Service</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">AAA (Authentication, Authorization, Accounting)</td><td>Verifies identity, controls what an authenticated user is allowed to do, and logs what they actually did — usually via RADIUS or TACACS+</td></tr>
+        <tr><td style="font-weight:700;">Syslog</td><td>Centralizes log messages from routers, switches, servers, and security devices into one place, instead of leaving them scattered on each device</td></tr>
+        <tr><td style="font-weight:700;">NTP (Network Time Protocol)</td><td>Synchronizes clocks across every device on the network — without it, log timestamps from different devices can't be lined up to reconstruct an incident</td></tr>
+        <tr><td style="font-weight:700;">SNMP (Simple Network Management Protocol)</td><td>Lets a management station poll and monitor the health and status of network devices remotely</td></tr>
+        <tr><td style="font-weight:700;">NetFlow</td><td>Collects metadata about traffic flows crossing a device — who talked to whom, how much, how often — without capturing full packet contents</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>NTP is easy to underrate.</b> A firewall log timestamped three seconds off from a server log sounds trivial — until an analyst is trying to prove which event happened first during an incident, and the timeline doesn't line up because the clocks never agreed.
+    </div>
+  </section>
+
+  <!-- ── WINDOWS HISTORY (7.1) ── -->
+  <section id="winhistory">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 7.1</p>
+      <h2>Windows History</h2>
+      <p>Two family lines matter: the old DOS-based consumer releases, and the NT-based line that eventually replaced them and is what every modern Windows box actually runs.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Line</th><th>Examples</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">DOS-based</td><td>Windows 3.1, 95, 98, Me</td><td>Ran on top of MS-DOS rather than replacing it — no real memory protection between processes, which made the whole system fragile and insecure by modern standards</td></tr>
+        <tr><td style="font-weight:700;">NT-based</td><td>Windows NT, 2000, XP, Vista, 7, 8, 10, 11</td><td>Built on a genuinely new kernel with real security features — user accounts, permissions, memory protection. Every current release is NT-based</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Client vs. server editions</b> split off the same NT kernel: client editions (7, 10, 11) target a single user on a workstation; server editions (Windows Server) add roles like Active Directory Domain Services, DNS, and DHCP for managing a whole network of clients.
+    </div>
+  </section>
+
+  <!-- ── WINDOWS ARCHITECTURE (7.2) ── -->
+  <section id="winarch">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 7.2</p>
+      <h2>Windows Architecture and Operations</h2>
+      <p>What actually happens under the hood — the layers between hardware and the programs a user runs, plus the two places Windows stores almost everything about itself.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 480 220" role="img" aria-label="Windows architecture layers: hardware, HAL, kernel mode, user mode.">
+        <g font-family="IBM Plex Mono" font-weight="700" font-size="13">
+          <rect x="140" y="20" width="200" height="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="240" y="45" text-anchor="middle">User mode (apps)</text>
+
+          <rect x="140" y="80" width="200" height="40" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="240" y="105" text-anchor="middle" fill="var(--accent)">Kernel mode</text>
+
+          <rect x="140" y="140" width="200" height="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="240" y="165" text-anchor="middle">HAL</text>
+
+          <rect x="140" y="200" width="200" height="0" stroke="none"/>
+          <text x="240" y="216" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" font-weight="400" fill="var(--muted)">Hardware</text>
+        </g>
+        <line x1="240" y1="60" x2="240" y2="78" stroke="var(--accent)" stroke-width="1.5"/>
+        <line x1="240" y1="120" x2="240" y2="138" stroke="var(--accent)" stroke-width="1.5"/>
+        <line x1="240" y1="180" x2="240" y2="198" stroke="var(--accent)" stroke-width="1.5"/>
+      </svg>
+      <figcaption>User mode runs applications with restricted access; kernel mode has full access to hardware and memory. The Hardware Abstraction Layer (HAL) sits below the kernel, letting the same Windows code run across different hardware.</figcaption>
+    </figure>
+
+    <table class="model-table" style="margin-top:32px;">
+      <thead><tr><th>Concept</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">User mode / Kernel mode</td><td>Two privilege levels — user mode applications can't directly touch hardware or other processes' memory; kernel mode code can, which is why a kernel-mode exploit is far more dangerous than a user-mode one</td></tr>
+        <tr><td style="font-weight:700;">Process / Thread</td><td>A process is a running program with its own memory space; a thread is a unit of execution within that process — a process can have many threads</td></tr>
+        <tr><td style="font-weight:700;">Windows Registry</td><td>A hierarchical database of configuration settings for the OS and installed applications, organized into root keys such as HKEY_LOCAL_MACHINE and HKEY_CURRENT_USER</td></tr>
+        <tr><td style="font-weight:700;">NTFS</td><td>The standard modern Windows file system — supports file-level permissions, encryption, and journaling (which helps recover from a crash without corrupting the file system)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout xref">
+      NTFS permissions and the registry are also where a lot of Windows-based attacks and persistence techniques live — worth remembering when Module 27's forensics content revisits Windows artifacts later in the term.
+    </div>
+  </section>
+
+  <!-- ── WINDOWS CONFIG & MONITORING (7.3) ── -->
+  <section id="winconfig">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 7.3</p>
+      <h2>Windows Configuration and Monitoring</h2>
+      <p>The built-in tools an analyst reaches for first — no third-party software required, all already on the box.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Tool</th><th>What it's for</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Task Manager</td><td>Real-time view of running processes, resource usage, and startup programs — the fastest way to spot something consuming CPU or network it shouldn't</td></tr>
+        <tr><td style="font-weight:700;">Event Viewer</td><td>Browses the Windows event logs (Application, Security, System) — the primary source of historical evidence for what happened on a host</td></tr>
+        <tr><td style="font-weight:700;">Microsoft Management Console (MMC)</td><td>A framework that hosts administrative snap-ins (like Computer Management, Services, or Group Policy) in one customizable window</td></tr>
+        <tr><td style="font-weight:700;">Services (services.msc)</td><td>Lists every Windows service, its status, and its startup type — used to start, stop, or disable background processes</td></tr>
+        <tr><td style="font-weight:700;">Windows PowerShell</td><td>A scripting shell and language for administration and automation — far more capable than the legacy Command Prompt</td></tr>
+        <tr><td style="font-weight:700;">netstat</td><td>Lists active network connections and listening ports from the command line — a first move when checking what a host is actually talking to</td></tr>
+        <tr><td style="font-weight:700;">Task Scheduler</td><td>Runs programs or scripts automatically on a schedule or trigger — also a common persistence mechanism attackers abuse</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>netstat and Task Scheduler both cut two ways.</b> They're legitimate administrative tools, but they're also exactly what an analyst checks when investigating a compromise — an unexpected listening port or an unfamiliar scheduled task is a classic signal something else is running on the box.
+    </div>
+  </section>
+
+  <!-- ── WINDOWS SECURITY (7.4) ── -->
+  <section id="winsecurity">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 7.4</p>
+      <h2>Windows Security</h2>
+      <p>Windows ships with real, functional security features — the trouble is usually a machine where they've been left off, out of date, or misconfigured, not a machine that lacks them entirely.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Feature</th><th>What it protects against</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Windows Update</td><td>Patches known vulnerabilities — an unpatched system is exploitable by attacks that a patched one is already immune to</td></tr>
+        <tr><td style="font-weight:700;">User Account Control (UAC)</td><td>Prompts for confirmation before an action that requires administrator privileges, limiting the damage malware can do while running under a standard user account</td></tr>
+        <tr><td style="font-weight:700;">Windows Defender (Windows Security)</td><td>Built-in antivirus and antimalware protection, enabled by default</td></tr>
+        <tr><td style="font-weight:700;">Windows Firewall</td><td>Host-based firewall filtering inbound and outbound traffic on the machine itself, independent of any network firewall</td></tr>
+        <tr><td style="font-weight:700;">Local Security Policy</td><td>Configures account and audit policies on a single machine — password requirements, lockout thresholds, and what gets logged</td></tr>
+        <tr><td style="font-weight:700;">BitLocker</td><td>Full-disk encryption — protects data at rest if a device is lost or stolen, since the drive is unreadable without the key</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>UAC is a permission boundary, not a malware scanner.</b> It doesn't decide whether an action is malicious — only whether it needs elevated privilege to run. Malware that never needs admin rights can still do plenty of damage without ever triggering a prompt.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Security devices</span>
+      <h3>IDS or IPS?</h3>
+      <p>Scenario A: a device receives a mirrored copy of network traffic from a switch's SPAN port, analyzes it, and sends an alert to the SOC when it spots something suspicious — but the traffic itself was never touched. Scenario B: a device sits directly in the path between the internet and the internal network, and when it spots the same suspicious pattern, the traffic never makes it through at all.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Scenario A:</strong> IDS — out-of-band, alert-only, working from a copy of traffic.</p>
+          <p><strong>Scenario B:</strong> IPS — inline, able to block traffic in real time because it sits directly in the path.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Security services</span>
+      <h3>The timeline that didn't add up</h3>
+      <p>An analyst is reconstructing an incident from three devices' logs: a firewall, a switch, and a server. The firewall log says an alert fired at 14:02:03. The server log shows the matching process starting at 14:01:58 — five seconds <em>before</em> the firewall event that supposedly triggered it. Nothing else about the logs looks wrong.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Most likely cause:</strong> the devices' clocks aren't synchronized — a missing or misconfigured NTP service. Once every device shares the same time source, the true order of events becomes reconstructable again.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Windows history</span>
+      <h3>DOS-based or NT-based?</h3>
+      <p>An IT department decommissioning old lab equipment finds one machine still running Windows 98, and another still running Windows XP. They want to know which one is the bigger security liability architecturally, not just because it's old.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Windows 98</strong> is the DOS-based line — it lacks the memory protection and permission model the NT-based line introduced. <strong>Windows XP</strong> is NT-based, so architecturally it's the more defensible of the two, even though both are long past end-of-support and need to be retired.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Windows administration</span>
+      <h3>Which tool for which question?</h3>
+      <p>An analyst has four questions: (1) Is this process using 90% of the CPU right now? (2) What security events happened on this box over the last three days? (3) Is anything listening on a port I don't recognize? (4) Is there a task scheduled to run at 3 a.m. that nobody on the team remembers creating?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>(1)</strong> Task Manager. <strong>(2)</strong> Event Viewer. <strong>(3)</strong> netstat. <strong>(4)</strong> Task Scheduler.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Windows security</span>
+      <h3>UAC didn't stop it — was that a bug?</h3>
+      <p>A user's machine gets infected with malware that quietly logs their keystrokes and sends them out over the network. No UAC prompt ever appeared. The user assumes UAC must be broken.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Not a bug.</strong> UAC only prompts when an action requires administrator privileges. Keylogging and exfiltrating data over the network don't require elevation — a standard user account already has enough access to do both. UAC is a privilege boundary, not a malware detector.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 4 reference — more sessions added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+    {t:"AAA (Authentication, Authorization, Accounting)", d:"A framework that verifies identity, controls what an authenticated user can do, and logs what they did — typically implemented with RADIUS or TACACS+."},
+    {t:"BitLocker", d:"Windows full-disk encryption, protecting data at rest if a device is lost or stolen."},
+    {t:"DOS-based Windows", d:"The older Windows family line (3.1, 95, 98, Me) that ran on top of MS-DOS without real memory protection between processes."},
+    {t:"Event Viewer", d:"The Windows tool for browsing event logs (Application, Security, System) — the primary source of historical evidence for what happened on a host."},
+    {t:"Firewall", d:"A device that filters traffic between a trusted network and an untrusted one, based on a defined rule set."},
+    {t:"HAL (Hardware Abstraction Layer)", d:"A layer beneath the Windows kernel that lets the same OS code run across different underlying hardware."},
+    {t:"IDS (Intrusion Detection System)", d:"Monitors a copy of network traffic out-of-band and alerts on suspicious activity, but cannot block traffic directly."},
+    {t:"IPS (Intrusion Prevention System)", d:"Sits inline with network traffic and can actively block a detected threat in real time."},
+    {t:"Kernel mode", d:"The privileged Windows execution mode with full access to hardware and memory — code running here can cause far more damage than user-mode code."},
+    {t:"Local Security Policy", d:"A Windows tool for configuring account and audit policy on a single machine, including password requirements and what gets logged."},
+    {t:"MMC (Microsoft Management Console)", d:"A framework that hosts administrative snap-ins, like Computer Management or Group Policy, in one customizable window."},
+    {t:"NAC (Network Access Control)", d:"Checks a device's security posture before granting it network access."},
+    {t:"NetFlow", d:"Collects metadata about network traffic flows — who talked to whom, how much, how often — without capturing full packet contents."},
+    {t:"netstat", d:"A command-line tool listing active network connections and listening ports on a host."},
+    {t:"NT-based Windows", d:"The Windows family line built on the NT kernel, with real memory protection and a permission model — every current release (7, 10, 11, and Server editions) is NT-based."},
+    {t:"NTFS", d:"The standard modern Windows file system, supporting file-level permissions, encryption, and journaling."},
+    {t:"NTP (Network Time Protocol)", d:"Synchronizes clocks across network devices, which is necessary for correlating log timestamps across devices during an investigation."},
+    {t:"Process / thread", d:"A process is a running program with its own memory space; a thread is a unit of execution within a process, and a process can have many threads."},
+    {t:"Services (services.msc)", d:"A Windows tool listing every service, its status, and its startup type, used to start, stop, or disable background processes."},
+    {t:"SNMP (Simple Network Management Protocol)", d:"Lets a management station remotely poll and monitor the health and status of network devices."},
+    {t:"Syslog", d:"A protocol and service that centralizes log messages from routers, switches, servers, and security devices into one place."},
+    {t:"Task Manager", d:"A real-time Windows tool showing running processes, resource usage, and startup programs."},
+    {t:"Task Scheduler", d:"A Windows tool that runs programs or scripts automatically on a schedule or trigger — also a common persistence mechanism abused by attackers."},
+    {t:"UAC (User Account Control)", d:"Prompts for confirmation before an action requiring administrator privileges, limiting damage malware can do while running under a standard account."},
+    {t:"User mode", d:"The restricted Windows execution mode applications normally run in, without direct access to hardware or other processes' memory."},
+    {t:"VPN concentrator", d:"A device that terminates encrypted VPN tunnels from remote users or sites, extending a protected network over an untrusted one."},
+    {t:"Windows Defender (Windows Security)", d:"Built-in Windows antivirus and antimalware protection, enabled by default."},
+    {t:"Windows Firewall", d:"A host-based firewall filtering inbound and outbound traffic on an individual Windows machine."},
+    {t:"Windows PowerShell", d:"A scripting shell and language for Windows administration and automation, more capable than the legacy Command Prompt."},
+    {t:"Windows Registry", d:"A hierarchical database of configuration settings for the OS and installed applications, organized into root keys like HKEY_LOCAL_MACHINE and HKEY_CURRENT_USER."},
+    {t:"Windows Update", d:"The service that patches known vulnerabilities in Windows — an unpatched system remains exploitable by attacks a patched one is already immune to."},
+  ];
+
+  const QUIZ = [
+    {
+      q:"Which device sits inline with network traffic and can block a detected threat in real time?",
+      choices:["IDS","IPS","Syslog server","NAC"],
+      correct:1,
+      explain:"An IPS sits directly in the traffic path, so it can block malicious traffic immediately, unlike an IDS which only monitors a copy of traffic out-of-band."
+    },
+    {
+      q:"Why can't an IDS block malicious traffic the way an IPS can?",
+      choices:[
+        "It uses weaker detection signatures",
+        "It only monitors a mirrored copy of traffic, out-of-band",
+        "It requires a VPN concentrator to function",
+        "It's only compatible with wireless networks"
+      ],
+      correct:1,
+      explain:"IDS analyzes a copy of traffic from something like a SPAN port — it was never in the direct path, so it has nothing to block."
+    },
+    {
+      q:"A NAC solution's primary function is to:",
+      choices:[
+        "Encrypt traffic between two sites",
+        "Check a device's security posture before granting network access",
+        "Centralize log messages from multiple devices",
+        "Synchronize clocks across the network"
+      ],
+      correct:1,
+      explain:"Network Access Control evaluates a device (patch level, antivirus status, etc.) before letting it onto the network at all."
+    },
+    {
+      q:"Two devices' logs disagree about which event happened first during an incident, even though both logs appear otherwise correct. What's the most likely missing service?",
+      choices:["SNMP","NetFlow","NTP","AAA"],
+      correct:2,
+      explain:"Without synchronized clocks (NTP), timestamps across devices can't be trusted to reconstruct an accurate timeline."
+    },
+    {
+      q:"Which service is most directly responsible for verifying a user's identity, controlling what they can do, and logging what they did?",
+      choices:["AAA","NetFlow","SNMP","Syslog"],
+      correct:0,
+      explain:"AAA — Authentication, Authorization, Accounting — covers all three of those functions by definition."
+    },
+    {
+      q:"Windows 95 and Windows 98 belong to which family line?",
+      choices:["NT-based", "DOS-based", "Server-based", "Kernel-based"],
+      correct:1,
+      explain:"Windows 95/98/Me ran on top of MS-DOS and lacked the memory protection the NT-based line later introduced."
+    },
+    {
+      q:"Which Windows execution mode has full access to hardware and memory, making a vulnerability there far more dangerous than one in the other mode?",
+      choices:["User mode","Kernel mode","Safe mode","Admin mode"],
+      correct:1,
+      explain:"Kernel mode code has unrestricted access to hardware and memory; user mode is deliberately restricted from that access."
+    },
+    {
+      q:"Where would an administrator look to see the hierarchical database of OS and application configuration settings, including keys like HKEY_LOCAL_MACHINE?",
+      choices:["NTFS permissions","The Windows Registry","Event Viewer","Task Scheduler"],
+      correct:1,
+      explain:"The Windows Registry stores exactly this kind of hierarchical configuration data under root keys such as HKEY_LOCAL_MACHINE and HKEY_CURRENT_USER."
+    },
+    {
+      q:"An analyst wants to know if anything is listening on an unexpected network port on a Windows host. Which tool answers that directly?",
+      choices:["Task Manager","netstat","Local Security Policy","BitLocker"],
+      correct:1,
+      explain:"netstat lists active connections and listening ports from the command line, which is exactly what this question is asking."
+    },
+    {
+      q:"A scheduled task nobody on the team remembers creating is found running every night at 3 a.m. This is a known abuse of which Windows feature?",
+      choices:["Windows Firewall","Task Scheduler","UAC","BitLocker"],
+      correct:1,
+      explain:"Task Scheduler is a legitimate administrative feature that's also a common persistence mechanism attackers abuse to keep malware running."
+    },
+    {
+      q:"Malware infects a standard (non-administrator) user account and successfully logs keystrokes without ever triggering a permission prompt. Why didn't UAC stop it?",
+      choices:[
+        "UAC was disabled by default",
+        "The malware disabled Windows Defender first",
+        "Keylogging doesn't require administrator privileges, so UAC never triggers",
+        "UAC only applies to network traffic, not local processes"
+      ],
+      correct:2,
+      explain:"UAC only prompts for actions that require elevated privileges. A standard user account already has enough access to log keystrokes, so no prompt ever fires."
+    },
+    {
+      q:"Which Windows feature protects data at rest if a laptop is lost or stolen, by encrypting the entire disk?",
+      choices:["Windows Firewall","BitLocker","Local Security Policy","Windows Defender"],
+      correct:1,
+      explain:"BitLocker provides full-disk encryption, making the drive unreadable without the encryption key even if the physical device is stolen."
+    },
+  ];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
