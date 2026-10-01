@@ -69,7 +69,7 @@ Kaidō Freight (mid-size logistics: Windows domain, Linux servers, warehouse
 Wi-Fi, VPN). The Threat Board is styled as a *kōsatsu* (public notice board),
 the Attack Log as a guardhouse ledger.
 
-**Recurring mentor (not yet introduced):** the Shift Lead — planned for the
+**Recurring mentor:** the watch captain (Bastion's shift lead, renamed 2026-10-01). Named on the Threat Board; full introduction planned for the
 first episode script, will walk a case from alert to resolution the way
 IT131's NOC character does for ARP spoofing.
 
