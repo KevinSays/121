@@ -1,15 +1,17 @@
 # Bastion Security — Teaching Kit
 
-A netrunner/hacker-terminal approach to teaching cybersecurity fundamentals.
+An Edo-period castle-town approach to teaching cybersecurity fundamentals.
 Bastion Security is a fictional managed SOC (security operations center)
-that protects client companies; the student is a newly hired Tier-1
-analyst — effectively the ICE standing between a client network and the
-threat actors and attack techniques filed here. Every recurring threat type
-gets a dossier; every session's content reads loosely as a case reviewed on
-shift. Built for classroom handouts and lecture read-alouds — the
-cybersecurity-essentials counterpart to IT131's "OSI Company" kit, though
-IT121 uses its own dark cyberpunk visual identity rather than IT131's kraft
-paper (changed 2026-09-03, at the user's request).
+that protects client organizations. The student is a newly hired Tier-1
+analyst, a new guard on the watch. A *bastion* is a fortification, so concepts
+are explained through one world: a castle town of Edo-period Japan
+(1603–1868), with its walls, checkpoints, watchtowers, couriers, and the
+shinobi who try to get past them. The clients and systems are modern. The
+castle town is only the lens. Every recurring threat type gets a dossier, and
+every session's content reads loosely as a case reviewed on shift. Built for
+classroom handouts and lecture read-alouds. It's the cybersecurity-essentials
+counterpart to IT131's "OSI Company" kit. (Visual identity changed from a dark
+cyberpunk look to washi paper on 2026-10-01, at the user's request.)
 
 ## Files
 
@@ -25,34 +27,31 @@ paper (changed 2026-09-03, at the user's request).
 
 ## Design system
 
-IT121's own palette — not shared with IT131. Near-black background with a
-faint cyan scanline texture; neon-glow borders and shadows instead of paper
-shadows; no card rotation (digital panels don't tilt, unlike IT131's pinned
-paper posters).
+Washi paper: sumi-ink text on cream paper, vermilion and gold accents, and a
+faint *seigaiha* (wave) texture. It's light like IT131's kraft paper, but IT121 is set apart
+by its Japanese typefaces, the wave texture, and the vermilion/gold palette.
+No card rotation.
 
-**Palette**
+**Palette** (all colors pass WCAG AA on the paper tones)
 | Token | Hex | Use |
 |---|---|---|
-| `--paper` | `#0d1619` | Card/panel background |
-| `--canvas` | `#070b0d` | Page background |
-| `--ink` | `#d8fff2` | Body text, pale-cyan card borders |
-| `--kraft` | `#ff2e88` | Dossier field labels (MO, tools, countermeasure) |
-| `--blue` | `#2de2e6` | Primary accent — links, card borders, status LEDs |
-| `--red` | `#ff4d4d` | Threat-level pips, danger accents |
+| `--paper` | `#fbf8f0` | Card/panel background |
+| `--canvas` | `#f4eee1` | Page background (washi) |
+| `--ink` | `#2b2420` | Body text, card borders (sumi) |
+| `--kraft` | `#7d590d` | Dossier field labels (MO, tools, countermeasure), gold |
+| `--blue` | `#b23a1e` | Primary accent: links, card borders, status dots (vermilion; token name kept for compatibility) |
+| `--red` | `#b0213d` | Threat-level pips, danger accents (crimson) |
 
 **Type** (Google Fonts, loaded via `<link>` in each file's `<head>`)
-- Display / headers: `Orbitron` (futuristic marquee)
-- Body prose: `Rajdhani` (technical HUD feel)
+- Display / headers: `Shippori Mincho B1` (Japanese Mincho serif with Latin)
+- Body prose: `Zen Kaku Gothic New`
 - Data, labels, dossier fields: `IBM Plex Mono`
 
 **Recurring conventions**
-- Small glowing status-LED dot (`.pin`) at top-center of each card instead
-  of IT131's pushpin; neon box-shadow (`0 0 0 1px rgba(45,226,230,.15), 0 0
-  24px rgba(45,226,230,.12)`) instead of offset hard-shadow
-- `text-shadow` glow on headers/eyebrows/kickers for the neon-marquee look
-- Dashed rules (`1px dashed rgba(45,226,230,.25)`) for section dividers
-- `@media print` rules included for handout printing (forces a light
-  background so posters actually print legibly)
+- Small vermilion dot (`.pin`) at top-center of each card instead of IT131's
+  pushpin; soft warm shadows, no glow
+- Dashed rules for section dividers
+- `@media print` rules included for handout printing
 
 ## Cast reference
 
@@ -62,6 +61,13 @@ Organized Crime · Nation-State / APT · Insider Threat.
 **Attack techniques (filed on the Attack Log):** Module 3 — IP Spoofing ·
 ICMP Abuse · TCP SYN Flood. Module 4 — ARP Cache Poisoning · DNS Cache
 Poisoning · DHCP Spoofing/Starvation.
+
+**Clients (Bastion protects these; examples and labs use them):**
+Kiriyama General Hospital (regional hospital: EHR, imaging, 24/7 ops) ·
+Tsukimi Sweets (small family confectionery: website, POS, shop Wi-Fi) ·
+Kaidō Freight (mid-size logistics: Windows domain, Linux servers, warehouse
+Wi-Fi, VPN). The Threat Board is styled as a *kōsatsu* (public notice board),
+the Attack Log as a guardhouse ledger.
 
 **Recurring mentor (not yet introduced):** the Shift Lead — planned for the
 first episode script, will walk a case from alert to resolution the way

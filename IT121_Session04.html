@@ -2,40 +2,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
-    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
-    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
-    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
-    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
-    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
-    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
     --mono:'IBM Plex Mono', monospace;
-    --display:'Orbitron', sans-serif;
-    --sans:'Rajdhani', system-ui, sans-serif;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; font-size:125%;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
   body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
-    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
   a{ color:var(--accent); }
   ::selection{ background:var(--accent-soft); }
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
 
   header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
-  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
-  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
   .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
   .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
   .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
   .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
 
-  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
   nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
   nav.index .wrap::-webkit-scrollbar{ display:none; }
   nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
@@ -56,8 +56,8 @@
   section{ padding:52px 0; border-bottom:1px solid var(--border); }
   section:last-of-type{ border-bottom:none; }
   .section-head{ margin-bottom:28px; max-width:70ch; }
-  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
-  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
   .section-head p{ color:var(--muted); margin:.4em 0 0; }
   h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
 
@@ -73,13 +73,16 @@
 
   .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
   .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
-  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
   .model-table tr:last-child td{ border-bottom:none; }
 
   .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
   .callout b{ color:var(--accent-2); }
   .callout.xref{ font-family:var(--mono); font-size:.85rem; }
   .callout.xref a{ font-weight:600; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
 
   .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
   button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
@@ -149,7 +152,7 @@
   <div class="wrap">
     <p class="eyebrow">IT121 · Session 4</p>
     <h1>Network Security Infrastructure &amp; The Windows Operating System</h1>
-    <p class="lede">Sessions 2 and 3 covered how the network gets attacked. This session flips to defense: the devices and services that stand between an attacker and the network, then a shift to the endpoint itself — how Windows is built, how it's administered, and how it's kept secure, since most of what a Tier-1 analyst investigates day to day is happening on a Windows host.</p>
+    <p class="lede">Sessions 2 and 3 covered how the network gets attacked. This session flips to defense: the devices and services that stand between an attacker and the network. Then it moves to the endpoint itself: how Windows is built, administered, and kept secure. Most of what you'll investigate day to day as a Tier-1 analyst happens on a Windows host.</p>
     <div class="factrow">
       <span class="fact"><b>Covers</b> Module 6 (6.1–6.2) &middot; Module 7 (7.1–7.4)</span>
     </div>
@@ -180,7 +183,7 @@
     <div class="section-head">
       <p class="kicker">Overview</p>
       <h2>What Session 4 covers</h2>
-      <p>Two modules: first, the network security infrastructure itself — the specialized devices that sit in front of traffic, and the services that support them. Then Windows: where it came from, how it's put together internally, the tools an analyst uses to configure and monitor it, and the settings that keep it from being the easiest way into a network.</p>
+      <p>Two modules. First, the network security infrastructure itself: the specialized devices that sit in front of traffic, and the services that support them. Then Windows: where it came from, how it's put together, the tools you'll use to configure and monitor it, and the settings that keep it from being the easiest way into a network.</p>
     </div>
     <ul class="obj-list">
       <li>Explain how specialized devices — firewalls, IPS, VPN, NAC, and dedicated security appliances — enhance network security</li>
@@ -197,7 +200,7 @@
     <div class="section-head">
       <p class="kicker">Concept 1 · Module 6.1</p>
       <h2>Security Devices</h2>
-      <p>A specialized device does one job at the network boundary — filtering, detecting, tunneling, or gatekeeping — better than a general-purpose router or switch would.</p>
+      <p>A specialized device does one job at the network boundary (filtering, detecting, tunneling, or gatekeeping) better than a general-purpose router or switch would.</p>
     </div>
 
     <table class="model-table">
@@ -213,7 +216,12 @@
     </table>
 
     <div class="callout">
-      <b>IDS vs. IPS is a placement question as much as a naming one.</b> IDS watches a mirrored copy of traffic — it can alert but never block, and a false positive costs nothing but an alert. IPS sits directly in the traffic path — it can block in real time, but a false positive can drop legitimate traffic.
+      <b>IDS vs. IPS is a placement question as much as a naming one.</b> An IDS watches a mirrored copy of traffic. It can alert but never block, and a false positive costs nothing but an alert. An IPS sits directly in the traffic path. It can block in real time, but a false positive can drop legitimate traffic.
+    </div>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the watchtower and the gate</span>
+      The <b>firewall</b> is the highway checkpoint (<em>sekisho</em>): travelers pass only if they meet the rules. Edo-period checkpoints like Hakone even watched both directions, for guns coming in and for certain people going out, the same way a firewall filters inbound and outbound traffic. The <b>IDS</b> is the lookout in the watchtower (<em>yagura</em>): he sees everything and rings the alarm, but he can't stop anyone. The <b>IPS</b> is the guard standing in the gateway: he can bar the gate, and if he's wrong, honest travelers get turned away too. One place the analogy breaks: the real IDS doesn't watch the road itself. It watches a <em>copy</em> of the traffic.
     </div>
   </section>
 
@@ -222,7 +230,7 @@
     <div class="section-head">
       <p class="kicker">Concept 2 · Module 6.2</p>
       <h2>Security Services</h2>
-      <p>Devices filter and block; services do the supporting work that makes filtering, blocking, and investigating possible in the first place.</p>
+      <p>Devices filter and block. Services do the supporting work that makes filtering, blocking, and investigating possible in the first place.</p>
     </div>
 
     <table class="model-table">
@@ -237,7 +245,12 @@
     </table>
 
     <div class="callout">
-      <b>NTP is easy to underrate.</b> A firewall log timestamped three seconds off from a server log sounds trivial — until an analyst is trying to prove which event happened first during an incident, and the timeline doesn't line up because the clocks never agreed.
+      <b>NTP is easy to underrate.</b> A firewall log timestamped three seconds off from a server log sounds trivial. Then you try to prove which event happened first during an incident, and the timeline doesn't line up because the clocks never agreed.
+    </div>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the town's time bell</span>
+      Edo-period towns rang a time bell (<em>toki no kane</em>) to announce the hours, so the whole town kept the same time. If every gatehouse kept its own clock, the magistrate could never line up the gate ledgers to tell who passed which gate first. NTP is the time bell for your network. <b>Syslog</b> is the other half: gathering every gatehouse's ledger into one office, so there's one place to read them.
     </div>
   </section>
 
@@ -267,7 +280,7 @@
     <div class="section-head">
       <p class="kicker">Concept 4 · Module 7.2</p>
       <h2>Windows Architecture and Operations</h2>
-      <p>What actually happens under the hood — the layers between hardware and the programs a user runs, plus the two places Windows stores almost everything about itself.</p>
+      <p>What happens under the hood: the layers between hardware and the programs a user runs, plus the two places Windows stores almost everything about itself.</p>
     </div>
 
     <figure>
@@ -283,7 +296,7 @@
           <text x="240" y="165" text-anchor="middle">HAL</text>
 
           <rect x="140" y="200" width="200" height="0" stroke="none"/>
-          <text x="240" y="216" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" font-weight="400" fill="var(--muted)">Hardware</text>
+          <text x="240" y="216" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" font-weight="400" fill="var(--muted)">Hardware</text>
         </g>
         <line x1="240" y1="60" x2="240" y2="78" stroke="var(--accent)" stroke-width="1.5"/>
         <line x1="240" y1="120" x2="240" y2="138" stroke="var(--accent)" stroke-width="1.5"/>
@@ -303,7 +316,7 @@
     </table>
 
     <div class="callout xref">
-      NTFS permissions and the registry are also where a lot of Windows-based attacks and persistence techniques live — worth remembering when Module 27's forensics content revisits Windows artifacts later in the term.
+      NTFS permissions and the registry are also where a lot of Windows-based attacks and persistence techniques live. Remember that when Module 27's forensics content revisits Windows artifacts later in the term.
     </div>
   </section>
 
@@ -312,7 +325,7 @@
     <div class="section-head">
       <p class="kicker">Concept 5 · Module 7.3</p>
       <h2>Windows Configuration and Monitoring</h2>
-      <p>The built-in tools an analyst reaches for first — no third-party software required, all already on the box.</p>
+      <p>The built-in tools you'll reach for first. No third-party software required: they're already on the box.</p>
     </div>
 
     <table class="model-table">
@@ -329,7 +342,7 @@
     </table>
 
     <div class="callout">
-      <b>netstat and Task Scheduler both cut two ways.</b> They're legitimate administrative tools, but they're also exactly what an analyst checks when investigating a compromise — an unexpected listening port or an unfamiliar scheduled task is a classic signal something else is running on the box.
+      <b>netstat and Task Scheduler both cut two ways.</b> They're legitimate administrative tools, and they're also exactly what you check when investigating a compromise. An unexpected listening port or an unfamiliar scheduled task is a classic sign that something else is running on the box.
     </div>
   </section>
 
@@ -338,7 +351,7 @@
     <div class="section-head">
       <p class="kicker">Concept 6 · Module 7.4</p>
       <h2>Windows Security</h2>
-      <p>Windows ships with real, functional security features — the trouble is usually a machine where they've been left off, out of date, or misconfigured, not a machine that lacks them entirely.</p>
+      <p>Windows ships with real, functional security features. The trouble is usually a machine where they've been left off, out of date, or misconfigured, not a machine that lacks them.</p>
     </div>
 
     <table class="model-table">
@@ -354,7 +367,7 @@
     </table>
 
     <div class="callout">
-      <b>UAC is a permission boundary, not a malware scanner.</b> It doesn't decide whether an action is malicious — only whether it needs elevated privilege to run. Malware that never needs admin rights can still do plenty of damage without ever triggering a prompt.
+      <b>UAC is a permission boundary, not a malware scanner.</b> It doesn't decide whether an action is malicious, only whether it needs elevated privilege to run. Malware that never needs admin rights can still do plenty of damage without ever triggering a prompt.
     </div>
   </section>
 
@@ -390,13 +403,13 @@
     <div class="section-head">
       <p class="kicker">Applied</p>
       <h2>Worked examples</h2>
-      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
     </div>
 
     <div class="example">
       <span class="tag">Security devices</span>
       <h3>IDS or IPS?</h3>
-      <p>Scenario A: a device receives a mirrored copy of network traffic from a switch's SPAN port, analyzes it, and sends an alert to the SOC when it spots something suspicious — but the traffic itself was never touched. Scenario B: a device sits directly in the path between the internet and the internal network, and when it spots the same suspicious pattern, the traffic never makes it through at all.</p>
+      <p>Two devices on Kaidō Freight's network. Scenario A: a device receives a mirrored copy of traffic from a switch's SPAN port, analyzes it, and alerts the SOC when it spots something suspicious, but the traffic itself is never touched. Scenario B: a device sits directly in the path between the internet and the internal network, and when it spots the same suspicious pattern, the traffic never makes it through at all.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -409,7 +422,7 @@
     <div class="example">
       <span class="tag">Security services</span>
       <h3>The timeline that didn't add up</h3>
-      <p>An analyst is reconstructing an incident from three devices' logs: a firewall, a switch, and a server. The firewall log says an alert fired at 14:02:03. The server log shows the matching process starting at 14:01:58 — five seconds <em>before</em> the firewall event that supposedly triggered it. Nothing else about the logs looks wrong.</p>
+      <p>You're reconstructing an incident at Kiriyama General Hospital from three devices' logs: a firewall, a switch, and a server. The firewall log says an alert fired at 14:02:03. The server log shows the matching process starting at 14:01:58 — five seconds <em>before</em> the firewall event that supposedly triggered it. Nothing else about the logs looks wrong.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -421,7 +434,7 @@
     <div class="example">
       <span class="tag">Windows history</span>
       <h3>DOS-based or NT-based?</h3>
-      <p>An IT department decommissioning old lab equipment finds one machine still running Windows 98, and another still running Windows XP. They want to know which one is the bigger security liability architecturally, not just because it's old.</p>
+      <p>Kaidō Freight's IT team, clearing out an old warehouse office, finds one machine still running Windows 98 and another still running Windows XP. They want to know which one is the bigger security liability architecturally, not just because it's old.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -433,7 +446,7 @@
     <div class="example">
       <span class="tag">Windows administration</span>
       <h3>Which tool for which question?</h3>
-      <p>An analyst has four questions: (1) Is this process using 90% of the CPU right now? (2) What security events happened on this box over the last three days? (3) Is anything listening on a port I don't recognize? (4) Is there a task scheduled to run at 3 a.m. that nobody on the team remembers creating?</p>
+      <p>You're on a Kaidō Freight workstation with four questions: (1) Is this process using 90% of the CPU right now? (2) What security events happened on this box over the last three days? (3) Is anything listening on a port I don't recognize? (4) Is there a task scheduled to run at 3 a.m. that nobody on the team remembers creating?</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -445,7 +458,7 @@
     <div class="example">
       <span class="tag">Windows security</span>
       <h3>UAC didn't stop it — was that a bug?</h3>
-      <p>A user's machine gets infected with malware that quietly logs their keystrokes and sends them out over the network. No UAC prompt ever appeared. The user assumes UAC must be broken.</p>
+      <p>The office PC at Tsukimi Sweets gets infected with malware that quietly logs keystrokes and sends them out over the network. No UAC prompt ever appeared. The owner assumes UAC must be broken.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -471,7 +484,7 @@
 
 <footer>
   <div class="wrap">
-    <p>IT121 · Cybersecurity Essentials · Session 4 reference — more sessions added as the course progresses.</p>
+    <p>IT121 · Cybersecurity Essentials · Session 4 reference. More sessions are added as the course progresses.</p>
   </div>
 </footer>
 

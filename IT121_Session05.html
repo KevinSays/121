@@ -2,40 +2,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
-    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
-    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
-    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
-    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
-    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
-    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
     --mono:'IBM Plex Mono', monospace;
-    --display:'Orbitron', sans-serif;
-    --sans:'Rajdhani', system-ui, sans-serif;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; font-size:125%;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
   body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
-    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
   a{ color:var(--accent); }
   ::selection{ background:var(--accent-soft); }
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
 
   header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
-  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
-  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
   .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
   .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
   .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
   .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
 
-  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
   nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
   nav.index .wrap::-webkit-scrollbar{ display:none; }
   nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
@@ -56,8 +56,8 @@
   section{ padding:52px 0; border-bottom:1px solid var(--border); }
   section:last-of-type{ border-bottom:none; }
   .section-head{ margin-bottom:28px; max-width:70ch; }
-  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
-  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
   .section-head p{ color:var(--muted); margin:.4em 0 0; }
   h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
 
@@ -73,7 +73,7 @@
 
   .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
   .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
-  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
   .model-table tr:last-child td{ border-bottom:none; }
 
   .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
@@ -146,9 +146,9 @@
   code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
   .callout.analogy{ border-left-color:var(--correct); }
   .callout.analogy b{ color:var(--correct); }
-  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; text-shadow:0 0 6px rgba(57,255,136,.4); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
   .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
-  pre.log{ color-scheme:dark; scrollbar-color:var(--border) #030607; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#030607; color:var(--correct); border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
   pre.log code{ background:none; padding:0; }
 </style>
 
@@ -583,13 +583,13 @@
     <div class="section-head">
       <p class="kicker">Applied</p>
       <h2>Worked examples</h2>
-      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
     </div>
 
     <div class="example">
       <span class="tag">Linux logs</span>
       <h3>Is someone guessing passwords?</h3>
-      <p>A Bastion client reports their Ubuntu web server "feels slow" and they're worried someone is trying to break into it over SSH. You have a shell on the box. Which file do you check, and what one-line command tells you how many failed login attempts there have been?</p>
+      <p>Tsukimi Sweets reports that the Ubuntu server behind its online-order site "feels slow," and the owners are worried someone is trying to break into it over SSH. You have a shell on the box. Which file do you check, and what one-line command tells you how many failed login attempts there have been?</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -602,7 +602,7 @@
   <div class="example">
       <span class="tag">Linux logs</span>
       <h3>Reading auth.log like an analyst</h3>
-      <p>You pull this excerpt from <code>/var/log/auth.log</code> on a Bastion client's web server. The account <code>deploy</code> is supposed to be used only by an automated deployment script. Which lines are routine, and which would you escalate?</p>
+      <p>You pull this excerpt from <code>/var/log/auth.log</code> on Kaidō Freight's web server. The account <code>deploy</code> is supposed to be used only by an automated deployment script. Which lines are routine, and which would you escalate?</p>
 <pre class="log">Sep 24 02:17:01 web01 CRON[2210]: pam_unix(cron:session): session opened for user root by (uid=0)
 Sep 24 02:17:01 web01 CRON[2210]: pam_unix(cron:session): session closed for user root
 Sep 24 02:41:09 web01 sshd[2388]: Accepted password for deploy from 203.0.113.45 port 51122 ssh2
@@ -649,7 +649,7 @@ Sep 24 02:43:15 web01 sudo:   deploy : TTY=pts/0 ; PWD=/tmp ; USER=root ; COMMAN
       <span class="tag">Defending systems</span>
       <h3>The fisherman who doesn't fit</h3>
       <p>Remember the village from <a href="#defending">Concept 8</a>? <em>Cyberjutsu</em> includes a thought exercise that starts there. A castle's fish supplier speaks with an unfamiliar accent, preserves fish in a way nobody has seen before, and has a surname no one recognizes. He says he just likes the taste. Is he a spy? The book's point is that you have to plan for three possibilities: he <em>is</em> a spy, he <em>isn't</em>, or you <em>can't tell</em>.</p>
-      <p>Here's the network version. A Bastion client's scan turns up a new device named <code>HP-LaserJet-4F</code>. Its network card maker (looked up from its MAC address) is Raspberry Pi, not HP. It's listening on SSH (port 22) and isn't in the asset inventory. What do you do?</p>
+      <p>Here's the network version. A scan of Kaidō Freight's office network turns up a new device named <code>HP-LaserJet-4F</code>. Its network card maker (looked up from its MAC address) is Raspberry Pi, not HP. It's listening on SSH (port 22) and isn't in the asset inventory. What do you do?</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -736,7 +736,7 @@ Sep 24 02:43:15 web01 sudo:   deploy : TTY=pts/0 ; PWD=/tmp ; USER=root ; COMMAN
 
 <footer>
   <div class="wrap">
-    <p>IT121 · Cybersecurity Essentials · Session 5 reference — more sessions added as the course progresses.</p>
+    <p>IT121 · Cybersecurity Essentials · Session 5 reference. More sessions are added as the course progresses.</p>
   </div>
 </footer>
 

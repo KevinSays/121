@@ -2,41 +2,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
-    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
-    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
-    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
-    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
-    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
-    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
     --mono:'IBM Plex Mono', monospace;
-    --display:'Orbitron', sans-serif;
-    --sans:'Rajdhani', system-ui, sans-serif;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; font-size:125%;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
   body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
-    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
   a{ color:var(--accent); }
   ::selection{ background:var(--accent-soft); }
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
 
   header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
   a.back-link{ display:inline-block; margin-bottom:14px; font-family:var(--mono); font-size:.85rem; font-weight:600; color:var(--accent); text-decoration:none; border-bottom:1.5px solid var(--accent); }
-  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
-  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,4.4vw,3.1rem); line-height:1.05; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,4.4vw,3.1rem); line-height:1.05; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
   .hero p.lede{ max-width:64ch; font-size:1.08rem; color:var(--muted); margin:0 0 1.6em; }
   .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
   .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
   .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
 
-  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
   nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
   nav.index .wrap::-webkit-scrollbar{ display:none; }
   nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
@@ -57,8 +57,8 @@
   section{ padding:52px 0; border-bottom:1px solid var(--border); }
   section:last-of-type{ border-bottom:none; }
   .section-head{ margin-bottom:28px; max-width:70ch; }
-  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
-  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.1rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.1rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
   .section-head p{ color:var(--muted); margin:.4em 0 0; }
   h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
 
@@ -71,14 +71,14 @@
 
   .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
   .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
-  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
   .model-table tr:last-child td{ border-bottom:none; }
   .fillin{ width:100%; min-width:120px; font-family:var(--mono); font-size:.85rem; padding:.45em .6em; background:var(--surface-2); border:1px solid var(--border); color:var(--text); }
   .fillin:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
   .fillin::placeholder{ color:var(--muted); opacity:.6; }
 
   .email-mock{ background:var(--surface); border:1px solid var(--border); box-shadow:var(--shadow); margin:24px 0; }
-  .email-mock .em-head{ border-bottom:1px dashed rgba(45,226,230,.25); padding:14px 18px; font-family:var(--mono); font-size:.82rem; }
+  .email-mock .em-head{ border-bottom:1px dashed var(--border); padding:14px 18px; font-family:var(--mono); font-size:.82rem; }
   .email-mock .em-head div{ margin-bottom:4px; }
   .email-mock .em-head .em-label{ color:var(--accent-2); font-weight:600; margin-right:.6em; }
   .email-mock .em-body{ padding:18px; font-size:.95rem; }
@@ -111,7 +111,7 @@
     <a class="back-link" href="../index.html">↩ Contents</a>
     <p class="eyebrow">IT121 · Hands-On Lab</p>
     <h1>Phishing Triage</h1>
-    <p class="lede">Four messages, flagged by an automated filter and dropped on your desk at Bastion Security's client, Halcyon Logistics. All four are fictional, written for this exercise — but the patterns are real. Your job: decide which ones are actually phishing, and defend the call.</p>
+    <p class="lede">Four messages, flagged by an automated filter and dropped on your desk from Bastion Security's client, Kaidō Freight. All four are fictional, written for this exercise, but the patterns are real. Your job: decide which ones are actually phishing, and defend the call.</p>
     <div class="factrow">
       <span class="fact"><b>Companion to</b> Session 1</span>
       <span class="fact"><b>Time</b> ~30 min</span>
@@ -159,12 +159,12 @@
     <div class="email-mock">
       <span class="em-tag" style="margin:14px 0 0 18px;">Message 1</span>
       <div class="em-head">
-        <div><span class="em-label">From</span>IT Helpdesk &lt;it-support@halcyon-it-alerts.net&gt;</div>
-        <div><span class="em-label">To</span>employee@halcyonlogistics.com</div>
+        <div><span class="em-label">From</span>IT Helpdesk &lt;it-support@kaido-it-alerts.net&gt;</div>
+        <div><span class="em-label">To</span>employee@kaidofreight.com</div>
         <div><span class="em-label">Subject</span>URGENT: Your password expires in 2 hours</div>
       </div>
       <div class="em-body">
-        <p>Your Halcyon Logistics network password will expire today at 5:00 PM. To avoid being locked out of your account, verify your credentials immediately using the link below. This must be completed within 2 hours or your account will be suspended.</p>
+        <p>Your Kaidō Freight network password will expire today at 5:00 PM. To avoid being locked out of your account, verify your credentials immediately using the link below. This must be completed within 2 hours or your account will be suspended.</p>
         <span class="em-btn">Verify My Account →</span>
         <p style="margin-top:14px;">Sincerely,<br>IT Support Team</p>
       </div>
@@ -173,8 +173,8 @@
     <div class="email-mock">
       <span class="em-tag" style="margin:14px 0 0 18px;">Message 2</span>
       <div class="em-head">
-        <div><span class="em-label">From</span>Marcus Reyes &lt;m.reyes@halcyonlogisitcs.com&gt;</div>
-        <div><span class="em-label">To</span>accounting@halcyonlogistics.com</div>
+        <div><span class="em-label">From</span>Marcus Reyes &lt;m.reyes@kaidofrieght.com&gt;</div>
+        <div><span class="em-label">To</span>accounting@kaidofreight.com</div>
         <div><span class="em-label">Subject</span>Confidential — need this handled today</div>
       </div>
       <div class="em-body">
@@ -187,7 +187,7 @@
       <span class="em-tag" style="margin:14px 0 0 18px;">Message 3</span>
       <div class="em-head">
         <div><span class="em-label">From</span>Delivery Notifications &lt;no-reply@swiftparcel-tracking.com&gt;</div>
-        <div><span class="em-label">To</span>employee@halcyonlogistics.com</div>
+        <div><span class="em-label">To</span>employee@kaidofreight.com</div>
         <div><span class="em-label">Subject</span>Your package could not be delivered</div>
       </div>
       <div class="em-body">
@@ -199,8 +199,8 @@
     <div class="email-mock">
       <span class="em-tag" style="margin:14px 0 0 18px;">Message 4</span>
       <div class="em-head">
-        <div><span class="em-label">From</span>HR Team &lt;hr@halcyonlogistics.com&gt;</div>
-        <div><span class="em-label">To</span>all-staff@halcyonlogistics.com</div>
+        <div><span class="em-label">From</span>HR Team &lt;hr@kaidofreight.com&gt;</div>
+        <div><span class="em-label">To</span>all-staff@kaidofreight.com</div>
         <div><span class="em-label">Subject</span>Reminder: open enrollment ends Friday</div>
       </div>
       <div class="em-body">

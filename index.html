@@ -2,25 +2,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --paper:#0d1619; --canvas:#070b0d; --ink:#d8fff2; --kraft:#ff2e88; --kraft-dark:#b5236a;
-    --blue:#2de2e6; --red:#ff4d4d; --ticket:#12232a;
-    --blue-soft:rgba(45,226,230,.10); --red-soft:rgba(255,77,77,.10);
-    --kraft-soft:rgba(255,46,136,.10); --ink-soft:rgba(45,226,230,.06);
-    --shadow:0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
-    --display:'Orbitron','Courier New',sans-serif;
-    --sans:'Rajdhani', system-ui, sans-serif;
+    --paper:#fbf8f0; --canvas:#f4eee1; --ink:#2b2420; --kraft:#7d590d; --kraft-dark:#a8452c;
+    --blue:#b23a1e; --red:#b0213d; --ticket:#ebe3d2;
+    --blue-soft:rgba(178,58,30,.10); --red-soft:rgba(176,33,61,.10);
+    --kraft-soft:rgba(125,89,13,.10); --ink-soft:rgba(178,58,30,.06);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
     --mono:'IBM Plex Mono', monospace;
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; font-size:125%;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
   body{
     margin:0; background:var(--canvas); color:var(--ink); font-family:var(--sans);
     line-height:1.55; -webkit-font-smoothing:antialiased;
-    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px);
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>");
   }
   ::selection{ background:var(--kraft-soft); }
   a{ color:var(--blue); }
@@ -29,29 +29,29 @@
 
   header.masthead{ padding:48px 0 30px; }
   .eyebrow{ display:inline-block; font-family:var(--mono); font-size:.86rem; letter-spacing:.12em;
-    border:1px solid var(--blue); color:var(--blue); padding:4px 10px; background:var(--paper); text-shadow:0 0 6px rgba(45,226,230,.5); }
+    border:1px solid var(--blue); color:var(--blue); padding:4px 10px; background:var(--paper); }
   h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,5.5vw,3.2rem); letter-spacing:.02em;
-    margin:16px 0 10px; line-height:1.15; text-shadow:0 0 18px rgba(45,226,230,.35); }
+    margin:16px 0 10px; line-height:1.15; }
   .lede{ max-width:66ch; font-size:1.02rem; line-height:1.6; opacity:.85; margin:0 0 18px; }
   .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
   .fact{ font-family:var(--mono); font-size:.82rem; letter-spacing:.02em; background:var(--paper);
-    border:1px solid var(--blue); padding:.4em .8em; display:flex; gap:.5em; box-shadow:0 0 10px rgba(45,226,230,.12); }
+    border:1px solid var(--blue); padding:.4em .8em; display:flex; gap:.5em; box-shadow:var(--shadow); }
   .fact b{ color:var(--kraft-dark); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.88rem; }
 
   nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--canvas) 92%, transparent);
-    backdrop-filter:blur(6px); border-top:1px solid var(--blue); border-bottom:1px solid var(--blue); box-shadow:0 0 16px rgba(45,226,230,.12); }
+    backdrop-filter:blur(6px); border-top:1px solid var(--blue); border-bottom:1px solid var(--blue); box-shadow:var(--shadow); }
   nav.index .wrap{ display:flex; gap:2px; overflow-x:auto; padding:8px 20px; scrollbar-width:none; }
   nav.index .wrap::-webkit-scrollbar{ display:none; }
   nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; font-size:.82rem; text-decoration:none;
     color:var(--ink); opacity:.85; padding:.5em .8em; white-space:nowrap; text-transform:uppercase; border:1px solid transparent; }
   nav.index a:hover{ opacity:1; border-color:var(--ink); background:var(--paper); }
 
-  section{ padding:44px 0; border-bottom:1px dashed rgba(45,226,230,.25); }
+  section{ padding:44px 0; border-bottom:1px dashed var(--border); }
   section:last-of-type{ border-bottom:none; }
   .section-head{ margin-bottom:26px; max-width:70ch; }
   .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--red); margin:0 0 .4em; text-shadow:0 0 6px rgba(255,77,77,.5); }
-  h2{ font-family:var(--display); font-weight:700; font-size:clamp(1.4rem,2.8vw,1.9rem); margin:0 0 .25em; letter-spacing:.01em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+    color:var(--red); margin:0 0 .4em; }
+  h2{ font-family:var(--display); font-weight:700; font-size:clamp(1.4rem,2.8vw,1.9rem); margin:0 0 .25em; letter-spacing:.01em; }
   .section-head p{ opacity:.82; margin:.5em 0 0; }
 
   .cold-open{ background:var(--paper); border:1.5px solid var(--ink); box-shadow:var(--shadow); padding:18px 20px; margin:24px 0; }
@@ -62,7 +62,7 @@
   table.log{ width:100%; border-collapse:collapse; margin:18px 0; font-size:.9rem; }
   table.log th{ font-family:var(--mono); font-weight:600; text-transform:uppercase; letter-spacing:.05em; font-size:.78rem;
     color:var(--kraft-dark); text-align:left; padding:9px 10px; border-bottom:2px solid var(--ink); }
-  table.log td{ padding:12px 10px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  table.log td{ padding:12px 10px; border-bottom:1px dashed var(--border); vertical-align:top; }
   table.log tr:last-child td{ border-bottom:none; }
   table.log tr.filed{ background:var(--blue-soft); }
   td.num{ font-family:var(--display); color:var(--kraft-dark); white-space:nowrap; }
@@ -111,7 +111,7 @@
   <div class="wrap">
     <p class="eyebrow">IT121 · CYBERSECURITY ESSENTIALS</p>
     <h1>Table of Contents</h1>
-    <p class="lede">Every session review, flashcard deck, and case file for this course, filed in one place. Sessions are added here as they're built — bookmark this page and start each class from it.</p>
+    <p class="lede">Every session review, flashcard deck, and case file for this course, filed in one place. Sessions are added here as they're built. Bookmark this page and start each class from it.</p>
     <div class="factrow">
       <span class="fact"><b>Term</b> 16 sessions across the semester</span>
       <span class="fact"><b>Filed</b> 5 of 16 sessions</span>
@@ -139,7 +139,7 @@
 
     <div class="cold-open">
       <p class="tag">Note</p>
-      <p>Eleven sessions are still unfiled — that's not missing work, it's the semester not having happened yet. Each one gets built out the week of, or the week before, its class date.</p>
+      <p>Eleven sessions are still unfiled. That's not missing work, it's the semester not having happened yet. Each one gets built out the week of, or the week before, its class date.</p>
     </div>
 
     <table class="log">
@@ -252,7 +252,7 @@
     <div class="section-head">
       <p class="kicker">Reference</p>
       <h2>The Bastion Security teaching kit</h2>
-      <p>The recurring "Bastion Security" material referenced across sessions — a fictional SOC where the student plays a newly hired Tier-1 analyst, and every threat type gets a case file. Introduced in Session 1 (threat actors) and built out further as later sessions add roles, cases, and episodes.</p>
+      <p>The recurring "Bastion Security" material referenced across sessions. Bastion is a fictional SOC where you play a newly hired Tier-1 analyst on the watch, guarding three client organizations: Kiriyama General Hospital, Tsukimi Sweets, and Kaidō Freight. A <em>bastion</em> is a fortification, so concepts throughout the course are explained through an Edo-period Japanese castle town: its gates, checkpoints, watchtowers, and couriers. Introduced in Session 1 and built out further as later sessions add roles, cases, and episodes.</p>
     </div>
 
     <div class="kit-grid">
@@ -260,7 +260,7 @@
         <span class="kit-tab">THREAT BOARD</span>
         <div class="kit-inner">
           <h3>Bastion Security Threat Board</h3>
-          <p>The wanted-poster board — one dossier per threat actor category: MO, tools of the trade, countermeasure, threat level, and a cross-reference back to Session 1.</p>
+          <p>The public notice board (<em>kōsatsu</em>), with one dossier per threat actor category: MO, tools of the trade, countermeasure, threat level, and a cross-reference back to Session 1.</p>
           <a class="open-link" href="bastion-security-kit/bastion-threat-board.html">Open →</a>
         </div>
       </div>
@@ -269,7 +269,7 @@
         <span class="kit-tab">ATTACK LOG</span>
         <div class="kit-inner">
           <h3>Bastion Security Attack Log</h3>
-          <p>Six dossiers spanning Module 3 (IP spoofing, ICMP abuse, TCP SYN flooding) and Module 4 (ARP cache poisoning, DNS cache poisoning, DHCP spoofing/starvation) — each with its MO, tools, countermeasure, and a cross-reference back to Session 2 or Session 3.</p>
+          <p>Six dossiers spanning Module 3 (IP spoofing, ICMP abuse, TCP SYN flooding) and Module 4 (ARP cache poisoning, DNS cache poisoning, DHCP spoofing/starvation), each with its MO, tools, countermeasure, and a cross-reference back to Session 2 or Session 3.</p>
           <a class="open-link" href="bastion-security-kit/bastion-attack-log.html">Open →</a>
         </div>
       </div>
@@ -281,7 +281,7 @@
     <div class="section-head">
       <p class="kicker">Practice</p>
       <h2>Hands-on labs</h2>
-      <p>Supplementary lab worksheets that reinforce a session's content with something to actually do — capture traffic, run a tool, fill in what you find. Not a replacement for the official NetAcad labs, just a companion for the concepts covered here.</p>
+      <p>Supplementary lab worksheets that reinforce a session's content with something to actually do: capture traffic, run a tool, fill in what you find. Not a replacement for the official NetAcad labs, just a companion for the concepts covered here.</p>
     </div>
 
     <div class="kit-grid">
@@ -289,7 +289,7 @@
         <span class="kit-tab">LAB</span>
         <div class="kit-inner">
           <h3>Wireshark Header Walk</h3>
-          <p>Capture live traffic, find a TCP three-way handshake, and fill in a worksheet identifying every IPv4 header field on a real packet — the hands-on companion to Session 2's IP PDU Details.</p>
+          <p>Capture live traffic, find a TCP three-way handshake, and fill in a worksheet identifying every IPv4 header field on a real packet. The hands-on companion to Session 2's IP PDU Details.</p>
           <a class="open-link" href="labs/wireshark-header-walk.html">Open →</a>
         </div>
       </div>
@@ -307,7 +307,7 @@
         <span class="kit-tab">LAB</span>
         <div class="kit-inner">
           <h3>Phishing Triage</h3>
-          <p>Four fictional messages from a Bastion Security client's inbox — not all of them are phishing. Identify sender-domain tells and psychology levers, and defend your verdict on each.</p>
+          <p>Four fictional messages from Kaidō Freight's inbox. Not all of them are phishing. Identify sender-domain tells and psychology levers, and defend your verdict on each.</p>
           <a class="open-link" href="labs/phishing-triage.html">Open →</a>
         </div>
       </div>
@@ -316,7 +316,7 @@
         <span class="kit-tab">LAB</span>
         <div class="kit-inner">
           <h3>Session 1 Synthesis Review</h3>
-          <p>Eight short scenarios run through every Session 1 framework at once — CIA triad, threat/vulnerability/exploit/risk, threat actor, and malware or social-engineering type. A capstone review, not a walkthrough.</p>
+          <p>Eight short scenarios run through every Session 1 framework at once: CIA triad, threat/vulnerability/exploit/risk, threat actor, and malware or social-engineering type. A capstone review, not a walkthrough.</p>
           <a class="open-link" href="labs/synthesis-review.html">Open →</a>
         </div>
       </div>
@@ -327,7 +327,7 @@
 
 <footer>
   <div class="wrap">
-    <p>IT121 · Cybersecurity Essentials · Table of contents — updated as sessions are filed.</p>
+    <p>IT121 · Cybersecurity Essentials · Table of contents, updated as sessions are filed.</p>
   </div>
 </footer>
 

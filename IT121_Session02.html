@@ -2,40 +2,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
-    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
-    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
-    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
-    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
-    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
-    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
     --mono:'IBM Plex Mono', monospace;
-    --display:'Orbitron', sans-serif;
-    --sans:'Rajdhani', system-ui, sans-serif;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; font-size:125%;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
   body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
-    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
   a{ color:var(--accent); }
   ::selection{ background:var(--accent-soft); }
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
 
   header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
-  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
-  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
   .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
   .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
   .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
   .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
 
-  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
   nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
   nav.index .wrap::-webkit-scrollbar{ display:none; }
   nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
@@ -56,8 +56,8 @@
   section{ padding:52px 0; border-bottom:1px solid var(--border); }
   section:last-of-type{ border-bottom:none; }
   .section-head{ margin-bottom:28px; max-width:70ch; }
-  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
-  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
   .section-head p{ color:var(--muted); margin:.4em 0 0; }
   h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
 
@@ -73,13 +73,16 @@
 
   .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
   .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
-  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
   .model-table tr:last-child td{ border-bottom:none; }
 
   .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
   .callout b{ color:var(--accent-2); }
   .callout.xref{ font-family:var(--mono); font-size:.85rem; }
   .callout.xref a{ font-weight:600; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
 
   .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
   button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
@@ -149,7 +152,7 @@
   <div class="wrap">
     <p class="eyebrow">IT121 · Session 2</p>
     <h1>Securing Networks &amp; Attacking the Foundation</h1>
-    <p class="lede">Session 1 gave you the vocabulary. This session gives you the terrain — the current threat landscape and how hacking itself has evolved, then how the protocols everything else runs on top of (IP, TCP, UDP) get attacked in the first place. None of these protocols were designed with an attacker in mind, and that gap is the whole story.</p>
+    <p class="lede">Session 1 gave you the vocabulary. This session gives you the terrain: who is attacking networks today, how that has changed, and how the protocols everything else runs on (IP, TCP, UDP) get attacked. None of these protocols were designed with an attacker in mind. That gap is the whole story.</p>
     <div class="factrow">
       <span class="fact"><b>Covers</b> Module 2 (2.1–2.2) &middot; Module 3 (3.1–3.3)</span>
     </div>
@@ -179,7 +182,7 @@
     <div class="section-head">
       <p class="kicker">Overview</p>
       <h2>What Session 2 covers</h2>
-      <p>Two modules, one throughline: first, why networks are targets and how the people attacking them have changed over time; then, the header structure and protocol behavior that IP, TCP, and UDP attacks actually exploit. Session 3 picks up where this leaves off — ARP, DNS, and DHCP attacks belong to Module 4, next week's material.</p>
+      <p>Two modules, one throughline. First, why networks are targets and how the people attacking them have changed. Then, the header fields and protocol behavior that IP, TCP, and UDP attacks exploit. Session 3 picks up from here with ARP, DNS, and DHCP attacks (Module 4).</p>
     </div>
     <ul class="obj-list">
       <li>Explain why networks are attractive targets and distinguish internal from external threats</li>
@@ -195,10 +198,10 @@
     <div class="section-head">
       <p class="kicker">Concept 1 · Module 2.1</p>
       <h2>The Current Threat Landscape</h2>
-      <p>Before defending a network, it helps to know why it's a target in the first place — and that not every threat comes from outside it.</p>
+      <p>Before you defend a network, know why it's a target, and remember that not every threat comes from outside it.</p>
     </div>
 
-    <p>Networks are targets because of what they connect to: money (financial systems, payment data), identity (personal records), and operations (the systems a business or hospital can't run without). As networks have grown to include cloud services, remote workers, and IoT devices, the attack surface has grown right along with them — more entry points to defend, not just more data to protect.</p>
+    <p>Networks are targets because of what they connect to: money (financial systems, payment data), identity (personal records), and operations (the systems a business or hospital can't run without). As networks have grown to include cloud services, remote workers, and IoT devices, the attack surface has grown right along with them. That means more entry points to defend, not just more data to protect.</p>
 
     <h3>Internal vs. external threats</h3>
     <table class="model-table">
@@ -222,7 +225,7 @@
     </table>
 
     <div class="callout">
-      <b>Data loss isn't always an "attack."</b> An unencrypted laptop left in a taxi and a hacker exfiltrating a database cause the same outcome — data in the wrong hands — through very different mechanisms. Both matter to a SOC.
+      <b>Data loss isn't always an "attack."</b> An unencrypted laptop left in a taxi and a hacker exfiltrating a database cause the same outcome, data in the wrong hands, through very different mechanisms. Both matter to a SOC.
     </div>
   </section>
 
@@ -231,7 +234,7 @@
     <div class="section-head">
       <p class="kicker">Concept 2 · Module 2.2</p>
       <h2>Who Is Attacking Our Network?</h2>
-      <p>Session 1 covered threat actors by motivation. This is about how "who's attacking" has changed shape over the decades — and one word that gets used loosely.</p>
+      <p>Session 1 sorted threat actors by motivation. This section covers how "who's attacking" has changed over the decades, and one word that gets used loosely.</p>
     </div>
 
     <div class="callout">
@@ -258,7 +261,7 @@
     <div class="section-head">
       <p class="kicker">Concept 3 · Module 3.1</p>
       <h2>IP PDU Details</h2>
-      <p>Before you can understand how IP gets attacked, you need to know what's actually in an IP packet's header — and how much IPv6 simplified it.</p>
+      <p>Before you can understand how IP gets attacked, you need to know what's in an IP packet's header, and how much IPv6 simplified it.</p>
     </div>
 
     <table class="model-table">
@@ -275,6 +278,11 @@
         <tr><td style="font-weight:700;">Options</td><td>Rarely-used optional field, part of why the IPv4 header is variable length</td></tr>
       </tbody>
     </table>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… couriers on the highway</span>
+      Picture each packet as a courier (<em>hikyaku</em>) running a letter down the highway, handing off at post stations along the way. The header is the label on the letter box: who sent it, who gets it, what's inside. <b>TTL</b> is the number of post stations the courier may pass before giving up, so a courier on the wrong road doesn't run forever. Notice that nobody along the route checks the sender's name. Concept 4 is about what happens because of that.
+    </div>
 
     <div class="callout">
       <b>IPv6 drops the excess weight.</b> The IPv6 header is fixed at 40 bytes — no Options field, no header checksum (upper layers already check for errors), and no in-network fragmentation (routers no longer fragment packets; the sending host does, using extension headers instead). Fewer fields for a router to process means faster forwarding, but the security-relevant ones — source/destination address, a TTL equivalent called Hop Limit, and a Next Header field doing the Protocol field's job — all carry over.
@@ -303,6 +311,11 @@
       <b>Spoofing is the common thread.</b> Once the source address can't be trusted, an attacker can hide behind it, redirect blame to an innocent host, or turn a third-party server into an unwitting weapon.
     </div>
 
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… a letter with a forged sender</span>
+      Anyone can write a lord's name in the "from" line of a letter. Without a seal to check, the castle answers whoever the letter <em>claims</em> to be from. That's IP spoofing. Amplification is the nasty version: send a short, forged request to a busy official, and their long, formal reply lands on the victim's doorstep instead of yours.
+    </div>
+
     <div class="callout xref">
       Dossiers on IP spoofing, ICMP abuse, and TCP SYN flooding are filed in the <a href="bastion-security-kit/bastion-attack-log.html">Bastion Security Attack Log</a>. ARP, DNS, and DHCP attacks get their own dossiers once Module 4 is filed.
     </div>
@@ -313,7 +326,7 @@
     <div class="section-head">
       <p class="kicker">Concept 5 · Module 3.3</p>
       <h2>TCP &amp; UDP Vulnerabilities</h2>
-      <p>TCP's handshake is a feature for reliability and a liability for availability — every half-open connection ties up a resource somewhere.</p>
+      <p>TCP's handshake is a feature for reliability and a liability for availability. Every half-open connection ties up a resource somewhere.</p>
     </div>
 
     <div class="diagram-grid">
@@ -327,7 +340,7 @@
             <line x1="65" y1="60" x2="65" y2="220" stroke="var(--border)" stroke-width="1"/>
             <line x1="415" y1="60" x2="415" y2="220" stroke="var(--border)" stroke-width="1"/>
           </g>
-          <g font-family="IBM Plex Sans" font-size="12">
+          <g font-family="Zen Kaku Gothic New" font-size="12">
             <line x1="65" y1="90" x2="415" y2="90" stroke="var(--correct)" stroke-width="1.5" marker-end="url(#arrowS)"/>
             <text x="240" y="82" text-anchor="middle" fill="var(--correct)">1. SYN</text>
             <line x1="415" y1="140" x2="65" y2="140" stroke="var(--correct)" stroke-width="1.5" marker-end="url(#arrowS)"/>
@@ -340,9 +353,9 @@
               <path d="M0,0 L10,5 L0,10 z" fill="var(--correct)"/>
             </marker>
           </defs>
-          <text x="240" y="242" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="var(--muted)">Connection established</text>
+          <text x="240" y="242" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="12" fill="var(--muted)">Connection established</text>
         </svg>
-        <figcaption>The normal three-way handshake — SYN, SYN-ACK, ACK — before any data flows.</figcaption>
+        <figcaption>The normal three-way handshake: SYN, SYN-ACK, ACK, before any data flows.</figcaption>
       </figure>
 
       <figure>
@@ -355,7 +368,7 @@
             <line x1="60" y1="60" x2="60" y2="220" stroke="var(--border)" stroke-width="1"/>
             <line x1="415" y1="60" x2="415" y2="220" stroke="var(--border)" stroke-width="1"/>
           </g>
-          <g font-family="IBM Plex Sans" font-size="11" stroke="var(--danger)" stroke-width="1.3" stroke-dasharray="4 3">
+          <g font-family="Zen Kaku Gothic New" font-size="11" stroke="var(--danger)" stroke-width="1.3" stroke-dasharray="4 3">
             <line x1="60" y1="82" x2="415" y2="82" marker-end="url(#arrowD)"/>
             <line x1="60" y1="102" x2="415" y2="102" marker-end="url(#arrowD)"/>
             <line x1="60" y1="122" x2="415" y2="122" marker-end="url(#arrowD)"/>
@@ -366,14 +379,14 @@
               <path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/>
             </marker>
           </defs>
-          <text x="240" y="75" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">SYN, SYN, SYN, SYN … (×1000s, spoofed sources)</text>
+          <text x="240" y="75" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--danger)">SYN, SYN, SYN, SYN … (×1000s, spoofed sources)</text>
           <rect x="330" y="160" width="130" height="60" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
           <text x="395" y="180" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="var(--danger)">Conn. table</text>
           <text x="395" y="196" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="var(--danger)">FULL</text>
-          <text x="395" y="211" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" fill="var(--muted)">all half-open</text>
-          <text x="150" y="240" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--muted)">No ACK ever returns — the handshake never finishes</text>
+          <text x="395" y="211" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="9" fill="var(--muted)">all half-open</text>
+          <text x="150" y="240" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--muted)">No ACK ever returns — the handshake never finishes</text>
         </svg>
-        <figcaption>SYN flood: the attacker never sends the final ACK, so every half-open connection sits in the table until it's full — locking out real users.</figcaption>
+        <figcaption>SYN flood: the attacker never sends the final ACK, so every half-open connection sits in the table until it's full, locking out real users.</figcaption>
       </figure>
     </div>
 
@@ -420,13 +433,13 @@
     <div class="section-head">
       <p class="kicker">Applied</p>
       <h2>Worked examples</h2>
-      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
     </div>
 
     <div class="example">
       <span class="tag">Internal vs. external</span>
       <h3>Which threat, and why?</h3>
-      <p>Scenario A: a departing employee copies the customer database to a personal USB drive the week before their last day. Scenario B: someone outside the company scans its public IP range looking for open, unpatched services.</p>
+      <p>Two alerts from Kaidō Freight. Scenario A: a departing employee copies the customer database to a personal USB drive the week before their last day. Scenario B: someone outside the company scans its public IP range looking for open, unpatched services.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -475,7 +488,7 @@
     <div class="example">
       <span class="tag">TCP/UDP</span>
       <h3>Diagnose the logs</h3>
-      <p>A server's connection logs show thousands of sessions stuck in a half-open state — SYN received, but the handshake never completes. Legitimate users can't connect.</p>
+      <p>The online-order server at Tsukimi Sweets shows thousands of sessions stuck in a half-open state: SYN received, but the handshake never completes. Customers can't connect.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -501,7 +514,7 @@
 
 <footer>
   <div class="wrap">
-    <p>IT121 · Cybersecurity Essentials · Session 2 reference — more sessions added as the course progresses.</p>
+    <p>IT121 · Cybersecurity Essentials · Session 2 reference. More sessions are added as the course progresses.</p>
   </div>
 </footer>
 

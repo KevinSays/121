@@ -2,40 +2,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --bg:#070b0d; --surface:#0d1619; --surface-2:#12232a;
-    --text:#d8fff2; --muted:#6f9994; --border:#1f4441;
-    --accent:#2de2e6; --accent-soft:rgba(45,226,230,.10);
-    --accent-2:#ff2e88; --accent-2-soft:rgba(255,46,136,.10);
-    --danger:#ff4d4d; --danger-soft:rgba(255,77,77,.10);
-    --correct:#39ff88; --correct-soft:rgba(57,255,136,.10);
-    --shadow: 0 0 0 1px rgba(45,226,230,.28), 0 0 20px rgba(45,226,230,.14);
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
     --mono:'IBM Plex Mono', monospace;
-    --display:'Orbitron', sans-serif;
-    --sans:'Rajdhani', system-ui, sans-serif;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; font-size:125%;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
   body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
-    background-image:repeating-linear-gradient(0deg, rgba(45,226,230,.05) 0px, rgba(45,226,230,.05) 1px, transparent 1px, transparent 3px); }
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
   a{ color:var(--accent); }
   ::selection{ background:var(--accent-soft); }
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
 
   header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
-  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); text-shadow:0 0 6px rgba(45,226,230,.5); }
-  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; text-shadow:0 0 18px rgba(45,226,230,.35); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
   .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
   .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
   .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
   .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
 
-  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:0 0 16px rgba(45,226,230,.12); }
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
   nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
   nav.index .wrap::-webkit-scrollbar{ display:none; }
   nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
@@ -56,8 +56,8 @@
   section{ padding:52px 0; border-bottom:1px solid var(--border); }
   section:last-of-type{ border-bottom:none; }
   .section-head{ margin-bottom:28px; max-width:70ch; }
-  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; text-shadow:0 0 6px rgba(255,46,136,.5); }
-  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; text-shadow:0 0 10px rgba(45,226,230,.2); }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
   .section-head p{ color:var(--muted); margin:.4em 0 0; }
   h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
 
@@ -73,13 +73,16 @@
 
   .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
   .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
-  .model-table td{ padding:10px 12px; border-bottom:1px dashed rgba(45,226,230,.25); vertical-align:top; }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
   .model-table tr:last-child td{ border-bottom:none; }
 
   .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
   .callout b{ color:var(--accent-2); }
   .callout.xref{ font-family:var(--mono); font-size:.85rem; }
   .callout.xref a{ font-weight:600; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
 
   .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
   button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
@@ -149,7 +152,7 @@
   <div class="wrap">
     <p class="eyebrow">IT121 · Session 1</p>
     <h1>Threats, Vulnerabilities &amp; Attacks</h1>
-    <p class="lede">Every case that lands on a SOC analyst's desk breaks down into the same handful of concepts: what security is actually protecting, who's attacking it, and the two big categories of attack — malicious code and manipulated people. Get this vocabulary locked in now; every later session assumes it.</p>
+    <p class="lede">Welcome to the watch. As a new Tier-1 analyst at Bastion Security, every case that reaches your desk comes down to a few questions: what is being protected, who is attacking it, and whether the attack used malicious code or a manipulated person. Learn this vocabulary now. Every later session assumes it.</p>
     <div class="factrow">
       <span class="fact"><b>Covers</b> Course Intro · Module 1</span>
     </div>
@@ -179,7 +182,7 @@
     <div class="section-head">
       <p class="kicker">Overview</p>
       <h2>What Session 1 covers</h2>
-      <p>Before we can talk about firewalls or forensics, we need a shared vocabulary. This session sets the frame: what security is actually protecting, who's attacking it, and the two big categories of attack — malicious code and manipulated people.</p>
+      <p>Before firewalls or forensics, you need a shared vocabulary. This session sets the frame: what security protects, who attacks it, and the two big categories of attack: malicious code and manipulated people.</p>
     </div>
     <ul class="obj-list">
       <li>Explain the CIA triad and give a real example of each leg breaking</li>
@@ -195,7 +198,7 @@
     <div class="section-head">
       <p class="kicker">Concept 1</p>
       <h2>The CIA Triad</h2>
-      <p>Security isn't one goal — it's a three-way balance. Every attack can usually be described as breaking one of these three legs.</p>
+      <p>Security isn't one goal. It's a balance of three, and most attacks can be described as breaking one of them.</p>
     </div>
 
     <figure>
@@ -205,26 +208,31 @@
         <circle cx="70" cy="344" r="7" fill="var(--accent-2)"/>
         <circle cx="410" cy="344" r="7" fill="var(--correct)"/>
         <text x="240" y="32" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="17" fill="currentColor">Confidentiality</text>
-        <text x="240" y="18" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">breaks: data breach, eavesdropping</text>
+        <text x="240" y="18" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--danger)">breaks: data breach, eavesdropping</text>
         <text x="70" y="372" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="17" fill="currentColor">Integrity</text>
-        <text x="4" y="390" text-anchor="start" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">breaks: tampering, MITM edits</text>
+        <text x="4" y="390" text-anchor="start" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--danger)">breaks: tampering, MITM edits</text>
         <text x="410" y="372" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="17" fill="currentColor">Availability</text>
-        <text x="410" y="390" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">breaks: ransomware, DoS</text>
+        <text x="410" y="390" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--danger)">breaks: ransomware, DoS</text>
       </svg>
-      <figcaption>The CIA triad — security is a balance between confidentiality, integrity, and availability, not a single goal.</figcaption>
+      <figcaption>The CIA triad: security is a balance between confidentiality, integrity, and availability, not a single goal.</figcaption>
     </figure>
 
     <table class="model-table">
       <thead><tr><th>Leg</th><th>What it protects</th><th>How it breaks</th><th>Example</th></tr></thead>
       <tbody>
-        <tr><td style="font-weight:700;">Confidentiality</td><td>Only authorized people/systems can view data</td><td>Data breach, eavesdropping, weak access control</td><td>A hospital leaks patient records — a HIPAA violation</td></tr>
-        <tr><td style="font-weight:700;">Integrity</td><td>Data is accurate and unaltered except by authorized action</td><td>Tampering, man-in-the-middle modification, corruption</td><td>A patient's allergy record is silently changed — wrong dosage risk</td></tr>
-        <tr><td style="font-weight:700;">Availability</td><td>Systems and data are accessible when needed</td><td>DoS/DDoS, ransomware, hardware failure</td><td>Ransomware locks the entire EHR during an emergency</td></tr>
+        <tr><td style="font-weight:700;">Confidentiality</td><td>Only authorized people/systems can view data</td><td>Data breach, eavesdropping, weak access control</td><td>Kiriyama General Hospital leaks patient records: a patient-privacy violation (HIPAA in the US)</td></tr>
+        <tr><td style="font-weight:700;">Integrity</td><td>Data is accurate and unaltered except by authorized action</td><td>Tampering, man-in-the-middle modification, corruption</td><td>A Kiriyama General patient's allergy record is silently changed, risking a wrong dose</td></tr>
+        <tr><td style="font-weight:700;">Availability</td><td>Systems and data are accessible when needed</td><td>DoS/DDoS, ransomware, hardware failure</td><td>Ransomware locks Kiriyama General's entire EHR during an emergency</td></tr>
       </tbody>
     </table>
 
     <div class="callout">
-      <b>Hospital example, one data set:</b> patient records can be <em>stolen</em> (confidentiality), <em>altered</em> (integrity), or <em>locked away</em> (availability). Same data, three different kinds of harm — that's why the triad matters.
+      <b>One data set, three kinds of harm:</b> Kiriyama General's patient records can be <em>stolen</em> (confidentiality), <em>altered</em> (integrity), or <em>locked away</em> (availability). That's why the triad matters.
+    </div>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the lord's letters</span>
+      A castle sends orders by sealed letter. <b>Confidentiality</b> means only the addressee opens it. <b>Integrity</b> means the lord's seal proves nobody changed a word on the way. <b>Availability</b> means the courier actually gets through when the order is needed. A spy who reads the letter, a forger who edits it, and a bandit who stops the courier are three different failures, even though it's the same letter.
     </div>
   </section>
 
@@ -233,7 +241,7 @@
     <div class="section-head">
       <p class="kicker">Concept 2</p>
       <h2>Threat · Vulnerability · Exploit · Risk</h2>
-      <p>Four words that look similar but mean very different things. Learn them in order — they chain together.</p>
+      <p>Four words that look similar but mean very different things. Learn them in order, because they chain together.</p>
     </div>
 
     <figure>
@@ -246,42 +254,42 @@
         <g font-family="IBM Plex Mono" font-size="14" font-weight="700">
           <rect x="20" y="40" width="160" height="56" rx="6" fill="var(--surface)" stroke="currentColor"/>
           <text x="100" y="62" text-anchor="middle" fill="currentColor">Vulnerability</text>
-          <text x="100" y="80" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">a weakness</text>
+          <text x="100" y="80" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" font-weight="400" fill="var(--muted)">a weakness</text>
 
           <rect x="20" y="150" width="160" height="56" rx="6" fill="var(--surface)" stroke="currentColor"/>
           <text x="100" y="172" text-anchor="middle" fill="currentColor">Exploit</text>
-          <text x="100" y="190" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">the mechanism</text>
+          <text x="100" y="190" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" font-weight="400" fill="var(--muted)">the mechanism</text>
 
           <rect x="20" y="260" width="160" height="56" rx="6" fill="var(--surface)" stroke="currentColor"/>
           <text x="100" y="282" text-anchor="middle" fill="currentColor">Threat</text>
-          <text x="100" y="300" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--muted)">the danger</text>
+          <text x="100" y="300" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" font-weight="400" fill="var(--muted)">the danger</text>
 
           <rect x="290" y="205" width="160" height="60" rx="6" fill="var(--danger-soft)" stroke="var(--danger)"/>
           <text x="370" y="229" text-anchor="middle" fill="var(--danger)">Risk</text>
-          <text x="370" y="247" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="var(--danger)">likelihood &times; impact</text>
+          <text x="370" y="247" text-anchor="middle" font-family="Zen Kaku Gothic New" font-size="10" font-weight="400" fill="var(--danger)">likelihood &times; impact</text>
         </g>
         <line x1="100" y1="96" x2="100" y2="150" stroke="currentColor" marker-end="url(#arrow121)"/>
-        <text x="112" y="127" font-family="IBM Plex Sans" font-size="11" fill="var(--muted)">enables</text>
+        <text x="112" y="127" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--muted)">enables</text>
         <line x1="100" y1="206" x2="100" y2="260" stroke="currentColor" marker-end="url(#arrow121)"/>
-        <text x="112" y="238" font-family="IBM Plex Sans" font-size="11" fill="var(--muted)">used by</text>
+        <text x="112" y="238" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--muted)">used by</text>
         <line x1="180" y1="288" x2="290" y2="245" stroke="var(--danger)" marker-end="url(#arrow121)"/>
-        <text x="200" y="258" font-family="IBM Plex Sans" font-size="11" fill="var(--danger)">produces</text>
+        <text x="200" y="258" font-family="Zen Kaku Gothic New" font-size="11" fill="var(--danger)">produces</text>
       </svg>
-      <figcaption>How a weakness becomes an incident — vulnerability &rarr; exploit &rarr; threat &rarr; risk.</figcaption>
+      <figcaption>How a weakness becomes an incident: vulnerability &rarr; exploit &rarr; threat &rarr; risk.</figcaption>
     </figure>
 
     <table class="model-table">
-      <thead><tr><th>Term</th><th>Definition</th><th>House analogy</th></tr></thead>
+      <thead><tr><th>Term</th><th>Definition</th><th>Castle analogy</th></tr></thead>
       <tbody>
-        <tr><td style="font-weight:700;">Vulnerability</td><td>A weakness that could be exploited</td><td>An unlocked door</td></tr>
-        <tr><td style="font-weight:700;">Threat</td><td>Anything that could exploit a vulnerability</td><td>A burglar</td></tr>
-        <tr><td style="font-weight:700;">Exploit</td><td>The specific mechanism/code used to take advantage</td><td>Lock-picking</td></tr>
-        <tr><td style="font-weight:700;">Risk</td><td>Likelihood &times; impact of a threat successfully exploiting a vulnerability</td><td>The chance your house actually gets robbed</td></tr>
+        <tr><td style="font-weight:700;">Vulnerability</td><td>A weakness that could be exploited</td><td>A gap in the stone wall, or a side gate left unbarred</td></tr>
+        <tr><td style="font-weight:700;">Threat</td><td>Anything that could exploit a vulnerability</td><td>A shinobi who could slip through it</td></tr>
+        <tr><td style="font-weight:700;">Exploit</td><td>The specific mechanism/code used to take advantage</td><td>The grappling hook and climbing technique used on that gap</td></tr>
+        <tr><td style="font-weight:700;">Risk</td><td>Likelihood &times; impact of a threat successfully exploiting a vulnerability</td><td>How likely the castle is breached, and how bad it would be</td></tr>
       </tbody>
     </table>
 
     <div class="callout">
-      <b>If there were no vulnerabilities, there'd be no risk to manage.</b> That's why so much of security is about shrinking the attack surface — patching software, enforcing strong passwords, training employees.
+      <b>If there were no vulnerabilities, there'd be no risk to manage.</b> That's why so much of security is about shrinking the <em>attack surface</em>, every gate and wall section an attacker could try. You do it by patching software, enforcing strong passwords, and training employees.
     </div>
   </section>
 
@@ -290,7 +298,7 @@
     <div class="section-head">
       <p class="kicker">Concept 3</p>
       <h2>Threat Actors</h2>
-      <p>Who's actually behind the attacks? They differ by motivation and sophistication — and knowing which you're up against changes what you defend first.</p>
+      <p>Who is behind the attacks? Threat actors differ by motivation and sophistication. Knowing which one you're up against changes what you defend first.</p>
     </div>
 
     <table class="model-table">
@@ -305,11 +313,11 @@
     </table>
 
     <div class="callout">
-      <b>Insider threats are the hard ones.</b> The person already has legitimate access — so the attack isn't "getting in," it's a person with a valid account doing the wrong thing, whether malicious or just careless.
+      <b>Insider threats are the hard ones.</b> The person already has legitimate access. The attack isn't "getting in." It's someone with a valid account doing the wrong thing, on purpose or by accident. In castle terms, it's the retainer inside the walls who opens the gate.
     </div>
 
     <div class="callout xref">
-      Full dossiers on all five — MO, tools, countermeasures — are filed on the <a href="bastion-security-kit/bastion-threat-board.html">Bastion Security Threat Board</a>.
+      Full dossiers on all five (MO, tools, countermeasures) are posted on the <a href="bastion-security-kit/bastion-threat-board.html">Bastion Security Threat Board</a>.
     </div>
   </section>
 
@@ -336,7 +344,7 @@
     </table>
 
     <div class="callout">
-      <b>Virus vs. worm:</b> a virus needs you to open the infected file; a worm spreads across the network with no user action at all. WannaCry is both at once — a worm for propagation, ransomware for payload — which is why it doesn't sit cleanly in just one row of this table.
+      <b>Virus vs. worm:</b> a virus needs you to open the infected file. A worm spreads across the network with no user action at all. WannaCry is both at once: a worm for spreading and ransomware for its payload. That's why it doesn't sit cleanly in one row of this table.
     </div>
   </section>
 
@@ -346,6 +354,11 @@
       <p class="kicker">Concept 5</p>
       <h2>Social Engineering</h2>
       <p>Attacks that exploit human psychology rather than technical flaws. No firewall can block a well-crafted lie.</p>
+    </div>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the shinobi in disguise</span>
+      The strongest castle wall doesn't help if the guard opens the gate. Picture a shinobi dressed as a traveling merchant with a believable story and the right name to drop. Nothing gets climbed or broken: the guard <b>lets him in</b>. Every technique below is a version of that disguise. The defense is the same too: check the pass, not the costume.
     </div>
 
     <table class="model-table">
@@ -362,7 +375,7 @@
     </table>
 
     <h3>Hacker ethics: White, Gray, and Black Hat</h3>
-    <p>A separate axis from motivation — this one's about legality and consent. The same skill set, sorted by whether the hacker had permission and what they did with what they found.</p>
+    <p>This is a separate axis from motivation. It's about legality and consent: the same skill set, sorted by whether the hacker had permission and what they did with what they found.</p>
     <table class="model-table">
       <thead><tr><th>Type</th><th>What defines them</th></tr></thead>
       <tbody>
@@ -414,13 +427,13 @@
     <div class="section-head">
       <p class="kicker">Applied</p>
       <h2>Worked examples</h2>
-      <p>Real-ish scenarios. Think them through before you expand the answer.</p>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
     </div>
 
     <div class="example">
       <span class="tag">Social engineering</span>
       <h3>The "IT" email</h3>
-      <p>An employee gets an email that looks like it's from the IT helpdesk: "Your password expires in 2 hours — click here to reset it before you're locked out." The link goes to a page that looks like the company login.</p>
+      <p>A Kaidō Freight dispatcher gets an email that looks like it's from the IT helpdesk: "Your password expires in 2 hours — click here to reset it before you're locked out." The link goes to a page that looks like Kaidō Freight's login.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -434,7 +447,7 @@
     <div class="example">
       <span class="tag">Malware</span>
       <h3>Spot the malware type</h3>
-      <p>A hospital's imaging system suddenly displays a message: all patient scan files are encrypted, and a payment is demanded to restore access.</p>
+      <p>Kiriyama General Hospital's imaging system suddenly displays a message: all patient scan files are encrypted, and a payment is demanded to restore access.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -448,12 +461,12 @@
     <div class="example">
       <span class="tag">Threat actors</span>
       <h3>Who's behind it?</h3>
-      <p>A small local bakery's website gets defaced overnight with a political message, then restored by the host within hours. No data was stolen.</p>
+      <p>Tsukimi Sweets, a small family confectionery shop, has its website defaced overnight with a political message. The host restores it within hours. No data was stolen.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
           <p><strong>Likely actor:</strong> Hacktivist — motivated by a message, not money or espionage, and low-impact/high-visibility fits the profile.</p>
-          <p><strong>Contrast:</strong> if the same bakery's POS system was quietly skimming card numbers for months, that pattern points to organized crime instead.</p>
+          <p><strong>Contrast:</strong> if the same shop's POS system was quietly skimming card numbers for months, that pattern points to organized crime instead.</p>
         </div>
       </details>
     </div>
@@ -461,7 +474,7 @@
     <div class="example">
       <span class="tag">Threat · risk</span>
       <h3>Unlock the chain</h3>
-      <p>A company runs an old, unpatched web server (a known weakness). An attacker finds and downloads a ready-made tool for it and breaks in, forcing the firm offline for a day as it recovers.</p>
+      <p>Kaidō Freight runs an old, unpatched web server (a known weakness). An attacker downloads a ready-made tool for it and breaks in, forcing the company offline for a day while it recovers.</p>
       <details class="solution">
         <summary>Show answer</summary>
         <div class="solbody">
@@ -504,7 +517,7 @@
 
 <footer>
   <div class="wrap">
-    <p>IT121 · Cybersecurity Essentials · Session 1 reference — more sessions added as the course progresses.</p>
+    <p>IT121 · Cybersecurity Essentials · Session 1 reference. More sessions are added as the course progresses.</p>
   </div>
 </footer>
 
@@ -555,7 +568,7 @@
 
   const QUIZ = [
     {
-      q:"A hospital's patient database is altered so a patient's allergy record is silently changed. Which CIA leg was violated?",
+      q:"Kiriyama General Hospital's patient database is altered so a patient's allergy record is silently changed. Which CIA leg was violated?",
       choices:["Confidentiality","Integrity","Availability","All three equally"],
       correct:1,
       explain:"The data wasn't stolen or made inaccessible — it was changed without authorization. That's an integrity violation."
