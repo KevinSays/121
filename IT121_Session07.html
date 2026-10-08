@@ -1,0 +1,1509 @@
+<title>IT121 Session 7 – System and Network Defense &amp; Access Control</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 7</p>
+    <h1>System and Network Defense &amp; Access Control</h1>
+    <p class="lede">Session 6 gave you the layers. This session fills them in: the fences and badge readers, hardened services, segmented networks, and systems built to keep running when something breaks. Then it turns to the question every layer asks: who are you, and what are you allowed to do?</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 12 (12.1–12.7) &middot; Module 13 (13.1–13.4)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#physical">Physical</a>
+    <a href="#appsec">App Security</a>
+    <a href="#hardening">Hardening</a>
+    <a href="#segmentation">Segmentation</a>
+    <a href="#wireless">Wireless &amp; Mobile</a>
+    <a href="#resilience">Resilience</a>
+    <a href="#embedded">Embedded &amp; IoT</a>
+    <a href="#accesscontrols">Access Controls</a>
+    <a href="#acconcepts">AC Models</a>
+    <a href="#accounts">Accounts</a>
+    <a href="#aaa">AAA</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 7 covers</h2>
+      <p>Module 12 goes layer by layer through system and network defense: physical security, application security, hardened services, segmentation, wireless and mobile devices, resilience, and embedded systems. Module 13 covers access control: how a system decides who you are, what you may do, and how it keeps a record of what you did. Expect a lot of terms this week. The tables are built to be scanned, so use them as your checklist.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Explain how physical security measures are implemented to protect network equipment</li>
+      <li>Explain how to apply application security measures</li>
+      <li>Explain how to harden network services and protocols</li>
+      <li>Explain how network segmentation can help you harden the network</li>
+      <li>Configure wireless router hardening and security</li>
+      <li>Explain how high availability and resilient design keep systems running</li>
+      <li>Explain the security challenges of embedded, IoT, and specialized systems</li>
+      <li>Configure secure access on a host</li>
+      <li>Explain how access control protects network data</li>
+      <li>Explain the need for account management and access control strategies</li>
+      <li>Configure server-based authentication with TACACS+ and RADIUS</li>
+    </ul>
+  </section>
+
+  <!-- ── PHYSICAL SECURITY (12.1) ── -->
+  <section id="physical">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 12.1</p>
+      <h2>Physical Security</h2>
+      <p>If someone can walk up to the server, most other defenses stop mattering. Physical security keeps people away from the equipment, and records who got close.</p>
+    </div>
+
+    <h3>Fencing and physical barriers</h3>
+    <p>Barriers are usually the outermost and most visible layer. They include perimeter fences, security gates, <b>bollards</b> (short posts that stop vehicles), vehicle entry barriers, and guard shelters. Fence height decides who it stops:</p>
+    <table class="model-table">
+      <thead><tr><th>Height</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1 m (3–4 ft)</td><td>Deters casual trespassers only</td></tr>
+        <tr><td style="font-weight:700;">2 m (6–7 ft)</td><td>Too high for a casual trespasser to climb</td></tr>
+        <tr><td style="font-weight:700;">2.5 m (8 ft)</td><td>Offers limited delay to a determined intruder</td></tr>
+      </tbody>
+    </table>
+    <p>High-security areas add a top guard, like barbed or concertina wire. Fences need regular maintenance, local rules may limit what you can build, and vehicles should never park next to one, since a car roof makes a good ladder.</p>
+
+    <h3>Biometrics</h3>
+    <p><b>Biometrics</b> are a person's physiological or behavioral characteristics: face, fingerprint, hand geometry, iris, retina, signature, or voice. When choosing a biometric system, weigh accuracy, speed, user acceptance, uniqueness, resistance to counterfeiting, reliability, storage needs, enrollment time, and how intrusive the scan is. Accuracy matters most, and it's measured by error type:</p>
+    <table class="model-table">
+      <thead><tr><th>Error</th><th>What happens</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Type I: false rejection</td><td>A legitimate user is turned away</td><td>Annoying and costly, like a lost sale at a checkout</td></tr>
+        <tr><td style="font-weight:700;">Type II: false acceptance</td><td>An impostor is let in</td><td>A security breach. Usually treated as the most important error</td></tr>
+        <tr><td style="font-weight:700;">Crossover error rate (CER)</td><td>The point where the false rejection rate equals the false acceptance rate</td><td>The usual single measure of a system's overall accuracy. Lower is better</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Surveillance, guards, and RFID</h3>
+    <table class="model-table">
+      <thead><tr><th>Control</th><th>Strengths</th><th>Weaknesses</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Video and electronic surveillance</td><td>Watches areas when nobody is there, records for long periods, links to motion detection and alerts. In high-security sites, cover every entrance, exit, loading bay, stairwell, and refuse area</td><td>Someone still has to respond</td></tr>
+        <tr><td style="font-weight:700;">Guards and escorts</td><td>Respond instantly, adapt to new situations, and make decisions on the spot</td><td>Cost, limited ability to track high volumes of traffic, human error</td></tr>
+        <tr><td style="font-weight:700;">RFID asset tags</td><td>Readers hidden in door frames flag any tagged asset that leaves a secure area. Reads many tags at once, with no line of sight and no visible tag needed</td><td>Only tracks what's tagged</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── APPLICATION SECURITY (12.2) ── -->
+  <section id="appsec">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 12.2</p>
+      <h2>Application Security</h2>
+      <p>Applications are where users and data meet, so they're a favorite target. Security has to be built in while the software is written, not bolted on after.</p>
+    </div>
+
+    <h3>The development process</h3>
+    <table class="model-table">
+      <thead><tr><th>Stage</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Developing and testing</td><td>Code is written, tested, and debugged in a development environment, which is less restricted than production. Version control tracks changes, sandboxes keep work from being overwritten, and quality assurance (QA) finds defects</td></tr>
+        <tr><td style="font-weight:700;">Staging and production</td><td>Staging closely matches production, so developers can confirm the software runs under the real security settings before it's deployed</td></tr>
+        <tr><td style="font-weight:700;">Provisioning and deprovisioning</td><td>Creating or updating software, and removing it. A self-service portal can automate both</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Secure coding techniques</h3>
+    <table class="model-table">
+      <thead><tr><th>Technique</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Normalization</td><td>Converts input to its simplest known form, so each string has one representation and malicious input stands out. Also organizes database data to protect integrity</td></tr>
+        <tr><td style="font-weight:700;">Stored procedure</td><td>A group of precompiled SQL statements kept in the database. It takes input as parameters, which cuts traffic and speeds results</td></tr>
+        <tr><td style="font-weight:700;">Obfuscation and camouflage</td><td>Obfuscation hides data with random characters. Camouflage swaps it for realistic fake data. Both make reverse engineering harder</td></tr>
+        <tr><td style="font-weight:700;">Code reuse</td><td>Building on existing software saves time and money, but can carry old vulnerabilities in with it</td></tr>
+        <tr><td style="font-weight:700;">SDKs and third-party libraries</td><td>Ready-made code that speeds development. A flaw in one library can affect every application that uses it</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Input validation</h3>
+    <p>Many attacks work by feeding an application malformed data, to confuse it, crash it, or make it reveal too much. NetAcad's example: a newsletter sends confirmation links, attackers alter the links to change usernames, emails, or subscription status, then automate it to flood the database with thousands of fake subscribers. A <b>validation rule</b> checks that data falls inside the limits the database designer set:</p>
+    <table class="model-table">
+      <thead><tr><th>Check</th><th>What it tests</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Size</td><td>The number of characters</td></tr>
+        <tr><td style="font-weight:700;">Format</td><td>That data matches the required format</td></tr>
+        <tr><td style="font-weight:700;">Consistency</td><td>That codes in related data items agree</td></tr>
+        <tr><td style="font-weight:700;">Range</td><td>That a value is between a minimum and a maximum</td></tr>
+        <tr><td style="font-weight:700;">Check digit</td><td>An extra calculated digit that detects errors</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Integrity checks</h3>
+    <p>An <b>integrity check</b> uses a hash function to take a snapshot of data, then compares later snapshots to confirm nothing changed. A <b>checksum</b> is one example: the sender and receiver each compute a value, and if the two match, the data arrived intact. Common hash functions are MD5, SHA-1, SHA-256, and SHA-512. Integrity is also protected by:</p>
+    <ul>
+      <li><b>Version control:</b> two users can't update the same file, record, or transaction at the same time</li>
+      <li><b>Backups:</b> a verified, accurate backup restores corrupted data</li>
+      <li><b>Authorization:</b> permissions on a need-to-know basis, such as setting a file to read-only</li>
+    </ul>
+
+    <h3>Other practices</h3>
+    <p><b>Code signing</b> digitally signs executables, which proves who wrote them and that the code hasn't changed since. <b>Secure cookies</b> are sent only over HTTPS, so the data they hold isn't exposed over plain HTTP.</p>
+
+    <table class="model-table">
+      <thead><tr><th>Threat to applications</th><th>How to manage it</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Unauthorized access to data centers, computer rooms, and wiring closets</td><td>Policies, standards, and procedures for staff and visitors</td></tr>
+        <tr><td style="font-weight:700;">Server and system downtime</td><td>Business continuity and disaster recovery plans for critical applications</td></tr>
+        <tr><td style="font-weight:700;">OS and application vulnerabilities</td><td>An update policy, and regular patching</td></tr>
+        <tr><td style="font-weight:700;">Unauthorized access to systems</td><td>Multi-factor authentication and log monitoring</td></tr>
+        <tr><td style="font-weight:700;">Data loss</td><td>Data classification standards and backup procedures</td></tr>
+        <tr><td style="font-weight:700;">Software development vulnerabilities</td><td>Testing before launch</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout xref">
+      Hashing as an integrity tool first came up in <a href="IT121_Session06.html#integrity">Session 6</a>.
+    </div>
+  </section>
+
+  <!-- ── NETWORK HARDENING: SERVICES & PROTOCOLS (12.3) ── -->
+  <section id="hardening">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 12.3</p>
+      <h2>Network Hardening: Services and Protocols</h2>
+      <p>Every running service is a door. Hardening means closing the doors you don't need and locking the ones you keep.</p>
+    </div>
+
+    <p>Start by finding the doors. A <b>port scanner</b> sends a message to each port and reads the response, which shows whether the port is open and what's using it. Attackers run the same scans, so you want to see the results first. The goal is that only necessary ports are exposed.</p>
+
+    <h3>Network and routing services</h3>
+    <table class="model-table">
+      <thead><tr><th>Service</th><th>What attackers do</th><th>How to harden it</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">DHCP</td><td>Target the server to deny devices their addresses, or run a rogue DHCP server</td><td>DHCP snooping blocks rogue servers. Also: physically secure the server, patch it, put it behind a firewall, review DHCP logs, run antivirus, remove unused services, and close unused ports</td></tr>
+        <tr><td style="font-weight:700;">DNS</td><td>Tamper with name resolution (Session 3's DNS poisoning)</td><td><b>DNSSEC</b> adds digital signatures. Also: keep DNS software updated, hide the version string, separate internal and external DNS servers, restrict transactions by client IP, sign transactions and zones, limit zone transfers and dynamic updates, and log</td></tr>
+        <tr><td style="font-weight:700;">ICMP</td><td>Use it for reconnaissance, denial of service, and covert channels</td><td>Many networks filter ICMP requests</td></tr>
+        <tr><td style="font-weight:700;">RIP</td><td>Attack routers and routing updates to hurt performance or redirect traffic</td><td>Use routing with authentication, and keep routers patched. (RIP picks routes by hop count, with a maximum of 15 hops)</td></tr>
+        <tr><td style="font-weight:700;">NTP</td><td>Attack time servers to break certificate-based communication and hide their tracks</td><td>NTP authentication, so devices only trust a verified time server</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Secure protocols</h3>
+    <table class="model-table">
+      <thead><tr><th>Insecure</th><th>Secure replacement</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Telnet (TCP 23)</td><td>SSH (TCP 22)</td><td>Telnet sends usernames, passwords, and data in plaintext that anyone running Wireshark can read. SSH encrypts the whole session</td></tr>
+        <tr><td style="font-weight:700;">Plain file copy</td><td>SCP</td><td>Uses SSH to transfer files with authentication and confidentiality</td></tr>
+        <tr><td style="font-weight:700;">Older SNMP versions</td><td>SNMPv3</td><td>The current standard. Uses cryptography to stop eavesdropping and detect tampering</td></tr>
+        <tr><td style="font-weight:700;">HTTP (port 80)</td><td>HTTPS (SSL/TLS)</td><td>TLS is the updated, more secure replacement for SSL. It encrypts traffic between client and server</td></tr>
+        <tr><td style="font-weight:700;">FTP</td><td>FTPS</td><td>FTP logs in with a plaintext username and password. FTPS adds SSL/TLS</td></tr>
+        <tr><td style="font-weight:700;">POP (110) and IMAP (143)</td><td>POP or IMAP over SSL/TLS, and S/MIME</td><td>TLS encrypts mail in transit. S/MIME signs and encrypts messages, for authentication, integrity, and nonrepudiation</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… patrolling the walls</span>
+      A well-run castle doesn't wait for someone to shout before it checks the walls. Guards walk the walls on a schedule, looking for the side gate left unbarred or the stone that's come loose. A regular port scan is that patrol: you find the open door before a shinobi does. The patrol only works if you know which gates are supposed to exist, which is why Session 5's baseline comes first.
+    </div>
+  </section>
+
+  <!-- ── SEGMENTATION (12.4) ── -->
+  <section id="segmentation">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 12.4</p>
+      <h2>Network Hardening: Segmentation</h2>
+      <p>A flat network lets an attacker who gets in reach everything. Segmentation splits it into pieces with controlled crossings between them.</p>
+    </div>
+
+    <h3>VLANs</h3>
+    <p>A <b>virtual LAN (VLAN)</b> groups devices logically, regardless of which switch they're physically plugged into. A LAN is defined by physical connections; a VLAN is defined by logical ones. Each switch port is assigned to a VLAN, and <b>trunk</b> ports carry traffic for several VLANs between switches. Devices in a VLAN act like their own network. That lets you put sensitive systems, like HR's, in a separate VLAN, and it limits broadcast traffic. Protect VLANs by monitoring them, using advanced configurations, and patching.</p>
+
+    <h3>The DMZ and zones of risk</h3>
+    <p>A <b>demilitarized zone (DMZ)</b> is a small network between the trusted private network and the internet. Web and mail servers go there, so outsiders can reach them without touching the internal network. Most networks have two to four zones:</p>
+    <table class="model-table">
+      <thead><tr><th>Zone</th><th>Risk</th><th>Trust</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Private LAN</td><td>Low</td><td>High</td></tr>
+        <tr><td style="font-weight:700;">Extranet</td><td>Medium-low</td><td>Medium-high</td></tr>
+        <tr><td style="font-weight:700;">DMZ</td><td>Medium-high</td><td>Medium-low</td></tr>
+        <tr><td style="font-weight:700;">Internet</td><td>High</td><td>Low</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Zero trust</h3>
+    <p>Firewalls manage two directions of traffic. <b>North-south</b> traffic moves into and out of the organization's network. <b>East-west</b> traffic moves between servers inside the data center. Automatically trusting everyone inside lets an attacker who gets in move freely. The <b>zero trust</b> model monitors every user constantly, whatever their status or role. Module 13 comes back to it in <a href="#acconcepts">Concept 9</a>.</p>
+  </section>
+
+  <!-- ── WIRELESS & MOBILE (12.5) ── -->
+  <section id="wireless">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 12.5</p>
+      <h2>Hardening Wireless and Mobile Devices</h2>
+      <p>Wireless signals leave the building and mobile devices leave with their owners. Both need protection that works outside your walls.</p>
+    </div>
+
+    <h3>Wireless security standards</h3>
+    <table class="model-table">
+      <thead><tr><th>Standard</th><th>What it added</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">WEP</td><td>The first wireless security protocol, with 64- or 128-bit keys. Broken</td></tr>
+        <tr><td style="font-weight:700;">WPA</td><td>The response to WEP's weaknesses. 256-bit keys, message integrity checks (MIC) to detect altered data, and TKIP for better key handling. WPA-PSK (pre-shared key) is its most common setup. AES later replaced TKIP</td></tr>
+        <tr><td style="font-weight:700;">WPA2</td><td>Made AES mandatory and replaced TKIP with CCMP, an AES-based protocol</td></tr>
+        <tr><td style="font-weight:700;">WPA3</td><td>Builds on WPA2 with stronger cryptography and better key exchange</td></tr>
+        <tr><td style="font-weight:700;">WPS</td><td>Connects devices with a PIN. The PIN can be brute-forced, so <b>disable WPS</b></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Authentication</h3>
+    <p>The original 802.11 standard had two methods. <b>Open system authentication</b> lets any device connect; use it only where security doesn't matter. <b>Shared key authentication</b> authenticates and encrypts between the client and the access point. For enterprise networks, <b>EAP</b> (Extensible Authentication Protocol) is the framework: the access point collects the user's ID and password and relays them to an authentication server, which approves or denies the connection.</p>
+    <table class="model-table">
+      <thead><tr><th>EAP type</th><th>Client cert?</th><th>Server cert?</th><th>Deployment</th><th>Security</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">EAP-TLS</td><td>Yes</td><td>Yes</td><td>Difficult</td><td>High</td></tr>
+        <tr><td style="font-weight:700;">PEAP</td><td>No</td><td>Yes</td><td>Moderate</td><td>Medium</td></tr>
+        <tr><td style="font-weight:700;">EAP-TTLS</td><td>No</td><td>Yes</td><td>Moderate</td><td>Medium</td></tr>
+        <tr><td style="font-weight:700;">EAP-FAST</td><td>No</td><td>No</td><td>Easy</td><td>Medium</td></tr>
+      </tbody>
+    </table>
+    <p>A <b>rogue access point</b> is any unauthorized device that bridges wireless clients onto the network, often imitating a real one to steal data. <b>Mutual authentication</b>, where both sides authenticate each other before connecting, defeats it.</p>
+
+    <h3>Mobile communication methods</h3>
+    <table class="model-table">
+      <thead><tr><th>Method</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Wi-Fi and Bluetooth</td><td>Wireless signals for network and short-range connections</td></tr>
+        <tr><td style="font-weight:700;">Near-field communication (NFC)</td><td>Contactless communication over a few centimeters, such as tap-to-pay</td></tr>
+        <tr><td style="font-weight:700;">Infrared (IR)</td><td>Short-range, line-of-sight communication, like a phone acting as a TV remote</td></tr>
+        <tr><td style="font-weight:700;">USB</td><td>The only wired method. Used for storage, tethering, and connecting forensic acquisition devices during an investigation</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Managing and protecting mobile devices</h3>
+    <p>Company devices may be corporate-owned, or <b>corporate-owned, personally enabled (COPE)</b>; others are BYOD. Mobile device management covers:</p>
+    <ul>
+      <li><b>Storage segmentation and containerization:</b> an authenticated, encrypted area that keeps work data apart from personal data. It can isolate apps, control what they do, delete the container, and remotely wipe the device</li>
+      <li><b>Content management:</b> controlling what users can reach in data-sharing apps like Dropbox, Box, Google Drive, and iCloud</li>
+      <li><b>Application management:</b> allow listing signed apps so users install only trusted ones, plus strong passwords for apps that need credentials</li>
+    </ul>
+    <p>Threats include theft, loss, unauthorized access, and OS, application, and network risks. Users also bypass the device's own limits:</p>
+    <table class="model-table">
+      <thead><tr><th>Bypass</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Jailbreaking</td><td>Removes Apple's restriction to approved apps</td></tr>
+        <tr><td style="font-weight:700;">Rooting</td><td>Bypasses Android's security architecture for full administrative access</td></tr>
+        <tr><td style="font-weight:700;">Sideloading</td><td>Installs unapproved apps from outside the approved store. Less invasive, still a risk</td></tr>
+      </tbody>
+    </table>
+    <p>Tools can detect jailbroken or rooted devices, mark them noncompliant, and cut their access. Safeguards include screen locks, biometric authentication, <b>context-aware authentication</b> (machine learning that judges access by the user's normal behavior), remote wiping, and full device encryption. <b>GPS</b> locates a device to within about 5 meters. Geolocation and geofencing drive location-based push notifications, which attackers have started using to capture data.</p>
+
+    <div class="callout xref">
+      WEP through WPA3 and 802.1X Enterprise authentication were in <a href="IT121_Session03.html#securewlan">Session 3</a>. Mutual authentication was in <a href="IT121_Session06.html#states">Session 6</a>, and BYOD and MDM were in <a href="IT121_Session06.html#byod">Session 6's policies</a>.
+    </div>
+  </section>
+
+  <!-- ── RESILIENCE (12.6) ── -->
+  <section id="resilience">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 12.6</p>
+      <h2>Cybersecurity Resilience</h2>
+      <p>Availability is the "A" in CIA. Resilience is how you keep it when hardware fails, power drops, or an attack lands.</p>
+    </div>
+
+    <h3>High availability</h3>
+    <p><b>High availability</b> describes systems designed to avoid downtime as much as possible. It rests on three design principles:</p>
+    <table class="model-table">
+      <thead><tr><th>Principle</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Eliminate single points of failure</td><td>Find every component whose failure takes the whole system down, then add hot standby devices, redundant components, and multiple paths</td></tr>
+        <tr><td style="font-weight:700;">Provide reliable crossover</td><td>Redundant power supplies, backup power, and backup communications that take over smoothly</td></tr>
+        <tr><td style="font-weight:700;">Detect failures as they occur</td><td>Active monitoring that spots failures, and can even trigger the backup system</td></tr>
+      </tbody>
+    </table>
+    <p>A <b>single point of failure</b> can be hardware, a process, a piece of data, a utility, or even one highly skilled staff member. The fix is to stop relying on any single element.</p>
+
+    <h3>The five nines</h3>
+    <p>A popular availability goal is <b>five nines</b>: 99.999% uptime. Here's what each extra nine buys you:</p>
+    <table class="model-table">
+      <thead><tr><th>Availability</th><th>Maximum downtime per year</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">99.9% (three nines)</td><td>About 8.8 hours</td></tr>
+        <tr><td style="font-weight:700;">99.99% (four nines)</td><td>About 53 minutes</td></tr>
+        <tr><td style="font-weight:700;">99.999% (five nines)</td><td>About 5.26 minutes</td></tr>
+      </tbody>
+    </table>
+    <p>Common steps toward it: <b>standardized systems</b> that use the same components, so parts are easy to stock and swap; <b>clustering</b>, where several devices appear to users as one, so one can fail without an outage; and <b>shared component systems</b>, where a whole system can stand in for one that failed.</p>
+
+    <h3>Redundancy techniques</h3>
+    <table class="model-table">
+      <thead><tr><th>Technique</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">N+1 redundancy</td><td>Every component (N) has at least one backup (+1), like a car's four tires and a spare. It survives losing one of each component, but it isn't a fully redundant system</td></tr>
+        <tr><td style="font-weight:700;">RAID</td><td>Spreads data across several drives. <b>Mirroring</b> duplicates data on a second drive, <b>striping</b> spreads consecutive segments across drives, and <b>parity</b> adds checksums so lost data can be rebuilt. Every level except RAID 0 survives losing a disk. Hardware or software based</td></tr>
+        <tr><td style="font-weight:700;">Spanning Tree Protocol (STP)</td><td>Keeps redundant switch links loop-free by blocking extra paths, then unblocks one if the active link or switch fails</td></tr>
+        <tr><td style="font-weight:700;">Router redundancy</td><td>A standby router shares a virtual IP address with the forwarding router, and end devices use that virtual IP as their default gateway. If the standby stops hearing the forwarding router's periodic messages, it takes over. This is <b>first-hop redundancy</b></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Location redundancy</h3>
+    <table class="model-table">
+      <thead><tr><th>Replication</th><th>Timing</th><th>Trade-off</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Synchronous</td><td>Both sites updated in real time</td><td>Needs high bandwidth, and the sites must be close together to keep latency low</td></tr>
+        <tr><td style="font-weight:700;">Asynchronous</td><td>Nearly real time</td><td>Less bandwidth, and the sites can be farther apart</td></tr>
+        <tr><td style="font-weight:700;">Point-in-time</td><td>The backup site is updated periodically</td><td>The most bandwidth-friendly, since no constant connection is needed</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Resilient design</h3>
+    <p><b>Resiliency</b> is the methods and configurations that make a system tolerate failure. Redundant links with STP, and well-tuned routing protocols, switch over fast enough that users don't notice. <b>Application resilience</b> is an application's ability to keep working through component problems, using <b>fault-tolerant hardware</b> (multiples of every critical component in one computer), a <b>cluster architecture</b>, or <b>backup and restore</b>. <b>Cisco IOS resilient configuration</b> keeps a secure copy of the router's IOS image and running configuration (the primary bootset) that users can't delete, for fast recovery if flash or the startup config is erased.</p>
+    <p><b>Fault tolerance</b> keeps a system running when components fail; data mirroring is an example. <b>System resiliency</b> goes further: data and services stay available even during an attack, which takes redundant power and processing.</p>
+
+    <h3>Backups</h3>
+    <p>Backups are one of the best protections against data loss, and a sound security policy requires them, usually stored off-site. Plan for:</p>
+    <ul>
+      <li><b>Frequency:</b> a full backup weekly or monthly plus frequent partial backups. More partial backups means a longer restore</li>
+      <li><b>Storage:</b> rotate backups to an approved off-site location on the schedule the policy sets</li>
+      <li><b>Security:</b> password-protect backups</li>
+      <li><b>Validation:</b> always validate backups to confirm the data's integrity</li>
+    </ul>
+
+    <h3>Power and HVAC</h3>
+    <p>Data centers should have their own power supply, two or more feeds from different substations, power conditioning, backup power, and a <b>UPS</b> (uninterruptible power supply) to shut systems down gracefully.</p>
+    <table class="model-table">
+      <thead><tr><th>Category</th><th>Momentary</th><th>Prolonged</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Power excess</td><td>Spike: high voltage</td><td>Surge: high voltage</td></tr>
+        <tr><td style="font-weight:700;">Power loss</td><td>Fault: loss of power</td><td>Blackout: complete loss of power</td></tr>
+        <tr><td style="font-weight:700;">Power degradation</td><td>Sag or dip: low voltage</td><td>Brownout: low voltage</td></tr>
+      </tbody>
+    </table>
+    <p>An <b>inrush current</b> is the initial surge of power when equipment switches on. <b>HVAC</b> systems control temperature, humidity, and airflow to match the hardware's environmental requirements, found in its product specifications. Modern HVAC systems connect to the internet for remote management by contractors, which spreads access to many people and makes the system a security risk of its own.</p>
+    <p>Other measures for physical facilities: access control and CCTV at every entrance, visitor policies, building security testing (digital and physical), encrypted entry badges, disaster recovery and business continuity planning, security awareness training, and asset tagging.</p>
+
+    <div class="callout xref">
+      RAID and disaster plans first appeared in <a href="IT121_Session06.html#integrity">Session 6</a>.
+    </div>
+  </section>
+
+  <!-- ── EMBEDDED & SPECIALIZED (12.7) ── -->
+  <section id="embedded">
+    <div class="section-head">
+      <p class="kicker">Concept 7 · Module 12.7</p>
+      <h2>Embedded and Specialized Systems</h2>
+      <p>More and more of the network is things, not computers: sensors, cameras, door locks, medical devices, and controllers. Many were never designed with security in mind.</p>
+    </div>
+
+    <h3>Industrial control systems</h3>
+    <p>Stuxnet (one of the Malware Case File lab's incidents) targeted <b>SCADA</b> (Supervisory Control and Data Acquisition) systems, a type of industrial control system (ICS) used in manufacturing, energy, and communications. SCADA was designed before anyone connected it to IT networks or the internet, so security wasn't part of the design. Separate the SCADA network from the organization's LAN.</p>
+
+    <h3>Embedded systems and IoT</h3>
+    <table class="model-table">
+      <thead><tr><th>Term</th><th>What it means</th><th>Security concern</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Internet of Things (IoT)</td><td>Technologies that connect everyday devices to the internet: cars, machines, appliances, locks, cameras, and sensors</td><td>Greatly expands the attack surface. Infected IoT devices have launched some of the largest DDoS attacks in history</td></tr>
+        <tr><td style="font-weight:700;">Embedded system</td><td>A computer built into a device, like a smart TV, HVAC controller, medical device, or car</td><td>Vulnerable to <b>timing attacks</b>, a <b>side-channel attack</b> that learns from how long the system takes to respond. Power use, electromagnetic leaks, and sound can leak information too</td></tr>
+        <tr><td style="font-weight:700;">System on Chip (SoC)</td><td>A small single-board computer, like a Raspberry Pi or Arduino, that integrates the processor and peripherals. Some use an FPGA, a chip that can be reprogrammed in the field</td><td>Often poor authentication, and many can't be patched. They require a level of implied trust</td></tr>
+        <tr><td style="font-weight:700;">Real-time operating system (RTOS)</td><td>A small OS for IoT that switches tasks quickly and focuses on timing</td><td>Code injection, DoS, and priority inversion (a lower-priority task preempting a higher-priority one)</td></tr>
+      </tbody>
+    </table>
+    <p>IoT devices talk over short-, medium-, and long-range methods, including cellular (4G, 5G), radio, and <b>Zigbee</b>, a protocol set for wireless personal area networks. An IoT search engine like <b>Shodan</b> shows whether a device is exposed. To secure IoT: secure the wireless network, know exactly which devices are on your network and what each does, install security software where you can, and secure the phones and apps used to control them.</p>
+
+    <h3>VoIP</h3>
+    <p>VoIP is only as secure as the network under it. Attackers want free calls, eavesdropping, or to disrupt service. Countermeasures: encrypt voice packets, use SSH to manage gateways and switches, change default passwords, use an IDS to catch attacks like ARP poisoning, use VoIP-aware firewalls, and use strong authentication against <b>registration spoofing</b> (rerouting a victim's incoming calls), <b>proxy impersonation</b> (a rogue proxy), and <b>call hijacking</b> (rerouting calls in transit).</p>
+
+    <h3>Special-purpose systems</h3>
+    <table class="model-table">
+      <thead><tr><th>Sector</th><th>Examples</th><th>Risks</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Medical</td><td>Pacemakers, insulin pumps, implants, and defibrillators with wireless, remote monitoring, and NFC</td><td>Patient safety, leaked records, and a foothold into the hospital network</td></tr>
+        <tr><td style="font-weight:700;">Automotive</td><td>In-vehicle systems that record speed, location, and braking</td><td>Unauthorized tracking, jamming, and spoofing. Use secure software design, encrypted controller communication, and firewalls</td></tr>
+        <tr><td style="font-weight:700;">Aviation</td><td>Flight control and communication systems, and drones (UAVs)</td><td>Hard-coded logins, insecure protocols, and backdoors. Drones face hijacking, Wi-Fi attacks, GPS spoofing, jamming, and deauthentication</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Deception technologies</h3>
+    <p>Deception adds a fake layer to distract attackers, learn their methods, and warn of attacks.</p>
+    <table class="model-table">
+      <thead><tr><th>Tool</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Honeypot</td><td>A decoy system that mimics a real server and is left exposed. Everything the attacker does there is logged</td></tr>
+        <tr><td style="font-weight:700;">Honeynet</td><td>A collection of honeypots that mimics a whole network</td></tr>
+        <tr><td style="font-weight:700;">Honeyfile</td><td>A dummy file that attracts an attacker but holds nothing real</td></tr>
+        <tr><td style="font-weight:700;">DNS sinkhole</td><td>Stops hostnames for specified URLs from resolving, steering users away from malicious sites</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── ACCESS CONTROLS (13.1) ── -->
+  <section id="accesscontrols">
+    <div class="section-head">
+      <p class="kicker">Concept 8 · Module 13.1</p>
+      <h2>Access Controls</h2>
+      <p>Access control decides who gets in and what they can touch. It comes in three kinds, and AAA is the framework that ties them together.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Type</th><th>What it is</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Physical</td><td>Barriers that prevent direct contact with systems</td><td>Guards, fences, motion detectors, laptop locks, locked doors, swipe cards, guard dogs, video cameras, mantraps (entries that stagger people through and trap intruders), alarms</td></tr>
+        <tr><td style="font-weight:700;">Logical</td><td>Hardware and software that manage access to resources and systems</td><td>Encryption, smart cards, passwords, biometrics, ACLs, protocols, firewalls, routers, IDS, and <b>clipping levels</b> (an allowed number of errors before an alert)</td></tr>
+        <tr><td style="font-weight:700;">Administrative</td><td>Policies and procedures, focused on personnel and business practices</td><td>Policies, procedures, hiring practices, background checks, data classification, security training, and performance reviews</td></tr>
+      </tbody>
+    </table>
+
+    <h3>AAA in access control</h3>
+    <table class="model-table">
+      <thead><tr><th>Service</th><th>Question it answers</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Authentication</td><td>Who are you?</td><td>A username or ID, verified by something you know, something you have, or something you are</td></tr>
+        <tr><td style="font-weight:700;">Authorization</td><td>What can you do?</td><td>Which resources a user can reach, which operations they can perform, and when. Often enforced with an ACL</td></tr>
+        <tr><td style="font-weight:700;">Accounting</td><td>What did you do?</td><td>Tracks what users access, for how long, and what they change, for auditing</td></tr>
+      </tbody>
+    </table>
+    <p>NetAcad compares AAA to a credit card: it identifies who can use it, sets how much they can spend, and records what they bought.</p>
+
+    <h3>Identification and federated identity</h3>
+    <p><b>Identification</b> uses a <b>unique identifier</b>, usually a username, but possibly a PIN, smart card, or biometric, so the system can tie each action to one person. <b>Federated identity management</b> lets several organizations accept the same credentials, like signing in to many websites with one social login. The user gets single sign-on across the group. The cost: one compromised identity can cascade across every member, so share as little identifying information with partners as possible, and tie logins to authorized devices.</p>
+
+    <h3>Authentication factors</h3>
+    <table class="model-table">
+      <thead><tr><th>Factor</th><th>Examples</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Something you know</td><td>Passwords, passphrases, PINs</td><td>At least eight characters, mixing upper and lowercase, numbers, and symbols. Use a different password for every system</td></tr>
+        <tr><td style="font-weight:700;">Something you have</td><td>Smart cards, security key fobs</td><td>Usually used as the second factor in 2FA</td></tr>
+        <tr><td style="font-weight:700;">Something you are</td><td>Physiological traits (fingerprint, face, retina, DNA) and behavioral traits (voice, gait, typing rhythm)</td><td>Needs a reader, software that digitizes the scan, and a database to compare against</td></tr>
+      </tbody>
+    </table>
+    <p><b>Multi-factor authentication (MFA)</b> uses at least two different factors, so a stolen password alone doesn't open the account. <b>Two-factor authentication (2FA)</b> is MFA with exactly two; the terms are often used interchangeably.</p>
+
+    <h3>Authorization and accountability</h3>
+    <p>Authorization happens automatically right after authentication. The system checks the user's attributes, like their read, copy, edit, create, and delete privileges, and applies the restrictions. An <b>authorization policy</b> sets the rules. A <b>group membership policy</b> grants access by group; an <b>authority-level policy</b> grants it by position. Every employee's swipe card may open the front door, but not the server room.</p>
+    <p><b>Accountability</b> traces each action back to the person or process that did it, then reports the usage data for auditing or billing. It's built from technology (log files), policies and procedures (what gets logged, and how logs are reviewed and stored), data retention, media disposal, and compliance requirements, plus training people on all of it.</p>
+
+    <div class="callout xref">
+      AAA was introduced with RADIUS and TACACS+ in <a href="IT121_Session04.html#secservices">Session 4</a>. Module 13.4 goes deeper in <a href="#aaa">Concept 11</a>.
+    </div>
+  </section>
+
+  <!-- ── ACCESS CONTROL CONCEPTS (13.2) ── -->
+  <section id="acconcepts">
+    <div class="section-head">
+      <p class="kicker">Concept 9 · Module 13.2</p>
+      <h2>Access Control Concepts</h2>
+      <p>Once you know who someone is, a model decides what they get. Knowing the models also tells you how attackers try to break them.</p>
+    </div>
+
+    <h3>Zero trust</h3>
+    <p>Traditionally, the network edge was the line between trusted and untrusted. In <b>zero trust</b>, every place an access decision is made is a perimeter. Passing one check doesn't earn trust anywhere else; you authenticate again for each resource. That contains breaches and limits an attacker's lateral movement. It has three pillars:</p>
+    <table class="model-table">
+      <thead><tr><th>Pillar</th><th>Covers</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Workforce</td><td>People (employees, contractors, partners, vendors) on personal or corporate devices. Only the right users on secure devices reach applications, wherever they are</td></tr>
+        <tr><td style="font-weight:700;">Workloads</td><td>Applications in the cloud and data centers talking to each other, like an API or container reaching a database</td></tr>
+        <tr><td style="font-weight:700;">Workplace</td><td>Every device that connects, including IoT: endpoints, servers, printers, cameras, HVAC, kiosks, infusion pumps, and industrial controls</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Access control models</h3>
+    <p>The <b>principle of least privilege</b> gives users and processes only the access they need. The attack it guards against is <b>privilege escalation</b>: exploiting a vulnerability to gain more privilege than you should have.</p>
+    <table class="model-table">
+      <thead><tr><th>Model</th><th>Who decides access</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Discretionary (DAC)</td><td>The data's owner</td><td>The least restrictive. Owners set permissions (read, write, execute) for others, often with ACLs</td></tr>
+        <tr><td style="font-weight:700;">Mandatory (MAC)</td><td>The system, by comparing labels</td><td>The strictest. Every object has a security label and every user a clearance. Used in military and mission-critical systems</td></tr>
+        <tr><td style="font-weight:700;">Role-based (RBAC)</td><td>The user's job role</td><td>Privileges attach to roles, and people are assigned to roles. A type of non-discretionary control that suits large organizations. Can enforce DAC or MAC policies</td></tr>
+        <tr><td style="font-weight:700;">Attribute-based (ABAC)</td><td>Attributes of the user, the resource, and the environment</td><td>For example, the time of day the access is attempted</td></tr>
+        <tr><td style="font-weight:700;">Rule-based (also "RBAC")</td><td>Rules set by network security staff</td><td>Rules in an ACL, like permitted IP addresses or protocols. Users can't change them</td></tr>
+        <tr><td style="font-weight:700;">Time-based (TAC)</td><td>The time and day</td><td>Access only during set hours</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>Watch the acronym:</b> role-based and rule-based access control both abbreviate to RBAC. On a quiz, read the description, not the letters. Roles and job functions mean role-based. ACL rules, IP addresses, and protocols mean rule-based.
+    </div>
+
+    <h3>Network access control (NAC)</h3>
+    <p><b>NAC</b> systems enforce policy on the people and devices trying to join the network. They:</p>
+    <ul>
+      <li>Enforce access policies quickly for different operating conditions</li>
+      <li>Recognize and profile connected users and devices</li>
+      <li>Give guests secure access, often through a registration portal</li>
+      <li>Check a device's compliance by user type, device type, and OS before letting it on</li>
+      <li>Block, isolate, or repair noncompliant devices</li>
+    </ul>
+    <p>With BYOD and IoT, nobody could check thousands of devices by hand. NAC automates it, which makes it a key part of a zero trust architecture.</p>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… who may enter which bailey</span>
+      In a castle, your rank decides which baileys you may enter: that's <b>MAC</b>, clearance against labels. A storehouse keeper deciding who gets a key to their own storehouse is <b>DAC</b>, the owner's choice. Your post, gate guard or quartermaster, deciding where you go is <b>role-based</b> access. Here's where the picture breaks: a castle runs one ranking system, but a network often mixes models, like role-based groups that enforce MAC labels.
+    </div>
+  </section>
+
+  <!-- ── ACCOUNT MANAGEMENT (13.3) ── -->
+  <section id="accounts">
+    <div class="section-head">
+      <p class="kicker">Concept 10 · Module 13.3</p>
+      <h2>Account Management</h2>
+      <p>Every account is a key. Account management makes sure the right people hold the right keys, and that old keys stop working.</p>
+    </div>
+
+    <h3>Account types and practices</h3>
+    <p>Account types include administrator, user, service, and guest accounts. Never share privileged, administrator, or application accounts. Use the administrator account only to administer: browsing or reading email as admin hands any malware admin rights. Know the default accounts your OS installs, disable the ones you don't need, replace defaults, and require a password on every account.</p>
+    <ul>
+      <li>On hiring, create an identity profile, register the employee's devices, and enable access. The organization is the <b>identity provider (IdP)</b></li>
+      <li>Disable accounts that are no longer needed, and recover company data from the user's devices</li>
+      <li>Grant no more access than the job needs, and review access regularly</li>
+      <li>Restrict when users can log in (time of day) and from where (location)</li>
+    </ul>
+    <table class="model-table">
+      <thead><tr><th>Location term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Geofencing</td><td>Triggers an action when a user enters or leaves a geographic boundary</td></tr>
+        <tr><td style="font-weight:700;">Geolocation</td><td>Identifies a device by where it is</td></tr>
+        <tr><td style="font-weight:700;">Geotagging</td><td>Adds location data to something, like a phone photo tagged with coordinates</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Privileged accounts</h3>
+    <p>Privileged accounts have elevated, unrestricted access, which makes them attackers' favorite target. Robust practices:</p>
+    <ul>
+      <li>Identify privileged accounts and reduce how many there are</li>
+      <li>Enforce least privilege, and revoke access when people leave or change jobs</li>
+      <li>Eliminate shared accounts, shared admin credentials, and passwords that never expire</li>
+      <li>Store passwords securely, and change privileged passwords automatically every 30 or 60 days</li>
+      <li>Change embedded passwords in scripts and service accounts</li>
+      <li>Record privileged sessions, log all user activity, and alert on unusual behavior</li>
+      <li>Disable inactive privileged accounts</li>
+      <li>Require MFA for all administrative access</li>
+      <li>Put a gateway between users and sensitive assets to limit exposure to malware</li>
+    </ul>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the keys to the treasury</span>
+      No single retainer holds every key in a well-run castle, and opening the treasury takes two officials. If one retainer is bribed or careless, the treasury is still safe. Privileged accounts work the same way: fewer of them, nobody sharing them, MFA on every one, and every session recorded.
+    </div>
+
+    <h3>File access control</h3>
+    <p><b>Permissions</b> limit what a user or group can do to a file or folder. Giving someone a whole drive is easier, but limiting them to the folder they need is least privilege, closely tied to <b>need to know</b>. If their computer is infected, the malware only reaches what they could.</p>
+    <table class="model-table">
+      <thead><tr><th>Permission</th><th>What users can do</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Full Control</td><td>See contents, change and delete existing files and folders, create new ones, and run programs</td></tr>
+        <tr><td style="font-weight:700;">Modify</td><td>Change and delete existing files and folders, but not create new ones</td></tr>
+        <tr><td style="font-weight:700;">Read and execute</td><td>See the contents of existing files and folders, and run programs</td></tr>
+        <tr><td style="font-weight:700;">Write</td><td>Create new files and folders, and change existing ones</td></tr>
+        <tr><td style="font-weight:700;">Read</td><td>See a folder's contents and open files and folders</td></tr>
+      </tbody>
+    </table>
+    <p>A <b>deny</b> on a network share overrides every other permission, even for administrators. New files and folders <b>inherit</b> their parent folder's permissions. When data moves or is copied:</p>
+    <table class="model-table">
+      <thead><tr><th>Action</th><th>Same volume</th><th>Different volume</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Move</td><td>Keeps original permissions</td><td>Inherits new permissions</td></tr>
+        <tr><td style="font-weight:700;">Copy</td><td>Inherits new permissions</td><td>Inherits new permissions</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Account policies in Windows</h3>
+    <p>In a domain, the administrator sets a <b>domain security policy</b> in Active Directory that applies to every domain member. A standalone PC uses <b>Local Security Policy</b>, opened with <code>secpol.msc</code> (every edition except Home).</p>
+    <table class="model-table">
+      <thead><tr><th>Policy</th><th>NetAcad's example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Password policy</td><td>Eight characters minimum, with three of four categories (uppercase, lowercase, numbers, symbols). A password can be reused only after 24 unique passwords</td></tr>
+        <tr><td style="font-weight:700;">Account lockout policy</td><td>Five wrong attempts locks the account for 30 minutes, then the counter resets</td></tr>
+        <tr><td style="font-weight:700;">Audit policy</td><td>Logs account logon events, account management, directory service access, object access, policy changes, privilege use, process tracking, and system events</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Authentication management</h3>
+    <table class="model-table">
+      <thead><tr><th>Tool</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Single sign-on (SSO)</td><td>One set of credentials for many applications, so users only need to remember one strong password</td></tr>
+        <tr><td style="font-weight:700;">OAuth</td><td>A standard that lets third-party services use your account information from a provider like Google or Facebook</td></tr>
+        <tr><td style="font-weight:700;">Password vault</td><td>Stores credentials behind one strong password</td></tr>
+        <tr><td style="font-weight:700;">Knowledge-based authentication (KBA)</td><td>Resets a forgotten password using personal information or security questions</td></tr>
+        <tr><td style="font-weight:700;">HMAC</td><td>Hash-based message authentication code: a secret key combined with a hash function. The server computes its own HMAC with the user's key, and the two must match. IPsec VPNs and Cisco routing protocol authentication use it</td></tr>
+      </tbody>
+    </table>
+    <p>For new systems, choose SHA-256 or stronger. Avoid MD5 and SHA-1, which have known flaws.</p>
+
+    <h3>Authentication protocols</h3>
+    <table class="model-table">
+      <thead><tr><th>Protocol</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">PAP</td><td>Sends the username and password in plaintext</td></tr>
+        <tr><td style="font-weight:700;">CHAP</td><td>The client sends a one-way hash, and the server compares it with the hash it expects</td></tr>
+        <tr><td style="font-weight:700;">EAP</td><td>The client's password is sent hashed to an authentication server that has a certificate (the client doesn't need one)</td></tr>
+        <tr><td style="font-weight:700;">802.1X</td><td>Port-based network access, with identity confirmed by a RADIUS server using credentials or a certificate</td></tr>
+        <tr><td style="font-weight:700;">RADIUS</td><td>Simple username and password checks. Encrypts only the password</td></tr>
+        <tr><td style="font-weight:700;">TACACS+</td><td>Encrypts all data between client and server</td></tr>
+        <tr><td style="font-weight:700;">Kerberos</td><td>Strong encryption, with the client and server each proving their identity to the other</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout xref">
+      Linux file permissions (<code>rwx</code> and <code>chmod</code>) were in <a href="IT121_Session05.html#filesystem">Session 5</a>. Least privilege first appeared as Session 6's <a href="IT121_Session06.html#layers">limiting</a> strategy.
+    </div>
+  </section>
+
+  <!-- ── AAA (13.4) ── -->
+  <section id="aaa">
+    <div class="section-head">
+      <p class="kicker">Concept 11 · Module 13.4</p>
+      <h2>AAA Usage and Operation</h2>
+      <p>The network security policy says who can connect and what they can do. AAA is the framework that enforces it at scale, and keeps the receipts.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Component</th><th>NetAcad's example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Authentication</td><td>Proving identity with a username and password, challenge and response, or a token card</td></tr>
+        <tr><td style="font-weight:700;">Authorization</td><td>"User 'student' can access host server XYZ using SSH only."</td></tr>
+        <tr><td style="font-weight:700;">Accounting</td><td>"User 'student' accessed host server XYZ using SSH for 15 minutes."</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Local vs. server-based AAA</h3>
+    <table class="model-table">
+      <thead><tr><th>Method</th><th>How it works</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Local AAA (self-contained)</td><td>Checks usernames and passwords stored on the device itself</td><td>Small networks</td></tr>
+        <tr><td style="font-weight:700;">Server-based AAA</td><td>Checks a central AAA server, which can use Active Directory or LDAP for users and groups</td><td>Medium to large networks. More scalable and manageable, and the preferred method</td></tr>
+      </tbody>
+    </table>
+    <p>Devices talk to a central AAA server using RADIUS or TACACS+:</p>
+    <table class="model-table">
+      <thead><tr><th></th><th>TACACS+</th><th>RADIUS</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Functions</td><td>Separates authentication, authorization, and accounting</td><td>Combines authentication and authorization; accounting is separate</td></tr>
+        <tr><td style="font-weight:700;">Standard</td><td>Mostly Cisco</td><td>Open standard (RFC)</td></tr>
+        <tr><td style="font-weight:700;">Transport</td><td>TCP port 49</td><td>UDP ports 1812/1813, or 1645/1646</td></tr>
+        <tr><td style="font-weight:700;">Challenge and response</td><td>Bidirectional (as in CHAP)</td><td>Unidirectional, server to client</td></tr>
+        <tr><td style="font-weight:700;">Confidentiality</td><td>Encrypts the entire packet body</td><td>Encrypts only the password</td></tr>
+        <tr><td style="font-weight:700;">Per-user router command authorization</td><td>Yes</td><td>No</td></tr>
+        <tr><td style="font-weight:700;">Accounting</td><td>Limited</td><td>Extensive</td></tr>
+      </tbody>
+    </table>
+
+    <h3>AAA accounting</h3>
+    <p>Centralized AAA sends accounting records from every device to one place, which makes auditing simpler. When a user authenticates, a <b>start</b> record begins; when they finish, a <b>stop</b> record ends it. Records include the username, date and time, and the exact commands entered, which helps troubleshooting and provides evidence against anyone acting maliciously.</p>
+    <table class="model-table">
+      <thead><tr><th>Accounting type</th><th>What it captures</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Network</td><td>All PPP sessions, with packet and byte counts</td></tr>
+        <tr><td style="font-weight:700;">Connection</td><td>Outbound connections from the AAA client, such as SSH</td></tr>
+        <tr><td style="font-weight:700;">EXEC</td><td>User terminal sessions: username, date, start and stop times, and the access server's IP</td></tr>
+        <tr><td style="font-weight:700;">System</td><td>System-level events, like reboots or accounting being turned on or off</td></tr>
+        <tr><td style="font-weight:700;">Command</td><td>Commands run at a given privilege level, with the time and the user</td></tr>
+        <tr><td style="font-weight:700;">Resource</td><td>Start and stop records for authenticated connections, plus stop records for connections that failed authentication</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Physical security</span>
+      <h3>Two fingerprint readers</h3>
+      <p>Kiriyama General is adding a fingerprint reader to the pharmacy's controlled-drug room. Vendor A's reader rarely turns away real staff but occasionally accepts the wrong finger. Vendor B's reader sometimes makes staff try twice but almost never accepts the wrong finger. Which error matters more here, and which vendor fits?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Type II (false acceptance) matters more.</strong> Letting the wrong person into a room full of controlled drugs is a breach. Making a nurse scan twice (a Type I false rejection) is an annoyance.</p>
+          <p><strong>Vendor B.</strong> If both vendors publish a crossover error rate (CER), compare that too: lower is better overall.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Hardening</span>
+      <h3>Port 23 on a switch</h3>
+      <p>Your scheduled port scan of Kaidō Freight's warehouse switches shows TCP port 23 open on three of them. What's listening, why is it a problem, and what's the fix?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>What:</strong> Telnet, which uses TCP 23.</p>
+          <p><strong>Why it's a problem:</strong> Telnet sends the admin's username, password, and every command in plaintext. Anyone capturing traffic on that network, with Wireshark for example, can read the credentials.</p>
+          <p><strong>Fix:</strong> enable SSH (TCP 22) for management, disable Telnet, and rescan to confirm port 23 is closed.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Wireless</span>
+      <h3>The shop router's settings page</h3>
+      <p>Tsukimi Sweets' Wi-Fi router shows: WPA2-PSK with AES, WPS enabled, and the admin password still set to the default. Customers and the POS terminal share the same network. What would you change?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Disable WPS.</strong> Its PIN can be brute-forced, which hands over the network.</p>
+          <p><strong>Change the default admin password.</strong> Defaults are published online.</p>
+          <p><strong>Move to WPA3</strong> if the router and devices support it. WPA2 with AES is acceptable if not.</p>
+          <p><strong>Separate the POS terminal from customer Wi-Fi.</strong> A guest network or VLAN keeps a customer's laptop off the network that carries card payments, which matters for PCI DSS.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Resilience</span>
+      <h3>How many nines?</h3>
+      <p>Kiriyama General's EHR vendor offers 99.9% availability. A competitor promises 99.999% for more money. In downtime per year, what's the difference, and which would you recommend for a 24/7 hospital?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>The math:</strong> 99.9% allows about 8.8 hours of downtime a year. 99.999% allows about 5.26 minutes.</p>
+          <p><strong>Recommendation:</strong> five nines. Nine hours without patient records in an emergency department is a patient-safety problem, not an inconvenience. The extra cost buys clustering, redundant power, and the other measures that keep a single failure from becoming an outage.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Access control</span>
+      <h3>Name the model</h3>
+      <p>At Kaidō Freight: (1) everyone in the Dispatch group can open the routing app, because that's their job; (2) the VPN only accepts driver logins between 5 a.m. and 10 p.m.; (3) the office manager decides who else can open the shared contracts folder she owns. Which access control model is each?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>(1) Role-based (RBAC):</strong> access follows the job role.</p>
+          <p><strong>(2) Time-based (TAC):</strong> access depends on the time of day.</p>
+          <p><strong>(3) Discretionary (DAC):</strong> the data's owner decides.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">AAA</span>
+      <h3>RADIUS or TACACS+?</h3>
+      <p>Kaidō Freight has 40 Cisco switches and routers, each with its own local admin accounts. They want one central login for all network admins, and a record of every command each admin types. Local or server-based AAA, and which protocol?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Server-based AAA.</strong> Forty devices of local accounts is hard to manage. One central server is more scalable, and removing an admin happens in one place.</p>
+          <p><strong>TACACS+.</strong> It can authorize router commands per user or group, it encrypts the entire packet body, and command accounting logs each command with the user and time. RADIUS encrypts only the password and can't authorize individual router commands.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 7 reference. More sessions are added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+      {
+            "t": "Accountability",
+            "d": "Tracing every action back to the person or process that did it, then reporting the usage data for auditing or billing."
+      },
+      {
+            "t": "Accounting",
+            "d": "The AAA service that records what a user does: what they accessed, for how long, and what they changed."
+      },
+      {
+            "t": "Administrative access controls",
+            "d": "Policies and procedures for controlling access, focused on personnel and business practices, such as background checks and security training."
+      },
+      {
+            "t": "Attribute-based access control (ABAC)",
+            "d": "Access decided by attributes of the user, the resource, and the environment, such as the time of day."
+      },
+      {
+            "t": "Authentication",
+            "d": "The AAA service that verifies a user's identity, using something they know, have, or are."
+      },
+      {
+            "t": "Authorization",
+            "d": "The AAA service that decides which resources an authenticated user can access and what they can do with them."
+      },
+      {
+            "t": "Biometrics",
+            "d": "Physiological or behavioral characteristics, like a fingerprint, face, iris, or voice, used to identify a person."
+      },
+      {
+            "t": "Checksum",
+            "d": "A simple hash-style value computed before and after a transfer. If the two match, the data arrived unchanged."
+      },
+      {
+            "t": "Code signing",
+            "d": "Digitally signing software to prove who wrote it and that it hasn't changed since it was signed."
+      },
+      {
+            "t": "Containerization",
+            "d": "Separating work data from personal data on a mobile device in an authenticated, encrypted area that can be wiped on its own."
+      },
+      {
+            "t": "Crossover error rate (CER)",
+            "d": "The point where a biometric system's false rejection rate equals its false acceptance rate. Lower means more accurate."
+      },
+      {
+            "t": "Demilitarized zone (DMZ)",
+            "d": "A small network between the trusted private network and the internet, where public-facing web and mail servers go."
+      },
+      {
+            "t": "Discretionary access control (DAC)",
+            "d": "The least restrictive model: the data's owner decides who can access it and how."
+      },
+      {
+            "t": "DNS sinkhole",
+            "d": "A DNS control that stops specified hostnames from resolving, steering users away from malicious sites."
+      },
+      {
+            "t": "DNSSEC",
+            "d": "DNS Security Extensions: digital signatures that authenticate DNS data and protect against DNS tampering."
+      },
+      {
+            "t": "Embedded system",
+            "d": "A computer built into a device, like a smart TV, medical device, or car, that captures, stores, and uses data."
+      },
+      {
+            "t": "Extensible Authentication Protocol (EAP)",
+            "d": "An authentication framework used in wireless networks. Types include EAP-TLS, PEAP, EAP-TTLS, and EAP-FAST."
+      },
+      {
+            "t": "Federated identity management",
+            "d": "Several organizations accepting the same credentials, giving users single sign-on across the group."
+      },
+      {
+            "t": "First-hop redundancy",
+            "d": "A network's ability to recover when its default gateway router fails, by having a standby router take over a shared virtual IP."
+      },
+      {
+            "t": "Five nines",
+            "d": "An availability goal of 99.999%, which allows about 5.26 minutes of downtime per year."
+      },
+      {
+            "t": "Geofencing",
+            "d": "Triggering an action when a user or device enters or leaves a geographic boundary."
+      },
+      {
+            "t": "High availability",
+            "d": "Designing systems to avoid downtime: eliminate single points of failure, provide reliable crossover, and detect failures as they occur."
+      },
+      {
+            "t": "HMAC",
+            "d": "Hash-based message authentication code: a secret key combined with a hash function to authenticate a message and its origin."
+      },
+      {
+            "t": "Honeypot",
+            "d": "A decoy system left exposed to lure attackers, so their activity can be logged and studied."
+      },
+      {
+            "t": "Integrity check",
+            "d": "Using a hash function to snapshot data, then comparing later snapshots to confirm the data hasn't changed."
+      },
+      {
+            "t": "Internet of Things (IoT)",
+            "d": "The technologies that connect everyday devices, like cameras, locks, sensors, and appliances, to the internet."
+      },
+      {
+            "t": "Jailbreaking",
+            "d": "Removing an Apple device's restriction to approved apps."
+      },
+      {
+            "t": "Logical access controls",
+            "d": "Hardware and software that manage access, such as passwords, encryption, ACLs, firewalls, and IDS."
+      },
+      {
+            "t": "Mandatory access control (MAC)",
+            "d": "The strictest model: the system grants access by comparing a user's clearance with the object's security label."
+      },
+      {
+            "t": "Multi-factor authentication (MFA)",
+            "d": "Authentication using at least two different factors, such as a password plus a key fob. 2FA is MFA with exactly two."
+      },
+      {
+            "t": "Mutual authentication",
+            "d": "Both sides of a connection authenticate each other before connecting. It defeats rogue access points."
+      },
+      {
+            "t": "N+1 redundancy",
+            "d": "Every component (N) has at least one standby backup (+1), like a car's spare tire."
+      },
+      {
+            "t": "Network access control (NAC)",
+            "d": "A system that checks users and devices against policy before letting them on the network, and blocks, isolates, or repairs noncompliant ones."
+      },
+      {
+            "t": "Normalization",
+            "d": "Converting input to its simplest known form so each string has one representation and malicious input stands out."
+      },
+      {
+            "t": "Physical access controls",
+            "d": "Barriers that prevent direct contact with systems, such as guards, fences, locked doors, swipe cards, and mantraps."
+      },
+      {
+            "t": "Principle of least privilege",
+            "d": "Giving users and processes only the access they need to do their job."
+      },
+      {
+            "t": "Privilege escalation",
+            "d": "Exploiting a vulnerability to gain more privileges than a user or process should have."
+      },
+      {
+            "t": "RADIUS",
+            "d": "An open-standard AAA protocol on UDP 1812/1813. Combines authentication and authorization, and encrypts only the password."
+      },
+      {
+            "t": "Rogue access point",
+            "d": "An unauthorized wireless access point on the network, often imitating a real one to steal data."
+      },
+      {
+            "t": "Role-based access control (RBAC)",
+            "d": "Access decided by the user's job role. Watch out: rule-based access control shares the same acronym."
+      },
+      {
+            "t": "Rooting",
+            "d": "Bypassing Android's security architecture to get full administrative access to the device."
+      },
+      {
+            "t": "Rule-based access control",
+            "d": "Access decided by rules set by network staff, such as permitted IP addresses or protocols in an ACL. Also abbreviated RBAC."
+      },
+      {
+            "t": "SCADA",
+            "d": "Supervisory Control and Data Acquisition: industrial control systems that monitor and control physical processes. Stuxnet targeted them."
+      },
+      {
+            "t": "Side-channel attack",
+            "d": "An attack that learns from how a system is implemented, like its timing, power use, or electromagnetic leaks, rather than from software flaws."
+      },
+      {
+            "t": "Sideloading",
+            "d": "Installing unapproved apps from outside the approved app store."
+      },
+      {
+            "t": "Single point of failure",
+            "d": "Any component, process, data, or person whose failure brings down the whole system."
+      },
+      {
+            "t": "Single sign-on (SSO)",
+            "d": "One set of credentials that authenticates a user to many applications."
+      },
+      {
+            "t": "Spanning Tree Protocol (STP)",
+            "d": "Keeps redundant switch links loop-free by blocking extra paths, and unblocks one if the active path fails."
+      },
+      {
+            "t": "SSH",
+            "d": "Secure Shell: an encrypted remote connection to a device, on TCP 22. The secure replacement for Telnet."
+      },
+      {
+            "t": "TACACS+",
+            "d": "A mostly Cisco AAA protocol on TCP 49. Separates authentication, authorization, and accounting, and encrypts the entire packet body."
+      },
+      {
+            "t": "Telnet",
+            "d": "An old remote access protocol on TCP 23 that sends credentials and data in plaintext. Replace it with SSH."
+      },
+      {
+            "t": "Time-based access control (TAC)",
+            "d": "Access allowed only at certain times and days."
+      },
+      {
+            "t": "Type I error",
+            "d": "A false rejection: a biometric system turns away a legitimate user."
+      },
+      {
+            "t": "Type II error",
+            "d": "A false acceptance: a biometric system lets in an impostor. Usually treated as the more serious error."
+      },
+      {
+            "t": "Validation rule",
+            "d": "A check that input falls within set limits, by size, format, consistency, range, or check digit."
+      },
+      {
+            "t": "VLAN",
+            "d": "Virtual LAN: a logical group of devices that acts as its own network regardless of physical location, used to segment the network."
+      },
+      {
+            "t": "WPS",
+            "d": "Wi-Fi Protected Setup: connects devices with a PIN that can be brute-forced. It should be disabled."
+      },
+      {
+            "t": "Zero trust",
+            "d": "A security approach where no user or device is trusted by default. Every access decision point is treated as a perimeter."
+      }
+];
+
+  const QUIZ = [
+      {
+            "q": "Which biometric error is usually considered the most important for an access control system?",
+            "choices": [
+                  "Type I error (false rejection)",
+                  "Type II error (false acceptance)",
+                  "Enrollment error",
+                  "Throughput error"
+            ],
+            "correct": 1,
+            "explain": "A Type II error lets an impostor in, which is a security breach. A Type I error only turns away a legitimate user."
+      },
+      {
+            "q": "What does a fence about 2.5 meters (8 ft) high provide?",
+            "choices": [
+                  "It deters casual trespassers only",
+                  "It offers limited delay to a determined intruder",
+                  "It stops all intruders",
+                  "It replaces the need for surveillance"
+            ],
+            "correct": 1,
+            "explain": "About 1 m deters casual trespassers, about 2 m is too high for them to climb, and about 2.5 m offers limited delay to a determined intruder."
+      },
+      {
+            "q": "Which validation rule check makes sure a value lies between a minimum and a maximum?",
+            "choices": [
+                  "Size",
+                  "Format",
+                  "Check digit",
+                  "Range"
+            ],
+            "correct": 3,
+            "explain": "A range check confirms the value falls between the limits the database designer set."
+      },
+      {
+            "q": "An administrator wants to manage a router remotely without sending credentials in plaintext. Which protocol should replace Telnet?",
+            "choices": [
+                  "SSH",
+                  "FTP",
+                  "HTTP",
+                  "SNMPv1"
+            ],
+            "correct": 0,
+            "explain": "SSH (TCP 22) encrypts the whole session. Telnet (TCP 23) sends usernames and passwords in plaintext."
+      },
+      {
+            "q": "Which technology adds digital signatures to protect against threats to name resolution?",
+            "choices": [
+                  "DHCP snooping",
+                  "DNSSEC",
+                  "NTP authentication",
+                  "SNMPv3"
+            ],
+            "correct": 1,
+            "explain": "DNS Security Extensions (DNSSEC) use digital signatures to strengthen DNS authentication."
+      },
+      {
+            "q": "Where are an organization's public web and mail servers usually placed?",
+            "choices": [
+                  "In the private LAN",
+                  "In the DMZ",
+                  "In the extranet",
+                  "In a management VLAN"
+            ],
+            "correct": 1,
+            "explain": "The DMZ sits between the internet and the trusted network, so outsiders can reach those servers without touching the internal network."
+      },
+      {
+            "q": "Which wireless feature should be disabled because its PIN can be discovered by a brute-force attack?",
+            "choices": [
+                  "WPA3",
+                  "AES",
+                  "WPS",
+                  "EAP-TLS"
+            ],
+            "correct": 2,
+            "explain": "Wi-Fi Protected Setup (WPS) uses a PIN that can be brute-forced, so it should be turned off."
+      },
+      {
+            "q": "Which EAP type requires certificates on both the client and the server?",
+            "choices": [
+                  "EAP-TLS",
+                  "PEAP",
+                  "EAP-TTLS",
+                  "EAP-FAST"
+            ],
+            "correct": 0,
+            "explain": "EAP-TLS needs client and server certificates. It's the hardest to deploy and the most secure."
+      },
+      {
+            "q": "A mobile device user installs an app from outside the approved app store. What is this called?",
+            "choices": [
+                  "Rooting",
+                  "Jailbreaking",
+                  "Sideloading",
+                  "Geofencing"
+            ],
+            "correct": 2,
+            "explain": "Sideloading bypasses the approved app settings. It's less invasive than jailbreaking or rooting, but still a risk."
+      },
+      {
+            "q": "A design gives every component at least one standby backup, like a car's spare tire. What is this?",
+            "choices": [
+                  "RAID 0",
+                  "N+1 redundancy",
+                  "Point-in-time replication",
+                  "Five nines"
+            ],
+            "correct": 1,
+            "explain": "N+1 means each component (N) has at least one backup (+1)."
+      },
+      {
+            "q": "Which RAID technique duplicates data onto a second drive?",
+            "choices": [
+                  "Striping",
+                  "Parity",
+                  "Mirroring",
+                  "Spanning"
+            ],
+            "correct": 2,
+            "explain": "Mirroring stores an identical copy on a second drive. Striping spreads data across drives, and parity adds checksums for rebuilding."
+      },
+      {
+            "q": "Which access control model lets the owner of the data decide who can access it?",
+            "choices": [
+                  "Mandatory access control",
+                  "Discretionary access control",
+                  "Rule-based access control",
+                  "Time-based access control"
+            ],
+            "correct": 1,
+            "explain": "Discretionary access control (DAC) is the least restrictive model. The owner sets the permissions."
+      },
+      {
+            "q": "Which access control model assigns security labels to information and grants access based on a user's clearance?",
+            "choices": [
+                  "DAC",
+                  "ABAC",
+                  "TAC",
+                  "MAC"
+            ],
+            "correct": 3,
+            "explain": "Mandatory access control (MAC) compares the user's clearance with the object's label. It's the strictest model."
+      },
+      {
+            "q": "Which AAA protocol encrypts the entire packet body and separates authentication, authorization, and accounting?",
+            "choices": [
+                  "RADIUS",
+                  "TACACS+",
+                  "PAP",
+                  "Kerberos"
+            ],
+            "correct": 1,
+            "explain": "TACACS+ (TCP 49) encrypts the whole body and separates the three AAA functions. RADIUS encrypts only the password."
+      },
+      {
+            "q": "Which type of AAA accounting captures the commands a user ran at a given privilege level, with the time and the user?",
+            "choices": [
+                  "Network accounting",
+                  "System accounting",
+                  "Command accounting",
+                  "Connection accounting"
+            ],
+            "correct": 2,
+            "explain": "Command accounting records each EXEC shell command, when it ran, and who ran it."
+      }
+];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
