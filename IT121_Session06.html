@@ -1,0 +1,1461 @@
+<title>IT121 Session 6 – Cybersecurity Principles, Practices &amp; Processes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 6</p>
+    <h1>Cybersecurity Principles, Practices &amp; Processes</h1>
+    <p class="lede">Sessions 1 through 5 covered threats, networks, and endpoints one piece at a time. This session gives you a way to organize all of it. Every security decision you'll make at Bastion comes down to three questions: what are you protecting the data <em>for</em>, <em>where</em> is the data right now, and <em>what</em> is protecting it? Then it shows why one protection is never enough.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 10 (10.1–10.3) &middot; Module 11 (11.1–11.3)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#cube">The Cube</a>
+    <a href="#confidentiality">Confidentiality</a>
+    <a href="#integrity">Integrity &amp; Availability</a>
+    <a href="#states">States of Data</a>
+    <a href="#technology">Technologies</a>
+    <a href="#policies">People &amp; Policies</a>
+    <a href="#depth">Assets &amp; Threats</a>
+    <a href="#layers">Defense in Depth</a>
+    <a href="#opsmgmt">Operations Mgmt</a>
+    <a href="#byod">Policies &amp; Compliance</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 6 covers</h2>
+      <p>Module 10 introduces the cybersecurity cube: a model that describes any security problem along three dimensions. The first is the security principles (the CIA triad from Session 1, now in more depth). The second is the state the data is in. The third is the kind of countermeasure protecting it. Module 11, Understanding Defense, puts the pieces together. Defense in depth layers protections so one failure doesn't expose everything. Operations management keeps watch over those layers through configuration baselines and logs. Policies, BYOD rules, and outside regulations set the rules every layer follows.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Explain the three dimensions of the cybersecurity cube</li>
+      <li>Explain how confidentiality, integrity, and availability are protected in practice</li>
+      <li>Compare the three states of data</li>
+      <li>Compare the types of cybersecurity countermeasures</li>
+      <li>Explain how the defense-in-depth strategy is used to protect networks</li>
+      <li>Explain how an organization monitors cybersecurity threats</li>
+      <li>Explain security policies, regulations, and standards</li>
+    </ul>
+  </section>
+
+  <!-- ── THE CUBE (10.1) ── -->
+  <section id="cube">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 10.1</p>
+      <h2>The Cybersecurity Cube</h2>
+      <p>The cybersecurity cube, also called the McCumber Cube, describes data protection along three dimensions. Any one problem sits at one point in each dimension.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 640 300" role="img" aria-label="The cybersecurity cube's three dimensions: security principles (confidentiality, integrity, availability), states of data (at rest, in transit, in process), and countermeasures (technologies, policies and practices, people).">
+        <g font-family="IBM Plex Mono" font-size="13" font-weight="700">
+          <rect x="10" y="40" width="190" height="230" fill="var(--surface)" stroke="var(--accent)"/>
+          <text x="105" y="28" text-anchor="middle" fill="var(--accent)">PRINCIPLES</text>
+          <rect x="225" y="40" width="190" height="230" fill="var(--surface)" stroke="var(--accent-2)"/>
+          <text x="320" y="28" text-anchor="middle" fill="var(--accent-2)">STATES OF DATA</text>
+          <rect x="440" y="40" width="190" height="230" fill="var(--surface)" stroke="var(--correct)"/>
+          <text x="535" y="28" text-anchor="middle" fill="var(--correct)">COUNTERMEASURES</text>
+        </g>
+        <g font-family="Zen Kaku Gothic New" font-size="14" fill="currentColor" text-anchor="middle">
+          <text x="105" y="95">Confidentiality</text>
+          <text x="105" y="160">Integrity</text>
+          <text x="105" y="225">Availability</text>
+          <text x="320" y="95">At rest</text>
+          <text x="320" y="160">In transit</text>
+          <text x="320" y="225">In process</text>
+          <text x="535" y="95">Technologies</text>
+          <text x="535" y="160">Policies &amp; practices</text>
+          <text x="535" y="225">People</text>
+        </g>
+        <g stroke="var(--border)" stroke-dasharray="4 4">
+          <line x1="20" y1="127" x2="190" y2="127"/><line x1="20" y1="192" x2="190" y2="192"/>
+          <line x1="235" y1="127" x2="405" y2="127"/><line x1="235" y1="192" x2="405" y2="192"/>
+          <line x1="450" y1="127" x2="620" y2="127"/><line x1="450" y1="192" x2="620" y2="192"/>
+        </g>
+      </svg>
+      <figcaption>The three dimensions of the cybersecurity cube. Pick one item from each column and you've described a specific security problem.</figcaption>
+    </figure>
+
+    <table class="model-table">
+      <thead><tr><th>Dimension</th><th>The question it answers</th><th>The three options</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Security principles</td><td>What are we protecting the data for?</td><td>Confidentiality, integrity, availability (the CIA triad)</td></tr>
+        <tr><td style="font-weight:700;">States of data</td><td>Where is the data right now?</td><td>At rest (stored), in transit (moving), in process (being used)</td></tr>
+        <tr><td style="font-weight:700;">Countermeasures</td><td>What protects it?</td><td>Technologies, policies and practices, people</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Example of one point on the cube:</b> patient records on Kiriyama General's file server, encrypted so a stolen drive is unreadable. That's <em>confidentiality</em> of data <em>at rest</em>, protected by a <em>technology</em>. Change any one of the three and you need a different defense.
+    </div>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the castle's three questions</span>
+      A castle steward guarding the rice harvest asks the same three things. Why does it matter: so nobody steals it, nobody waters it down, and it's there when the garrison is hungry? Where is it now: in the storehouse, on a cart, or on the counting-house scale? And what guards it: walls and locks, the castle's written rules, or trained guards? Session 1's <a href="IT121_Session01.html#cia">lord's sealed letters</a> covered the first question. This session adds the other two.
+    </div>
+  </section>
+
+  <!-- ── CONFIDENTIALITY (10.1) ── -->
+  <section id="confidentiality">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 10.1</p>
+      <h2>Confidentiality in Practice</h2>
+      <p>Confidentiality keeps data away from people, processes, and devices that aren't authorized to see it. The first step is knowing what kind of information you're holding.</p>
+    </div>
+
+    <h3>Types of sensitive information</h3>
+    <table class="model-table">
+      <thead><tr><th>Type</th><th>What it includes</th><th>Bastion example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Personal information</td><td>Anything that can identify a person: name, address, medical records, credit records (often called PII, personally identifiable information)</td><td>Kiriyama General's patient records</td></tr>
+        <tr><td style="font-weight:700;">Business information</td><td>Internal details that give a company its edge: trade secrets, customer lists, contracts, financials</td><td>Kaidō Freight's customer list and shipping rates</td></tr>
+        <tr><td style="font-weight:700;">Classified information</td><td>Government information labeled by sensitivity, such as top secret, secret, or confidential</td><td>None of Bastion's clients. Government agencies and their contractors handle it</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Ways to protect it</h3>
+    <table class="model-table">
+      <thead><tr><th>Method</th><th>How it protects confidentiality</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Encryption</td><td>Scrambles data so only someone with the key can read it</td></tr>
+        <tr><td style="font-weight:700;">Authentication and access control</td><td>Verifies who someone is, then limits what they can open (Session 4's AAA)</td></tr>
+        <tr><td style="font-weight:700;">Tokenization</td><td>Replaces sensitive data, like a card number, with a random token. The token has no mathematical link to the original, so it's useless outside the system that issued it</td></tr>
+        <tr><td style="font-weight:700;">Digital rights management (DRM)</td><td>Controls how copyrighted digital content, like music, movies, and e-books, can be copied or used</td></tr>
+        <tr><td style="font-weight:700;">Information rights management (IRM)</td><td>The same idea applied to an organization's own documents and emails: who can open, forward, print, or edit them</td></tr>
+        <tr><td style="font-weight:700;">Data anonymization</td><td>Strips or alters identifying details so the data can't be traced back to a person, for example before sharing it for research</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Tokenization vs. encryption:</b> encrypted data can be turned back into the original by anyone who gets the key. A token can't be reversed at all. Only the system that issued it keeps the lookup table. That's why a stolen token is worthless to an attacker, while stolen encrypted data is only as safe as the key.
+    </div>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… a storehouse claim tag</span>
+      Leave goods at the castle storehouse and you get a numbered wooden tag. The tag itself says nothing about what you left, and it's worthless at any other storehouse. Only the storehouse's own book links the number to your goods. A payment token works the same way: steal it, and all you have is a number.
+    </div>
+  </section>
+
+  <!-- ── INTEGRITY & AVAILABILITY (10.1) ── -->
+  <section id="integrity">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 10.1</p>
+      <h2>Integrity and Availability in Practice</h2>
+      <p>Integrity means data stays accurate, consistent, and trustworthy for its whole life. How hard you work to protect it depends on how much damage bad data would do.</p>
+    </div>
+
+    <h3>Levels of integrity need</h3>
+    <table class="model-table">
+      <thead><tr><th>Level</th><th>Who needs it</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Critical</td><td>Healthcare, like Kiriyama General</td><td>Wrong prescription or allergy data can kill someone</td></tr>
+        <tr><td style="font-weight:700;">High</td><td>E-commerce and analytics businesses</td><td>Decisions and transactions depend on the data, so it's validated and verified often</td></tr>
+        <tr><td style="font-weight:700;">Mid</td><td>Public data, like search results and online sales listings</td><td>Some verification, and users know to trust it less</td></tr>
+        <tr><td style="font-weight:700;">Low</td><td>Blogs and personal social media pages</td><td>Mostly unverified opinion. Readers shouldn't rely on it</td></tr>
+      </tbody>
+    </table>
+
+    <p>Integrity is protected with access controls (only authorized people can change data), validation checks on what goes in, and hashing, which produces a fingerprint that changes if even one bit of the data changes. Hashing comes back in detail with cryptography in Module 18.</p>
+
+    <h3>Keeping data available</h3>
+    <table class="model-table">
+      <thead><tr><th>Practice</th><th>What it involves</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Redundancy</td><td>No single point of failure: spare servers, extra network paths, RAID storage (Concept 4)</td></tr>
+        <tr><td style="font-weight:700;">Backups</td><td>Copies of data kept somewhere else. Both the backup system and the backed-up data have to be tested by actually restoring them</td></tr>
+        <tr><td style="font-weight:700;">Maintenance and patching</td><td>Planned updates so systems don't fail or get knocked offline by a known bug</td></tr>
+        <tr><td style="font-weight:700;">Disaster plan</td><td>Written, practiced steps so staff and the security team know how to respond and recover from a major disruption</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>A backup you've never restored is a hope, not a backup.</b> Ransomware attacks often succeed because the victim's backups turn out to be incomplete, out of date, or encrypted along with everything else.
+    </div>
+  </section>
+
+  <!-- ── STATES OF DATA (10.2) ── -->
+  <section id="states">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 10.2</p>
+      <h2>States of Data</h2>
+      <p>Data is always in one of three states, and each state has its own risks. A good defense covers all three.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>State</th><th>What it means</th><th>Main risks</th><th>Typical protection</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">At rest</td><td>Stored and not being used: on a drive, in a database, in the cloud</td><td>Theft of the device, unauthorized access to the storage</td><td>Disk and file encryption, access control, physical security</td></tr>
+        <tr><td style="font-weight:700;">In transit</td><td>Moving from one device to another: over a cable, over Wi-Fi, or on a carried USB drive</td><td>Interception, alteration on the way, the transfer being blocked</td><td>Encryption in transit (like HTTPS or a VPN), mutual authentication</td></tr>
+        <tr><td style="font-weight:700;">In process</td><td>Being input, changed, computed, or output</td><td>Bad input, corruption, unauthorized changes</td><td>Input validation, integrity checks, access control on who can modify</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the rice harvest</span>
+      The same rice faces different dangers depending on where it is. In the storehouse (<b>at rest</b>), the risk is a thief getting inside, so you need strong doors and a guard on the key. On a cart on the highway (<b>in transit</b>), bandits can stop it or swap it, so you need escorts and sealed bales. On the counting-house scale (<b>in process</b>), a dishonest clerk can misweigh it, so you need careful records and a second person checking.
+    </div>
+
+    <h3>Data at rest: where it's stored</h3>
+    <table class="model-table">
+      <thead><tr><th>Storage type</th><th>What it is</th><th>Security notes</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Direct-attached storage (DAS)</td><td>Storage connected to one computer: an internal drive or a plugged-in USB drive</td><td>Not shared by default. Hard to manage at scale, and only as safe as the one host it's attached to</td></tr>
+        <tr><td style="font-weight:700;">RAID</td><td>Redundant array of independent disks: several drives that the system treats as one</td><td>Improves performance and fault tolerance (a drive can fail without losing data). RAID is not a backup: deleted or encrypted files are gone on every disk at once</td></tr>
+        <tr><td style="font-weight:700;">Network-attached storage (NAS)</td><td>A storage device on the network that many authorized users can save to and read from</td><td>Centralized and easy to back up, but it's a single, valuable target</td></tr>
+        <tr><td style="font-weight:700;">Storage area network (SAN)</td><td>A dedicated high-speed network connecting servers to shared storage</td><td>Built for performance and scale in data centers. Needs its own access controls</td></tr>
+        <tr><td style="font-weight:700;">Cloud storage</td><td>Storage in a provider's data center, reached over the internet</td><td>Someone else runs the hardware, but you're still responsible for who can access your data (Module 17)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Data in transit and in process</h3>
+    <p>Data in transit moves over wired networks, over wireless, or by <b>sneakernet</b>: someone physically carrying it on removable media like a USB drive. Each path needs protecting. <b>Mutual authentication</b>, where the client and the server each verify the other's identity, stops a device from connecting to an impostor such as Session 3's evil twin access point.</p>
+    <p>Data in process goes through three stages: <b>input</b> (typing, forms, file uploads, sensors), <b>modification</b> (manual edits or automated processing, like compression or encryption), and <b>output</b> (to a screen, a printer, or another system). <b>Data corruption</b>, accidental or deliberate, can happen at any of those stages and leave data unreadable or wrong.</p>
+  </section>
+
+  <!-- ── TECHNOLOGIES (10.3) ── -->
+  <section id="technology">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 10.3</p>
+      <h2>Countermeasures: Technologies</h2>
+      <p>The third dimension of the cube is what actually protects the data. Technology is the most visible kind of countermeasure, and most of it is either software running on a host or hardware sitting on the network.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Type</th><th>Examples</th><th>What they do</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Software-based</td><td>Software firewalls, network and port scanners, protocol analyzers, vulnerability scanners, host-based IDS</td><td>Control traffic to one host, find open ports, capture and examine traffic, find weaknesses, and watch a host for suspicious activity</td></tr>
+        <tr><td style="font-weight:700;">Hardware-based</td><td>Firewall appliances, IDS/IPS appliances, proxy servers, biometric access control</td><td>Filter or block traffic for a whole network, stand between users and the internet, and verify identity physically</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tools you'll see named on the exam</h3>
+    <table class="model-table">
+      <thead><tr><th>Tool</th><th>What it's for</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Port scanner</td><td>Finds which ports are open on a host, so you can spot services that shouldn't be listening</td></tr>
+        <tr><td style="font-weight:700;">Protocol analyzer</td><td>Captures and decodes traffic. It's how you learn what normal traffic looks like (a baseline) and find misconfigurations. Wireshark is one</td></tr>
+        <tr><td style="font-weight:700;">Vulnerability scanner</td><td>Checks systems against a list of known weaknesses and reports what needs fixing</td></tr>
+        <tr><td style="font-weight:700;">Proxy server</td><td>Makes requests to the internet on users' behalf, so the outside world sees one address instead of each user's</td></tr>
+        <tr><td style="font-weight:700;">Biometric access control</td><td>Verifies identity with a physical trait, like a fingerprint or face, before granting access</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout xref">
+      Firewalls, IDS, and IPS were covered in <a href="IT121_Session04.html#secdevices">Session 4</a>. Host-based firewalls and HIDS were covered in <a href="IT121_Session05.html#hips">Session 5</a>.
+    </div>
+  </section>
+
+  <!-- ── PEOPLE & POLICIES (10.3) ── -->
+  <section id="policies">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 10.3</p>
+      <h2>Countermeasures: People and Policies</h2>
+      <p>Technology fails if nobody knows how to use it or what the rules are. The other two countermeasures are trained people and written policies.</p>
+    </div>
+
+    <p><b>People:</b> a <b>security awareness program</b> teaches every employee, not just IT, to recognize threats like phishing and to follow security procedures. Awareness only works when it's ongoing and when it's backed by clear policies.</p>
+
+    <h3>The security policy</h3>
+    <p>A <b>security policy</b> is a set of written security goals and rules for an organization. It shows the organization's commitment to security and sets the rules for how people behave. Most policies include these parts:</p>
+    <table class="model-table">
+      <thead><tr><th>Policy</th><th>What it covers</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Identification and authentication</td><td>Who is allowed to access network resources, and how their identity is verified</td></tr>
+        <tr><td style="font-weight:700;">Password policy</td><td>Password strength and how often passwords must change</td></tr>
+        <tr><td style="font-weight:700;">Acceptable use policy (AUP)</td><td>What users may and may not do on the organization's systems, such as banned websites or apps that hog bandwidth</td></tr>
+        <tr><td style="font-weight:700;">Remote access policy</td><td>How off-site users, like Kaidō Freight's drivers on VPN, may connect</td></tr>
+        <tr><td style="font-weight:700;">Network maintenance policy</td><td>How and when operating systems and applications get updated</td></tr>
+        <tr><td style="font-weight:700;">Incident handling policy</td><td>The procedures for responding to a security incident</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Standards, guidelines, and procedures</h3>
+    <table class="model-table">
+      <thead><tr><th>Document</th><th>Mandatory?</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Standard</td><td>Yes. A required rule everyone follows the same way</td><td>"All laptops use full-disk encryption."</td></tr>
+        <tr><td style="font-weight:700;">Guideline</td><td>No. A recommendation for doing something more securely</td><td>"Consider using a password manager."</td></tr>
+        <tr><td style="font-weight:700;">Procedure</td><td>Yes. Step-by-step instructions, often with screenshots, for doing a task the approved way</td><td>"How to enable BitLocker: step 1, open Control Panel…"</td></tr>
+      </tbody>
+    </table>
+    <p>Organizations don't have to write guidelines from scratch. Outside sources include <b>NIST</b> (the US National Institute of Standards and Technology), the <b>NSA's</b> security configuration guides, and the <b>Common Criteria</b>, an international standard for evaluating the security of IT products.</p>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… walls, laws, and guards</span>
+      A castle needs all three. Walls and gates (<b>technology</b>) do nothing if the gate is left open. The castle's written rules (<b>policies</b>) say who may pass and when, but rules nobody reads protect nothing. Trained guards (<b>people</b>) make the rules and the walls work. Take away any one and the other two have a gap an attacker can walk through.
+    </div>
+  </section>
+
+  <!-- ── ASSETS, VULNERABILITIES, THREATS (11.1) ── -->
+  <section id="depth">
+    <div class="section-head">
+      <p class="kicker">Concept 7 · Module 11.1</p>
+      <h2>Assets, Vulnerabilities, and Threats</h2>
+      <p>Your job is to secure the organization's assets. Before you can plan any defense, you have to know three things: what you're protecting, where it's weak, and what could go wrong.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Term</th><th>Definition</th><th>Kaidō Freight example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Asset</td><td>Anything of value to the organization that must be protected: servers, infrastructure devices, end devices, and the greatest asset, data</td><td>The domain controller, the routing database, the drivers' tablets</td></tr>
+        <tr><td style="font-weight:700;">Vulnerability</td><td>A weakness in a system or its design that a threat actor could exploit</td><td>A VPN appliance that's three patches behind</td></tr>
+        <tr><td style="font-weight:700;">Threat</td><td>Any potential danger to an asset</td><td>A ransomware gang scanning the internet for that VPN flaw</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Identify assets</h3>
+    <p>Every device and every piece of information the organization owns or manages is an asset. Together they make up the <b>attack surface</b> (Session 1's term). As the organization grows, so does the list. <b>Asset management</b> means inventorying all of those assets, then developing and implementing policies and procedures to protect them. You also need to know where the critical information is stored and how people get to it.</p>
+
+    <p><b>Asset classification</b> sorts assets into groups with common characteristics, so the most critical information gets the most protection. A labeling system shows how valuable, sensitive, and critical each item is. It takes four steps:</p>
+    <table class="model-table">
+      <thead><tr><th>Step</th><th>What you do</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1. Choose the category</td><td>Information assets, software assets, physical assets, or services</td></tr>
+        <tr><td style="font-weight:700;">2. Establish accountability</td><td>Name an owner for every information asset and every piece of application software</td></tr>
+        <tr><td style="font-weight:700;">3. Set the criteria</td><td>Classify by confidentiality, value, time, access rights, and destruction</td></tr>
+        <tr><td style="font-weight:700;">4. Apply a schema</td><td>Label information the same way everywhere, so protection is uniform and monitoring is easier</td></tr>
+      </tbody>
+    </table>
+
+    <p><b>Asset standardization</b> picks the specific hardware and software products the organization uses. When something fails, a standard part can be swapped in fast. A non-standard environment needs more expertise to run and costs more in maintenance contracts and spare inventory.</p>
+
+    <h3>The asset lifecycle</h3>
+    <table class="model-table">
+      <thead><tr><th>Stage</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Procurement</td><td>The organization buys the asset based on a documented need, and it's added to inventory</td></tr>
+        <tr><td style="font-weight:700;">Deployment</td><td>Staff inspect and test it, then tag it (a label or barcode) for tracking. It moves from inventory to in use</td></tr>
+        <tr><td style="font-weight:700;">Utilization</td><td>The longest stage. Performance is checked continuously, and upgrades, patches, license renewals, and compliance audits happen here</td></tr>
+        <tr><td style="font-weight:700;">Maintenance</td><td>Modifications and upgrades that extend the asset's productive life</td></tr>
+        <tr><td style="font-weight:700;">Disposal</td><td>All data is wiped first. The asset may be dismantled for parts, and hazardous parts go out under local guidelines</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Identify vulnerabilities and threats</h3>
+    <p><b>Threat identification</b> produces a list of the threats likely in your environment. Ask three questions about each system. What are its possible vulnerabilities? Who might want to exploit them to reach specific information assets? What are the consequences if they do and the assets are lost?</p>
+    <p>NetAcad's example is an online banking system. Its threat list would include:</p>
+    <table class="model-table">
+      <thead><tr><th>Threat</th><th>What it looks like</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Internal system compromise</td><td>The attacker uses the exposed e-banking servers to break into internal bank systems</td></tr>
+        <tr><td style="font-weight:700;">Stolen customer data</td><td>Customers' personal and financial data is taken from the customer database</td></tr>
+        <tr><td style="font-weight:700;">Phony transactions from an external server</td><td>The attacker alters the application's code and makes transactions while impersonating a real user</td></tr>
+        <tr><td style="font-weight:700;">Phony transactions with a stolen PIN or smart card</td><td>The attacker steals a customer's identity and uses the account</td></tr>
+        <tr><td style="font-weight:700;">Insider attack</td><td>An employee finds a flaw and uses it to mount an attack</td></tr>
+        <tr><td style="font-weight:700;">Data input errors</td><td>A user enters wrong data or makes incorrect transaction requests</td></tr>
+        <tr><td style="font-weight:700;">Data center destruction</td><td>A disaster severely damages or destroys the data center</td></tr>
+      </tbody>
+    </table>
+    <p>Notice that the last two aren't attacks at all. Threat identification covers anything that could cost you the asset, including mistakes and disasters.</p>
+  </section>
+
+  <!-- ── DEFENSE IN DEPTH (11.1) ── -->
+  <section id="layers">
+    <div class="section-head">
+      <p class="kicker">Concept 8 · Module 11.1</p>
+      <h2>Defense in Depth</h2>
+      <p>Defense in depth uses multiple layers of security at the network edge, inside the network, and on the endpoints. The layers work together, so the failure of one safeguard doesn't weaken the others.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Line of defense</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1. Edge router</td><td>Applies rules that allow or deny traffic, and passes connections meant for the internal LAN to the firewall</td></tr>
+        <tr><td style="font-weight:700;">2. Firewall</td><td>A checkpoint device that does additional filtering and tracks the state of each connection</td></tr>
+        <tr><td style="font-weight:700;">3. Internal router</td><td>Applies final filtering rules before traffic reaches its destination</td></tr>
+      </tbody>
+    </table>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-label="Defense in depth drawn as nested layers. From outside in: edge router, firewall, internal router, then the assets in the center.">
+        <g fill="none" stroke-width="2">
+          <rect x="20" y="20" width="600" height="220" rx="16" stroke="var(--accent)"/>
+          <rect x="90" y="55" width="460" height="150" rx="14" stroke="var(--accent-2)"/>
+          <rect x="160" y="88" width="320" height="84" rx="12" stroke="var(--correct)"/>
+        </g>
+        <rect x="230" y="110" width="180" height="40" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+        <g font-family="IBM Plex Mono" font-size="13" font-weight="700" text-anchor="middle">
+          <text x="320" y="43" fill="var(--accent)">1 · EDGE ROUTER</text>
+          <text x="320" y="77" fill="var(--accent-2)">2 · FIREWALL</text>
+          <text x="320" y="104" fill="var(--correct)">3 · INTERNAL ROUTER</text>
+        </g>
+        <text x="320" y="135" font-family="Zen Kaku Gothic New" font-size="14" fill="currentColor" text-anchor="middle">Assets</text>
+      </svg>
+      <figcaption>Each layer is a separate chance to stop an attack. An attacker who gets past the edge router still has to get past the firewall.</figcaption>
+    </figure>
+
+    <p>Routers and firewalls aren't the only layers. IPS, Advanced Malware Protection (AMP), web and email content security, identity services, and network access control (Session 4's NAC) all add more.</p>
+
+    <h3>Security onion vs. security artichoke</h3>
+    <table class="model-table">
+      <thead><tr><th>Analogy</th><th>The idea</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Security onion</td><td>A threat actor has to peel away the network's defenses layer by layer. Only after getting through every layer do they reach the target data or system</td></tr>
+        <tr><td style="font-weight:700;">Security artichoke</td><td>Borderless networks changed the picture, in the attacker's favor. Threat actors only need to remove certain "leaves," and each leaf may reveal sensitive data that isn't well secured. They chip away at the perimeter to reach the heart of the enterprise</td></tr>
+      </tbody>
+    </table>
+    <p>Don't confuse the security onion analogy with <b>Security Onion</b>, a suite of network security monitoring tools. Same name, different thing.</p>
+
+    <h3>Defense-in-depth strategies</h3>
+    <table class="model-table">
+      <thead><tr><th>Strategy</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Layering</td><td>Multiple defenses that work together as one barrier</td></tr>
+        <tr><td style="font-weight:700;">Limiting</td><td>Each user gets only the access their job requires. Less access means fewer chances for a threat</td></tr>
+        <tr><td style="font-weight:700;">Diversity</td><td>The layers are different from each other, so a technique that gets through one doesn't get through all of them</td></tr>
+        <tr><td style="font-weight:700;">Obscurity</td><td>Don't reveal information attackers can use, like which OS a server runs or the make of its equipment</td></tr>
+        <tr><td style="font-weight:700;">Simplicity</td><td>Complexity doesn't guarantee security. A setup people can't configure correctly is as easy to break as a weak one</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Takeaway:</b> the artichoke doesn't make layers useless. It means you can't assume every attack starts at the outer edge. Devices and data that live outside the perimeter need protection of their own.
+    </div>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the castle's rings</span>
+      A castle is built in rings: a moat, an outer bailey, an inner bailey, and finally the keep. Losing the outer wall isn't losing the castle, because each ring has to be taken separately. That's the onion. Here's where the picture breaks, and why the artichoke replaced it: a retainer carrying documents outside the walls can be robbed on the road without anyone crossing a single ring. A Kaidō Freight driver's tablet on a highway rest stop's Wi-Fi is that retainer.
+    </div>
+  </section>
+
+  <!-- ── CYBERSECURITY OPERATIONS MANAGEMENT (11.2) ── -->
+  <section id="opsmgmt">
+    <div class="section-head">
+      <p class="kicker">Concept 9 · Module 11.2</p>
+      <h2>Cybersecurity Operations Management</h2>
+      <p>Layers only help if someone is watching them. This topic covers how an organization keeps track of what its systems should look like, and records what actually happens on them.</p>
+    </div>
+
+    <h3>Configuration management</h3>
+    <p><b>Configuration management</b> is identifying, controlling, and auditing a system's established baseline and every change made to it. The <b>baseline configuration</b> is all the settings configured for a system. It acts as a template for every similar system. Documented configuration resources can include:</p>
+    <ul>
+      <li>Network maps, cabling and wiring diagrams, and application configuration specifications</li>
+      <li>Standard naming conventions for computers</li>
+      <li>An IP schema that tracks IP addresses</li>
+    </ul>
+    <p>Hardening the OS is a big part of a secure configuration: set up log files and auditing, change default account names and passwords, and apply account policies and file-level access control. Session 5 covered these as <a href="IT121_Session05.html#defending">operating system security</a>.</p>
+
+    <h3>Log files and log management</h3>
+    <p>A log records events as they happen. Each <b>log entry</b> holds all the information about one event, and the entries together make up a <b>log file</b>. Security generates a lot of logs, so organizations need a <b>log management</b> process. It sets the procedures for:</p>
+    <table class="model-table">
+      <thead><tr><th>Procedure</th><th>The question it answers</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Generating</td><td>Which events get logged?</td></tr>
+        <tr><td style="font-weight:700;">Transmitting</td><td>How do logs get to where they're kept?</td></tr>
+        <tr><td style="font-weight:700;">Storing</td><td>Where are they kept, and for how long?</td></tr>
+        <tr><td style="font-weight:700;">Analyzing</td><td>Who reviews them, and how?</td></tr>
+        <tr><td style="font-weight:700;">Disposing</td><td>How are old logs safely removed?</td></tr>
+      </tbody>
+    </table>
+
+    <table class="model-table">
+      <thead><tr><th>Log type</th><th>What it records</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Operating system logs</td><td>Events tied to the OS, such as client requests and server responses (like successful user authentications) and usage information (the number and size of transactions over time)</td></tr>
+        <tr><td style="font-weight:700;">Application security logs</td><td>Output from network-based or system-based security software that detects malicious activity</td></tr>
+      </tbody>
+    </table>
+    <p>Logs are useful for auditing and for spotting trends and long-term problems. They also give the organization documentation that it complies with laws and regulations.</p>
+
+    <h3>Protocol analyzers</h3>
+    <p>A <b>protocol analyzer</b> (also called a <b>packet analyzer</b> or <b>packet sniffer</b>) intercepts and logs network traffic, wired or wireless. It captures each packet, reads its fields, and analyzes the contents. Wireshark and tcpdump are two examples. Analysts use them for:</p>
+    <ul>
+      <li>Traffic logging</li>
+      <li>Network problem analysis</li>
+      <li>Detecting network misuse</li>
+      <li>Detecting intrusion attempts</li>
+      <li>Isolating exploited systems</li>
+    </ul>
+
+    <div class="callout xref">
+      Protocol analyzers first appeared in <a href="#technology">Concept 5</a>. Syslog, which gathers logs from many devices into one place, is in <a href="IT121_Session04.html#secservices">Session 4</a>. Linux log files like <code>/var/log/syslog</code> are in <a href="IT121_Session05.html#admin">Session 5</a>.
+    </div>
+  </section>
+
+  <!-- ── POLICIES, BYOD & COMPLIANCE (11.3) ── -->
+  <section id="byod">
+    <div class="section-head">
+      <p class="kicker">Concept 10 · Module 11.3</p>
+      <h2>Security Policies, Regulations, and Standards</h2>
+      <p>Business policies define correct behavior for the business and its employees. That gives you a baseline: if behavior that breaks policy shows up on the network, a breach may have happened.</p>
+    </div>
+
+    <h3>Business policies</h3>
+    <table class="model-table">
+      <thead><tr><th>Policy</th><th>What it covers</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Company policies</td><td>The rules of conduct and the responsibilities of both employees and employers. They protect workers' rights and the employer's business interests</td></tr>
+        <tr><td style="font-weight:700;">Employee policies</td><td>Created and kept by human resources: salary, pay schedule, benefits, work schedule, vacations, and more. New employees usually review and sign them</td></tr>
+        <tr><td style="font-weight:700;">Security policies</td><td>The security objectives, the rules of behavior for users and administrators, and the system requirements. The parts are in <a href="#policies">Concept 6</a>: identification and authentication, passwords, acceptable use, remote access, network maintenance, and incident handling</td></tr>
+      </tbody>
+    </table>
+
+    <p>A comprehensive security policy:</p>
+    <ul>
+      <li>Demonstrates the organization's commitment to security</li>
+      <li>Sets the rules for expected behavior</li>
+      <li>Keeps system operations, hardware and software purchasing and use, and maintenance consistent</li>
+      <li>Defines the legal consequences of violations</li>
+      <li>Gives security staff the backing of management</li>
+    </ul>
+    <p>It also provides a baseline for acquiring, configuring, and auditing systems for compliance.</p>
+
+    <h3>BYOD policies</h3>
+    <p><b>Bring your own device (BYOD)</b> lets employees use their own mobile devices to reach company systems, software, networks, or information. Organizations get higher productivity, lower IT and operating costs, more mobile employees, and an edge in hiring and keeping staff. A BYOD security policy should:</p>
+    <ul>
+      <li>Specify the goals of the BYOD program</li>
+      <li>Identify which employees can bring their own devices, and which devices are supported</li>
+      <li>Identify the level of access employees get on personal devices</li>
+      <li>Describe what security personnel may access and do on the device</li>
+      <li>Identify which regulations apply when employee devices are used</li>
+      <li>Identify safeguards for when a device is compromised</li>
+    </ul>
+
+    <h3>BYOD security best practices</h3>
+    <table class="model-table">
+      <thead><tr><th>Practice</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Password-protected access</td><td>Unique passwords for each device and account</td></tr>
+        <tr><td style="font-weight:700;">Manually control wireless connectivity</td><td>Turn off Wi-Fi and Bluetooth when not in use, and connect only to trusted networks</td></tr>
+        <tr><td style="font-weight:700;">Keep updated</td><td>Keep the OS and other software current. Updates often carry patches for the latest threats</td></tr>
+        <tr><td style="font-weight:700;">Back up data</td><td>Enable backups in case the device is lost or stolen</td></tr>
+        <tr><td style="font-weight:700;">Enable "Find my Device"</td><td>Subscribe to a device locator service that can remotely wipe the device</td></tr>
+        <tr><td style="font-weight:700;">Provide antivirus software</td><td>Provide antivirus for approved BYOD devices</td></tr>
+        <tr><td style="font-weight:700;">Use mobile device management (MDM) software</td><td>Lets IT apply security settings and software configurations to every device that connects to the company network</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Regulatory and standards compliance</h3>
+    <p>Some rules come from outside the organization. Network security professionals need to know the laws and the codes of ethics that bind information systems security (INFOSEC) professionals. Many organizations are required to develop and implement security policies. Compliance regulations define what the organization must provide and its liability if it doesn't. Which regulations apply depends on the type of organization and the data it handles. Two examples among Bastion's clients:</p>
+    <table class="model-table">
+      <thead><tr><th>Requirement</th><th>Who it applies to</th><th>Bastion client</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Patient-privacy law (HIPAA in the US)</td><td>Healthcare organizations that hold patient records</td><td>Kiriyama General Hospital</td></tr>
+        <tr><td style="font-weight:700;">PCI DSS (Payment Card Industry Data Security Standard)</td><td>Any business that accepts, processes, or stores payment cards</td><td>Tsukimi Sweets, at its register</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout xref">
+      Governance and compliance get a full session later in the course. For now, know that compliance is set from outside, and the organization's own policies have to meet it.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Confidentiality</span>
+      <h3>The card numbers at the register</h3>
+      <p>Tsukimi Sweets is replacing its point-of-sale terminal after a card-skimming scare. The vendor offers two options: encrypt card numbers and store them in the shop's database, or tokenize them so the shop's database only ever holds tokens. Which better protects the shop if its database is stolen, and why?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Tokenization.</strong> A stolen token can't be turned back into a card number, because the token has no mathematical link to it. Only the payment processor's system can map a token to a card.</p>
+          <p><strong>Why not encryption:</strong> encrypted card numbers are only as safe as the key. If the attacker gets the database and the key, which are often on the same server, the numbers can be recovered.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Integrity</span>
+      <h3>How much checking is enough?</h3>
+      <p>Kiriyama General's pharmacy system and the hospital's public "news and events" blog both get a request to drop a validation step to speed things up. Using the levels of integrity need, how should you answer each?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Pharmacy system:</strong> critical integrity need. A wrong dose or a missing allergy can kill a patient, so every validation step stays.</p>
+          <p><strong>Public blog:</strong> low integrity need. A typo in an event post is embarrassing, not dangerous, so lighter checking is reasonable. (It still needs access control, so nobody can deface it.)</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">States of data</span>
+      <h3>Name the state</h3>
+      <p>At Kaidō Freight, three things happen in one minute: (1) a dispatcher types a delivery address into the routing app, (2) the routing app sends the finished route to a driver's tablet over the cellular network, and (3) last month's routes sit in the database on the file server. Which state is each in?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>(1)</strong> In process: the input stage.</p>
+          <p><strong>(2)</strong> In transit: moving between devices, so it needs encryption on the way.</p>
+          <p><strong>(3)</strong> At rest: stored and not being used.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Storage</span>
+      <h3>The contracts on one PC</h3>
+      <p>Kaidō Freight's shipping contracts live on the internal hard drive of one office manager's PC. Other staff get copies by asking the manager to email them or by carrying them over on a USB stick. What storage type is that, what are the risks, and what would you suggest instead?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Storage type:</strong> direct-attached storage (DAS). The data is only as safe as that one PC, and there's likely no central backup.</p>
+          <p><strong>Transit risk:</strong> the USB copies are sneakernet. They can be lost, stolen, or carry malware between machines, and nobody tracks where the copies end up.</p>
+          <p><strong>Better option:</strong> a network-attached storage (NAS) device or a managed file server, with access control on the contracts folder and regular, tested backups.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Policies</span>
+      <h3>Standard, guideline, or procedure?</h3>
+      <p>Three lines from Kiriyama General's security documents: (A) "Staff should lock their screen whenever they step away." (B) "All workstations must lock automatically after 5 minutes of inactivity." (C) "To set the lock timer: open Settings, choose Accounts, then Sign-in options…"</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>(A) Guideline:</strong> a recommendation, worded as "should."</p>
+          <p><strong>(B) Standard:</strong> a mandatory rule, worded as "must."</p>
+          <p><strong>(C) Procedure:</strong> step-by-step instructions for doing the task.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">The cube</span>
+      <h3>Place it on the cube</h3>
+      <p>Kaidō Freight runs a monthly phishing-awareness session for drivers, so they stop opening fake "delivery exception" emails on their tablets. Where does this fall on each of the cube's three dimensions?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Countermeasure:</strong> people (awareness training).</p>
+          <p><strong>Principle:</strong> mainly confidentiality (stopping stolen credentials), though a phish that installs malware could hit integrity and availability too.</p>
+          <p><strong>State of data:</strong> the credentials are at risk in process, at the moment the driver types them into a fake page.</p>
+        </div>
+      </details>
+    </div>
+    <div class="example">
+      <span class="tag">Defense in depth</span>
+      <h3>"We have a firewall now"</h3>
+      <p>Kaidō Freight just installed a new firewall. Their IT manager says, "Since we have the firewall, we can skip patching the internal file server this quarter." Using defense in depth, how do you answer?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>The firewall is one layer, not the whole defense.</strong> If a phishing email lands malware on an office PC, the attacker is already inside the firewall. The unpatched file server is then the next easy step.</p>
+          <p><strong>The artichoke view makes it worse:</strong> drivers connect over VPN from their tablets. A stolen tablet or driver password skips the outer layers entirely.</p>
+          <p><strong>Answer:</strong> patch the server. Each layer covers for the others' failures, and the patch closes a known vulnerability on an asset the firewall can't fully protect.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">BYOD</span>
+      <h3>Orders on personal phones</h3>
+      <p>Tsukimi Sweets' owner wants the counter staff to watch the online order queue on their own phones. What should a basic BYOD policy for the shop cover?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Who and what:</strong> which staff may do it, and which phones are supported.</p>
+          <p><strong>Access and data:</strong> the phones see the order queue only. Card numbers never go on a personal phone, because PCI DSS applies to the shop.</p>
+          <p><strong>Device rules:</strong> a passcode, current updates, and "Find My Device" turned on.</p>
+          <p><strong>Lost device and leaving:</strong> how to report a lost phone, and how the owner removes a departing employee's access to the order queue the day they leave.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Operations management</span>
+      <h3>The account nobody remembers</h3>
+      <p>During a routine check of Kaidō Freight's Linux web server, you find a local account named <code>svc-backup2</code> with sudo rights. Nobody on the IT team remembers creating it. Which two operations-management practices from Module 11.2 help you decide whether it's a problem, and how?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Configuration management:</strong> compare the server against its documented baseline configuration. If <code>svc-backup2</code> isn't in the baseline and there's no approved change for it, it's an unauthorized change. Treat it as suspicious until someone proves otherwise.</p>
+          <p><strong>Log management:</strong> the server's operating system logs should show when the account was created, from which session, and every time it has signed in since. If the logs were sent to a central server (Session 4's syslog), an attacker who deleted the local copies didn't erase the record.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 6 reference. More sessions are added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+      {
+            "t": "Acceptable use policy (AUP)",
+            "d": "The part of a security policy that defines what users may and may not do on an organization's systems, such as banned websites or bandwidth-heavy apps."
+      },
+      {
+            "t": "Application security logs",
+            "d": "Logs generated by network-based or system-based security software that detects malicious activity. Useful for auditing, spotting trends, and proving compliance."
+      },
+      {
+            "t": "Asset",
+            "d": "Anything of value to an organization that must be protected, including servers, infrastructure devices, end devices, and the greatest asset, data."
+      },
+      {
+            "t": "Asset classification",
+            "d": "Grouping an organization's resources by common characteristics so the most critical information gets the most protection. Four steps: pick the category, assign an owner, set the criteria, apply a schema."
+      },
+      {
+            "t": "Asset lifecycle",
+            "d": "The stages an asset moves through: procurement, deployment, utilization, maintenance, and disposal."
+      },
+      {
+            "t": "Asset management",
+            "d": "Inventorying all of an organization's assets, then developing and implementing policies and procedures to protect them."
+      },
+      {
+            "t": "Asset standardization",
+            "d": "Choosing specific hardware and software products for the organization to use, so failures are faster and cheaper to fix."
+      },
+      {
+            "t": "Availability",
+            "d": "The 'A' in the CIA triad: systems and data are reachable by authorized users when they need them. Protected by redundancy, tested backups, maintenance, and a disaster plan."
+      },
+      {
+            "t": "Baseline configuration",
+            "d": "All the settings configured for a system, used as the template for every similar system."
+      },
+      {
+            "t": "Biometric access control",
+            "d": "Hardware that verifies identity with a physical trait, such as a fingerprint or face, before granting access."
+      },
+      {
+            "t": "Bring your own device (BYOD)",
+            "d": "Letting employees use their personal phones, tablets, and laptops for work. A BYOD policy sets which devices are allowed, what they can access, and what happens if one is lost."
+      },
+      {
+            "t": "Business information",
+            "d": "Internal data that gives a company its edge, such as trade secrets, customer lists, contracts, and financials."
+      },
+      {
+            "t": "Classified information",
+            "d": "Government information labeled by sensitivity, such as top secret, secret, or confidential."
+      },
+      {
+            "t": "Cloud storage",
+            "d": "Storage in a provider's data center, reached over the internet. The provider runs the hardware; the customer still controls who can access the data."
+      },
+      {
+            "t": "Common Criteria",
+            "d": "An international standard for evaluating the security of IT products. One outside source of security guidance."
+      },
+      {
+            "t": "Company policies",
+            "d": "Business policies that set the rules of conduct and the responsibilities of employees and employers."
+      },
+      {
+            "t": "Confidentiality",
+            "d": "The 'C' in the CIA triad: only authorized people, processes, and devices can see the data."
+      },
+      {
+            "t": "Configuration management",
+            "d": "Identifying, controlling, and auditing the implementation of a system's baseline and any changes made to it."
+      },
+      {
+            "t": "Countermeasure",
+            "d": "Anything that protects data. The cube's third dimension groups them as technologies, policies and practices, and people."
+      },
+      {
+            "t": "Cybersecurity cube",
+            "d": "A model (also called the McCumber Cube) that describes data protection in three dimensions: security principles (CIA), states of data, and countermeasures."
+      },
+      {
+            "t": "Data anonymization",
+            "d": "Removing or altering identifying details so data can't be traced back to a person."
+      },
+      {
+            "t": "Data at rest",
+            "d": "Data that is stored and not being used, such as files on a drive or records in a database."
+      },
+      {
+            "t": "Data corruption",
+            "d": "Accidental or deliberate changes that leave data unreadable or wrong."
+      },
+      {
+            "t": "Data in process",
+            "d": "Data being input, modified, computed, or output."
+      },
+      {
+            "t": "Data in transit",
+            "d": "Data moving from one device to another, over a network or on removable media."
+      },
+      {
+            "t": "Defense in depth",
+            "d": "A strategy of layering several defenses so that if one fails, others still protect the assets."
+      },
+      {
+            "t": "Digital rights management (DRM)",
+            "d": "Technology that controls how copyrighted digital content, like music, movies, and e-books, can be copied or used."
+      },
+      {
+            "t": "Direct-attached storage (DAS)",
+            "d": "Storage connected to a single computer, like an internal drive or USB drive. Not shared by default and only as secure as its host."
+      },
+      {
+            "t": "Disaster plan",
+            "d": "Written, practiced steps for responding to and recovering from a major disruption."
+      },
+      {
+            "t": "Diversity",
+            "d": "A defense-in-depth strategy: make each layer different, so a technique that beats one layer doesn't beat them all."
+      },
+      {
+            "t": "Employee policies",
+            "d": "Business policies maintained by human resources that cover salary, pay schedule, benefits, work schedule, and vacations."
+      },
+      {
+            "t": "Guideline",
+            "d": "A recommended, non-mandatory practice for doing something more securely."
+      },
+      {
+            "t": "Incident handling policy",
+            "d": "The part of a security policy that sets the procedures for responding to a security incident."
+      },
+      {
+            "t": "Information rights management (IRM)",
+            "d": "Technology that controls who can open, forward, print, or edit an organization's own documents and emails."
+      },
+      {
+            "t": "Integrity",
+            "d": "The 'I' in the CIA triad: data stays accurate, consistent, and trustworthy throughout its life."
+      },
+      {
+            "t": "Layering",
+            "d": "A defense-in-depth strategy: set up multiple defenses that work together, so no single failure opens the way."
+      },
+      {
+            "t": "Limiting",
+            "d": "A defense-in-depth strategy: restrict access so each user has only the access their job requires."
+      },
+      {
+            "t": "Log management",
+            "d": "The procedures for generating, transmitting, storing, analyzing, and disposing of log data."
+      },
+      {
+            "t": "Mobile device management (MDM)",
+            "d": "Software that lets IT enforce settings, push updates, and remotely wipe work data on enrolled mobile devices."
+      },
+      {
+            "t": "Mutual authentication",
+            "d": "Both sides of a connection, client and server, verify each other's identity before trusting it."
+      },
+      {
+            "t": "Network-attached storage (NAS)",
+            "d": "A storage device on the network that many authorized users can save to and read from."
+      },
+      {
+            "t": "Obscurity",
+            "d": "A defense-in-depth strategy: don't reveal details, like a server's OS or equipment make, that attackers could use."
+      },
+      {
+            "t": "Operating system logs",
+            "d": "Logs of events tied to the operating system, such as successful user authentications and usage information."
+      },
+      {
+            "t": "Packet analyzer",
+            "d": "Another name for a protocol analyzer, also called a packet sniffer: it intercepts and logs network traffic for analysis."
+      },
+      {
+            "t": "PCI DSS",
+            "d": "Payment Card Industry Data Security Standard: the security requirements for any business that accepts, processes, or stores payment cards."
+      },
+      {
+            "t": "Personal information",
+            "d": "Data that can identify a person, such as name, address, medical records, or credit records. Often called PII (personally identifiable information)."
+      },
+      {
+            "t": "Port scanner",
+            "d": "A tool that finds which ports are open on a host."
+      },
+      {
+            "t": "Procedure",
+            "d": "Mandatory step-by-step instructions, often with screenshots, for doing a task the approved way."
+      },
+      {
+            "t": "Protocol analyzer",
+            "d": "A tool that captures and decodes network traffic, used to baseline normal traffic and find problems. Wireshark is an example."
+      },
+      {
+            "t": "Proxy server",
+            "d": "A server that makes internet requests on users' behalf, so outside systems see one address instead of each user's."
+      },
+      {
+            "t": "RAID",
+            "d": "Redundant array of independent disks: several drives treated as one for performance and fault tolerance. Not a backup."
+      },
+      {
+            "t": "Regulatory compliance",
+            "d": "Following the external laws and regulations that bind an organization. Which ones apply depends on the type of organization and the data it handles."
+      },
+      {
+            "t": "Remote access policy",
+            "d": "The part of a security policy that sets how off-site users may connect to the network."
+      },
+      {
+            "t": "Security artichoke",
+            "d": "A view of defense in depth for borderless networks: a threat actor doesn't have to get through every layer, and removing one leaf can expose sensitive data."
+      },
+      {
+            "t": "Security awareness program",
+            "d": "Ongoing training that teaches every employee to recognize threats and follow security procedures."
+      },
+      {
+            "t": "Security onion",
+            "d": "A view of defense in depth where a threat actor must peel away each layer, one at a time, before the assets are exposed."
+      },
+      {
+            "t": "Security policy",
+            "d": "An organization's written security goals and rules for behavior, covering areas like authentication, passwords, acceptable use, remote access, maintenance, and incident handling."
+      },
+      {
+            "t": "Simplicity",
+            "d": "A defense-in-depth strategy: avoid needless complexity, because security that people can't configure correctly doesn't protect anything."
+      },
+      {
+            "t": "Sneakernet",
+            "d": "Moving data by physically carrying removable media, like a USB drive, between computers."
+      },
+      {
+            "t": "Standard",
+            "d": "A mandatory rule that everyone in the organization follows the same way."
+      },
+      {
+            "t": "Storage area network (SAN)",
+            "d": "A dedicated high-speed network that connects servers to shared storage."
+      },
+      {
+            "t": "Threat",
+            "d": "Any potential danger to an asset."
+      },
+      {
+            "t": "Tokenization",
+            "d": "Replacing sensitive data with a random token that has no mathematical link to the original and is useless outside the issuing system."
+      },
+      {
+            "t": "Vulnerability",
+            "d": "A weakness in a system or its design that a threat could exploit."
+      },
+      {
+            "t": "Vulnerability scanner",
+            "d": "A tool that checks systems for known weaknesses and reports what needs fixing."
+      }
+];
+
+  const QUIZ = [
+      {
+            "q": "What are the three dimensions of the cybersecurity cube?",
+            "choices": [
+                  "Hardware, software, and firmware",
+                  "Security principles, states of data, and countermeasures",
+                  "Prevention, detection, and response",
+                  "Users, devices, and networks"
+            ],
+            "correct": 1,
+            "explain": "The cube describes data protection by its security principles (CIA), the state the data is in, and the countermeasure protecting it."
+      },
+      {
+            "q": "Which state of data describes a customer record being typed into a web form?",
+            "choices": [
+                  "Data at rest",
+                  "Data in transit",
+                  "Data in process",
+                  "Data in storage"
+            ],
+            "correct": 2,
+            "explain": "Input is one of the three stages of data in process, along with modification and output."
+      },
+      {
+            "q": "A store replaces card numbers with random values that only its payment processor can map back to real cards. This is:",
+            "choices": [
+                  "Hashing",
+                  "Tokenization",
+                  "Anonymization",
+                  "Data rights management"
+            ],
+            "correct": 1,
+            "explain": "Tokens have no mathematical relationship to the original data, so they're useless outside the issuing system."
+      },
+      {
+            "q": "Which kind of organization has the most critical need for data integrity?",
+            "choices": [
+                  "A personal blog",
+                  "A search engine's public results",
+                  "A hospital's prescription system",
+                  "A social media page"
+            ],
+            "correct": 2,
+            "explain": "Inaccurate prescription or allergy data can be life-threatening, which puts healthcare at the critical level."
+      },
+      {
+            "q": "Which storage type is attached to a single computer and isn't shared by default?",
+            "choices": [
+                  "SAN",
+                  "NAS",
+                  "Cloud storage",
+                  "DAS"
+            ],
+            "correct": 3,
+            "explain": "Direct-attached storage, like an internal drive or USB drive, belongs to one host unless someone manually shares it."
+      },
+      {
+            "q": "Which storage option uses a dedicated high-speed network to connect servers to shared storage?",
+            "choices": [
+                  "SAN",
+                  "DAS",
+                  "RAID",
+                  "Sneakernet"
+            ],
+            "correct": 0,
+            "explain": "A storage area network (SAN) is a separate high-speed network built for server-to-storage traffic."
+      },
+      {
+            "q": "An employee copies files to a USB drive to carry them to another office. This way of moving data is called:",
+            "choices": [
+                  "Tunneling",
+                  "Sneakernet",
+                  "Mutual authentication",
+                  "Replication"
+            ],
+            "correct": 1,
+            "explain": "Sneakernet means physically carrying data on removable media. It's data in transit, and it's easy to lose track of."
+      },
+      {
+            "q": "Which security measure has the client and server each verify the other's identity?",
+            "choices": [
+                  "Single sign-on",
+                  "Tokenization",
+                  "Mutual authentication",
+                  "A proxy server"
+            ],
+            "correct": 2,
+            "explain": "With mutual authentication, a device won't trust an impostor server, such as an evil twin access point."
+      },
+      {
+            "q": "Which document is mandatory and tells everyone to do something the same way?",
+            "choices": [
+                  "A guideline",
+                  "A standard",
+                  "A newsletter",
+                  "An awareness poster"
+            ],
+            "correct": 1,
+            "explain": "Standards are mandatory rules. Guidelines are recommendations, and procedures are mandatory step-by-step instructions."
+      },
+      {
+            "q": "Which part of a security policy defines what users may and may not do on company systems?",
+            "choices": [
+                  "Incident handling policy",
+                  "Network maintenance policy",
+                  "Remote access policy",
+                  "Acceptable use policy"
+            ],
+            "correct": 3,
+            "explain": "The acceptable use policy (AUP) lists allowed and prohibited behavior, like banned sites or bandwidth-heavy apps."
+      },
+      {
+            "q": "Which tool captures and decodes network traffic so an analyst can learn what normal traffic looks like?",
+            "choices": [
+                  "Protocol analyzer",
+                  "Vulnerability scanner",
+                  "Port scanner",
+                  "Biometric reader"
+            ],
+            "correct": 0,
+            "explain": "A protocol analyzer, like Wireshark, decodes captured traffic and helps establish a baseline."
+      },
+      {
+            "q": "Which set lists the three categories of countermeasures in the cybersecurity cube?",
+            "choices": [
+                  "Encryption, hashing, and signing",
+                  "Firewalls, IDS, and IPS",
+                  "Technologies, policies and practices, and people",
+                  "Backups, RAID, and the cloud"
+            ],
+            "correct": 2,
+            "explain": "The cube's third dimension groups countermeasures as technologies, policies and practices, and knowledgeable people."
+      },
+      {
+            "q": "Which term describes a weakness in a system or its design that a threat actor could exploit?",
+            "choices": [
+                  "Asset",
+                  "Threat",
+                  "Vulnerability",
+                  "Countermeasure"
+            ],
+            "correct": 2,
+            "explain": "A vulnerability is the weakness. A threat is the potential danger that could exploit it, and an asset is what's at risk."
+      },
+      {
+            "q": "In a defense-in-depth design, which device is usually the first line of defense on the path in from the internet?",
+            "choices": [
+                  "Internal router",
+                  "Edge router",
+                  "Firewall",
+                  "Host-based IDS"
+            ],
+            "correct": 1,
+            "explain": "The edge router is the first line of defense, the firewall is the second, and the internal router is the third."
+      },
+      {
+            "q": "With the growth of borderless networks, which statement describes the security artichoke approach?",
+            "choices": [
+                  "A threat actor must peel away every layer to reach the data",
+                  "Not every layer has to be penetrated for a threat actor to reach data or systems",
+                  "One firewall at the network edge protects every asset",
+                  "Only physical security layers matter"
+            ],
+            "correct": 1,
+            "explain": "In the artichoke model, mobile devices, BYOD, and cloud services mean an attacker can pull off one leaf and reach sensitive data without getting through every layer."
+      },
+      {
+            "q": "Which is a recommended security best practice for BYOD devices?",
+            "choices": [
+                  "Leave Wi-Fi and Bluetooth on at all times",
+                  "Turn off automatic updates",
+                  "Use mobile device management (MDM) software",
+                  "Share one passcode across all staff devices"
+            ],
+            "correct": 2,
+            "explain": "MDM lets IT enforce settings, push updates, and wipe work data. The other choices all weaken the device's security."
+      },
+      {
+            "q": "Which defense-in-depth strategy makes each layer of protection different, so one technique can't defeat them all?",
+            "choices": [
+                  "Layering",
+                  "Limiting",
+                  "Diversity",
+                  "Obscurity"
+            ],
+            "correct": 2,
+            "explain": "Diversity means the layers differ. If every layer were the same, a technique that beat one would beat the whole system."
+      },
+      {
+            "q": "What does configuration management involve?",
+            "choices": [
+                  "Capturing and decoding network traffic",
+                  "Identifying, controlling, and auditing a system's baseline and any changes to it",
+                  "Assigning an owner to each information asset",
+                  "Writing the organization's acceptable use policy"
+            ],
+            "correct": 1,
+            "explain": "Configuration management tracks a system's established baseline and every change made to it."
+      }
+];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
