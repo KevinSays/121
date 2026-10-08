@@ -251,6 +251,17 @@
       </tbody>
     </table>
 
+    <h3>Sharing threat information</h3>
+    <p>Many attacks can be prevented if defenders share what they've seen. Two kinds of indicator get shared:</p>
+    <table class="model-table">
+      <thead><tr><th>Indicator</th><th>Focus</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Indicators of compromise (IOC)</td><td>What happened in an attack, so defenses can be built against it</td><td>Features of malware files, IP addresses of attack servers, filenames, changes made to end-system software</td></tr>
+        <tr><td style="font-weight:700;">Indicators of attack (IOA)</td><td>The attacker's motivation and strategy, so defenses work against the whole approach rather than one incident</td><td>The methods a group uses to compromise vulnerabilities and reach assets</td></tr>
+      </tbody>
+    </table>
+    <p>Governments promote sharing too. In the US, <b>CISA</b> (the Cybersecurity and Infrastructure Security Agency) runs Automated Indicator Sharing at no cost, and with the <b>National Cyber Security Alliance (NCSA)</b> runs National Cybersecurity Awareness Month every October. In Europe, <b>ENISA</b> is the European Union Agency for Cybersecurity. Vendors help as well: the <b>Cisco Talos Intelligence Group</b> researches threats and feeds that intelligence into Cisco products, and the <b>Cisco Product Security Incident Response Team (PSIRT)</b> publishes advisories on vulnerabilities in Cisco products.</p>
+
     <div class="callout xref">
       Full motivation-based threat actor breakdown (script kiddie, hacktivist, organized crime, nation-state/APT, insider) is in <a href="IT121_Session01.html#actors">Session 1</a>, with dossiers on the <a href="bastion-security-kit/bastion-threat-board.html">Bastion Security Threat Board</a>.
     </div>
@@ -306,6 +317,8 @@
         <tr><td style="font-weight:700;">Amplification &amp; reflection</td><td>A small spoofed request (e.g. to a DNS or NTP server) triggers a huge response — sent to the victim, not the attacker</td></tr>
       </tbody>
     </table>
+
+    <p>Spoofing comes in two forms. In <b>non-blind spoofing</b>, the attacker can see the traffic between the host and the target, so they can read the target's replies. In <b>blind spoofing</b>, the attacker can't see that traffic. Blind spoofing is used in DoS attacks, where the attacker doesn't need the replies.</p>
 
     <div class="callout">
       <b>Spoofing is the common thread.</b> Once the source address can't be trusted, an attacker can hide behind it, redirect blame to an innocent host, or turn a third-party server into an unwitting weapon.
@@ -524,6 +537,9 @@
   const TERMS = [
     {t:"Amplification / reflection attack", d:"A small, spoofed request (often to DNS or NTP) triggers a much larger response sent to the victim instead of the attacker."},
     {t:"Blended threat", d:"A modern attack that combines multiple techniques — malware, social engineering, protocol abuse — in a single campaign rather than relying on just one."},
+    {t:"Blind / non-blind spoofing", d:"In non-blind spoofing, the attacker can see the traffic between host and target and reads the replies. In blind spoofing, the attacker can't see it; blind spoofing is used in DoS attacks."},
+    {t:"CISA", d:"The US Cybersecurity and Infrastructure Security Agency. Runs Automated Indicator Sharing and, with the NCSA, National Cybersecurity Awareness Month each October."},
+    {t:"Cisco Talos", d:"Cisco's threat intelligence and research group, whose findings feed Cisco security products and help administrators mitigate threats."},
     {t:"Data exfiltration", d:"The unauthorized transfer of data out of a network — the mechanism half of 'data loss.'"},
     {t:"External threat", d:"An attacker with no legitimate access to the network, who must first find a way in from outside before doing anything else."},
     {t:"Hacker", d:"Historically a neutral term for someone skilled at exploring and manipulating systems — distinguished from 'threat actor' by intent, not skill."},
@@ -531,6 +547,7 @@
     {t:"ICMP redirect", d:"A forged ICMP message that tricks a host into routing its traffic through an attacker-controlled path."},
     {t:"ICMP reconnaissance", d:"Using ping sweeps and similar ICMP traffic to map which hosts are alive before an attack."},
     {t:"Internal threat", d:"A threat from someone already inside the network's trust boundary — an employee or contractor — intentional or accidental, often more damaging than an external threat because of direct physical access to the building and its infrastructure, not just network access."},
+    {t:"IOA (Indicator of Attack)", d:"An indicator focused on an attacker's motivation and strategy rather than one incident, which supports a proactive defense."},
     {t:"IP spoofing", d:"Forging the source IP address on a packet so the traffic, or the blame for it, appears to come from somewhere else."},
     {t:"IPv4 header", d:"The variable-length header (20+ bytes) carried by every IPv4 packet, including fields like TTL, Protocol, and an optional Options field."},
     {t:"IPv6 header", d:"The simplified, fixed 40-byte header carried by every IPv6 packet — no header checksum, no in-network fragmentation, optional features moved to extension headers."},
@@ -618,6 +635,18 @@
       choices:["TCP reset attack","UDP flood","TCP session hijacking","ICMP redirect"],
       correct:2,
       explain:"TCP session hijacking takes over a session someone else already authenticated into, by predicting or stealing its sequence numbers."
+    },
+    {
+      q:"An attacker spoofs a source address to flood a target and has no way to see the target's replies. This is:",
+      choices:["Non-blind spoofing","Blind spoofing","Session hijacking","MAC spoofing"],
+      correct:1,
+      explain:"In blind spoofing the attacker can't see the traffic between host and target. It's typical of DoS attacks, where replies don't matter."
+    },
+    {
+      q:"Which type of indicator focuses on an attacker's motivation and strategy, supporting a proactive defense?",
+      choices:["Indicator of compromise (IOC)","Indicator of attack (IOA)","CVE entry","Syslog severity level"],
+      correct:1,
+      explain:"IOAs describe the strategies attackers use. IOCs describe what happened in a specific attack."
     },
   ];
 

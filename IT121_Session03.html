@@ -216,6 +216,17 @@
       </tbody>
     </table>
 
+    <h3>DNS open resolvers and stealth techniques</h3>
+    <p>A <b>DNS open resolver</b> answers queries from anyone, even clients outside its own domain. That makes it a target for cache poisoning, amplification and reflection, and <b>resource utilization attacks</b>, which are DoS attacks that use up the resolver's resources until it has to be restarted. Attackers also use DNS to hide their own servers:</p>
+    <table class="model-table">
+      <thead><tr><th>Stealth technique</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Fast flux</td><td>Hides phishing and malware sites behind a quickly changing set of compromised DNS hosts, whose IP addresses change within minutes. Botnets use it to stay hidden</td></tr>
+        <tr><td style="font-weight:700;">Double IP flux</td><td>Rapidly changes the hostname-to-IP mappings and also the authoritative name server, making the source even harder to find</td></tr>
+        <tr><td style="font-weight:700;">Domain generation algorithms (DGA)</td><td>Malware randomly generates domain names to use as meeting points with its command-and-control servers</td></tr>
+      </tbody>
+    </table>
+
     <div class="callout">
       <b>Notice the DHCP spoofing detail:</b> the goal usually isn't the gateway itself. It's the DNS server address. Control what DNS server a victim uses, and you control where every domain name they type actually takes them.
     </div>
@@ -244,7 +255,32 @@
         <tr><td style="font-weight:700;">HTTP 302 cushioning</td><td>Abuses HTTP's own redirect response (302) to quietly bounce a victim toward a malicious site instead of the one they requested</td></tr>
         <tr><td style="font-weight:700;">Spam</td><td>Bulk unsolicited email flooded to many users — a delivery vector for phishing and malware as much as a nuisance on its own</td></tr>
         <tr><td style="font-weight:700;">SQL injection</td><td>Injects SQL commands into an insecure input field (often a login form) to manipulate or extract data straight from the backend database</td></tr>
+        <tr><td style="font-weight:700;">Malicious iFrames</td><td>An attacker adds HTML to a compromised web page so it loads content from another site, delivering spam ads, exploit kits, or other malware</td></tr>
         <tr><td style="font-weight:700;">Cross-site scripting (XSS)</td><td>Injects malicious script into a trusted site's input fields — exploits the same missing input validation SQL injection does, but targets the browser instead of the database</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Email threats</h3>
+    <table class="model-table">
+      <thead><tr><th>Threat</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Attachment-based attacks</td><td>Malicious content embedded in business files, like an attachment that seems to come from the IT department</td></tr>
+        <tr><td style="font-weight:700;">Email spoofing</td><td>A forged sender address meant to trick the recipient into sending money or sensitive information</td></tr>
+        <tr><td style="font-weight:700;">Open mail relay</td><td>A mail server misconfigured to relay mail for anyone, abused to send spam or malware in bulk</td></tr>
+        <tr><td style="font-weight:700;">Homoglyphs</td><td>Characters that look the same as, or nearly the same as, legitimate ones, used to make fake links and domains look real</td></tr>
+      </tbody>
+    </table>
+
+    <h3>HTTP status codes</h3>
+    <p>Every HTTP response carries a three-digit status code. Analysts read them in web logs to see what a client asked for and what happened. The first digit tells you the class:</p>
+    <table class="model-table">
+      <thead><tr><th>Class</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1xx Informational</td><td>A provisional response</td></tr>
+        <tr><td style="font-weight:700;">2xx Successful</td><td>The request was received, understood, and accepted</td></tr>
+        <tr><td style="font-weight:700;">3xx Redirection</td><td>The client must take further action, like following a redirect. HTTP 302 cushioning abuses this class</td></tr>
+        <tr><td style="font-weight:700;">4xx Client error</td><td>The client seems to have made an error</td></tr>
+        <tr><td style="font-weight:700;">5xx Server error</td><td>The server failed to carry out a valid request</td></tr>
       </tbody>
     </table>
 
@@ -321,6 +357,12 @@
         <tr><td style="font-weight:700;">5 GHz</td><td>802.11a, and 802.11n/ac (optionally/typically)</td><td>Shorter range, less interference, more available bandwidth</td></tr>
       </tbody>
     </table>
+
+    <h3>Sharing the air: CSMA/CA</h3>
+    <p>A WLAN is half-duplex, shared media, and a wireless client can't hear while it's sending, so it can't detect a collision. Instead, WLANs use <b>CSMA/CA</b> (carrier sense multiple access with collision avoidance). The client listens until the channel is idle, sends a <b>request to send (RTS)</b> to the AP, and waits for a <b>clear to send (CTS)</b>. No CTS means it waits a random time and tries again. Every transmission is acknowledged, and a missing acknowledgment is treated as a collision.</p>
+
+    <h3>Autonomous APs vs. a controller</h3>
+    <p>An <b>autonomous AP</b> is configured on its own, one device at a time. In larger networks, a <b>wireless LAN controller (WLC)</b> centralizes the control and management of many APs, which then act as <b>lightweight APs (LWAPs)</b> instead of working independently.</p>
 
     <div class="callout">
       <b>The core difference from wired:</b> a wired attacker needs physical access to a cable or a switch port. A wireless attacker just needs to be within range. The "network edge" isn't a castle wall anymore. It's a signal that carries over the wall and into the parking lot, where anyone can listen.
@@ -548,20 +590,29 @@
     {t:"ARP cache poisoning", d:"Manipulating ARP caches on a local segment so the attacker's MAC address gets mapped to the default gateway's IP address."},
     {t:"Containment (worm mitigation)", d:"The first phase of worm response — isolating the parts of the network not yet infected."},
     {t:"Cross-site scripting (XSS)", d:"Injecting malicious script into a trusted website's input fields, which then executes in other visitors' browsers."},
+    {t:"CSMA/CA", d:"Carrier sense multiple access with collision avoidance: a wireless client listens for an idle channel, requests to send (RTS), and transmits only after a clear to send (CTS)."},
     {t:"DHCP spoofing", d:"A rogue DHCP server hands out false DNS server addresses, redirecting a client's later requests to fake sites."},
     {t:"DHCP starvation", d:"Flooding a DHCP server with fake lease requests until its address pool is exhausted, denying service to real clients."},
     {t:"DNS amplification/reflection", d:"Using open DNS resolvers to multiply a small spoofed request into a much larger flood aimed at the victim."},
     {t:"DNS cache poisoning", d:"Injecting falsified information into a DNS resolver's cache, redirecting users from a legitimate site to a malicious one."},
+    {t:"DNS open resolver", d:"A DNS server that answers queries from anyone, including clients outside its domain. Vulnerable to cache poisoning, amplification and reflection, and resource utilization attacks."},
     {t:"DNS shadowing", d:"Compromising a legitimate parent domain, then creating malicious subdomains under it for further attacks."},
     {t:"DNS tunneling", d:"Smuggling data inside DNS queries — often detected by queries running noticeably longer than average."},
+    {t:"Domain generation algorithm (DGA)", d:"Malware that randomly generates domain names to use as meeting points with its command-and-control servers."},
+    {t:"Double IP flux", d:"A DNS stealth technique that rapidly changes hostname-to-IP mappings and also the authoritative name server."},
     {t:"Enterprise (802.1X) authentication", d:"A wireless authentication mode using a centralized RADIUS server and EAP, giving each user individual credentials instead of a shared key."},
     {t:"Evil twin", d:"A rogue access point broadcasting the same SSID as a legitimate one, relying on jamming or disassociation to force clients to reconnect to it instead."},
+    {t:"Fast flux", d:"A DNS stealth technique that hides malicious sites behind a quickly changing set of compromised DNS hosts whose IP addresses change within minutes."},
+    {t:"Homoglyphs", d:"Characters that look the same as, or nearly the same as, legitimate ones, used to make fake links and domains look real."},
     {t:"HTTP 302 cushioning", d:"Abusing HTTP's redirect response to quietly bounce a victim toward a malicious site."},
+    {t:"HTTP status codes", d:"Three-digit response codes grouped by first digit: 1xx informational, 2xx successful, 3xx redirection, 4xx client error, 5xx server error."},
     {t:"Inoculation (worm mitigation)", d:"The worm-response phase of patching and scanning still-healthy systems, usually run in parallel with quarantine and treatment."},
     {t:"Jamming", d:"Transmitting noise or another signal on the same wireless frequency to deliberately interfere with transmissions — a DoS attack."},
     {t:"MAC address spoofing", d:"Altering an attacking host's MAC address to match a legitimate one, defeating MAC-based access controls."},
     {t:"MAC filtering", d:"Permitting or denying wireless clients by MAC address — weak on its own, since MAC addresses are trivially spoofed."},
+    {t:"Malicious iFrame", d:"HTML an attacker adds to a compromised web page so it loads content from another site, used to deliver exploit kits, spam ads, or malware."},
     {t:"Man-in-the-middle (wireless)", d:"Intercepting or altering a victim's traffic after they've connected to a rogue AP or evil twin."},
+    {t:"Open mail relay", d:"A mail server misconfigured to relay mail for anyone, abused to send spam or malware in bulk."},
     {t:"Personal (PSK) authentication", d:"A wireless authentication mode where every client shares the same pre-shared key."},
     {t:"Quarantine (worm mitigation)", d:"The worm-response phase of finding and disconnecting already-infected machines."},
     {t:"Rogue access point", d:"An unauthorized access point plugged into the network — sometimes by an attacker, sometimes just by an employee wanting better coverage."},
@@ -571,6 +622,7 @@
     {t:"Treatment (worm mitigation)", d:"The final worm-response phase — actively disinfecting infected systems."},
     {t:"War driving", d:"Searching for unsecured wireless networks to exploit, often using a directional antenna to detect weak or distant signals."},
     {t:"WEP", d:"The original wireless encryption standard — a static shared key that's straightforward to crack. Considered broken."},
+    {t:"WLC / LWAP", d:"A wireless LAN controller (WLC) centrally manages many access points, which then act as lightweight APs (LWAPs) instead of being configured one at a time."},
     {t:"WPA / WPA2 / WPA3", d:"Successive wireless security standards, each stronger than the last; WPA2 introduced AES encryption (based on 802.11i), WPA3 is the current strongest."},
   ];
 
@@ -656,6 +708,24 @@
       choices:["Jamming","War driving","An evil twin attack","DNS tunneling"],
       correct:1,
       explain:"War driving is specifically the practice of searching for unsecured wireless networks to exploit, often aided by a directional antenna."
+    },
+    {
+      q:"Botnet operators hide their malware sites behind compromised DNS hosts whose IP addresses change every few minutes. Which technique is this?",
+      choices:["DNS tunneling","Fast flux","DNS shadowing","DHCP spoofing"],
+      correct:1,
+      explain:"Fast flux is a DNS stealth technique that keeps malicious servers hidden behind rapidly changing IP addresses."
+    },
+    {
+      q:"What does a wireless client do under CSMA/CA after it finds the channel idle?",
+      choices:["Transmits immediately and listens for collisions","Sends a request to send (RTS) and waits for a clear to send (CTS)","Asks the DHCP server for a new address","Switches to the 5 GHz band"],
+      correct:1,
+      explain:"Wireless clients can't detect collisions while sending, so CSMA/CA avoids them: listen, send RTS, wait for CTS, then transmit."
+    },
+    {
+      q:"A web server log shows many responses in the 4xx range. What do these codes indicate?",
+      choices:["Successful requests","Redirections","Client errors","Server errors"],
+      correct:2,
+      explain:"4xx means the client seems to have made an error. 5xx is a server error, and 3xx is a redirection."
     },
   ];
 

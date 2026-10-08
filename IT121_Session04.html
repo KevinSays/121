@@ -215,6 +215,20 @@
       </tbody>
     </table>
 
+    <h3>Firewall types</h3>
+    <table class="model-table">
+      <thead><tr><th>Type</th><th>How it filters</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Packet filtering (stateless)</td><td>Permits or denies traffic by Layer 3 and Layer 4 information, without tracking connections. Usually part of a router</td></tr>
+        <tr><td style="font-weight:700;">Stateful</td><td>Uses connection information kept in a state table. Analyzes Layers 3 through 5</td></tr>
+        <tr><td style="font-weight:700;">Application gateway (proxy)</td><td>Filters at Layers 3, 4, 5, and 7, mostly in software</td></tr>
+        <tr><td style="font-weight:700;">Next-generation (NGFW)</td><td>Goes beyond stateful with integrated intrusion prevention and application awareness and control</td></tr>
+        <tr><td style="font-weight:700;">Transparent</td><td>Filters IP traffic between a pair of bridged interfaces</td></tr>
+        <tr><td style="font-weight:700;">Hybrid</td><td>A combination of firewall types</td></tr>
+      </tbody>
+    </table>
+    <p>Cisco's specialized appliances include <b>Advanced Malware Protection (AMP)</b>, the <b>Web Security Appliance (WSA)</b>, and the <b>Email Security Appliance (ESA)</b>, all fed by the Cisco Talos intelligence group (<a href="IT121_Session02.html#actors">Session 2</a>). VPNs come in several forms: <b>GRE</b> and <b>IPsec</b> build point-to-point site connections, and <b>MPLS</b> can connect many sites to each other.</p>
+
     <div class="callout">
       <b>IDS vs. IPS is a placement question as much as a naming one.</b> An IDS watches a mirrored copy of traffic. It can alert but never block, and a false positive costs nothing but an alert. An IPS sits directly in the traffic path. It can block in real time, but a false positive can drop legitimate traffic.
     </div>
@@ -240,6 +254,8 @@
         <tr><td style="font-weight:700;">Syslog</td><td>Centralizes log messages from routers, switches, servers, and security devices into one place, instead of leaving them scattered on each device</td></tr>
         <tr><td style="font-weight:700;">NTP (Network Time Protocol)</td><td>Synchronizes clocks across every device on the network — without it, log timestamps from different devices can't be lined up to reconstruct an incident</td></tr>
         <tr><td style="font-weight:700;">SNMP (Simple Network Management Protocol)</td><td>Lets a management station poll and monitor the health and status of network devices remotely</td></tr>
+        <tr><td style="font-weight:700;">Access control lists (ACLs)</td><td>Ordered statements that tell a device to forward or drop packets based on header information. A <b>standard ACL</b> filters only by source IPv4 address. An <b>extended ACL</b> can also filter by destination address, protocol, and source and destination ports</td></tr>
+        <tr><td style="font-weight:700;">Port mirroring</td><td>Switches isolate traffic, so a monitor plugged into one port can't see everything. Port mirroring copies the traffic passing through the switch and sends the copy out a port where an IDS or packet analyzer is attached; the original traffic is forwarded as usual</td></tr>
         <tr><td style="font-weight:700;">NetFlow</td><td>Collects metadata about traffic flows crossing a device — who talked to whom, how much, how often — without capturing full packet contents</td></tr>
       </tbody>
     </table>
@@ -315,6 +331,21 @@
       </tbody>
     </table>
 
+    <h3>Inside an NTFS volume</h3>
+    <table class="model-table">
+      <thead><tr><th>Part</th><th>What it holds</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Partition boot sector</td><td>The first 16 sectors of the drive, including the location of the MFT. The last 16 sectors hold a copy</td></tr>
+        <tr><td style="font-weight:700;">Master File Table (MFT)</td><td>The location of every file and directory on the partition, plus attributes like security information and timestamps</td></tr>
+        <tr><td style="font-weight:700;">System files</td><td>Hidden files with information about other volumes and file attributes</td></tr>
+        <tr><td style="font-weight:700;">File area</td><td>The main area where files and directories are stored</td></tr>
+      </tbody>
+    </table>
+    <p>Formatting a partition doesn't remove all the old data, so it may still be recoverable. Securely wipe a drive before reusing it.</p>
+
+    <h3>The boot process</h3>
+    <p>Computers use one of two kinds of firmware. <b>BIOS</b> dates from the early 1980s: it runs a power-on self-test (POST), then looks for the <b>master boot record (MBR)</b>, which holds a small program that finds and loads the OS. <b>UEFI</b> replaced BIOS to support newer features; it loads <code>.efi</code> files from a special EFI System Partition. Either way, Windows then runs <code>Bootmgr.exe</code>, which reads the Boot Configuration Database, then <code>Winload.exe</code> (or <code>Winresume.exe</code> after hibernation). <code>Winload.exe</code> runs <code>Ntoskrnl.exe</code>, which starts the kernel and sets up the HAL. Finally, the <b>Session Manager Subsystem (SMSS)</b> reads the registry, starts the Winlogon service, and prepares each user's desktop. Programs that start automatically are listed in the registry under HKEY_LOCAL_MACHINE (every boot) and HKEY_CURRENT_USER (at that user's logon), in entries such as Run and RunOnce.</p>
+
     <div class="callout xref">
       NTFS permissions and the registry are also where a lot of Windows-based attacks and persistence techniques live. Remember that when Module 27's forensics content revisits Windows artifacts later in the term.
     </div>
@@ -337,6 +368,9 @@
         <tr><td style="font-weight:700;">Services (services.msc)</td><td>Lists every Windows service, its status, and its startup type — used to start, stop, or disable background processes</td></tr>
         <tr><td style="font-weight:700;">Windows PowerShell</td><td>A scripting shell and language for administration and automation — far more capable than the legacy Command Prompt</td></tr>
         <tr><td style="font-weight:700;">netstat</td><td>Lists active network connections and listening ports from the command line — a first move when checking what a host is actually talking to</td></tr>
+        <tr><td style="font-weight:700;">Windows Management Instrumentation (WMI)</td><td>Manages remote computers: reads information about components, hardware and software statistics, and monitors their health</td></tr>
+        <tr><td style="font-weight:700;">nslookup</td><td>Tests DNS from the command line, e.g. <code>nslookup cisco.com</code> returns the server's address</td></tr>
+        <tr><td style="font-weight:700;">Server Message Block (SMB)</td><td>The protocol Windows uses to share files and other resources on remote hosts, reached with UNC paths like <code>\\server\share</code></td></tr>
         <tr><td style="font-weight:700;">Task Scheduler</td><td>Runs programs or scripts automatically on a schedule or trigger — also a common persistence mechanism attackers abuse</td></tr>
       </tbody>
     </table>
@@ -362,6 +396,7 @@
         <tr><td style="font-weight:700;">Windows Defender (Windows Security)</td><td>Built-in antivirus and antimalware protection, enabled by default</td></tr>
         <tr><td style="font-weight:700;">Windows Firewall</td><td>Host-based firewall filtering inbound and outbound traffic on the machine itself, independent of any network firewall</td></tr>
         <tr><td style="font-weight:700;">Local Security Policy</td><td>Configures account and audit policies on a single machine — password requirements, lockout thresholds, and what gets logged</td></tr>
+        <tr><td style="font-weight:700;">AppLocker</td><td>Restricts which files users or groups are allowed to run, so unapproved programs can't start</td></tr>
         <tr><td style="font-weight:700;">BitLocker</td><td>Full-disk encryption — protects data at rest if a device is lost or stolen, since the drive is unreadable without the key</td></tr>
       </tbody>
     </table>
@@ -493,6 +528,10 @@
 <script>
   const TERMS = [
     {t:"AAA (Authentication, Authorization, Accounting)", d:"A framework that verifies identity, controls what an authenticated user can do, and logs what they did — typically implemented with RADIUS or TACACS+."},
+    {t:"ACL (Access Control List)", d:"Ordered statements that forward or drop packets based on header information. Standard ACLs filter by source IPv4 address only; extended ACLs also use destination, protocol, and ports."},
+    {t:"Application gateway firewall", d:"A proxy firewall that filters at OSI Layers 3, 4, 5, and 7, mostly in software."},
+    {t:"AppLocker", d:"A Windows feature that restricts which files users or groups are allowed to run."},
+    {t:"BIOS / UEFI", d:"The two kinds of firmware that start a computer. BIOS (1980s) runs POST and loads the MBR; UEFI replaced it and loads .efi files from the EFI System Partition."},
     {t:"BitLocker", d:"Windows full-disk encryption, protecting data at rest if a device is lost or stolen."},
     {t:"DOS-based Windows", d:"The older Windows family line (3.1, 95, 98, Me) that ran on top of MS-DOS without real memory protection between processes."},
     {t:"Event Viewer", d:"The Windows tool for browsing event logs (Application, Security, System) — the primary source of historical evidence for what happened on a host."},
@@ -502,16 +541,24 @@
     {t:"IPS (Intrusion Prevention System)", d:"Sits inline with network traffic and can actively block a detected threat in real time."},
     {t:"Kernel mode", d:"The privileged Windows execution mode with full access to hardware and memory — code running here can cause far more damage than user-mode code."},
     {t:"Local Security Policy", d:"A Windows tool for configuring account and audit policy on a single machine, including password requirements and what gets logged."},
+    {t:"MFT (Master File Table)", d:"The NTFS table holding the location of every file and directory on a partition, plus attributes like security information and timestamps."},
     {t:"MMC (Microsoft Management Console)", d:"A framework that hosts administrative snap-ins, like Computer Management or Group Policy, in one customizable window."},
     {t:"NAC (Network Access Control)", d:"Checks a device's security posture before granting it network access."},
     {t:"NetFlow", d:"Collects metadata about network traffic flows — who talked to whom, how much, how often — without capturing full packet contents."},
     {t:"netstat", d:"A command-line tool listing active network connections and listening ports on a host."},
+    {t:"NGFW (Next-Generation Firewall)", d:"A firewall that goes beyond stateful filtering with integrated intrusion prevention and application awareness and control."},
+    {t:"nslookup", d:"A command that tests DNS by looking up a name, such as nslookup cisco.com."},
     {t:"NT-based Windows", d:"The Windows family line built on the NT kernel, with real memory protection and a permission model — every current release (7, 10, 11, and Server editions) is NT-based."},
     {t:"NTFS", d:"The standard modern Windows file system, supporting file-level permissions, encryption, and journaling."},
     {t:"NTP (Network Time Protocol)", d:"Synchronizes clocks across network devices, which is necessary for correlating log timestamps across devices during an investigation."},
+    {t:"Packet filtering firewall", d:"A stateless firewall, usually part of a router, that permits or denies traffic by Layer 3 and Layer 4 information."},
+    {t:"Port mirroring", d:"A switch feature that copies the traffic passing through it and sends the copy out a port where a network monitor or IDS is attached."},
     {t:"Process / thread", d:"A process is a running program with its own memory space; a thread is a unit of execution within a process, and a process can have many threads."},
     {t:"Services (services.msc)", d:"A Windows tool listing every service, its status, and its startup type, used to start, stop, or disable background processes."},
+    {t:"SMB (Server Message Block)", d:"The protocol Windows uses to share files and other resources on remote hosts."},
+    {t:"SMSS (Session Manager Subsystem)", d:"The Windows boot component that reads the registry, starts Winlogon, and prepares each user's desktop."},
     {t:"SNMP (Simple Network Management Protocol)", d:"Lets a management station remotely poll and monitor the health and status of network devices."},
+    {t:"Stateful firewall", d:"A firewall that filters using connection information kept in a state table, analyzing OSI Layers 3 through 5."},
     {t:"Syslog", d:"A protocol and service that centralizes log messages from routers, switches, servers, and security devices into one place."},
     {t:"Task Manager", d:"A real-time Windows tool showing running processes, resource usage, and startup programs."},
     {t:"Task Scheduler", d:"A Windows tool that runs programs or scripts automatically on a schedule or trigger — also a common persistence mechanism abused by attackers."},
@@ -523,6 +570,7 @@
     {t:"Windows PowerShell", d:"A scripting shell and language for Windows administration and automation, more capable than the legacy Command Prompt."},
     {t:"Windows Registry", d:"A hierarchical database of configuration settings for the OS and installed applications, organized into root keys like HKEY_LOCAL_MACHINE and HKEY_CURRENT_USER."},
     {t:"Windows Update", d:"The service that patches known vulnerabilities in Windows — an unpatched system remains exploitable by attacks a patched one is already immune to."},
+    {t:"WMI (Windows Management Instrumentation)", d:"A Windows feature for managing remote computers: reading component information and statistics and monitoring health."},
   ];
 
   const QUIZ = [
@@ -612,6 +660,30 @@
       choices:["Windows Firewall","BitLocker","Local Security Policy","Windows Defender"],
       correct:1,
       explain:"BitLocker provides full-disk encryption, making the drive unreadable without the encryption key even if the physical device is stolen."
+    },
+    {
+      q:"Which type of firewall uses a state table of connection information to filter traffic?",
+      choices:["Packet filtering firewall","Stateful firewall","Transparent firewall","Hybrid firewall"],
+      correct:1,
+      explain:"A stateful firewall tracks connections in a state table. A packet filtering firewall is stateless."
+    },
+    {
+      q:"A standard ACL filters traffic based on which information?",
+      choices:["Source IPv4 address only","Destination port only","Source and destination ports","Protocol type and destination address"],
+      correct:0,
+      explain:"Standard ACLs look only at the source IPv4 address. Extended ACLs add destination, protocol, and ports."
+    },
+    {
+      q:"An analyst connects an IDS to a switch but sees only the traffic for its own port. Which feature would send it a copy of all the traffic?",
+      choices:["NetFlow","Port mirroring","SNMP","NTP"],
+      correct:1,
+      explain:"Port mirroring copies traffic passing through the switch to the port where the monitor is attached."
+    },
+    {
+      q:"In the Windows boot process, which component reads the registry, starts Winlogon, and prepares each user's desktop?",
+      choices:["Bootmgr.exe","The MBR","The Session Manager Subsystem (SMSS)","The HAL"],
+      correct:2,
+      explain:"SMSS runs after the kernel starts. It builds the user environment and starts the Winlogon service."
     },
   ];
 

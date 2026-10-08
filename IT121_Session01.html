@@ -168,6 +168,7 @@
     <a href="#actors">Threat Actors</a>
     <a href="#malware">Malware</a>
     <a href="#social">Social Engineering</a>
+    <a href="#intel">Cloud &amp; Threat Intel</a>
     <a href="#flashcards">Flashcards</a>
     <a href="#quiz">Quiz</a>
     <a href="#examples">Examples</a>
@@ -337,6 +338,7 @@
         <tr><td style="font-weight:700;">Trojan horse</td><td>Disguised as legit software; doesn't self-replicate</td><td>Fake "free" downloads</td></tr>
         <tr><td style="font-weight:700;">Ransomware</td><td>Encrypts files/systems; demands payment</td><td>Hospital EHR locks (availability!) — WannaCry (a self-spreading "cryptoworm" — worm delivery, ransomware payload) is the classic example</td></tr>
         <tr><td style="font-weight:700;">Spyware / adware</td><td>Covertly monitors, or floods with ads</td><td>Browser hijackers</td></tr>
+        <tr><td style="font-weight:700;">Grayware</td><td>Unwanted apps that behave in annoying or undesirable ways. Not always recognizable malware, but can still track location or push ads</td><td>A "free" flashlight app that wants your location</td></tr>
         <tr><td style="font-weight:700;">Rootkit</td><td>Hides deep in the OS for privileged, undetected access</td><td>Bootkit infections</td></tr>
         <tr><td style="font-weight:700;">Keylogger</td><td>Captures keystrokes to steal credentials</td><td>Credential theft</td></tr>
         <tr><td style="font-weight:700;">Logic bomb</td><td>Triggers on a condition/date</td><td>Insider sabotage</td></tr>
@@ -393,6 +395,41 @@
       <li><strong>Curiosity</strong> — "open this attachment"</li>
       <li><strong>Trust</strong> — impersonating someone the victim knows</li>
     </ul>
+  </section>
+
+  <!-- ── CLOUD THREATS & THREAT INTELLIGENCE ── -->
+  <section id="intel">
+    <div class="section-head">
+      <p class="kicker">Concept 6</p>
+      <h2>Cloud Threats &amp; Threat Intelligence</h2>
+      <p>Two more pieces of Module 1: the cloud services organizations rent, which widen the attack surface, and the sources analysts use to keep up with new threats.</p>
+    </div>
+
+    <h3>Threats to the public cloud</h3>
+    <p>The <b>public cloud</b> is computing services hosted by a provider and shared across many organizations. Organizations subscribe to one of three models:</p>
+    <table class="model-table">
+      <thead><tr><th>Model</th><th>What the provider gives you</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Software as a Service (SaaS)</td><td>Software hosted centrally in the cloud, used through a web browser or app</td><td>Webmail or an online office suite</td></tr>
+        <tr><td style="font-weight:700;">Platform as a Service (PaaS)</td><td>The provider's hardware and tools, for developing, running, and managing your own applications</td><td>A hosted platform for a custom web app</td></tr>
+        <tr><td style="font-weight:700;">Infrastructure as a Service (IaaS)</td><td>Virtual computing resources: servers, storage, and other infrastructure you rent access to</td><td>Virtual servers in a provider's data center</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Threat intelligence sources</h3>
+    <table class="model-table">
+      <thead><tr><th>Source</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Common vulnerabilities and exposures (CVE)</td><td>A public dictionary of known vulnerabilities, each with its own ID, sponsored by US-CERT and the US Department of Homeland Security</td></tr>
+        <tr><td style="font-weight:700;">The dark web</td><td>Encrypted web content that needs special software, authorization, or configuration to reach, and isn't indexed by normal search engines. Analysts watch it for stolen data and attack plans</td></tr>
+        <tr><td style="font-weight:700;">Indicator of compromise (IOC)</td><td>Evidence that a breach happened, with details about it, such as a malware signature or a malicious domain name</td></tr>
+        <tr><td style="font-weight:700;">Automated Indicator Sharing (AIS)</td><td>A CISA service for trading threat indicators in real time, using the structured language <b>STIX</b> and the exchange method <b>TAXII</b></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout xref">
+      IOCs, and the indicators of attack (IOAs) that go with them, come back in <a href="IT121_Session02.html#actors">Session 2</a>.
+    </div>
   </section>
 
   <!-- ── FLASHCARDS ── -->
@@ -533,12 +570,16 @@
     {t:"Black hat", d:"A hacker who exploits vulnerabilities without authorization for personal gain or harm — the malicious attacker in every other table on this page."},
     {t:"CIA triad", d:"The three goals of security: Confidentiality, Integrity, Availability. Most attacks can be described as breaking one of these three."},
     {t:"Confidentiality", d:"The 'C' in the CIA triad — only authorized people/systems can view the data. Broken by data breaches, eavesdropping, weak access control."},
+    {t:"CVE (Common Vulnerabilities and Exposures)", d:"A public dictionary of known vulnerabilities, each with its own ID, sponsored by US-CERT and the US Department of Homeland Security."},
+    {t:"Dark web", d:"Encrypted web content that needs special software, authorization, or configuration to reach, and isn't indexed by normal search engines."},
     {t:"Dumpster diving", d:"Retrieving discarded information from the trash — not just paper like sticky notes, but electronic media (old drives, USB sticks) too."},
     {t:"Exploit", d:"The specific mechanism or code that takes advantage of a vulnerability to actually carry out an attack."},
     {t:"Gray hat", d:"A hacker who finds a vulnerability without authorization but discloses it rather than exploiting it — technically illegal access, not malicious intent."},
+    {t:"Grayware", d:"Unwanted applications that behave in annoying or undesirable ways. They may not carry recognizable malware, but can still track location or push unwanted ads."},
     {t:"Hacktivist", d:"A threat actor motivated by a political or social message — typically website defacement or leaked data rather than financial theft."},
     {t:"Insider threat", d:"A threat from someone with legitimate access — an employee or contractor — whether malicious or simply careless."},
     {t:"Integrity", d:"The 'I' in the CIA triad — data is accurate and unaltered except by authorized action. Broken by tampering or man-in-the-middle edits."},
+    {t:"IOC (Indicator of Compromise)", d:"Evidence that a breach happened, with details about it, such as a malware signature or a malicious domain name."},
     {t:"Keylogger", d:"Malware that silently records keystrokes, typically to steal usernames, passwords, and other typed credentials."},
     {t:"Logic bomb", d:"Malicious code that lies dormant until triggered by a specific condition or date — often planted by an insider."},
     {t:"Malware", d:"Any software designed to damage, disrupt, or gain unauthorized access to a system."},
@@ -549,12 +590,14 @@
     {t:"Ransomware", d:"Malware that encrypts a victim's files or systems and demands payment for the decryption key — a direct attack on availability."},
     {t:"Risk", d:"The likelihood that a threat will successfully exploit a vulnerability, combined with the impact if it does."},
     {t:"Rootkit", d:"Malware designed to hide deep in the operating system, maintaining privileged, hard-to-detect access."},
+    {t:"SaaS / PaaS / IaaS", d:"The three public cloud models: Software as a Service (hosted applications), Platform as a Service (a platform to build and run your own apps), and Infrastructure as a Service (virtual servers, storage, and networking)."},
     {t:"Scareware", d:"Software that frightens a victim into believing their system is already infected, coaxing them into installing fake antivirus software (which is itself the malware)."},
     {t:"Script kiddie", d:"A low-skill threat actor who uses existing tools and canned exploits, often for bragging rights rather than a specific goal."},
     {t:"Shoulder surfing", d:"Visually stealing information — a password or PIN — by looking over someone's shoulder."},
     {t:"Smishing", d:"Phishing conducted over SMS text message instead of email."},
     {t:"Social engineering", d:"Manipulating people, rather than technology, into breaking normal security procedure."},
     {t:"Spyware / Adware", d:"Software that covertly monitors user activity (spyware) or floods the system with unwanted advertising (adware)."},
+    {t:"STIX and TAXII", d:"The structured language (STIX) and exchange method (TAXII) used by CISA's Automated Indicator Sharing to trade threat indicators in real time."},
     {t:"Tailgating / Piggybacking", d:"Following an authorized person through a secured door without using your own credentials."},
     {t:"Threat", d:"Anything that could exploit a vulnerability — an attacker, a piece of malware, even a natural disaster."},
     {t:"Threat actor", d:"The entity behind an attack, categorized by motivation and skill: script kiddie, hacktivist, organized crime, nation-state/APT, insider."},
@@ -643,6 +686,24 @@
       choices:["Black hat","White hat","Gray hat","Script kiddie"],
       correct:2,
       explain:"Gray hat: the access itself was unauthorized (not white hat), but the intent was disclosure, not exploitation (not black hat)."
+    },
+    {
+      q:"An app doesn't contain recognizable malware, but it tracks the user's location and floods them with ads. This is best described as:",
+      choices:["A worm","Grayware","A rootkit","A logic bomb"],
+      correct:1,
+      explain:"Grayware is unwanted software that behaves in annoying or undesirable ways, like tracking location or pushing ads, without being recognizable malware."
+    },
+    {
+      q:"Which cloud model gives an organization virtual servers and storage that it manages itself?",
+      choices:["SaaS","PaaS","IaaS","DaaS"],
+      correct:2,
+      explain:"Infrastructure as a Service provides virtual computing resources. SaaS provides finished software, and PaaS provides a platform to build applications on."
+    },
+    {
+      q:"A malware signature or a malicious domain name that proves a breach happened is an example of:",
+      choices:["A CVE","An indicator of compromise (IOC)","A zero-day","An attack vector"],
+      correct:1,
+      explain:"IOCs are evidence of a breach and details about it. CVEs are IDs for known vulnerabilities."
     },
   ];
 
