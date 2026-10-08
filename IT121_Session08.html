@@ -1,0 +1,3977 @@
+<title>IT121 Session 8 – Midterm Review</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+  select.filter{ font-family:var(--mono); font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.55em .7em; max-width:100%; }
+  select.filter:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .filter-lbl{ font-family:var(--mono); font-size:.78rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .stag{ display:inline-block; font-family:var(--mono); font-size:.72rem; font-weight:600; letter-spacing:.04em; color:var(--accent-2); background:var(--accent-2-soft); padding:.1em .45em; text-decoration:none; vertical-align:middle; }
+  a.stag:hover{ color:var(--accent); }
+  .quiz-q .qsrc{ margin:0 0 8px; }
+  #quizReport ul{ margin:.6em 0 0; padding-left:1.2em; }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 8</p>
+    <h1>Midterm Review</h1>
+    <p class="lede">Seven sessions in, you've covered threats, the network, two operating systems, and the defenses around all of it. The midterm asks you to pull that together. This page is your study desk: one map of every module, the pairs people mix up, a pooled flashcard deck, and a practice exam that tells you which session to reopen.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Modules 1–13 &middot; Sessions 1–7</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#map">Module Map</a>
+    <a href="#confused">Commonly Confused</a>
+    <a href="#extras">Module Extras</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Practice Exam</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>How to use this page</h2>
+      <p>The midterm is cumulative: Modules 1–13, which Sessions 1–7 covered. This page doesn't teach anything new. It pulls everything from those sessions into one place, so you can find your weak spots and go back to the right page to fix them.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Skim the module map and mark any module where the big ideas don't feel familiar</li>
+      <li>Read the commonly confused pairs. Most wrong answers come from mixing up two terms that look alike</li>
+      <li>Check "Also in the modules" for NetAcad content the session pages didn't cover</li>
+      <li>Run the flashcards, filtered to one session at a time</li>
+      <li>Take the practice exam, then reopen the session for every question you miss</li>
+    </ul>
+  </section>
+
+  <!-- ── MODULE MAP ── -->
+  <section id="map">
+    <div class="section-head">
+      <p class="kicker">Review 1</p>
+      <h2>Module map</h2>
+      <p>Every module on the midterm, where it was taught, and the ideas you should be able to explain without notes.</p>
+    </div>
+    <table class="model-table">
+      <thead><tr><th>Module</th><th>Session</th><th>Big ideas</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1. Cybersecurity Threats, Vulnerabilities, and Attacks</td><td style="white-space:nowrap;"><a href="IT121_Session01.html">Session 1</a></td><td>The CIA triad. Threat vs. vulnerability vs. exploit vs. risk. Malware types: a virus needs a user, a worm spreads on its own, a Trojan pretends to be legitimate. Social engineering techniques</td></tr>
+        <tr><td style="font-weight:700;">2. Securing Networks</td><td style="white-space:nowrap;"><a href="IT121_Session02.html">Session 2</a></td><td>Internal vs. external threats. Threat actor types, from script kiddies to state-sponsored attackers. How hacking evolved, and why sharing threat information matters</td></tr>
+        <tr><td style="font-weight:700;">3. Attacking the Foundation</td><td style="white-space:nowrap;"><a href="IT121_Session02.html#pdu">Session 2</a></td><td>IPv4 and IPv6 header fields, including TTL. IP attacks: ICMP, amplification and reflection, spoofing, man-in-the-middle, session hijacking. TCP attacks: SYN flood, reset, hijacking. UDP floods</td></tr>
+        <tr><td style="font-weight:700;">4. Attacking What We Do</td><td style="white-space:nowrap;"><a href="IT121_Session03.html">Session 3</a></td><td>ARP, DNS, and DHCP attacks. Enterprise services attacks: HTTP, email, SQL injection, XSS. Mitigation, including the four phases of worm response: containment, inoculation, quarantine, treatment</td></tr>
+        <tr><td style="font-weight:700;">5. Wireless Network Communication Devices</td><td style="white-space:nowrap;"><a href="IT121_Session03.html#wireless">Session 3</a></td><td>How 802.11 works. WLAN threats: rogue APs, evil twins, man-in-the-middle, DoS. Securing WLANs: WEP through WPA3, and Personal vs. Enterprise authentication</td></tr>
+        <tr><td style="font-weight:700;">6. Network Security Infrastructure</td><td style="white-space:nowrap;"><a href="IT121_Session04.html">Session 4</a></td><td>Firewalls, IDS vs. IPS, VPNs, NAC. Security services: AAA, syslog, NTP, SNMP, NetFlow</td></tr>
+        <tr><td style="font-weight:700;">7. The Windows Operating System</td><td style="white-space:nowrap;"><a href="IT121_Session04.html#winhistory">Session 4</a></td><td>DOS-based vs. NT-based Windows. HAL, user mode vs. kernel mode, NTFS, the registry. Monitoring tools: Task Manager, Event Viewer, PowerShell, netstat. UAC and patching</td></tr>
+        <tr><td style="font-weight:700;">8. Linux Overview</td><td style="white-space:nowrap;"><a href="IT121_Session05.html">Session 5</a></td><td>Why the SOC uses Linux. The shell and its commands. Services and their config files. Logs in <code>/var/log</code>. Permissions, root, and sudo</td></tr>
+        <tr><td style="font-weight:700;">9. System and Endpoint Protection</td><td style="white-space:nowrap;"><a href="IT121_Session05.html#defending">Session 5</a></td><td>OS hardening from a baseline. Antimalware detection: signature, heuristic, behavior, and anomaly based. HIDS vs. HIPS. Host firewalls. Sandboxing. Attack surface</td></tr>
+        <tr><td style="font-weight:700;">10. Cybersecurity Principles, Practices, and Processes</td><td style="white-space:nowrap;"><a href="IT121_Session06.html">Session 6</a></td><td>The cybersecurity cube: CIA, states of data, countermeasures. Data at rest, in transit, in process. Standards vs. guidelines vs. procedures</td></tr>
+        <tr><td style="font-weight:700;">11. Understanding Defense</td><td style="white-space:nowrap;"><a href="IT121_Session06.html#depth">Session 6</a></td><td>Assets, vulnerabilities, threats, and the asset lifecycle. Defense in depth, the onion and the artichoke, and the five strategies. Configuration and log management. Business, security, and BYOD policies</td></tr>
+        <tr><td style="font-weight:700;">12. System and Network Defense</td><td style="white-space:nowrap;"><a href="IT121_Session07.html">Session 7</a></td><td>Physical and application security. Hardening services and replacing insecure protocols. VLANs, DMZ, zero trust. Wireless and mobile hardening. High availability, five nines, RAID. IoT and embedded systems</td></tr>
+        <tr><td style="font-weight:700;">13. Access Control</td><td style="white-space:nowrap;"><a href="IT121_Session07.html#accesscontrols">Session 7</a></td><td>Physical, logical, and administrative controls. AAA and MFA. DAC, MAC, role-based, rule-based, ABAC, TAC. Account management and file permissions. TACACS+ vs. RADIUS</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── COMMONLY CONFUSED ── -->
+  <section id="confused">
+    <div class="section-head">
+      <p class="kicker">Review 2</p>
+      <h2>Commonly confused</h2>
+      <p>Pairs that look alike on a quiz. If you can say the difference in one sentence, you're ready for the question.</p>
+    </div>
+    <table class="model-table">
+      <thead><tr><th>These two</th><th>The difference</th><th>Where</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Threat vs. vulnerability</td><td>A vulnerability is the weakness. A threat is what could exploit it. Risk is how likely and how bad</td><td><a href="IT121_Session01.html#tver">S1</a></td></tr>
+        <tr><td style="font-weight:700;">Virus vs. worm vs. Trojan</td><td>A virus needs a user to run its host file. A worm spreads on its own. A Trojan is disguised as legitimate software and doesn't replicate</td><td><a href="IT121_Session01.html#malware">S1</a></td></tr>
+        <tr><td style="font-weight:700;">Phishing vs. spear phishing vs. whaling</td><td>Mass email, a targeted person, an executive. Vishing is by phone, smishing by text</td><td><a href="IT121_Session01.html#social">S1</a></td></tr>
+        <tr><td style="font-weight:700;">SYN flood vs. TCP reset</td><td>A SYN flood never finishes the handshake and fills the connection table. A reset attack forges an RST to kill an existing connection</td><td><a href="IT121_Session02.html#tcpudp">S2</a></td></tr>
+        <tr><td style="font-weight:700;">DHCP spoofing vs. DHCP starvation</td><td>Spoofing is a rogue server handing out false settings. Starvation exhausts the real server's address pool</td><td><a href="IT121_Session03.html#ipservices">S3</a></td></tr>
+        <tr><td style="font-weight:700;">Rogue AP vs. evil twin</td><td>A rogue AP is any unauthorized AP on the network. An evil twin copies a real AP's SSID to lure clients</td><td><a href="IT121_Session03.html#wlanthreats">S3</a></td></tr>
+        <tr><td style="font-weight:700;">IDS vs. IPS</td><td>An IDS watches a copy of traffic and alerts. An IPS sits inline and can block</td><td><a href="IT121_Session04.html#secdevices">S4</a></td></tr>
+        <tr><td style="font-weight:700;">HIDS vs. HIPS</td><td>The same split on a host: a HIDS alerts, a HIPS can stop the action</td><td><a href="IT121_Session05.html#hips">S5</a></td></tr>
+        <tr><td style="font-weight:700;">Signature vs. anomaly detection</td><td>Signature matches known-bad fingerprints and misses anything new. Anomaly learns normal and flags deviations</td><td><a href="IT121_Session05.html#antimalware">S5</a>, <a href="IT121_Session05.html#hips">S5</a></td></tr>
+        <tr><td style="font-weight:700;">Standard vs. guideline vs. procedure</td><td>A standard is a mandatory rule ("must"). A guideline is a recommendation ("should"). A procedure is mandatory step-by-step instructions</td><td><a href="IT121_Session06.html#policies">S6</a></td></tr>
+        <tr><td style="font-weight:700;">Security onion vs. Security Onion</td><td>The analogy: an attacker peels each layer of defense in depth. The tool suite: a Linux distribution for network security monitoring</td><td><a href="IT121_Session06.html#layers">S6</a>, <a href="IT121_Session05.html#linuxbasics">S5</a></td></tr>
+        <tr><td style="font-weight:700;">Onion vs. artichoke</td><td>The onion assumes an attacker must get through every layer. The artichoke, for borderless networks, says pulling one leaf can expose data</td><td><a href="IT121_Session06.html#layers">S6</a></td></tr>
+        <tr><td style="font-weight:700;">Type I vs. Type II error</td><td>Type I is a false rejection (a real user turned away). Type II is a false acceptance (an impostor let in), usually the worse one</td><td><a href="IT121_Session07.html#physical">S7</a></td></tr>
+        <tr><td style="font-weight:700;">Role-based vs. rule-based (both "RBAC")</td><td>Role-based follows the job role. Rule-based follows ACL rules set by staff, like permitted IPs or protocols</td><td><a href="IT121_Session07.html#acconcepts">S7</a></td></tr>
+        <tr><td style="font-weight:700;">DAC vs. MAC</td><td>In DAC, the data's owner decides. In MAC, the system compares the user's clearance with the object's label</td><td><a href="IT121_Session07.html#acconcepts">S7</a></td></tr>
+        <tr><td style="font-weight:700;">Authentication vs. authorization vs. accounting</td><td>Who are you, what can you do, what did you do</td><td><a href="IT121_Session07.html#accesscontrols">S7</a></td></tr>
+        <tr><td style="font-weight:700;">TACACS+ vs. RADIUS</td><td>TACACS+: TCP 49, mostly Cisco, encrypts the whole body, separates all three A's. RADIUS: UDP 1812/1813, open standard, encrypts only the password, combines authentication and authorization</td><td><a href="IT121_Session07.html#aaa">S7</a></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Port numbers the sessions used</h3>
+    <table class="model-table">
+      <thead><tr><th>Protocol</th><th>Port</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">SSH</td><td>TCP 22</td><td>Encrypted remote access</td></tr>
+        <tr><td style="font-weight:700;">Telnet</td><td>TCP 23</td><td>Plaintext. Replace with SSH</td></tr>
+        <tr><td style="font-weight:700;">TACACS+</td><td>TCP 49</td><td>AAA, mostly Cisco</td></tr>
+        <tr><td style="font-weight:700;">HTTP</td><td>80</td><td>Unencrypted web. HTTPS adds SSL/TLS</td></tr>
+        <tr><td style="font-weight:700;">POP</td><td>110</td><td>Secure it with SSL/TLS</td></tr>
+        <tr><td style="font-weight:700;">IMAP</td><td>143</td><td>Secure it with SSL/TLS</td></tr>
+        <tr><td style="font-weight:700;">RADIUS</td><td>UDP 1812/1813 (or 1645/1646)</td><td>AAA, open standard</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── ALSO IN THE MODULES ── -->
+  <section id="extras">
+    <div class="section-head">
+      <p class="kicker">Review 3</p>
+      <h2>Also in the modules</h2>
+      <p>The NetAcad modules include some content that Sessions 1–5 didn't cover. The midterm can still ask about it. Each item below is a short definition taken from the module material. They're also in the flashcards and glossary, tagged "Module extras."</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Module</th><th>Term</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td style="white-space:nowrap;">Module 1</td><td style="font-weight:700;">Grayware</td><td>Unwanted applications that behave in annoying or undesirable ways. They may not carry recognizable malware, but can still track your location or push unwanted ads.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 1</td><td style="font-weight:700;">Common vulnerabilities and exposures (CVE)</td><td>A public dictionary of known vulnerabilities, each with its own ID, sponsored by US-CERT and the US Department of Homeland Security.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 1</td><td style="font-weight:700;">Indicator of compromise (IOC)</td><td>Evidence that a breach has happened, with details about it, such as a malware signature or a malicious domain name.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 1</td><td style="font-weight:700;">STIX and TAXII</td><td>The structured language (STIX) and exchange method (TAXII) that CISA&#x27;s Automated Indicator Sharing uses to trade threat indicators in real time.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 1</td><td style="font-weight:700;">Cloud service models (SaaS, PaaS, IaaS)</td><td>Software as a Service delivers applications. Platform as a Service provides a platform to build and run applications. Infrastructure as a Service provides virtualized servers, storage, and networking.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 2</td><td style="font-weight:700;">Indicators of attack (IOA)</td><td>Indicators that focus on an attacker&#x27;s motivation and strategies rather than one breach, which supports a proactive defense.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 2</td><td style="font-weight:700;">Cisco Talos Intelligence Group</td><td>Cisco&#x27;s threat intelligence and research group. Its data feeds Cisco security appliances and helps administrators mitigate threats.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 3</td><td style="font-weight:700;">Blind vs. non-blind spoofing</td><td>In non-blind spoofing, the attacker can see the traffic between the host and the target and inspects the replies. In blind spoofing, the attacker can&#x27;t see that traffic. Blind spoofing is used in DoS attacks.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 4</td><td style="font-weight:700;">Fast flux</td><td>Hiding phishing and malware sites behind a quickly changing set of compromised DNS hosts, with IP addresses changing within minutes. Botnets use it to stay hidden.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 4</td><td style="font-weight:700;">Double IP flux</td><td>Fast flux that also rapidly changes the authoritative name server, making the attack&#x27;s source even harder to find.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 4</td><td style="font-weight:700;">Domain generation algorithm (DGA)</td><td>Malware that randomly generates domain names to use as meeting points with its command-and-control servers.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 4</td><td style="font-weight:700;">Malicious iFrame</td><td>HTML an attacker adds to a compromised web page so it loads content from another site, used to deliver exploit kits, spam ads, or malware.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 4</td><td style="font-weight:700;">Homoglyphs</td><td>Characters that look the same as, or nearly the same as, legitimate ones. Used to make fake links and domains look real.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 4</td><td style="font-weight:700;">Open mail relay</td><td>A mail server misconfigured to relay mail for anyone. Attackers abuse it to send spam or malware in bulk.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 4</td><td style="font-weight:700;">HTTP status codes</td><td>Three-digit server responses grouped by first digit: 1xx informational, 2xx success, 3xx redirection, 4xx client error, 5xx server error.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 5</td><td style="font-weight:700;">CSMA/CA</td><td>Carrier sense multiple access with collision avoidance: WLAN devices listen and transmit only when the channel is clear, because they can&#x27;t detect collisions.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 5</td><td style="font-weight:700;">WLC and LWAP</td><td>A wireless LAN controller (WLC) centralizes control and management of many access points, which then act as lightweight APs (LWAPs) instead of working on their own.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Packet filtering (stateless) firewall</td><td>Permits or denies traffic by Layer 3 and Layer 4 information, without tracking connections. Usually part of a router.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Stateful firewall</td><td>Filters traffic using connection information kept in a state table. Analyzes OSI Layers 3 through 5.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Application gateway (proxy) firewall</td><td>Filters at OSI Layers 3, 4, 5, and 7, mostly in software.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Next-generation firewall (NGFW)</td><td>Goes beyond a stateful firewall with integrated intrusion prevention and application awareness and control.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Transparent and hybrid firewalls</td><td>A transparent firewall filters IP traffic between a pair of bridged interfaces. A hybrid firewall combines firewall types.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Standard vs. extended ACLs</td><td>A standard ACL filters only by source IPv4 address. An extended ACL can also filter by destination, protocol, and port.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Port mirroring</td><td>A switch feature that copies the traffic passing through it and sends the copy out a port where a network monitor is attached.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Cisco ESA and WSA</td><td>The Email Security Appliance and Web Security Appliance: Cisco devices that filter email and web traffic using Talos threat intelligence.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 6</td><td style="font-weight:700;">Layer 3 VPNs: GRE, IPsec, MPLS</td><td>GRE and IPsec make point-to-point site connections. MPLS can connect many sites to each other.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 7</td><td style="font-weight:700;">Master File Table (MFT)</td><td>The NTFS table that holds the location of every file and directory on a partition, plus attributes like security information and timestamps. The partition boot sector points to it.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 7</td><td style="font-weight:700;">Session Manager Subsystem (SMSS)</td><td>The Windows boot component that reads the registry to create the user environment, start Winlogon, and prepare each user&#x27;s desktop.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 7</td><td style="font-weight:700;">Server Message Block (SMB)</td><td>The protocol Windows uses to share files and other resources on remote hosts.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 7</td><td style="font-weight:700;">nslookup</td><td>A command that tests DNS by looking up a name, such as nslookup cisco.com.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 7</td><td style="font-weight:700;">Windows Management Instrumentation (WMI)</td><td>A Windows feature for managing remote computers: reading component information and statistics and monitoring their health.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 7</td><td style="font-weight:700;">AppLocker</td><td>A Windows feature that restricts which files users or groups are allowed to run.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 8</td><td style="font-weight:700;">Master Boot Record (MBR)</td><td>Located in the first sector of a partitioned disk, it stores the information about how the file system is organized.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 9</td><td style="font-weight:700;">Endpoint detection and response (EDR)</td><td>A security solution that continuously monitors, collects, and analyzes data from an endpoint and responds to threats it detects.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 9</td><td style="font-weight:700;">Data loss prevention (DLP)</td><td>Tools that centrally make sure sensitive data isn&#x27;t lost, misused, or accessed by unauthorized users.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 9</td><td style="font-weight:700;">TCP Wrappers</td><td>A rule-based access control and logging system for Linux. One example of a host-based firewall.</td></tr>
+        <tr><td style="white-space:nowrap;">Module 9</td><td style="font-weight:700;">XProtect and Gatekeeper</td><td>macOS protections. XProtect blocks malware using signatures. Gatekeeper only allows signed software from Apple-notarized developers.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Every term from Sessions 1–7, plus the module extras. Filter to one session at a time. Click a card to flip it, and double-click to mark it known.</p>
+    </div>
+    <div class="toolbar">
+      <label class="filter-lbl" for="cardFilter">Show</label>
+      <select id="cardFilter" class="filter"></select>
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── PRACTICE EXAM ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Practice exam</h2>
+      <p>Every sample question from Sessions 1–7 in one bank. Draw a random set for a timed-feeling run, or work through one session at a time. Each question shows where it came from, and the summary at the end tells you which sessions to reopen.</p>
+    </div>
+    <div class="toolbar">
+      <label class="filter-lbl" for="quizFilter">From</label>
+      <select id="quizFilter" class="filter"></select>
+      <label class="filter-lbl" for="quizCount">Questions</label>
+      <select id="quizCount" class="filter">
+        <option value="25">25 random</option>
+        <option value="50">50 random</option>
+        <option value="all">All, in order</option>
+      </select>
+      <button class="btn" id="drawQuizBtn">Start</button>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <div id="quizReport"></div>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real incidents rarely stay inside one module. Each of these follows one problem across several sessions.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Sessions 1, 4, 5</span>
+      <h3>The invoice attachment</h3>
+      <p>A Kaidō Freight accounts clerk opens an emailed "invoice" that installs software, which then starts copying itself to other PCs on the office network without anyone clicking anything. Name the social engineering technique, the two malware behaviors, and two controls that would have helped.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Technique:</strong> phishing, a fake email from a trusted-looking source (<a href="IT121_Session01.html#social">Session 1</a>).</p>
+          <p><strong>Malware behavior:</strong> it arrived like a Trojan, disguised as a legitimate file the user chose to open. It then spread like a worm, copying itself across the network with no user action (<a href="IT121_Session01.html#malware">Session 1</a>).</p>
+          <p><strong>Controls:</strong> security awareness training against phishing. On the hosts, antimalware and a HIPS to catch and block the behavior (<a href="IT121_Session05.html#hips">Session 5</a>). On the network, an IPS to block the spreading traffic inline (<a href="IT121_Session04.html#secdevices">Session 4</a>).</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Sessions 3, 6, 7</span>
+      <h3>The second "TsukimiWiFi"</h3>
+      <p>A Tsukimi Sweets customer reports two networks named "TsukimiWiFi," one with a stronger signal. After joining it, they were sent to a fake login page. What attack is this, which CIA leg is at risk, and what would stop it?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Attack:</strong> an evil twin, copying the real SSID so clients connect to the attacker, who can then run a man-in-the-middle attack (<a href="IT121_Session03.html#wlanthreats">Session 3</a>).</p>
+          <p><strong>CIA leg:</strong> confidentiality. The fake login page is there to capture credentials.</p>
+          <p><strong>What stops it:</strong> mutual authentication, where the client verifies the network as well as the network verifying the client (<a href="IT121_Session06.html#states">Session 6</a>, <a href="IT121_Session07.html#wireless">Session 7</a>). Enterprise authentication with 802.1X and EAP supports that (<a href="IT121_Session03.html#securewlan">Session 3</a>).</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Sessions 4, 5, 6, 7</span>
+      <h3>The 3 a.m. logins</h3>
+      <p>Kiriyama General's syslog server shows dozens of failed SSH logins to a Linux imaging server at 3 a.m., then one success for an account that belongs to a radiologist who works days. Where would you look to confirm what happened, and which controls would have limited the damage?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Look at:</strong> the server's authentication log in <code>/var/log</code> (<a href="IT121_Session05.html#admin">Session 5</a>) and the central syslog copy, with timestamps you can trust because every device uses NTP (<a href="IT121_Session04.html#secservices">Session 4</a>). Compare the server against its baseline for new accounts or services (<a href="IT121_Session06.html#opsmgmt">Session 6</a>).</p>
+          <p><strong>This looks like</strong> password guessing that succeeded: a confidentiality breach of patient images.</p>
+          <p><strong>Controls:</strong> an account lockout policy and MFA would have stopped the guessing. A time-based rule could block day-shift accounts at 3 a.m. Least privilege limits what the stolen account can reach (<a href="IT121_Session07.html#accounts">Session 7</a>).</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Sessions 6, 7</span>
+      <h3>Place the defenses</h3>
+      <p>Kaidō Freight is redesigning its network. Its public website, its internal file server, and the drivers' VPN all currently sit on one flat network. Using defense in depth, where should each go, and what one principle should govern access to the file server?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Website:</strong> in a DMZ, so outsiders reach it without touching the internal network (<a href="IT121_Session07.html#segmentation">Session 7</a>).</p>
+          <p><strong>File server:</strong> on the private LAN, ideally in its own VLAN, behind the edge router, firewall, and internal router layers (<a href="IT121_Session06.html#layers">Session 6</a>).</p>
+          <p><strong>Drivers on VPN:</strong> treat them as the artichoke's exposed leaves. Authenticate every connection, and don't trust them more just because they're "inside." That's zero trust.</p>
+          <p><strong>Principle:</strong> least privilege. Each user gets only the folders their job needs.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from Sessions 1–7 and the module extras, A–Z, tagged with the session that teaches it.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 8 midterm review. More sessions are added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+ {
+  "t": "AAA (Authentication, Authorization, Accounting)",
+  "d": "A framework that verifies identity, controls what an authenticated user can do, and logs what they did — typically implemented with RADIUS or TACACS+.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Acceptable use policy (AUP)",
+  "d": "The part of a security policy that defines what users may and may not do on an organization's systems, such as banned websites or bandwidth-heavy apps.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Accidental interference",
+  "d": "Non-malicious devices sharing a wireless band — microwave ovens, cordless phones — degrading WLAN performance without any attacker involved.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Accountability",
+  "d": "Tracing every action back to the person or process that did it, then reporting the usage data for auditing or billing.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Accounting",
+  "d": "The AAA service that records what a user does: what they accessed, for how long, and what they changed.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Administrative access controls",
+  "d": "Policies and procedures for controlling access, focused on personnel and business practices, such as background checks and security training.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Allow list (whitelist)",
+  "d": "A list of applications explicitly permitted to run; everything not on it is blocked. Stronger than a block list but more work to maintain.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Amplification / reflection attack",
+  "d": "A small, spoofed request (often to DNS or NTP) triggers a much larger response sent to the victim instead of the attacker.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Anomaly-based detection",
+  "d": "Detection that learns a baseline of normal activity on a host or network and flags deviations from it.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Application gateway (proxy) firewall",
+  "d": "Filters at OSI Layers 3, 4, 5, and 7, mostly in software.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "Application security logs",
+  "d": "Logs generated by network-based or system-based security software that detects malicious activity. Useful for auditing, spotting trends, and proving compliance.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "AppLocker",
+  "d": "A Windows feature that restricts which files users or groups are allowed to run.",
+  "s": [
+   "X"
+  ],
+  "m": 7
+ },
+ {
+  "t": "APT (Advanced Persistent Threat)",
+  "d": "A highly skilled, well-funded attacker (often nation-state) that maintains long-term, stealthy access rather than a quick smash-and-grab.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "ARP cache poisoning",
+  "d": "Manipulating ARP caches on a local segment so the attacker's MAC address gets mapped to the default gateway's IP address.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Asset",
+  "d": "Anything of value to an organization that must be protected, including servers, infrastructure devices, end devices, and the greatest asset, data.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Asset classification",
+  "d": "Grouping an organization's resources by common characteristics so the most critical information gets the most protection. Four steps: pick the category, assign an owner, set the criteria, apply a schema.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Asset inventory",
+  "d": "A complete list of every system, device, and piece of software an organization owns — you cannot protect or notice what you have not listed.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Asset lifecycle",
+  "d": "The stages an asset moves through: procurement, deployment, utilization, maintenance, and disposal.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Asset management",
+  "d": "Inventorying all of an organization's assets, then developing and implementing policies and procedures to protect them.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Asset standardization",
+  "d": "Choosing specific hardware and software products for the organization to use, so failures are faster and cheaper to fix.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Attack surface",
+  "d": "The total set of points where an attacker could try to get into a system — every open port, service, and installed application adds to it.",
+  "s": [
+   1,
+   5
+  ]
+ },
+ {
+  "t": "Attack vector",
+  "d": "The specific path or method an attacker uses to gain access — a phishing email, a USB drive, an unpatched service.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Attribute-based access control (ABAC)",
+  "d": "Access decided by attributes of the user, the resource, and the environment, such as the time of day.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "auth.log / secure",
+  "d": "The Linux authentication log — /var/log/auth.log on Debian/Ubuntu, /var/log/secure on Red Hat-family distros — recording logins, failed passwords, and sudo use.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Authentication",
+  "d": "The AAA service that verifies a user's identity, using something they know, have, or are.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Authorization",
+  "d": "The AAA service that decides which resources an authenticated user can access and what they can do with them.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Availability",
+  "d": "The 'A' in the CIA triad: systems and data are reachable by authorized users when they need them. Protected by redundancy, tested backups, maintenance, and a disaster plan.",
+  "s": [
+   1,
+   6
+  ]
+ },
+ {
+  "t": "Baiting",
+  "d": "A social engineering technique that lures a victim with something enticing — a free download, a USB drive labeled 'Payroll 2026' left in a parking lot.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Baseline configuration",
+  "d": "All the settings configured for a system, documented as the template for similar systems and used to spot changes or anything that does not belong.",
+  "s": [
+   5,
+   6
+  ]
+ },
+ {
+  "t": "Behavior-based detection",
+  "d": "Antimalware detection that watches what a program does while running (e.g. mass-encrypting files) rather than what its code looks like.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Biometric access control",
+  "d": "Hardware that verifies identity with a physical trait, such as a fingerprint or face, before granting access.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Biometrics",
+  "d": "Physiological or behavioral characteristics, like a fingerprint, face, iris, or voice, used to identify a person.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "BitLocker",
+  "d": "Windows full-disk encryption, protecting data at rest if a device is lost or stolen.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Black hat",
+  "d": "A hacker who exploits vulnerabilities without authorization for personal gain or harm — the malicious attacker in every other table on this page.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Blended threat",
+  "d": "A modern attack that combines multiple techniques — malware, social engineering, protocol abuse — in a single campaign rather than relying on just one.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Blind vs. non-blind spoofing",
+  "d": "In non-blind spoofing, the attacker can see the traffic between the host and the target and inspects the replies. In blind spoofing, the attacker can't see that traffic. Blind spoofing is used in DoS attacks.",
+  "s": [
+   "X"
+  ],
+  "m": 3
+ },
+ {
+  "t": "Block list (blacklist)",
+  "d": "A list of applications that are forbidden to run; everything else is allowed. Easy to manage, but anything not listed gets through.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Boot integrity",
+  "d": "Ensuring only trusted, signed code loads during startup — e.g. UEFI Secure Boot — so malware can't load before the OS's own defenses.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Bring your own device (BYOD)",
+  "d": "Letting employees use their personal phones, tablets, and laptops for work. A BYOD policy sets which devices are allowed, what they can access, and what happens if one is lost.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Business information",
+  "d": "Internal data that gives a company its edge, such as trade secrets, customer lists, contracts, and financials.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Checksum",
+  "d": "A simple hash-style value computed before and after a transfer. If the two match, the data arrived unchanged.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "chkrootkit",
+  "d": "A Linux tool that scans a host for signs of known rootkits.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "chmod / chown",
+  "d": "Linux commands to change a file's permissions (chmod 750 file) and its owner/group (chown user:group file).",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "CIA triad",
+  "d": "The three goals of security: Confidentiality, Integrity, Availability. Most attacks can be described as breaking one of these three.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Cisco ESA and WSA",
+  "d": "The Email Security Appliance and Web Security Appliance: Cisco devices that filter email and web traffic using Talos threat intelligence.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "Cisco Talos Intelligence Group",
+  "d": "Cisco's threat intelligence and research group. Its data feeds Cisco security appliances and helps administrators mitigate threats.",
+  "s": [
+   "X"
+  ],
+  "m": 2
+ },
+ {
+  "t": "Classified information",
+  "d": "Government information labeled by sensitivity, such as top secret, secret, or confidential.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Cloud service models (SaaS, PaaS, IaaS)",
+  "d": "Software as a Service delivers applications. Platform as a Service provides a platform to build and run applications. Infrastructure as a Service provides virtualized servers, storage, and networking.",
+  "s": [
+   "X"
+  ],
+  "m": 1
+ },
+ {
+  "t": "Cloud storage",
+  "d": "Storage in a provider's data center, reached over the internet. The provider runs the hardware; the customer still controls who can access the data.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Code signing",
+  "d": "Digitally signing software to prove who wrote it and that it hasn't changed since it was signed.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Common Criteria",
+  "d": "An international standard for evaluating the security of IT products. One outside source of security guidance.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Common vulnerabilities and exposures (CVE)",
+  "d": "A public dictionary of known vulnerabilities, each with its own ID, sponsored by US-CERT and the US Department of Homeland Security.",
+  "s": [
+   "X"
+  ],
+  "m": 1
+ },
+ {
+  "t": "Company policies",
+  "d": "Business policies that set the rules of conduct and the responsibilities of employees and employers.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Confidentiality",
+  "d": "The 'C' in the CIA triad: only authorized people, processes, and devices can see the data.",
+  "s": [
+   1,
+   6
+  ]
+ },
+ {
+  "t": "Configuration management",
+  "d": "Identifying, controlling, and auditing the implementation of a system's baseline and any changes made to it.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Containerization",
+  "d": "Separating work data from personal data on a mobile device in an authenticated, encrypted area that can be wiped on its own.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Containment (worm mitigation)",
+  "d": "The first phase of worm response — isolating the parts of the network not yet infected.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Correlation",
+  "d": "Comparing events from two or more log sources (e.g. auth.log and a web server log) by time and detail to reconstruct what happened.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Countermeasure",
+  "d": "Anything that protects data. The cube's third dimension groups them as technologies, policies and practices, and people.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Cross-site scripting (XSS)",
+  "d": "Injecting malicious script into a trusted website's input fields, which then executes in other visitors' browsers.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Crossover error rate (CER)",
+  "d": "The point where a biometric system's false rejection rate equals its false acceptance rate. Lower means more accurate.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "CSMA/CA",
+  "d": "Carrier sense multiple access with collision avoidance: WLAN devices listen and transmit only when the channel is clear, because they can't detect collisions.",
+  "s": [
+   "X"
+  ],
+  "m": 5
+ },
+ {
+  "t": "Cybersecurity cube",
+  "d": "A model (also called the McCumber Cube) that describes data protection in three dimensions: security principles (CIA), states of data, and countermeasures.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Data anonymization",
+  "d": "Removing or altering identifying details so data can't be traced back to a person.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Data at rest",
+  "d": "Data that is stored and not being used, such as files on a drive or records in a database.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Data corruption",
+  "d": "Accidental or deliberate changes that leave data unreadable or wrong.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Data exfiltration",
+  "d": "The unauthorized transfer of data out of a network — the mechanism half of 'data loss.'",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Data in process",
+  "d": "Data being input, modified, computed, or output.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Data in transit",
+  "d": "Data moving from one device to another, over a network or on removable media.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Data loss prevention (DLP)",
+  "d": "Tools that centrally make sure sensitive data isn't lost, misused, or accessed by unauthorized users.",
+  "s": [
+   "X"
+  ],
+  "m": 9
+ },
+ {
+  "t": "Defense in depth",
+  "d": "A strategy of layering several defenses so that if one fails, others still protect the assets.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Demilitarized zone (DMZ)",
+  "d": "A small network between the trusted private network and the internet, where public-facing web and mail servers go.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Desktop environment",
+  "d": "The full Linux graphical package — window manager, panels, menus, file manager, settings — e.g. GNOME, KDE Plasma, Xfce.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "DHCP spoofing",
+  "d": "A rogue DHCP server hands out false DNS server addresses, redirecting a client's later requests to fake sites.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "DHCP starvation",
+  "d": "Flooding a DHCP server with fake lease requests until its address pool is exhausted, denying service to real clients.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Digital rights management (DRM)",
+  "d": "Technology that controls how copyrighted digital content, like music, movies, and e-books, can be copied or used.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Direct-attached storage (DAS)",
+  "d": "Storage connected to a single computer, like an internal drive or USB drive. Not shared by default and only as secure as its host.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Disaster plan",
+  "d": "Written, practiced steps for responding to and recovering from a major disruption.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Discretionary access control (DAC)",
+  "d": "The least restrictive model: the data's owner decides who can access it and how.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Distribution (distro)",
+  "d": "The Linux kernel packaged with tools, a package manager, and usually a desktop — e.g. Ubuntu, Fedora, Kali, Security Onion.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Diversity",
+  "d": "A defense-in-depth strategy: make each layer different, so a technique that beats one layer doesn't beat them all.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "DNS amplification/reflection",
+  "d": "Using open DNS resolvers to multiply a small spoofed request into a much larger flood aimed at the victim.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "DNS cache poisoning",
+  "d": "Injecting falsified information into a DNS resolver's cache, redirecting users from a legitimate site to a malicious one.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "DNS shadowing",
+  "d": "Compromising a legitimate parent domain, then creating malicious subdomains under it for further attacks.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "DNS sinkhole",
+  "d": "A DNS control that stops specified hostnames from resolving, steering users away from malicious sites.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "DNS tunneling",
+  "d": "Smuggling data inside DNS queries — often detected by queries running noticeably longer than average.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "DNSSEC",
+  "d": "DNS Security Extensions: digital signatures that authenticate DNS data and protect against DNS tampering.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Domain generation algorithm (DGA)",
+  "d": "Malware that randomly generates domain names to use as meeting points with its command-and-control servers.",
+  "s": [
+   "X"
+  ],
+  "m": 4
+ },
+ {
+  "t": "DOS-based Windows",
+  "d": "The older Windows family line (3.1, 95, 98, Me) that ran on top of MS-DOS without real memory protection between processes.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Double IP flux",
+  "d": "Fast flux that also rapidly changes the authoritative name server, making the attack's source even harder to find.",
+  "s": [
+   "X"
+  ],
+  "m": 4
+ },
+ {
+  "t": "Dumpster diving",
+  "d": "Retrieving discarded information from the trash — not just paper like sticky notes, but electronic media (old drives, USB sticks) too.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Embedded system",
+  "d": "A computer built into a device, like a smart TV, medical device, or car, that captures, stores, and uses data.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Employee policies",
+  "d": "Business policies maintained by human resources that cover salary, pay schedule, benefits, work schedule, and vacations.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Endpoint detection and response (EDR)",
+  "d": "A security solution that continuously monitors, collects, and analyzes data from an endpoint and responds to threats it detects.",
+  "s": [
+   "X"
+  ],
+  "m": 9
+ },
+ {
+  "t": "Enterprise (802.1X) authentication",
+  "d": "A wireless authentication mode using a centralized RADIUS server and EAP, giving each user individual credentials instead of a shared key.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Event Viewer",
+  "d": "The Windows tool for browsing event logs (Application, Security, System) — the primary source of historical evidence for what happened on a host.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Evil twin",
+  "d": "A rogue access point broadcasting the same SSID as a legitimate one, relying on jamming or disassociation to force clients to reconnect to it instead.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Exploit",
+  "d": "The specific mechanism or code that takes advantage of a vulnerability to actually carry out an attack.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "ext4",
+  "d": "The current default Linux file system on many distributions; a journaling successor to ext2 and ext3.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Extensible Authentication Protocol (EAP)",
+  "d": "An authentication framework used in wireless networks. Types include EAP-TLS, PEAP, EAP-TTLS, and EAP-FAST.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "External threat",
+  "d": "An attacker with no legitimate access to the network, who must first find a way in from outside before doing anything else.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Fast flux",
+  "d": "Hiding phishing and malware sites behind a quickly changing set of compromised DNS hosts, with IP addresses changing within minutes. Botnets use it to stay hidden.",
+  "s": [
+   "X"
+  ],
+  "m": 4
+ },
+ {
+  "t": "Federated identity management",
+  "d": "Several organizations accepting the same credentials, giving users single sign-on across the group.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Firewall",
+  "d": "A device that filters traffic between a trusted network and an untrusted one, based on a defined rule set.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "First-hop redundancy",
+  "d": "A network's ability to recover when its default gateway router fails, by having a standby router take over a shared virtual IP.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Five nines",
+  "d": "An availability goal of 99.999%, which allows about 5.26 minutes of downtime per year.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Fork",
+  "d": "How Linux creates a new process: an existing process makes a copy of itself, so every process has a parent.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Geofencing",
+  "d": "Triggering an action when a user or device enters or leaves a geographic boundary.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Gray hat",
+  "d": "A hacker who finds a vulnerability without authorization but discloses it rather than exploiting it — technically illegal access, not malicious intent.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Grayware",
+  "d": "Unwanted applications that behave in annoying or undesirable ways. They may not carry recognizable malware, but can still track your location or push unwanted ads.",
+  "s": [
+   "X"
+  ],
+  "m": 1
+ },
+ {
+  "t": "grep",
+  "d": "A Linux command that searches text for lines matching a pattern — the analyst's workhorse for log searching.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Guideline",
+  "d": "A recommended, non-mandatory practice for doing something more securely.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Hacker",
+  "d": "Historically a neutral term for someone skilled at exploring and manipulating systems — distinguished from 'threat actor' by intent, not skill.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Hacktivist",
+  "d": "A threat actor motivated by a political or social message — typically website defacement or leaked data rather than financial theft.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "HAL (Hardware Abstraction Layer)",
+  "d": "A layer beneath the Windows kernel that lets the same OS code run across different underlying hardware.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Hard link",
+  "d": "A second directory entry pointing to the same data on disk as an existing file; it keeps working even if the original name is deleted.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Header Checksum",
+  "d": "An IPv4 header field that error-checks the header itself, recalculated at every router hop. Dropped entirely in IPv6.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Heuristics-based detection",
+  "d": "Antimalware detection that looks for general traits common to malware, catching some unknown variants at the cost of more false positives.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "HIDS (Host-based Intrusion Detection System)",
+  "d": "Software on an endpoint that monitors its logs, file integrity, configuration, and processes, and alerts on suspicious activity. OSSEC is a common open-source example.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "High availability",
+  "d": "Designing systems to avoid downtime: eliminate single points of failure, provide reliable crossover, and detect failures as they occur.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "HIPS (Host-based Intrusion Prevention System)",
+  "d": "Like a HIDS, but able to block the suspicious action on the host, not just alert on it.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "HMAC",
+  "d": "Hash-based message authentication code: a secret key combined with a hash function to authenticate a message and its origin.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Homoglyphs",
+  "d": "Characters that look the same as, or nearly the same as, legitimate ones. Used to make fake links and domains look real.",
+  "s": [
+   "X"
+  ],
+  "m": 4
+ },
+ {
+  "t": "Honeypot",
+  "d": "A decoy system left exposed to lure attackers, so their activity can be logged and studied.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Host-based firewall",
+  "d": "A firewall running on an individual machine, filtering its own inbound and outbound traffic — e.g. Windows Defender Firewall, or iptables/nftables on Linux.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "HTTP 302 cushioning",
+  "d": "Abusing HTTP's redirect response to quietly bounce a victim toward a malicious site.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "HTTP status codes",
+  "d": "Three-digit server responses grouped by first digit: 1xx informational, 2xx success, 3xx redirection, 4xx client error, 5xx server error.",
+  "s": [
+   "X"
+  ],
+  "m": 4
+ },
+ {
+  "t": "ICMP reconnaissance",
+  "d": "Using ping sweeps and similar ICMP traffic to map which hosts are alive before an attack.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "ICMP redirect",
+  "d": "A forged ICMP message that tricks a host into routing its traffic through an attacker-controlled path.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "IDS (Intrusion Detection System)",
+  "d": "Monitors a copy of network traffic out-of-band and alerts on suspicious activity, but cannot block traffic directly.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Incident handling policy",
+  "d": "The part of a security policy that sets the procedures for responding to a security incident.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Indicator of compromise (IOC)",
+  "d": "Evidence that a breach has happened, with details about it, such as a malware signature or a malicious domain name.",
+  "s": [
+   "X"
+  ],
+  "m": 1
+ },
+ {
+  "t": "Indicators of attack (IOA)",
+  "d": "Indicators that focus on an attacker's motivation and strategies rather than one breach, which supports a proactive defense.",
+  "s": [
+   "X"
+  ],
+  "m": 2
+ },
+ {
+  "t": "Information rights management (IRM)",
+  "d": "Technology that controls who can open, forward, print, or edit an organization's own documents and emails.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Inoculation (worm mitigation)",
+  "d": "The worm-response phase of patching and scanning still-healthy systems, usually run in parallel with quarantine and treatment.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Insider threat",
+  "d": "A threat from someone with legitimate access — an employee or contractor — whether malicious or simply careless.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Integrity",
+  "d": "The 'I' in the CIA triad: data stays accurate, consistent, and trustworthy throughout its life.",
+  "s": [
+   1,
+   6
+  ]
+ },
+ {
+  "t": "Integrity check",
+  "d": "Using a hash function to snapshot data, then comparing later snapshots to confirm the data hasn't changed.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Internal threat",
+  "d": "A threat from someone already inside the network's trust boundary — an employee or contractor — intentional or accidental, often more damaging than an external threat because of direct physical access to the building and its infrastructure, not just network access.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Internet of Things (IoT)",
+  "d": "The technologies that connect everyday devices, like cameras, locks, sensors, and appliances, to the internet.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "IP spoofing",
+  "d": "Forging the source IP address on a packet so the traffic, or the blame for it, appears to come from somewhere else.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "IPS (Intrusion Prevention System)",
+  "d": "Sits inline with network traffic and can actively block a detected threat in real time.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "IPv4 header",
+  "d": "The variable-length header (20+ bytes) carried by every IPv4 packet, including fields like TTL, Protocol, and an optional Options field.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "IPv6 header",
+  "d": "The simplified, fixed 40-byte header carried by every IPv6 packet — no header checksum, no in-network fragmentation, optional features moved to extension headers.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Jailbreaking",
+  "d": "Removing an Apple device's restriction to approved apps.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Jamming",
+  "d": "Transmitting noise or another signal on the same wireless frequency to deliberately interfere with transmissions — a DoS attack.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Kali Linux",
+  "d": "A Linux distribution built for penetration testing, preloaded with offensive security tools.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Kernel mode",
+  "d": "The privileged Windows execution mode with full access to hardware and memory — code running here can cause far more damage than user-mode code.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Keylogger",
+  "d": "Malware that silently records keystrokes, typically to steal usernames, passwords, and other typed credentials.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Layer 3 VPNs: GRE, IPsec, MPLS",
+  "d": "GRE and IPsec make point-to-point site connections. MPLS can connect many sites to each other.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "Layering",
+  "d": "A defense-in-depth strategy: set up multiple defenses that work together, so no single failure opens the way.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Limiting",
+  "d": "A defense-in-depth strategy: restrict access so each user has only the access their job requires.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Linux",
+  "d": "An open-source operating system kernel, the base of distributions that run most servers and most security tooling.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Living off the land",
+  "d": "An attacker technique of using legitimate tools already present on a system (PowerShell, wget, Task Scheduler) instead of custom malware, to avoid detection.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Local Security Policy",
+  "d": "A Windows tool for configuring account and audit policy on a single machine, including password requirements and what gets logged.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Log directory (/var/log)",
+  "d": "The standard Linux directory holding system and service log files.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Log management",
+  "d": "The procedures for generating, transmitting, storing, analyzing, and disposing of log data.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Logic bomb",
+  "d": "Malicious code that lies dormant until triggered by a specific condition or date — often planted by an insider.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Logical access controls",
+  "d": "Hardware and software that manage access, such as passwords, encryption, ACLs, firewalls, and IDS.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "MAC address spoofing",
+  "d": "Altering an attacking host's MAC address to match a legitimate one, defeating MAC-based access controls.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "MAC filtering",
+  "d": "Permitting or denying wireless clients by MAC address — weak on its own, since MAC addresses are trivially spoofed.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Malicious iFrame",
+  "d": "HTML an attacker adds to a compromised web page so it loads content from another site, used to deliver exploit kits, spam ads, or malware.",
+  "s": [
+   "X"
+  ],
+  "m": 4
+ },
+ {
+  "t": "Malware",
+  "d": "Any software designed to damage, disrupt, or gain unauthorized access to a system.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Man-in-the-middle (wireless)",
+  "d": "Intercepting or altering a victim's traffic after they've connected to a rogue AP or evil twin.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Mandatory access control (MAC)",
+  "d": "The strictest model: the system grants access by comparing a user's clearance with the object's security label.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Master Boot Record (MBR)",
+  "d": "Located in the first sector of a partitioned disk, it stores the information about how the file system is organized.",
+  "s": [
+   "X"
+  ],
+  "m": 8
+ },
+ {
+  "t": "Master File Table (MFT)",
+  "d": "The NTFS table that holds the location of every file and directory on a partition, plus attributes like security information and timestamps. The partition boot sector points to it.",
+  "s": [
+   "X"
+  ],
+  "m": 7
+ },
+ {
+  "t": "MMC (Microsoft Management Console)",
+  "d": "A framework that hosts administrative snap-ins, like Computer Management or Group Policy, in one customizable window.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Mobile device management (MDM)",
+  "d": "Software that lets IT enforce settings, push updates, and remotely wipe work data on enrolled mobile devices.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Mount",
+  "d": "Attaching a drive, partition, or network share into the single Linux directory tree at a chosen directory.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Multi-factor authentication (MFA)",
+  "d": "Authentication using at least two different factors, such as a password plus a key fob. 2FA is MFA with exactly two.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Mutual authentication",
+  "d": "Both sides of a connection authenticate each other before connecting. It defeats rogue access points.",
+  "s": [
+   6,
+   7
+  ]
+ },
+ {
+  "t": "N+1 redundancy",
+  "d": "Every component (N) has at least one standby backup (+1), like a car's spare tire.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "NAC (Network Access Control)",
+  "d": "Checks a device's security posture before granting it network access.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Nation-state / APT",
+  "d": "A threat actor backed by a government, highly sophisticated and well-funded, focused on espionage or sabotage with long dwell time.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "NetFlow",
+  "d": "Collects metadata about network traffic flows — who talked to whom, how much, how often — without capturing full packet contents.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "netstat",
+  "d": "A command-line tool listing active network connections and listening ports on a host.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "netstat / ss",
+  "d": "Commands that list network connections and listening ports; ss is the modern replacement for netstat on most current Linux distros.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Network access control (NAC)",
+  "d": "A system that checks users and devices against policy before letting them on the network, and blocks, isolates, or repairs noncompliant ones.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Network-attached storage (NAS)",
+  "d": "A storage device on the network that many authorized users can save to and read from.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Next-generation firewall (NGFW)",
+  "d": "Goes beyond a stateful firewall with integrated intrusion prevention and application awareness and control.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "Normalization",
+  "d": "Converting input to its simplest known form so each string has one representation and malicious input stands out.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "nslookup",
+  "d": "A command that tests DNS by looking up a name, such as nslookup cisco.com.",
+  "s": [
+   "X"
+  ],
+  "m": 7
+ },
+ {
+  "t": "NT-based Windows",
+  "d": "The Windows family line built on the NT kernel, with real memory protection and a permission model — every current release (7, 10, 11, and Server editions) is NT-based.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "NTFS",
+  "d": "The standard modern Windows file system, supporting file-level permissions, encryption, and journaling.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "NTP (Network Time Protocol)",
+  "d": "Synchronizes clocks across network devices, which is necessary for correlating log timestamps across devices during an investigation.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Obscurity",
+  "d": "A defense-in-depth strategy: don't reveal details, like a server's OS or equipment make, that attackers could use.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Open mail relay",
+  "d": "A mail server misconfigured to relay mail for anyone. Attackers abuse it to send spam or malware in bulk.",
+  "s": [
+   "X"
+  ],
+  "m": 4
+ },
+ {
+  "t": "Operating system logs",
+  "d": "Logs of events tied to the operating system, such as successful user authentications and usage information.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Organized crime",
+  "d": "Financially motivated threat actors — ransomware-as-a-service, card skimming — often well-resourced and professionalized.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Package manager",
+  "d": "The tool a Linux distro uses to install, update, and remove software from trusted repositories — apt, dnf/yum, pacman.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Packet analyzer",
+  "d": "Another name for a protocol analyzer, also called a packet sniffer: it intercepts and logs network traffic for analysis.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Packet filtering (stateless) firewall",
+  "d": "Permits or denies traffic by Layer 3 and Layer 4 information, without tracking connections. Usually part of a router.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "Patch management",
+  "d": "A planned process for testing and deploying software updates across every system in an organization.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "PCI DSS",
+  "d": "Payment Card Industry Data Security Standard: the security requirements for any business that accepts, processes, or stores payment cards.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "PDU (Protocol Data Unit)",
+  "d": "The unit of data at a given layer, defined by its header plus payload. At Layer 3, the PDU is the IP packet.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Permissions (rwx)",
+  "d": "Linux read/write/execute rights for a file's owner, group, and others; written in octal as r=4, w=2, x=1 summed per set (e.g. 750).",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Personal (PSK) authentication",
+  "d": "A wireless authentication mode where every client shares the same pre-shared key.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Personal information",
+  "d": "Data that can identify a person, such as name, address, medical records, or credit records. Often called PII (personally identifiable information).",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Phishing",
+  "d": "An email/message impersonating a trusted source to steal credentials or install malware. Spear-phishing targets a specific person; whaling targets executives.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Physical access controls",
+  "d": "Barriers that prevent direct contact with systems, such as guards, fences, locked doors, swipe cards, and mantraps.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Piping",
+  "d": "Sending one command's output into another command's input with the | symbol — e.g. ps aux | grep ssh.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Policy-based detection",
+  "d": "Detection that flags any action violating a defined rule, regardless of whether it matches a known attack.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Port mirroring",
+  "d": "A switch feature that copies the traffic passing through it and sends the copy out a port where a network monitor is attached.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "Port scanner",
+  "d": "A tool that finds which ports are open on a host.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Pretexting",
+  "d": "Inventing a false scenario or identity to manipulate a victim into giving up information or access.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Principle of least privilege",
+  "d": "Giving users and processes only the access they need to do their job.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Privilege escalation",
+  "d": "Exploiting a vulnerability to gain more privileges than a user or process should have.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Procedure",
+  "d": "Mandatory step-by-step instructions, often with screenshots, for doing a task the approved way.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Process / thread",
+  "d": "A process is a running program with its own memory space; a thread is a unit of execution within a process, and a process can have many threads.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Protocol analyzer",
+  "d": "A tool that captures and decodes network traffic, used to baseline normal traffic and find problems. Wireshark is an example.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Proxy server",
+  "d": "A server that makes internet requests on users' behalf, so outside systems see one address instead of each user's.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "ps / top / kill",
+  "d": "Linux process tools: ps lists processes, top shows them live, kill stops one by its process ID (PID).",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Quarantine (worm mitigation)",
+  "d": "The worm-response phase of finding and disconnecting already-infected machines.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "RADIUS",
+  "d": "An open-standard AAA protocol on UDP 1812/1813. Combines authentication and authorization, and encrypts only the password.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "RAID",
+  "d": "Redundant array of independent disks: several drives treated as one for performance and fault tolerance. Not a backup.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Ransomware",
+  "d": "Malware that encrypts a victim's files or systems and demands payment for the decryption key — a direct attack on availability.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Regulatory compliance",
+  "d": "Following the external laws and regulations that bind an organization. Which ones apply depends on the type of organization and the data it handles.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Remote access policy",
+  "d": "The part of a security policy that sets how off-site users may connect to the network.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Risk",
+  "d": "The likelihood that a threat will successfully exploit a vulnerability, combined with the impact if it does.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Rogue access point",
+  "d": "An unauthorized access point plugged into the network — sometimes by an attacker, sometimes just by an employee wanting better coverage.",
+  "s": [
+   3,
+   7
+  ]
+ },
+ {
+  "t": "Role-based access control (RBAC)",
+  "d": "Access decided by the user's job role. Watch out: rule-based access control shares the same acronym.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Root",
+  "d": "The Linux superuser account with unrestricted access to the system.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Rooting",
+  "d": "Bypassing Android's security architecture to get full administrative access to the device.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Rootkit",
+  "d": "Malware that hides itself — and often other malware — by modifying the operating system, so normal tools don't reveal it.",
+  "s": [
+   1,
+   5
+  ]
+ },
+ {
+  "t": "Rule-based access control",
+  "d": "Access decided by rules set by network staff, such as permitted IP addresses or protocols in an ACL. Also abbreviated RBAC.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Sandboxing",
+  "d": "Running a suspicious file in an isolated environment to observe its behavior safely — e.g. Cuckoo Sandbox, ANY.RUN, Cisco Threat Grid.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "SCADA",
+  "d": "Supervisory Control and Data Acquisition: industrial control systems that monitor and control physical processes. Stuxnet targeted them.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Scareware",
+  "d": "Software that frightens a victim into believing their system is already infected, coaxing them into installing fake antivirus software (which is itself the malware).",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Script kiddie",
+  "d": "A low-skill threat actor who uses existing tools and canned exploits, often for bragging rights rather than a specific goal.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Secure Boot",
+  "d": "A UEFI feature that only loads a digitally signed, trusted bootloader and OS, blocking bootkits.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Security artichoke",
+  "d": "A view of defense in depth for borderless networks: a threat actor doesn't have to get through every layer, and removing one leaf can expose sensitive data.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Security awareness program",
+  "d": "Ongoing training that teaches every employee to recognize threats and follow security procedures.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Security onion (defense-in-depth analogy)",
+  "d": "A view of defense in depth where a threat actor must peel away each layer, one at a time, before the assets are exposed.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Security Onion (tool suite)",
+  "d": "A Linux distribution built for network security monitoring, bundling IDS, packet capture, and log analysis tools.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Security policy",
+  "d": "An organization's written security goals and rules for behavior, covering areas like authentication, passwords, acceptable use, remote access, maintenance, and incident handling.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Server Message Block (SMB)",
+  "d": "The protocol Windows uses to share files and other resources on remote hosts.",
+  "s": [
+   "X"
+  ],
+  "m": 7
+ },
+ {
+  "t": "Services (services.msc)",
+  "d": "A Windows tool listing every service, its status, and its startup type, used to start, stop, or disable background processes.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Session Manager Subsystem (SMSS)",
+  "d": "The Windows boot component that reads the registry to create the user environment, start Winlogon, and prepare each user's desktop.",
+  "s": [
+   "X"
+  ],
+  "m": 7
+ },
+ {
+  "t": "Shell",
+  "d": "The Linux command interpreter (e.g. bash, zsh) that reads typed commands and runs them.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Shoulder surfing",
+  "d": "Visually stealing information — a password or PIN — by looking over someone's shoulder.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Side-channel attack",
+  "d": "An attack that learns from how a system is implemented, like its timing, power use, or electromagnetic leaks, rather than from software flaws.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Sideloading",
+  "d": "Installing unapproved apps from outside the approved app store.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Signature-based detection",
+  "d": "Detection that matches files or traffic against a database of known-malicious fingerprints; misses anything new.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Simplicity",
+  "d": "A defense-in-depth strategy: avoid needless complexity, because security that people can't configure correctly doesn't protect anything.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Single point of failure",
+  "d": "Any component, process, data, or person whose failure brings down the whole system.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Single sign-on (SSO)",
+  "d": "One set of credentials that authenticates a user to many applications.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Smishing",
+  "d": "Phishing conducted over SMS text message instead of email.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Sneakernet",
+  "d": "Moving data by physically carrying removable media, like a USB drive, between computers.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "SNMP (Simple Network Management Protocol)",
+  "d": "Lets a management station remotely poll and monitor the health and status of network devices.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Social engineering",
+  "d": "Manipulating people, rather than technology, into breaking normal security procedure.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Spam",
+  "d": "Bulk unsolicited email flooded to many users, often used as a delivery vector for phishing or malware.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Spanning Tree Protocol (STP)",
+  "d": "Keeps redundant switch links loop-free by blocking extra paths, and unblocks one if the active path fails.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Spyware / Adware",
+  "d": "Software that covertly monitors user activity (spyware) or floods the system with unwanted advertising (adware).",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "SQL injection",
+  "d": "Injecting SQL commands into an insecure input field to manipulate or extract data directly from a backend database.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "SSH",
+  "d": "Secure Shell: an encrypted remote connection to a device, on TCP 22. The secure replacement for Telnet.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "SSID cloaking",
+  "d": "Hiding a wireless network's name from casual discovery — security by obscurity, not a real barrier to a determined attacker.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Standard",
+  "d": "A mandatory rule that everyone in the organization follows the same way.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Standard vs. extended ACLs",
+  "d": "A standard ACL filters only by source IPv4 address. An extended ACL can also filter by destination, protocol, and port.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "Stateful firewall",
+  "d": "Filters traffic using connection information kept in a state table. Analyzes OSI Layers 3 through 5.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "STIX and TAXII",
+  "d": "The structured language (STIX) and exchange method (TAXII) that CISA's Automated Indicator Sharing uses to trade threat indicators in real time.",
+  "s": [
+   "X"
+  ],
+  "m": 1
+ },
+ {
+  "t": "Storage area network (SAN)",
+  "d": "A dedicated high-speed network that connects servers to shared storage.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "sudo",
+  "d": "Runs a single command with root privileges, and logs that it was used.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Symbolic link",
+  "d": "A shortcut file that points to another path (ln -s); it breaks if the target is moved or deleted.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "SYN flood",
+  "d": "A DoS attack that opens many TCP connections and never completes the handshake, filling the target's connection table with half-open sessions.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Syslog",
+  "d": "A protocol and service that centralizes log messages from routers, switches, servers, and security devices into one place.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "TACACS+",
+  "d": "A mostly Cisco AAA protocol on TCP 49. Separates authentication, authorization, and accounting, and encrypts the entire packet body.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "tail -f",
+  "d": "Prints new lines of a file as they're written — used to watch a log live.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Tailgating / Piggybacking",
+  "d": "Following an authorized person through a secured door without using your own credentials.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Task Manager",
+  "d": "A real-time Windows tool showing running processes, resource usage, and startup programs.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Task Scheduler",
+  "d": "A Windows tool that runs programs or scripts automatically on a schedule or trigger — also a common persistence mechanism abused by attackers.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "TCP reset attack",
+  "d": "Sending a forged RST packet to forcibly terminate someone else's legitimate TCP connection.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "TCP session hijacking",
+  "d": "Predicting or stealing TCP sequence numbers to take over a session that someone else already authenticated into.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "TCP Wrappers",
+  "d": "A rule-based access control and logging system for Linux. One example of a host-based firewall.",
+  "s": [
+   "X"
+  ],
+  "m": 9
+ },
+ {
+  "t": "Telnet",
+  "d": "An old remote access protocol on TCP 23 that sends credentials and data in plaintext. Replace it with SSH.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Terminal emulator",
+  "d": "A window that provides access to the shell inside a graphical desktop.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Threat",
+  "d": "Anything that could exploit a vulnerability — an attacker, a piece of malware, even a natural disaster.",
+  "s": [
+   1,
+   6
+  ]
+ },
+ {
+  "t": "Threat actor",
+  "d": "The entity behind an attack, categorized by motivation and skill: script kiddie, hacktivist, organized crime, nation-state/APT, insider.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Time-based access control (TAC)",
+  "d": "Access allowed only at certain times and days.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Tokenization",
+  "d": "Replacing sensitive data with a random token that has no mathematical link to the original and is useless outside the issuing system.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "Transparent and hybrid firewalls",
+  "d": "A transparent firewall filters IP traffic between a pair of bridged interfaces. A hybrid firewall combines firewall types.",
+  "s": [
+   "X"
+  ],
+  "m": 6
+ },
+ {
+  "t": "Treatment (worm mitigation)",
+  "d": "The final worm-response phase — actively disinfecting infected systems.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "Trojan horse",
+  "d": "Malware disguised as legitimate software. Unlike a virus or worm, it doesn't self-replicate — it relies on the user installing it.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "TTL (Time to Live)",
+  "d": "An IPv4 header field decremented by every router a packet crosses, discarded at zero — prevents infinite routing loops and is what makes traceroute work.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Type I error",
+  "d": "A false rejection: a biometric system turns away a legitimate user.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Type II error",
+  "d": "A false acceptance: a biometric system lets in an impostor. Usually treated as the more serious error.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "UAC (User Account Control)",
+  "d": "Prompts for confirmation before an action requiring administrator privileges, limiting damage malware can do while running under a standard account.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "UDP flood",
+  "d": "A DoS attack that overwhelms a target with connectionless UDP traffic, which is cheap to send and costly to process.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "User mode",
+  "d": "The restricted Windows execution mode applications normally run in, without direct access to hardware or other processes' memory.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Validation rule",
+  "d": "A check that input falls within set limits, by size, format, consistency, range, or check digit.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "Virus",
+  "d": "Malware that attaches to a host file and requires user action (like opening the file) to spread.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Vishing",
+  "d": "Phishing conducted over a phone call instead of email.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "VLAN",
+  "d": "Virtual LAN: a logical group of devices that acts as its own network regardless of physical location, used to segment the network.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "VPN concentrator",
+  "d": "A device that terminates encrypted VPN tunnels from remote users or sites, extending a protected network over an untrusted one.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Vulnerability",
+  "d": "A weakness that could be exploited — unpatched software, a weak password policy, an untrained employee.",
+  "s": [
+   1,
+   6
+  ]
+ },
+ {
+  "t": "Vulnerability broker",
+  "d": "A gray-hat role: someone who finds an exploitable weakness and reports or sells it to the affected vendor — sometimes for a reward — rather than exploiting it directly.",
+  "s": [
+   2
+  ]
+ },
+ {
+  "t": "Vulnerability scanner",
+  "d": "A tool that checks systems for known weaknesses and reports what needs fixing.",
+  "s": [
+   6
+  ]
+ },
+ {
+  "t": "War driving",
+  "d": "Searching for unsecured wireless networks to exploit, often using a directional antenna to detect weak or distant signals.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "WEP",
+  "d": "The original wireless encryption standard — a static shared key that's straightforward to crack. Considered broken.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "White hat",
+  "d": "A hacker who breaks into systems with authorization to find and report weaknesses — a penetration tester or bug-bounty researcher.",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "Window manager",
+  "d": "The part of a Linux GUI that controls window placement, appearance, and movement.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "Windows Defender (Windows Security)",
+  "d": "Built-in Windows antivirus and antimalware protection, enabled by default.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Windows Firewall",
+  "d": "A host-based firewall filtering inbound and outbound traffic on an individual Windows machine.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Windows Management Instrumentation (WMI)",
+  "d": "A Windows feature for managing remote computers: reading component information and statistics and monitoring their health.",
+  "s": [
+   "X"
+  ],
+  "m": 7
+ },
+ {
+  "t": "Windows PowerShell",
+  "d": "A scripting shell and language for Windows administration and automation, more capable than the legacy Command Prompt.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Windows Registry",
+  "d": "A hierarchical database of configuration settings for the OS and installed applications, organized into root keys like HKEY_LOCAL_MACHINE and HKEY_CURRENT_USER.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "Windows Update",
+  "d": "The service that patches known vulnerabilities in Windows — an unpatched system remains exploitable by attacks a patched one is already immune to.",
+  "s": [
+   4
+  ]
+ },
+ {
+  "t": "WLC and LWAP",
+  "d": "A wireless LAN controller (WLC) centralizes control and management of many access points, which then act as lightweight APs (LWAPs) instead of working on their own.",
+  "s": [
+   "X"
+  ],
+  "m": 5
+ },
+ {
+  "t": "Worm",
+  "d": "Self-replicating malware that spreads across a network on its own, without needing a user to do anything (e.g., Conficker).",
+  "s": [
+   1
+  ]
+ },
+ {
+  "t": "WPA / WPA2 / WPA3",
+  "d": "Successive wireless security standards, each stronger than the last; WPA2 introduced AES encryption (based on 802.11i), WPA3 is the current strongest.",
+  "s": [
+   3
+  ]
+ },
+ {
+  "t": "WPS",
+  "d": "Wi-Fi Protected Setup: connects devices with a PIN that can be brute-forced. It should be disabled.",
+  "s": [
+   7
+  ]
+ },
+ {
+  "t": "X Window System (X11)",
+  "d": "The long-standing Linux display server that draws the GUI and handles input; Wayland is its modern successor.",
+  "s": [
+   5
+  ]
+ },
+ {
+  "t": "XProtect and Gatekeeper",
+  "d": "macOS protections. XProtect blocks malware using signatures. Gatekeeper only allows signed software from Apple-notarized developers.",
+  "s": [
+   "X"
+  ],
+  "m": 9
+ },
+ {
+  "t": "Zero trust",
+  "d": "A security approach where no user or device is trusted by default. Every access decision point is treated as a perimeter.",
+  "s": [
+   7
+  ]
+ }
+];
+
+  const QUIZ = [
+ {
+  "q": "Kiriyama General Hospital's patient database is altered so a patient's allergy record is silently changed. Which CIA leg was violated?",
+  "choices": [
+   "Confidentiality",
+   "Integrity",
+   "Availability",
+   "All three equally"
+  ],
+  "correct": 1,
+  "explain": "The data wasn't stolen or made inaccessible — it was changed without authorization. That's an integrity violation.",
+  "s": 1
+ },
+ {
+  "q": "An attacker leaves a USB drive labeled 'Executive Bonuses' in a company parking lot, hoping an employee plugs it in. This is:",
+  "choices": [
+   "Phishing",
+   "Pretexting",
+   "Baiting",
+   "Tailgating"
+  ],
+  "correct": 2,
+  "explain": "Baiting lures the victim with something enticing — here, curiosity about bonus info — to get them to compromise their own system.",
+  "s": 1
+ },
+ {
+  "q": "Which threat actor is best described as highly skilled, well-resourced, and focused on long-term, stealthy access?",
+  "choices": [
+   "Script kiddie",
+   "Hacktivist",
+   "APT / nation-state",
+   "Insider threat"
+  ],
+  "correct": 2,
+  "explain": "APTs (Advanced Persistent Threats) are typically nation-state or nation-state-adjacent, with the funding and patience for long campaigns.",
+  "s": 1
+ },
+ {
+  "q": "Malware that self-replicates across a network without any user action is a:",
+  "choices": [
+   "Virus",
+   "Worm",
+   "Trojan horse",
+   "Rootkit"
+  ],
+  "correct": 1,
+  "explain": "Self-replication with no user action is the defining trait of a worm — a virus needs a host file to be opened.",
+  "s": 1
+ },
+ {
+  "q": "Put these in the order they actually chain together: Exploit, Vulnerability, Risk.",
+  "choices": [
+   "Vulnerability → Exploit → Risk",
+   "Exploit → Vulnerability → Risk",
+   "Risk → Vulnerability → Exploit",
+   "Vulnerability → Risk → Exploit"
+  ],
+  "correct": 0,
+  "explain": "A vulnerability exists first; an exploit is built to take advantage of it; risk is the resulting likelihood/impact if that exploit succeeds.",
+  "s": 1
+ },
+ {
+  "q": "A finance employee is quietly selling customer data to a competitor. This is best classified as:",
+  "choices": [
+   "Hacktivism",
+   "An insider threat",
+   "A zero-day attack",
+   "Tailgating"
+  ],
+  "correct": 1,
+  "explain": "An insider threat comes from someone with legitimate access — this is a malicious (not accidental) example of one.",
+  "s": 1
+ },
+ {
+  "q": "Which of these is NOT one of the three legs of the CIA triad?",
+  "choices": [
+   "Confidentiality",
+   "Integrity",
+   "Authentication",
+   "Availability"
+  ],
+  "correct": 2,
+  "explain": "Authentication supports security but isn't one of the three CIA triad goals — it's a mechanism, not a goal in itself.",
+  "s": 1
+ },
+ {
+  "q": "An employee's browser is redirected to a fake banking page for 20 minutes and a few credentials are captured. No data was changed. Which CIA leg was primarily violated?",
+  "choices": [
+   "Confidentiality",
+   "Integrity",
+   "Availability",
+   "None of them"
+  ],
+  "correct": 0,
+  "explain": "Credentials were viewed by an unauthorized party. Nothing was altered (integrity) and nothing became inaccessible (availability).",
+  "s": 1
+ },
+ {
+  "q": "Which social engineering technique involves fabricating an identity or scenario to extract information?",
+  "choices": [
+   "Phishing",
+   "Pretexting",
+   "Baiting",
+   "Shoulder surfing"
+  ],
+  "correct": 1,
+  "explain": "Pretexting is inventing a story or role — like 'I'm from IT and need your password' — to get the victim to hand over information.",
+  "s": 1
+ },
+ {
+  "q": "A webcam-laden 'free video player' a user installed turns out to be malware that hides deep in the OS to keep undetected access. Best classification:",
+  "choices": [
+   "Worm",
+   "Keylogger",
+   "Rootkit",
+   "Logic bomb"
+  ],
+  "correct": 2,
+  "explain": "A rootkit hides deep in the OS to maintain privileged, hard-to-detect access. It was delivered via a trojan-like disguise.",
+  "s": 1
+ },
+ {
+  "q": "A pop-up claims a user's computer is 'infected with 5 viruses' and pressures them to download a 'security tool' to fix it — which is itself malware. This technique is:",
+  "choices": [
+   "Scareware",
+   "Baiting",
+   "Tailgating",
+   "Dumpster diving"
+  ],
+  "correct": 0,
+  "explain": "Scareware uses fear — a fabricated infection warning — to talk the victim into installing the actual malware themselves.",
+  "s": 1
+ },
+ {
+  "q": "A researcher finds a vulnerability in a company's app with no authorization to test it, but reports it to the company instead of exploiting it. This makes them a:",
+  "choices": [
+   "Black hat",
+   "White hat",
+   "Gray hat",
+   "Script kiddie"
+  ],
+  "correct": 2,
+  "explain": "Gray hat: the access itself was unauthorized (not white hat), but the intent was disclosure, not exploitation (not black hat).",
+  "s": 1
+ },
+ {
+  "q": "Compared to an external attacker, an internal threat is often more damaging primarily because:",
+  "choices": [
+   "They are always more technically skilled",
+   "They already have legitimate access to the network and its data",
+   "They only ever act by accident",
+   "They cannot be detected by logging"
+  ],
+  "correct": 1,
+  "explain": "The defining trait of an internal threat is direct, already-authorized access — the attack isn't 'getting in,' since they're already in.",
+  "s": 2
+ },
+ {
+  "q": "A former employee uses VPN credentials that haven't been revoked yet to copy files after their last day. This is best classified as:",
+  "choices": [
+   "An external threat",
+   "An internal threat",
+   "An amplification attack",
+   "A PDU violation"
+  ],
+  "correct": 1,
+  "explain": "They're using legitimate (if stale) credentials from inside the trust boundary — that's an internal threat, regardless of current employment status.",
+  "s": 2
+ },
+ {
+  "q": "The key difference between a 'hacker' and a 'threat actor' is:",
+  "choices": [
+   "Skill level",
+   "Intent",
+   "Which tools they use",
+   "Whether they work alone or in groups"
+  ],
+  "correct": 1,
+  "explain": "'Hacker' is historically neutral — about skill at exploring/manipulating systems. 'Threat actor' specifically implies malicious intent.",
+  "s": 2
+ },
+ {
+  "q": "Which best describes how cyberattacks have evolved since the early days of hacking?",
+  "choices": [
+   "From organized crime toward individual curiosity",
+   "From individual curiosity and bragging rights toward organized, professionalized, often blended attacks",
+   "Attacks have stayed essentially the same since the 1980s",
+   "Attacks have become exclusively state-sponsored"
+  ],
+  "correct": 1,
+  "explain": "The arc runs from lone, curiosity-driven exploits toward financially- or politically-motivated groups running blended, business-like operations.",
+  "s": 2
+ },
+ {
+  "q": "Which IPv4 header field limits how many router hops a packet can traverse before being discarded?",
+  "choices": [
+   "Header Checksum",
+   "Total Length",
+   "TTL (Time to Live)",
+   "Identification"
+  ],
+  "correct": 2,
+  "explain": "TTL is decremented at every hop; when it reaches zero the packet is dropped. This is also what makes traceroute work.",
+  "s": 2
+ },
+ {
+  "q": "Compared to IPv4, the IPv6 header is:",
+  "choices": [
+   "Variable length, with more optional fields",
+   "Fixed length and simplified — no header checksum, no in-network fragmentation",
+   "Identical in every field",
+   "Missing a source and destination address"
+  ],
+  "correct": 1,
+  "explain": "IPv6 fixes the header at 40 bytes, drops the header checksum (handled at other layers) and in-network fragmentation, moving optional features to extension headers instead.",
+  "s": 2
+ },
+ {
+  "q": "An attacker forges the source IP address on a packet so the security team traces the attack back to an uninvolved third party. This is:",
+  "choices": [
+   "ICMP redirect",
+   "IP spoofing",
+   "TCP session hijacking",
+   "A blended threat"
+  ],
+  "correct": 1,
+  "explain": "IP spoofing forges the source address — attackers use it to hide their real origin or frame someone else.",
+  "s": 2
+ },
+ {
+  "q": "An attacker sends a small, spoofed DNS query so a large response floods the victim instead of the attacker. This is:",
+  "choices": [
+   "ICMP reconnaissance",
+   "An internal threat",
+   "Amplification/reflection attack",
+   "TCP reset attack"
+  ],
+  "correct": 2,
+  "explain": "Amplification/reflection abuses a legitimate third-party server (like DNS) to turn a small spoofed request into a large flood aimed at the real victim.",
+  "s": 2
+ },
+ {
+  "q": "A SYN flood attack works by:",
+  "choices": [
+   "Completing handshakes as fast as possible to overload CPU",
+   "Sending SYNs and never completing the handshake, filling the connection table with half-open sessions",
+   "Forging the TTL field to bypass routers",
+   "Sending a forged RST packet to a legitimate connection"
+  ],
+  "correct": 1,
+  "explain": "The attacker never sends the final ACK, so every half-open connection sits in the table consuming resources until nothing is left for real users.",
+  "s": 2
+ },
+ {
+  "q": "An attacker predicts a valid TCP sequence number and injects packets into an already-authenticated session. This is:",
+  "choices": [
+   "TCP reset attack",
+   "UDP flood",
+   "TCP session hijacking",
+   "ICMP redirect"
+  ],
+  "correct": 2,
+  "explain": "TCP session hijacking takes over a session someone else already authenticated into, by predicting or stealing its sequence numbers.",
+  "s": 2
+ },
+ {
+  "q": "What is the primary objective of a DHCP spoofing attack?",
+  "choices": [
+   "To exhaust the DHCP server's address pool",
+   "To provide false DNS server addresses so later requests get redirected to a fake server",
+   "To crack the wireless encryption key",
+   "To flood a server with SYN packets"
+  ],
+  "correct": 1,
+  "explain": "DHCP spoofing hands out a malicious DNS server address — the goal is usually redirecting future domain lookups, not just the initial IP lease.",
+  "s": 3
+ },
+ {
+  "q": "A cybersecurity analyst notices DNS queries running noticeably longer than average. This is most associated with:",
+  "choices": [
+   "DNS shadowing",
+   "DNS cache poisoning",
+   "DNS tunneling",
+   "DNS amplification"
+  ],
+  "correct": 2,
+  "explain": "DNS tunneling smuggles data inside DNS traffic, which tends to produce longer, more unusual-looking queries than normal lookups.",
+  "s": 3
+ },
+ {
+  "q": "Which two attacks share the same root cause — untrusted user input being treated as trusted code?",
+  "choices": [
+   "ARP poisoning and DHCP starvation",
+   "SQL injection and cross-site scripting",
+   "Jamming and war driving",
+   "DNS shadowing and HTTP cushioning"
+  ],
+  "correct": 1,
+  "explain": "Both SQL injection and XSS exploit missing input validation — one targets the database, the other targets the browser.",
+  "s": 3
+ },
+ {
+  "q": "Which HTTP mechanism does an HTTP 302 cushioning attack abuse?",
+  "choices": [
+   "Cookies",
+   "The redirect response",
+   "Basic authentication",
+   "Chunked transfer encoding"
+  ],
+  "correct": 1,
+  "explain": "HTTP 302 cushioning abuses the server's own redirect response to quietly send victims to a malicious site.",
+  "s": 3
+ },
+ {
+  "q": "Which is the primary mitigation for virus and Trojan horse attacks?",
+  "choices": [
+   "Blocking ICMP at the edge",
+   "Antivirus software",
+   "SSID cloaking",
+   "DHCP snooping"
+  ],
+  "correct": 1,
+  "explain": "Antivirus software is the standard, primary countermeasure for viruses and Trojan horses specifically.",
+  "s": 3
+ },
+ {
+  "q": "During a worm outbreak, disconnecting already-infected machines from the network is which phase?",
+  "choices": [
+   "Containment",
+   "Inoculation",
+   "Quarantine",
+   "Treatment"
+  ],
+  "correct": 2,
+  "explain": "Quarantine is specifically about finding and disconnecting infected machines, distinct from isolating unaffected areas (containment) or disinfecting (treatment).",
+  "s": 3
+ },
+ {
+  "q": "Which two frequency bands does 802.11 wireless primarily use?",
+  "choices": [
+   "900 MHz and 2.4 GHz",
+   "2.4 GHz and 5 GHz",
+   "5 GHz and 6 GHz",
+   "900 MHz and 5 GHz"
+  ],
+  "correct": 1,
+  "explain": "2.4 GHz (802.11b/g, and optionally n) and 5 GHz (802.11a, and typically n/ac) are the two primary bands.",
+  "s": 3
+ },
+ {
+  "q": "An attacker sets up an access point broadcasting the exact same SSID as a company's real Wi-Fi, then jams the real signal so clients reconnect to the fake one. This is a:",
+  "choices": [
+   "Rogue access point",
+   "Evil twin",
+   "War driving attack",
+   "DHCP starvation attack"
+  ],
+  "correct": 1,
+  "explain": "Matching SSID plus a jamming/disassociation step to force reconnection is the defining pattern of an evil twin, distinct from a rogue AP (which doesn't need to impersonate anything).",
+  "s": 3
+ },
+ {
+  "q": "Why is MAC filtering considered weak as a standalone wireless security measure?",
+  "choices": [
+   "It only works on 5 GHz networks",
+   "MAC addresses can be easily spoofed to match an allowed client",
+   "It requires a RADIUS server",
+   "It's incompatible with WPA2"
+  ],
+  "correct": 1,
+  "explain": "An attacker can simply spoof an allowed client's MAC address, making the filter trivial to bypass — even for an amateur.",
+  "s": 3
+ },
+ {
+  "q": "A hospital requires each staff member to authenticate with individual credentials against a RADIUS server before getting wireless access. This is:",
+  "choices": [
+   "Personal (PSK) authentication",
+   "Open authentication",
+   "Enterprise (802.1X) authentication",
+   "SSID cloaking"
+  ],
+  "correct": 2,
+  "explain": "Centralized, per-user authentication via RADIUS and EAP is the defining feature of Enterprise (802.1X) mode, as opposed to Personal mode's single shared key.",
+  "s": 3
+ },
+ {
+  "q": "Which wireless security standard introduced AES encryption based on 802.11i?",
+  "choices": [
+   "WEP",
+   "WPA",
+   "WPA2",
+   "None of them — AES was never used in Wi-Fi"
+  ],
+  "correct": 2,
+  "explain": "WPA2 introduced AES encryption based on the 802.11i standard, a major step up from WPA's weaker encryption.",
+  "s": 3
+ },
+ {
+  "q": "An attacker drives around a city with a directional antenna, mapping unsecured wireless networks to target later. This is:",
+  "choices": [
+   "Jamming",
+   "War driving",
+   "An evil twin attack",
+   "DNS tunneling"
+  ],
+  "correct": 1,
+  "explain": "War driving is specifically the practice of searching for unsecured wireless networks to exploit, often aided by a directional antenna.",
+  "s": 3
+ },
+ {
+  "q": "Which device sits inline with network traffic and can block a detected threat in real time?",
+  "choices": [
+   "IDS",
+   "IPS",
+   "Syslog server",
+   "NAC"
+  ],
+  "correct": 1,
+  "explain": "An IPS sits directly in the traffic path, so it can block malicious traffic immediately, unlike an IDS which only monitors a copy of traffic out-of-band.",
+  "s": 4
+ },
+ {
+  "q": "Why can't an IDS block malicious traffic the way an IPS can?",
+  "choices": [
+   "It uses weaker detection signatures",
+   "It only monitors a mirrored copy of traffic, out-of-band",
+   "It requires a VPN concentrator to function",
+   "It's only compatible with wireless networks"
+  ],
+  "correct": 1,
+  "explain": "IDS analyzes a copy of traffic from something like a SPAN port — it was never in the direct path, so it has nothing to block.",
+  "s": 4
+ },
+ {
+  "q": "A NAC solution's primary function is to:",
+  "choices": [
+   "Encrypt traffic between two sites",
+   "Check a device's security posture before granting network access",
+   "Centralize log messages from multiple devices",
+   "Synchronize clocks across the network"
+  ],
+  "correct": 1,
+  "explain": "Network Access Control evaluates a device (patch level, antivirus status, etc.) before letting it onto the network at all.",
+  "s": 4
+ },
+ {
+  "q": "Two devices' logs disagree about which event happened first during an incident, even though both logs appear otherwise correct. What's the most likely missing service?",
+  "choices": [
+   "SNMP",
+   "NetFlow",
+   "NTP",
+   "AAA"
+  ],
+  "correct": 2,
+  "explain": "Without synchronized clocks (NTP), timestamps across devices can't be trusted to reconstruct an accurate timeline.",
+  "s": 4
+ },
+ {
+  "q": "Which service is most directly responsible for verifying a user's identity, controlling what they can do, and logging what they did?",
+  "choices": [
+   "AAA",
+   "NetFlow",
+   "SNMP",
+   "Syslog"
+  ],
+  "correct": 0,
+  "explain": "AAA — Authentication, Authorization, Accounting — covers all three of those functions by definition.",
+  "s": 4
+ },
+ {
+  "q": "Windows 95 and Windows 98 belong to which family line?",
+  "choices": [
+   "NT-based",
+   "DOS-based",
+   "Server-based",
+   "Kernel-based"
+  ],
+  "correct": 1,
+  "explain": "Windows 95/98/Me ran on top of MS-DOS and lacked the memory protection the NT-based line later introduced.",
+  "s": 4
+ },
+ {
+  "q": "Which Windows execution mode has full access to hardware and memory, making a vulnerability there far more dangerous than one in the other mode?",
+  "choices": [
+   "User mode",
+   "Kernel mode",
+   "Safe mode",
+   "Admin mode"
+  ],
+  "correct": 1,
+  "explain": "Kernel mode code has unrestricted access to hardware and memory; user mode is deliberately restricted from that access.",
+  "s": 4
+ },
+ {
+  "q": "Where would an administrator look to see the hierarchical database of OS and application configuration settings, including keys like HKEY_LOCAL_MACHINE?",
+  "choices": [
+   "NTFS permissions",
+   "The Windows Registry",
+   "Event Viewer",
+   "Task Scheduler"
+  ],
+  "correct": 1,
+  "explain": "The Windows Registry stores exactly this kind of hierarchical configuration data under root keys such as HKEY_LOCAL_MACHINE and HKEY_CURRENT_USER.",
+  "s": 4
+ },
+ {
+  "q": "An analyst wants to know if anything is listening on an unexpected network port on a Windows host. Which tool answers that directly?",
+  "choices": [
+   "Task Manager",
+   "netstat",
+   "Local Security Policy",
+   "BitLocker"
+  ],
+  "correct": 1,
+  "explain": "netstat lists active connections and listening ports from the command line, which is exactly what this question is asking.",
+  "s": 4
+ },
+ {
+  "q": "A scheduled task nobody on the team remembers creating is found running every night at 3 a.m. This is a known abuse of which Windows feature?",
+  "choices": [
+   "Windows Firewall",
+   "Task Scheduler",
+   "UAC",
+   "BitLocker"
+  ],
+  "correct": 1,
+  "explain": "Task Scheduler is a legitimate administrative feature that's also a common persistence mechanism attackers abuse to keep malware running.",
+  "s": 4
+ },
+ {
+  "q": "Malware infects a standard (non-administrator) user account and successfully logs keystrokes without ever triggering a permission prompt. Why didn't UAC stop it?",
+  "choices": [
+   "UAC was disabled by default",
+   "The malware disabled Windows Defender first",
+   "Keylogging doesn't require administrator privileges, so UAC never triggers",
+   "UAC only applies to network traffic, not local processes"
+  ],
+  "correct": 2,
+  "explain": "UAC only prompts for actions that require elevated privileges. A standard user account already has enough access to log keystrokes, so no prompt ever fires.",
+  "s": 4
+ },
+ {
+  "q": "Which Windows feature protects data at rest if a laptop is lost or stolen, by encrypting the entire disk?",
+  "choices": [
+   "Windows Firewall",
+   "BitLocker",
+   "Local Security Policy",
+   "Windows Defender"
+  ],
+  "correct": 1,
+  "explain": "BitLocker provides full-disk encryption, making the drive unreadable without the encryption key even if the physical device is stolen.",
+  "s": 4
+ },
+ {
+  "q": "Why are Linux skills essential for a SOC analyst?",
+  "choices": [
+   "Linux is the only OS malware can't infect",
+   "Most servers and most security tools (IDS, SIEM, packet capture) run on Linux",
+   "Windows cannot be monitored remotely",
+   "Linux has no command line, so it's easier to learn"
+  ],
+  "correct": 1,
+  "explain": "Linux runs a large share of servers and nearly all security tooling — Security Onion, Kali, tcpdump, and more — so analysts work in it constantly.",
+  "s": 5
+ },
+ {
+  "q": "Which command searches a file for lines matching a pattern?",
+  "choices": [
+   "cat",
+   "grep",
+   "chmod",
+   "mount"
+  ],
+  "correct": 1,
+  "explain": "grep searches text for a pattern — e.g. grep \"Failed password\" /var/log/auth.log.",
+  "s": 5
+ },
+ {
+  "q": "An analyst wants to see which ports a Linux server is listening on. Which command answers that?",
+  "choices": [
+   "ss -tuln",
+   "ls -l",
+   "chown",
+   "tail -f"
+  ],
+  "correct": 0,
+  "explain": "ss -tuln (or the older netstat -tuln) lists listening TCP and UDP ports.",
+  "s": 5
+ },
+ {
+  "q": "Which well-known port does SSH use?",
+  "choices": [
+   "21",
+   "22",
+   "23",
+   "25"
+  ],
+  "correct": 1,
+  "explain": "SSH is TCP 22. 21 is FTP, 23 is Telnet, 25 is SMTP.",
+  "s": 5
+ },
+ {
+  "q": "On an Ubuntu server, where are failed SSH login attempts recorded?",
+  "choices": [
+   "/var/log/auth.log",
+   "/etc/passwd",
+   "/var/log/kern.log",
+   "/home/root/logins"
+  ],
+  "correct": 0,
+  "explain": "Debian/Ubuntu write authentication events to /var/log/auth.log (Red Hat-family distros use /var/log/secure).",
+  "s": 5
+ },
+ {
+  "q": "Which command lets you watch new lines appear in a log file in real time?",
+  "choices": [
+   "cat",
+   "less",
+   "tail -f",
+   "man"
+  ],
+  "correct": 2,
+  "explain": "tail -f follows a file, printing new lines as they're written.",
+  "s": 5
+ },
+ {
+  "q": "A file's permissions are -rwxr-x---. What is the octal value?",
+  "choices": [
+   "755",
+   "750",
+   "740",
+   "700"
+  ],
+  "correct": 1,
+  "explain": "Owner rwx = 4+2+1 = 7, group r-x = 4+0+1 = 5, others --- = 0, giving 750.",
+  "s": 5
+ },
+ {
+  "q": "What happens to a symbolic link if the file it points to is deleted?",
+  "choices": [
+   "It keeps the file's data",
+   "It becomes a hard link",
+   "It breaks — it points to a path that no longer exists",
+   "It deletes itself automatically"
+  ],
+  "correct": 2,
+  "explain": "A symbolic link just stores a path; with the target gone, it's a broken link. A hard link, by contrast, keeps the data reachable.",
+  "s": 5
+ },
+ {
+  "q": "Which Linux GUI component controls where windows are placed and how they move?",
+  "choices": [
+   "Kernel",
+   "Window manager",
+   "Package manager",
+   "Shell"
+  ],
+  "correct": 1,
+  "explain": "The window manager handles window placement and appearance; the desktop environment bundles it with panels, menus, and apps.",
+  "s": 5
+ },
+ {
+  "q": "What is a rootkit's defining characteristic?",
+  "choices": [
+   "It encrypts files and demands ransom",
+   "It hides itself by modifying the operating system",
+   "It spreads only by email",
+   "It only runs on Windows"
+  ],
+  "correct": 1,
+  "explain": "A rootkit conceals itself (and often other malware) by tampering with the OS — which is why tools like chkrootkit look for signs of tampering.",
+  "s": 5
+ },
+ {
+  "q": "Brand-new malware with no known fingerprint is caught because it starts rapidly encrypting files. Which detection method caught it?",
+  "choices": [
+   "Signature-based",
+   "Behavior-based",
+   "Block list",
+   "NAC"
+  ],
+  "correct": 1,
+  "explain": "Behavior-based detection judges a program by what it does while running, so it can catch malware no signature exists for.",
+  "s": 5
+ },
+ {
+  "q": "Which UEFI feature prevents an unsigned bootloader or bootkit from loading at startup?",
+  "choices": [
+   "BitLocker",
+   "Secure Boot",
+   "UAC",
+   "Patch management"
+  ],
+  "correct": 1,
+  "explain": "Secure Boot only loads signed, trusted boot components — a boot integrity control.",
+  "s": 5
+ },
+ {
+  "q": "How does a HIPS differ from a HIDS?",
+  "choices": [
+   "A HIPS runs on the network, a HIDS on the host",
+   "A HIPS can block suspicious host activity; a HIDS only alerts",
+   "A HIDS uses signatures, a HIPS never does",
+   "There is no difference"
+  ],
+  "correct": 1,
+  "explain": "Both run on the host with the same visibility; prevention (HIPS) can stop the action, detection (HIDS) only reports it.",
+  "s": 5
+ },
+ {
+  "q": "A point-of-sale terminal should only ever run one register application. Which application control is the best fit?",
+  "choices": [
+   "Block list",
+   "Allow list",
+   "No control — antivirus is enough",
+   "Sandboxing every transaction"
+  ],
+  "correct": 1,
+  "explain": "With a tiny, fixed set of legitimate programs, an allow list blocks everything else — including unknown malware — at almost no management cost.",
+  "s": 5
+ },
+ {
+  "q": "An analyst wants to learn what a suspicious attachment does without running it on a real machine. What should they use?",
+  "choices": [
+   "A sandbox",
+   "chmod",
+   "A block list",
+   "NTP"
+  ],
+  "correct": 0,
+  "explain": "A sandbox runs the sample in isolation and reports its behavior — the core malware investigation tool for this module.",
+  "s": 5
+ },
+ {
+  "q": "What are the three dimensions of the cybersecurity cube?",
+  "choices": [
+   "Hardware, software, and firmware",
+   "Security principles, states of data, and countermeasures",
+   "Prevention, detection, and response",
+   "Users, devices, and networks"
+  ],
+  "correct": 1,
+  "explain": "The cube describes data protection by its security principles (CIA), the state the data is in, and the countermeasure protecting it.",
+  "s": 6
+ },
+ {
+  "q": "Which state of data describes a customer record being typed into a web form?",
+  "choices": [
+   "Data at rest",
+   "Data in transit",
+   "Data in process",
+   "Data in storage"
+  ],
+  "correct": 2,
+  "explain": "Input is one of the three stages of data in process, along with modification and output.",
+  "s": 6
+ },
+ {
+  "q": "A store replaces card numbers with random values that only its payment processor can map back to real cards. This is:",
+  "choices": [
+   "Hashing",
+   "Tokenization",
+   "Anonymization",
+   "Data rights management"
+  ],
+  "correct": 1,
+  "explain": "Tokens have no mathematical relationship to the original data, so they're useless outside the issuing system.",
+  "s": 6
+ },
+ {
+  "q": "Which kind of organization has the most critical need for data integrity?",
+  "choices": [
+   "A personal blog",
+   "A search engine's public results",
+   "A hospital's prescription system",
+   "A social media page"
+  ],
+  "correct": 2,
+  "explain": "Inaccurate prescription or allergy data can be life-threatening, which puts healthcare at the critical level.",
+  "s": 6
+ },
+ {
+  "q": "Which storage type is attached to a single computer and isn't shared by default?",
+  "choices": [
+   "SAN",
+   "NAS",
+   "Cloud storage",
+   "DAS"
+  ],
+  "correct": 3,
+  "explain": "Direct-attached storage, like an internal drive or USB drive, belongs to one host unless someone manually shares it.",
+  "s": 6
+ },
+ {
+  "q": "Which storage option uses a dedicated high-speed network to connect servers to shared storage?",
+  "choices": [
+   "SAN",
+   "DAS",
+   "RAID",
+   "Sneakernet"
+  ],
+  "correct": 0,
+  "explain": "A storage area network (SAN) is a separate high-speed network built for server-to-storage traffic.",
+  "s": 6
+ },
+ {
+  "q": "An employee copies files to a USB drive to carry them to another office. This way of moving data is called:",
+  "choices": [
+   "Tunneling",
+   "Sneakernet",
+   "Mutual authentication",
+   "Replication"
+  ],
+  "correct": 1,
+  "explain": "Sneakernet means physically carrying data on removable media. It's data in transit, and it's easy to lose track of.",
+  "s": 6
+ },
+ {
+  "q": "Which security measure has the client and server each verify the other's identity?",
+  "choices": [
+   "Single sign-on",
+   "Tokenization",
+   "Mutual authentication",
+   "A proxy server"
+  ],
+  "correct": 2,
+  "explain": "With mutual authentication, a device won't trust an impostor server, such as an evil twin access point.",
+  "s": 6
+ },
+ {
+  "q": "Which document is mandatory and tells everyone to do something the same way?",
+  "choices": [
+   "A guideline",
+   "A standard",
+   "A newsletter",
+   "An awareness poster"
+  ],
+  "correct": 1,
+  "explain": "Standards are mandatory rules. Guidelines are recommendations, and procedures are mandatory step-by-step instructions.",
+  "s": 6
+ },
+ {
+  "q": "Which part of a security policy defines what users may and may not do on company systems?",
+  "choices": [
+   "Incident handling policy",
+   "Network maintenance policy",
+   "Remote access policy",
+   "Acceptable use policy"
+  ],
+  "correct": 3,
+  "explain": "The acceptable use policy (AUP) lists allowed and prohibited behavior, like banned sites or bandwidth-heavy apps.",
+  "s": 6
+ },
+ {
+  "q": "Which tool captures and decodes network traffic so an analyst can learn what normal traffic looks like?",
+  "choices": [
+   "Protocol analyzer",
+   "Vulnerability scanner",
+   "Port scanner",
+   "Biometric reader"
+  ],
+  "correct": 0,
+  "explain": "A protocol analyzer, like Wireshark, decodes captured traffic and helps establish a baseline.",
+  "s": 6
+ },
+ {
+  "q": "Which set lists the three categories of countermeasures in the cybersecurity cube?",
+  "choices": [
+   "Encryption, hashing, and signing",
+   "Firewalls, IDS, and IPS",
+   "Technologies, policies and practices, and people",
+   "Backups, RAID, and the cloud"
+  ],
+  "correct": 2,
+  "explain": "The cube's third dimension groups countermeasures as technologies, policies and practices, and knowledgeable people.",
+  "s": 6
+ },
+ {
+  "q": "Which term describes a weakness in a system or its design that a threat actor could exploit?",
+  "choices": [
+   "Asset",
+   "Threat",
+   "Vulnerability",
+   "Countermeasure"
+  ],
+  "correct": 2,
+  "explain": "A vulnerability is the weakness. A threat is the potential danger that could exploit it, and an asset is what's at risk.",
+  "s": 6
+ },
+ {
+  "q": "In a defense-in-depth design, which device is usually the first line of defense on the path in from the internet?",
+  "choices": [
+   "Internal router",
+   "Edge router",
+   "Firewall",
+   "Host-based IDS"
+  ],
+  "correct": 1,
+  "explain": "The edge router is the first line of defense, the firewall is the second, and the internal router is the third.",
+  "s": 6
+ },
+ {
+  "q": "With the growth of borderless networks, which statement describes the security artichoke approach?",
+  "choices": [
+   "A threat actor must peel away every layer to reach the data",
+   "Not every layer has to be penetrated for a threat actor to reach data or systems",
+   "One firewall at the network edge protects every asset",
+   "Only physical security layers matter"
+  ],
+  "correct": 1,
+  "explain": "In the artichoke model, mobile devices, BYOD, and cloud services mean an attacker can pull off one leaf and reach sensitive data without getting through every layer.",
+  "s": 6
+ },
+ {
+  "q": "Which is a recommended security best practice for BYOD devices?",
+  "choices": [
+   "Leave Wi-Fi and Bluetooth on at all times",
+   "Turn off automatic updates",
+   "Use mobile device management (MDM) software",
+   "Share one passcode across all staff devices"
+  ],
+  "correct": 2,
+  "explain": "MDM lets IT enforce settings, push updates, and wipe work data. The other choices all weaken the device's security.",
+  "s": 6
+ },
+ {
+  "q": "Which defense-in-depth strategy makes each layer of protection different, so one technique can't defeat them all?",
+  "choices": [
+   "Layering",
+   "Limiting",
+   "Diversity",
+   "Obscurity"
+  ],
+  "correct": 2,
+  "explain": "Diversity means the layers differ. If every layer were the same, a technique that beat one would beat the whole system.",
+  "s": 6
+ },
+ {
+  "q": "What does configuration management involve?",
+  "choices": [
+   "Capturing and decoding network traffic",
+   "Identifying, controlling, and auditing a system's baseline and any changes to it",
+   "Assigning an owner to each information asset",
+   "Writing the organization's acceptable use policy"
+  ],
+  "correct": 1,
+  "explain": "Configuration management tracks a system's established baseline and every change made to it.",
+  "s": 6
+ },
+ {
+  "q": "Which biometric error is usually considered the most important for an access control system?",
+  "choices": [
+   "Type I error (false rejection)",
+   "Type II error (false acceptance)",
+   "Enrollment error",
+   "Throughput error"
+  ],
+  "correct": 1,
+  "explain": "A Type II error lets an impostor in, which is a security breach. A Type I error only turns away a legitimate user.",
+  "s": 7
+ },
+ {
+  "q": "What does a fence about 2.5 meters (8 ft) high provide?",
+  "choices": [
+   "It deters casual trespassers only",
+   "It offers limited delay to a determined intruder",
+   "It stops all intruders",
+   "It replaces the need for surveillance"
+  ],
+  "correct": 1,
+  "explain": "About 1 m deters casual trespassers, about 2 m is too high for them to climb, and about 2.5 m offers limited delay to a determined intruder.",
+  "s": 7
+ },
+ {
+  "q": "Which validation rule check makes sure a value lies between a minimum and a maximum?",
+  "choices": [
+   "Size",
+   "Format",
+   "Check digit",
+   "Range"
+  ],
+  "correct": 3,
+  "explain": "A range check confirms the value falls between the limits the database designer set.",
+  "s": 7
+ },
+ {
+  "q": "An administrator wants to manage a router remotely without sending credentials in plaintext. Which protocol should replace Telnet?",
+  "choices": [
+   "SSH",
+   "FTP",
+   "HTTP",
+   "SNMPv1"
+  ],
+  "correct": 0,
+  "explain": "SSH (TCP 22) encrypts the whole session. Telnet (TCP 23) sends usernames and passwords in plaintext.",
+  "s": 7
+ },
+ {
+  "q": "Which technology adds digital signatures to protect against threats to name resolution?",
+  "choices": [
+   "DHCP snooping",
+   "DNSSEC",
+   "NTP authentication",
+   "SNMPv3"
+  ],
+  "correct": 1,
+  "explain": "DNS Security Extensions (DNSSEC) use digital signatures to strengthen DNS authentication.",
+  "s": 7
+ },
+ {
+  "q": "Where are an organization's public web and mail servers usually placed?",
+  "choices": [
+   "In the private LAN",
+   "In the DMZ",
+   "In the extranet",
+   "In a management VLAN"
+  ],
+  "correct": 1,
+  "explain": "The DMZ sits between the internet and the trusted network, so outsiders can reach those servers without touching the internal network.",
+  "s": 7
+ },
+ {
+  "q": "Which wireless feature should be disabled because its PIN can be discovered by a brute-force attack?",
+  "choices": [
+   "WPA3",
+   "AES",
+   "WPS",
+   "EAP-TLS"
+  ],
+  "correct": 2,
+  "explain": "Wi-Fi Protected Setup (WPS) uses a PIN that can be brute-forced, so it should be turned off.",
+  "s": 7
+ },
+ {
+  "q": "Which EAP type requires certificates on both the client and the server?",
+  "choices": [
+   "EAP-TLS",
+   "PEAP",
+   "EAP-TTLS",
+   "EAP-FAST"
+  ],
+  "correct": 0,
+  "explain": "EAP-TLS needs client and server certificates. It's the hardest to deploy and the most secure.",
+  "s": 7
+ },
+ {
+  "q": "A mobile device user installs an app from outside the approved app store. What is this called?",
+  "choices": [
+   "Rooting",
+   "Jailbreaking",
+   "Sideloading",
+   "Geofencing"
+  ],
+  "correct": 2,
+  "explain": "Sideloading bypasses the approved app settings. It's less invasive than jailbreaking or rooting, but still a risk.",
+  "s": 7
+ },
+ {
+  "q": "A design gives every component at least one standby backup, like a car's spare tire. What is this?",
+  "choices": [
+   "RAID 0",
+   "N+1 redundancy",
+   "Point-in-time replication",
+   "Five nines"
+  ],
+  "correct": 1,
+  "explain": "N+1 means each component (N) has at least one backup (+1).",
+  "s": 7
+ },
+ {
+  "q": "Which RAID technique duplicates data onto a second drive?",
+  "choices": [
+   "Striping",
+   "Parity",
+   "Mirroring",
+   "Spanning"
+  ],
+  "correct": 2,
+  "explain": "Mirroring stores an identical copy on a second drive. Striping spreads data across drives, and parity adds checksums for rebuilding.",
+  "s": 7
+ },
+ {
+  "q": "Which access control model lets the owner of the data decide who can access it?",
+  "choices": [
+   "Mandatory access control",
+   "Discretionary access control",
+   "Rule-based access control",
+   "Time-based access control"
+  ],
+  "correct": 1,
+  "explain": "Discretionary access control (DAC) is the least restrictive model. The owner sets the permissions.",
+  "s": 7
+ },
+ {
+  "q": "Which access control model assigns security labels to information and grants access based on a user's clearance?",
+  "choices": [
+   "DAC",
+   "ABAC",
+   "TAC",
+   "MAC"
+  ],
+  "correct": 3,
+  "explain": "Mandatory access control (MAC) compares the user's clearance with the object's label. It's the strictest model.",
+  "s": 7
+ },
+ {
+  "q": "Which AAA protocol encrypts the entire packet body and separates authentication, authorization, and accounting?",
+  "choices": [
+   "RADIUS",
+   "TACACS+",
+   "PAP",
+   "Kerberos"
+  ],
+  "correct": 1,
+  "explain": "TACACS+ (TCP 49) encrypts the whole body and separates the three AAA functions. RADIUS encrypts only the password.",
+  "s": 7
+ },
+ {
+  "q": "Which type of AAA accounting captures the commands a user ran at a given privilege level, with the time and the user?",
+  "choices": [
+   "Network accounting",
+   "System accounting",
+   "Command accounting",
+   "Connection accounting"
+  ],
+  "correct": 2,
+  "explain": "Command accounting records each EXEC shell command, when it ran, and who ran it.",
+  "s": 7
+ }
+];
+
+  const SESSION_TITLES = {1:'Threats, Vulnerabilities & Attacks',2:'Securing Networks & Attacking the Foundation',3:'Attacking What We Do & Wireless',4:'Network Security Infrastructure & Windows',5:'Linux & Endpoint Protection',6:'Principles, Practices & Understanding Defense',7:'System and Network Defense & Access Control'};
+  const sessionUrl = n => `IT121_Session0${n}.html`;
+  function tagHtml(item){
+    return item.s.map(n => n === 'X' ? `<span class="stag">Module ${item.m} extra</span>` : `<a class="stag" href="${sessionUrl(n)}">S${n}</a>`).join(' ');
+  }
+  function fillFilter(sel, withExtras){
+    const opts = [['all','All sessions']].concat(Object.keys(SESSION_TITLES).map(n => [n, 'Session ' + n + ': ' + SESSION_TITLES[n]]));
+    if (withExtras) opts.push(['X','Module extras']);
+    opts.forEach(([v, label]) => { const o = document.createElement('option'); o.value = v; o.textContent = label; sel.appendChild(o); });
+  }
+  function shuffle(a){ for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  // ── Flashcards ──
+  const grid = document.getElementById('cardGrid');
+  const cardFilter = document.getElementById('cardFilter');
+  fillFilter(cardFilter, true);
+  function renderCards(){
+    const f = cardFilter.value;
+    grid.innerHTML = '';
+    TERMS.filter(t => f === 'all' || t.s.map(String).includes(f)).forEach(item => {
+      const card = document.createElement('button');
+      card.className = 'flashcard';
+      card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+      card.innerHTML = `
+        <div class="flashcard-inner">
+          <div class="flashcard-face front"><div class="lbl">Term · ${item.s.map(n => n === 'X' ? 'M' + item.m + ' extra' : 'S' + n).join(', ')}</div><div class="term">${item.t}</div></div>
+          <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+        </div>`;
+      card.addEventListener('click', () => card.classList.toggle('flipped'));
+      card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+      grid.appendChild(card);
+    });
+    updateProgress();
+  }
+  function updateProgress(){
+    const known = grid.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${grid.children.length} marked known (double-click a card to mark it)`;
+  }
+  cardFilter.addEventListener('change', renderCards);
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    shuffle(Array.from(grid.children)).forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    grid.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+  renderCards();
+
+  // ── Practice exam ──
+  const quizList = document.getElementById('quizList');
+  const quizReport = document.getElementById('quizReport');
+  const quizFilter = document.getElementById('quizFilter');
+  fillFilter(quizFilter, false);
+  let current = [], score = 0, answered = 0, misses = {};
+  function drawQuiz(){
+    const f = quizFilter.value, count = document.getElementById('quizCount').value;
+    let pool = QUIZ.filter(q => f === 'all' || String(q.s) === f);
+    if (count !== 'all') pool = shuffle(pool.slice()).slice(0, Number(count));
+    current = pool; score = 0; answered = 0; misses = {};
+    quizList.innerHTML = ''; quizReport.innerHTML = '';
+    current.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qsrc"><a class="stag" href="${sessionUrl(item.s)}">Session ${item.s}</a></p><p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++; else misses[item.s] = (misses[item.s] || 0) + 1;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    const el = document.getElementById('quizScore');
+    if (!current.length) { el.textContent = `${QUIZ.length} questions in the bank. Pick a set and press Start.`; return; }
+    el.textContent = answered === 0 ? `${current.length} questions. Click an answer to check yourself.` : `Score: ${score} / ${answered} answered (of ${current.length})`;
+    if (answered === current.length) {
+      const pct = Math.round(100 * score / current.length);
+      const rows = Object.keys(misses).sort((a, b) => a - b).map(n => `<li><a href="${sessionUrl(n)}">Session ${n}: ${SESSION_TITLES[n]}</a>, ${misses[n]} missed</li>`).join('');
+      quizReport.innerHTML = `<div class="callout"><b>Finished: ${score} / ${current.length} (${pct}%).</b> ` +
+        (rows ? `Reopen these sessions:<ul>${rows}</ul>` : `No misses. Draw another set to keep going.`) + `</div>`;
+    }
+  }
+  document.getElementById('drawQuizBtn').addEventListener('click', drawQuiz);
+  updateScore();
+
+  // ── Glossary ──
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t} ${tagHtml(item)}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
