@@ -1,0 +1,1275 @@
+<title>IT121 Session 9 – Access Control Lists &amp; Firewall Technologies</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 9</p>
+    <h1>Access Control Lists &amp; Firewall Technologies</h1>
+    <p class="lede">Every block you'll ever see in a firewall log comes from a rule somebody wrote. This session starts with the simplest kind: an access control list on a router, read top to bottom, first match wins. Then it steps up to firewalls that remember connections, read applications, and sit at the boundaries between networks you trust and networks you don't.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 14 (14.1–14.7) &middot; Module 15 (15.1–15.2)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#aclintro">ACL Basics</a>
+    <a href="#wildcard">Wildcard Masks</a>
+    <a href="#configure">Configure</a>
+    <a href="#modify">Modify</a>
+    <a href="#implement">Implement</a>
+    <a href="#mitigate">Mitigate Attacks</a>
+    <a href="#ipv6">IPv6 ACLs</a>
+    <a href="#firewalls">Firewalls</a>
+    <a href="#design">Firewall Design</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 9 covers</h2>
+      <p>Module 14 is hands-on: how a Cisco router uses access control lists to permit or deny traffic, how wildcard masks pick out addresses, and how to write, fix, place, and apply ACLs, including ACLs that block common attacks and ACLs for IPv6. Module 15 steps back to firewalls as a whole: the main types, what each is good and bad at, and where firewalls go in a network design. Session 4 introduced firewall types in one table. This session explains why they differ.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Describe standard and extended IPv4 ACLs</li>
+      <li>Explain how ACLs use wildcard masks</li>
+      <li>Explain how to configure ACLs</li>
+      <li>Use sequence numbers to edit existing standard IPv4 ACLs</li>
+      <li>Implement ACLs</li>
+      <li>Use ACLs to mitigate common network attacks</li>
+      <li>Configure IPv6 ACLs using the CLI</li>
+      <li>Explain how firewalls are used to help secure networks</li>
+      <li>Explain design considerations for implementing firewall technologies</li>
+    </ul>
+  </section>
+
+  <!-- ── INTRODUCTION TO ACLS (14.1) ── -->
+  <section id="aclintro">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 14.1</p>
+      <h2>Introduction to Access Control Lists</h2>
+      <p>An ACL is the router's rulebook for traffic. Learn how it reads the rules and most ACL questions answer themselves.</p>
+    </div>
+
+    <h3>What an ACL is</h3>
+    <p>An <b>access control list (ACL)</b> is a series of IOS commands that filter packets based on information in the packet header. A router has no ACLs by default. Once you apply one to an interface, the router checks every packet passing through that interface to decide whether it can be forwarded.</p>
+    <p>An ACL is a sequential list of permit or deny statements called <b>access control entries (ACEs)</b>. ACEs are also commonly called ACL statements. Routers use ACLs to identify traffic for several jobs:</p>
+    <table class="model-table">
+      <thead><tr><th>Task</th><th>Example policy</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Limit traffic to improve performance</td><td>Block video traffic to reduce the network load</td></tr>
+        <tr><td style="font-weight:700;">Provide traffic flow control</td><td>Accept routing updates only from a known source</td></tr>
+        <tr><td style="font-weight:700;">Provide a basic level of security</td><td>Restrict the Human Resources network to authorized users</td></tr>
+        <tr><td style="font-weight:700;">Filter by traffic type</td><td>Permit email into the network, but deny Telnet</td></tr>
+        <tr><td style="font-weight:700;">Screen hosts for access to services</td><td>Limit access to some file types to certain user groups</td></tr>
+        <tr><td style="font-weight:700;">Prioritize classes of traffic</td><td>Identify voice traffic so QoS can forward it first</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Packet filtering: standard and extended</h3>
+    <p><b>Packet filtering</b> controls access by examining packets and forwarding or discarding them based on given criteria. It can happen at Layer 3 or Layer 4. Cisco routers support two types of ACL:</p>
+    <table class="model-table">
+      <thead><tr><th>Type</th><th>Filters on</th><th>Numbered ranges</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Standard ACL</td><td>Layer 3 only, using the <b>source</b> IPv4 address only</td><td>1–99 and 1300–1999</td></tr>
+        <tr><td style="font-weight:700;">Extended ACL</td><td>Layer 3 source and/or destination IPv4 address, plus Layer 4 TCP or UDP ports and protocol type, for finer control</td><td>100–199 and 2000–2699</td></tr>
+      </tbody>
+    </table>
+    <p>Either type can be <b>numbered</b> or <b>named</b>. Named ACLs are the preferred method, because the name can say what the ACL is for. Create one with the <code>ip access-list</code> global configuration command. Names are alphanumeric, can't contain spaces or punctuation, and are suggested to be written in CAPITAL LETTERS. You can add or delete entries inside a named ACL.</p>
+    <p>One edge to know: IOS does accept hyphens in ACL names, and NetAcad's own examples use them (NO-ACCESS, NO-FTP-ACCESS). On the quiz, go with the rule as written.</p>
+
+    <h3>Inbound and outbound</h3>
+    <table class="model-table">
+      <thead><tr><th>Direction</th><th>When it filters</th><th>Best used when</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Inbound ACL</td><td>Before the packet is routed to the outbound interface. Efficient: a denied packet never costs a routing lookup</td><td>The network attached to that inbound interface is the only source of packets you need to examine</td></tr>
+        <tr><td style="font-weight:700;">Outbound ACL</td><td>After the packet is routed, no matter which interface it came in on</td><td>The same filter applies to packets arriving from several interfaces before they leave the same outbound interface</td></tr>
+      </tbody>
+    </table>
+
+    <h3>How the router reads an ACL</h3>
+    <p>For a packet entering an interface with an inbound standard ACL:</p>
+    <ol>
+      <li>The router extracts the source IPv4 address from the packet header.</li>
+      <li>It starts at the top of the ACL and compares that address to each ACE in order.</li>
+      <li>At the first match, it permits or denies the packet. The remaining ACEs are not checked.</li>
+      <li>If nothing matches, the packet is discarded.</li>
+    </ol>
+    <p>Step 4 happens because every ACL ends with an <b>implicit deny</b>: a hidden last ACE that blocks all traffic. It never shows in the configuration, but it's always there. So an ACL must contain at least one permit statement, or it denies everything.</p>
+
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the guard's list at the gate</span>
+      The guard at each gate holds a written list and reads it from the top. The first line that fits the traveler decides: pass or turn back. Nobody reads further down. A traveler who fits no line at all is turned away, because the gate's standing order is "if you're not on the list, you don't enter." That standing order is the implicit deny. Here's where the picture breaks: the guard has no memory. He doesn't recall who went <em>out</em> this morning, so a plain list can't tell a reply coming home from a stranger arriving. That gap is what the <code>established</code> keyword and stateful firewalls fill, later on this page.
+    </div>
+
+    <div class="callout xref">
+      ACLs first appeared as a router security tool in <a href="IT121_Session04.html#secdevices">Session 4</a>. Rule-based access control, which uses ACL-style rules, is in <a href="IT121_Session07.html#acconcepts">Session 7</a>.
+    </div>
+  </section>
+
+  <!-- ── WILDCARD MASKS (14.2) ── -->
+  <section id="wildcard">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 14.2</p>
+      <h2>Wildcard Masks</h2>
+      <p>A wildcard mask tells an ACE which bits of an address have to match. It looks like a subnet mask, but it reads backwards.</p>
+    </div>
+
+    <p>Every IPv4 ACE uses a 32-bit <b>wildcard mask</b> to decide which bits of the address to examine. (OSPF uses wildcard masks too.) Like a subnet mask, it uses ANDing to pick bits. Unlike a subnet mask, the meaning of 0 and 1 is reversed:</p>
+    <ul>
+      <li><b>Wildcard bit 0:</b> match the corresponding bit in the address</li>
+      <li><b>Wildcard bit 1:</b> ignore the corresponding bit</li>
+    </ul>
+
+    <table class="model-table">
+      <thead><tr><th>Wildcard mask</th><th>Last octet in binary</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">0.0.0.0</td><td><code>00000000</code></td><td>Match all octets: one exact host</td></tr>
+        <tr><td style="font-weight:700;">0.0.0.63</td><td><code>00111111</code></td><td>Match the first three octets and the two leftmost bits of the last octet. Ignore the last 6 bits</td></tr>
+        <tr><td style="font-weight:700;">0.0.0.15</td><td><code>00001111</code></td><td>Match the first three octets and the four leftmost bits of the last octet. Ignore the last 4 bits</td></tr>
+        <tr><td style="font-weight:700;">0.0.0.252</td><td><code>11111100</code></td><td>Match the first three octets. Ignore the six leftmost bits of the last octet and match the last two bits</td></tr>
+        <tr><td style="font-weight:700;">0.0.0.255</td><td><code>11111111</code></td><td>Match the first three octets. Ignore the last octet</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Calculating a wildcard mask</h3>
+    <p>The shortcut: subtract the subnet mask from 255.255.255.255.</p>
+    <table class="model-table">
+      <thead><tr><th>Goal</th><th>Subtraction</th><th>Resulting ACE</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Permit the 14 users in 192.168.3.32/28</td><td>255.255.255.255 − 255.255.255.240 = <b>0.0.0.15</b></td><td><code>access-list 10 permit 192.168.3.32 0.0.0.15</code></td></tr>
+        <tr><td style="font-weight:700;">Permit 192.168.16.0/24 through 192.168.31.0/24 (summarized as 192.168.16.0/20)</td><td>255.255.255.255 − 255.255.240.0 = <b>0.0.15.255</b></td><td><code>access-list 10 permit 192.168.16.0 0.0.15.255</code></td></tr>
+        <tr><td style="font-weight:700;">Permit all of 192.168.1.0/24</td><td>255.255.255.255 − 255.255.255.0 = <b>0.0.0.255</b></td><td><code>access-list 10 permit 192.168.1.0 0.0.0.255</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>The host and any keywords</h3>
+    <p>IOS has two keywords for the most common masks:</p>
+    <ul>
+      <li><b><code>host</code></b> replaces the 0.0.0.0 mask: every bit must match, so it filters one host. <code>permit host 192.168.10.10</code> equals <code>permit 192.168.10.10 0.0.0.0</code>.</li>
+      <li><b><code>any</code></b> replaces the 255.255.255.255 mask: ignore the whole address and accept anything. <code>permit any</code> equals <code>permit 0.0.0.0 255.255.255.255</code>.</li>
+    </ul>
+
+    <div class="callout">
+      <b>The two rules to memorize:</b> in a wildcard mask, 0 means match and 1 means ignore. To build one from a subnet mask, subtract the mask from 255.255.255.255. If your answer has 255s on the left and 0s on the right, you've written a subnet mask by mistake.
+    </div>
+  </section>
+
+  <!-- ── CONFIGURE ACLS (14.3) ── -->
+  <section id="configure">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 14.3</p>
+      <h2>Configure ACLs</h2>
+      <p>Writing an ACL is easy. Writing one that does only what you meant takes planning.</p>
+    </div>
+
+    <h3>Plan first</h3>
+    <p>Every ACL should be planned, especially one with many ACEs. For a complex ACL:</p>
+    <ol>
+      <li>Write out the policy in a text editor.</li>
+      <li>Add the IOS commands that carry it out.</li>
+      <li>Include remarks that document the ACL.</li>
+      <li>Copy and paste the commands onto the device.</li>
+      <li>Test the ACL thoroughly to confirm it applies the policy you intended.</li>
+    </ol>
+
+    <h3>Standard ACLs</h3>
+    <p>A <b>numbered standard ACL</b> is one global configuration command per ACE:</p>
+<pre class="log">Router(config)# access-list access-list-number {deny | permit | remark text} source [source-wildcard] [log]</pre>
+    <table class="model-table">
+      <thead><tr><th>Parameter</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">access-list-number</td><td>1–99 or 1300–1999 for a standard ACL</td></tr>
+        <tr><td style="font-weight:700;">deny / permit</td><td>What to do when the condition matches</td></tr>
+        <tr><td style="font-weight:700;">remark text</td><td>Optional documentation, up to 100 characters per remark</td></tr>
+        <tr><td style="font-weight:700;">source</td><td>The source network or host. Use <code>any</code> for all networks, or <code>host</code> plus an address (or just the address) for one host</td></tr>
+        <tr><td style="font-weight:700;">source-wildcard</td><td>Optional. If you leave it out, IOS assumes 0.0.0.0</td></tr>
+        <tr><td style="font-weight:700;">log</td><td>Optional. Generates an informational message whenever the ACE matches</td></tr>
+      </tbody>
+    </table>
+    <p>Remove it with <code>no access-list access-list-number</code>.</p>
+    <p>A <b>named standard ACL</b> starts with <code>ip access-list standard NAME</code>, which drops you into named standard ACL configuration mode. You enter ACEs there without repeating the <code>ip access-list</code> command each time. Names are alphanumeric, case sensitive, and must be unique. Capitals aren't required, but they stand out in the running config and keep you from creating two ACLs whose names differ only by case. Remove it with <code>no ip access-list standard NAME</code>.</p>
+<pre class="log">R1(config)# ip access-list standard NO-ACCESS
+R1(config-std-nacl)# remark Keep one workstation off the file server
+R1(config-std-nacl)# deny host 192.168.11.10
+R1(config-std-nacl)# permit any</pre>
+
+    <h3>Extended ACLs</h3>
+    <p>A <b>numbered extended ACL</b> adds protocol, destination, and ports:</p>
+<pre class="log">Router(config)# access-list access-list-number {deny | permit | remark text} protocol source source-wildcard [operator {port}] destination destination-wildcard [operator {port}] [established] [log]</pre>
+    <table class="model-table">
+      <thead><tr><th>Parameter</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">access-list-number</td><td>100–199 or 2000–2699 for an extended ACL</td></tr>
+        <tr><td style="font-weight:700;">protocol</td><td>The name or number of an internet protocol. <code>ip</code>, <code>tcp</code>, <code>udp</code>, and <code>icmp</code> are the ones you'll use most</td></tr>
+        <tr><td style="font-weight:700;">source, source-wildcard</td><td>Where the traffic comes from</td></tr>
+        <tr><td style="font-weight:700;">destination, destination-wildcard</td><td>Where the traffic is going</td></tr>
+        <tr><td style="font-weight:700;">operator</td><td>Optional. Compares ports: <code>lt</code> (less than), <code>gt</code> (greater than), <code>eq</code> (equal), <code>neq</code> (not equal)</td></tr>
+        <tr><td style="font-weight:700;">port</td><td>Optional. A TCP or UDP port, by number or name</td></tr>
+        <tr><td style="font-weight:700;">established</td><td>Optional, TCP only. A first-generation firewall feature (below)</td></tr>
+        <tr><td style="font-weight:700;">log</td><td>Optional. Sends an informational message whenever the ACE matches</td></tr>
+      </tbody>
+    </table>
+    <p>Choosing a protocol changes the port options: <code>tcp</code> offers TCP port names, <code>udp</code> offers UDP ports, and <code>icmp</code> offers ICMP message types. Port names make an ACE easier to read. These two ACEs do the same thing:</p>
+<pre class="log">R1(config)# access-list 100 permit tcp any any eq www
+R1(config)# access-list 100 permit tcp any any eq 80</pre>
+    <p>When a service has no name keyword in the list, such as SSH (22) or HTTPS (443), you have to use the port number. Typing <code>?</code> while building an ACE shows the options.</p>
+
+    <h3>Applying an ACL to an interface</h3>
+    <p>Creating an ACL does nothing until you apply it. The command is the same for standard and extended ACLs:</p>
+<pre class="log">Router(config-if)# ip access-group {access-list-number | access-list-name} {in | out}</pre>
+    <p>To remove an ACL, first take it off the interface with <code>no ip access-group</code>, then delete it from the router with <code>no access-list</code>.</p>
+
+    <h3>The established keyword</h3>
+    <p>The <b><code>established</code></b> keyword gives an extended ACL a basic stateful behavior. Inside hosts can start connections out, and the replies are allowed back in. A TCP connection started by an outside host toward an inside host is denied.</p>
+    <p>It works by checking TCP flags: an ACE with <code>established</code> matches only segments with the <b>ACK</b> or <b>RST</b> bit set. The first segment of a new connection is a SYN with no ACK, so outsiders can't open one. Without <code>established</code>, the same ACE would permit all that traffic.</p>
+<pre class="log">R1(config)# access-list 120 permit tcp any 192.168.10.0 0.0.0.255 established
+R1(config)# interface g0/0/0
+R1(config-if)# ip access-group 120 out</pre>
+    <p>Here G0/0/0 faces the inside 192.168.10.0/24 LAN, so "out" means traffic leaving the router toward the inside hosts. Only replies to connections those hosts started get through.</p>
+
+    <h3>Named extended ACLs</h3>
+    <p>A <b>named extended ACL</b> is created the same way as a named standard one, with <code>ip access-list extended NAME</code>. The prompt changes to <code>R1(config-ext-nacl)#</code>. NetAcad's example uses two ACLs on the same inside interface: SURFING lets inside web traffic out, and BROWSING lets only the returning web traffic back in.</p>
+<pre class="log">R1(config)# ip access-list extended SURFING
+R1(config-ext-nacl)# remark Permits inside HTTP and HTTPS traffic
+R1(config-ext-nacl)# permit tcp 192.168.10.0 0.0.0.255 any eq 80
+R1(config-ext-nacl)# permit tcp 192.168.10.0 0.0.0.255 any eq 443
+R1(config-ext-nacl)# exit
+R1(config)# ip access-list extended BROWSING
+R1(config-ext-nacl)# remark Only permit returning HTTP and HTTPS traffic
+R1(config-ext-nacl)# permit tcp any 192.168.10.0 0.0.0.255 established
+R1(config-ext-nacl)# exit
+R1(config)# interface g0/0/0
+R1(config-if)# ip access-group SURFING in
+R1(config-if)# ip access-group BROWSING out</pre>
+    <p>Everything else leaving G0/0/0 toward the inside hosts hits BROWSING's implicit deny. Use <code>show access-lists</code> to check the match counters: if the <code>eq 443</code> line in SURFING and the <code>established</code> line in BROWSING are both climbing, users are reaching secure websites.</p>
+
+    <div class="callout xref">
+      ACK, RST, and SYN are the TCP flags from the three-way handshake in <a href="IT121_Session02.html#tcpudp">Session 2</a>.
+    </div>
+  </section>
+
+  <!-- ── MODIFY ACLS (14.4) ── -->
+  <section id="modify">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 14.4</p>
+      <h2>Modify ACLs</h2>
+      <p>ACLs often take some trial and error. There are two ways to fix one without starting over blind.</p>
+    </div>
+
+    <h3>Text editor method</h3>
+    <p>Build any ACL with several ACEs in a text editor. That makes it easy to plan, and easy to fix. Say ACL 1 was typed with <code>19</code> instead of <code>192</code> in the first octet. To correct it:</p>
+    <ol>
+      <li>Copy the ACL from the running configuration into the text editor.</li>
+      <li>Make the changes.</li>
+      <li>Remove the old ACL from the router. If you skip this, pasting the edited commands only <b>adds</b> them to the end of the existing ACL.</li>
+      <li>Paste the corrected ACL back into global configuration mode.</li>
+    </ol>
+
+    <h3>Sequence number method</h3>
+    <p>IOS assigns a <b>sequence number</b> to each ACE as you enter it. <code>show access-lists</code> displays them; <code>show running-config</code> doesn't. You can't overwrite an ACE by reusing its number, so delete the bad one first, then add the corrected one under the same number. The <code>ip access-list standard</code> command works on numbered ACLs too:</p>
+<pre class="log">R1# show access-lists
+Standard IP access list 1
+    10 deny   19.168.10.10
+    20 permit 192.168.10.0, wildcard bits 0.0.0.255
+R1# configure terminal
+R1(config)# ip access-list standard 1
+R1(config-std-nacl)# no 10
+R1(config-std-nacl)# 10 deny host 192.168.10.10
+R1(config-std-nacl)# end
+R1# show access-lists
+Standard IP access list 1
+    10 deny   192.168.10.10
+    20 permit 192.168.10.0, wildcard bits 0.0.0.255</pre>
+  </section>
+
+  <!-- ── IMPLEMENT ACLS (14.5) ── -->
+  <section id="implement">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 14.5</p>
+      <h2>Implement ACLs</h2>
+      <p>A correct ACL on the wrong interface can still block the wrong people. These rules cover the order and the placement.</p>
+    </div>
+
+    <h3>Configuration guidelines</h3>
+    <ul>
+      <li>Create the ACL globally, then apply it.</li>
+      <li>The last statement is always an implicit <code>deny any</code> (standard) or <code>deny ip any any</code> (extended).</li>
+      <li>Statement order matters: ACLs are processed top-down, and the ACL is exited at the first match.</li>
+      <li>Filter from the most specific to the most general.</li>
+      <li>Only <b>one ACL per interface, per protocol, per direction</b>.</li>
+      <li>New statements are added to the bottom of an existing ACL by default.</li>
+      <li>Outbound ACLs don't filter packets the router generates itself.</li>
+      <li>Place standard ACLs as close to the destination as possible.</li>
+      <li>Place extended ACLs as close to the source as possible.</li>
+    </ul>
+
+    <h3>Where to apply it</h3>
+    <p>On an interface, use <code>ip access-group</code>. To control who can manage the router remotely, apply an ACL to the vty lines instead:</p>
+    <!-- Instructor note: the NetAcad 14.5 slide prints this as "ip access-class". On real IOS the IPv4 line command is "access-class" (no "ip"); "ipv6 access-class" is the IPv6 form. Kept out of the quiz on purpose. -->
+<pre class="log">Router(config-if)# ip access-group {acl-# | name} {in | out}
+Router(config-line)# access-class {acl-# | name} {in | out}</pre>
+    <p>Heads-up: NetAcad's slide writes the vty command as <code>ip access-class</code>. On a real router the IPv4 command is <code>access-class</code>, without the <code>ip</code>.</p>
+
+    <h3>Placement</h3>
+    <table class="model-table">
+      <thead><tr><th>ACL type</th><th>Place it</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Extended</td><td>As close to the <b>source</b> as possible</td><td>It can name the destination, so it drops unwanted traffic before it crosses the network, without affecting anything else</td></tr>
+        <tr><td style="font-weight:700;">Standard</td><td>As close to the <b>destination</b> as possible</td><td>It only knows the source. Placed near the source, it would block that source from <em>everywhere</em>, not just from the one destination</td></tr>
+      </tbody>
+    </table>
+    <p>Placement can also depend on:</p>
+    <table class="model-table">
+      <thead><tr><th>Factor</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Extent of organizational control</td><td>You can only place ACLs on devices you control. If you don't own the source network, you can't filter there</td></tr>
+        <tr><td style="font-weight:700;">Bandwidth</td><td>Filtering at the source keeps bandwidth-heavy unwanted traffic off the links</td></tr>
+        <tr><td style="font-weight:700;">Ease of configuration</td><td>One ACL at the destination is easier to set up but wastes bandwidth. Extended ACLs on every source router save bandwidth but mean more ACLs to manage</td></tr>
+      </tbody>
+    </table>
+    <p>NetAcad's standard ACL example: block 192.168.10.0/24 from reaching 192.168.30.0/24, which sits behind R3. Applied inbound on R3's link from the rest of the network, the ACL would also block .10 traffic headed for R3's other LAN, 192.168.31.0/24. Applied outbound on R3's G0/0/0, the interface facing 192.168.30.0/24, it blocks only what it should.</p>
+
+    <div class="callout">
+      <b>How to remember placement:</b> a standard ACL only sees who sent the packet, not where it's going. Push it right up against the thing you're protecting, so the sender is blocked from that one place and nowhere else.
+    </div>
+  </section>
+
+  <!-- ── MITIGATE ATTACKS (14.6) ── -->
+  <section id="mitigate">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 14.6</p>
+      <h2>Mitigate Attacks with ACLs</h2>
+      <p>ACLs aren't only for policy. A few well-known rules at the edge stop a lot of attack traffic before it starts.</p>
+    </div>
+
+    <h3>Spoofing</h3>
+    <p>IP address spoofing replaces the real source address with a different one. Attackers use it to hide who they are, and most DoS attacks use some kind of spoofing. Some source addresses should <b>never</b> arrive from the internet, so an inbound ACL on the internet-facing interface can drop them:</p>
+    <table class="model-table">
+      <thead><tr><th>Source address block</th><th>Why it can't legitimately come from the internet</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">All zeros (0.0.0.0/8)</td><td>Means "this network." Not a valid sender</td></tr>
+        <tr><td style="font-weight:700;">Broadcast (255.255.255.255)</td><td>A broadcast address is never a sender</td></tr>
+        <tr><td style="font-weight:700;">127.0.0.0/8</td><td>Loopback: only ever the device itself</td></tr>
+        <tr><td style="font-weight:700;">169.254.0.0/16</td><td>Link-local (APIPA): never routed</td></tr>
+        <tr><td style="font-weight:700;">RFC 1918 private (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)</td><td>Private addresses aren't routed on the public internet</td></tr>
+        <tr><td style="font-weight:700;">224.0.0.0/4</td><td>Multicast: a group address, not a sender</td></tr>
+      </tbody>
+    </table>
+<pre class="log">R1(config)# access-list 150 deny ip 0.0.0.0 0.255.255.255 any
+R1(config)# access-list 150 deny ip 10.0.0.0 0.255.255.255 any
+R1(config)# access-list 150 deny ip 127.0.0.0 0.255.255.255 any
+R1(config)# access-list 150 deny ip 169.254.0.0 0.0.255.255 any
+R1(config)# access-list 150 deny ip 172.16.0.0 0.15.255.255 any
+R1(config)# access-list 150 deny ip 192.168.0.0 0.0.255.255 any
+R1(config)# access-list 150 deny ip 224.0.0.0 15.255.255.255 any
+R1(config)# access-list 150 deny ip host 255.255.255.255 any
+R1(config)# access-list 150 permit ip any any
+R1(config)# interface s0/0/0
+R1(config-if)# ip access-group 150 in</pre>
+    <p>The same idea works in the other direction. The inside interface facing 192.168.1.0/24 should only accept inbound packets with a source address from 192.168.1.0/24. Anything else is either misconfigured or spoofed, and is dropped.</p>
+
+    <h3>Permit only what's needed</h3>
+    <p>An effective strategy is to explicitly permit only certain types of traffic through a firewall. DNS, SMTP, and FTP often have to be allowed. Administrators also need remote access, and the router may need SSH, syslog, and SNMP. All of these are useful, and all of them should be controlled and monitored, because exploited services become vulnerabilities.</p>
+
+    <h3>ICMP</h3>
+    <p>Block ICMP <b>echo</b> and <b>redirect</b> messages inbound. Allow only the ICMP messages the network needs:</p>
+    <table class="model-table">
+      <thead><tr><th>Direction</th><th>ICMP message</th><th>Why allow it</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Inbound</td><td>Echo reply</td><td>Lets inside users ping external hosts</td></tr>
+        <tr><td style="font-weight:700;">Inbound</td><td>Source quench</td><td>Asks the sender to slow down</td></tr>
+        <tr><td style="font-weight:700;">Inbound</td><td>Unreachable</td><td>Generated for packets an ACL administratively denied</td></tr>
+        <tr><td style="font-weight:700;">Outbound</td><td>Echo</td><td>Lets inside users ping external hosts</td></tr>
+        <tr><td style="font-weight:700;">Outbound</td><td>Parameter problem</td><td>Tells a host about packet header problems</td></tr>
+        <tr><td style="font-weight:700;">Outbound</td><td>Packet too big</td><td>Needed for MTU discovery</td></tr>
+        <tr><td style="font-weight:700;">Outbound</td><td>Source quench</td><td>Throttles traffic when necessary</td></tr>
+      </tbody>
+    </table>
+    <p>As a rule, block all other ICMP message types outbound.</p>
+
+    <h3>SNMP</h3>
+    <p>SNMP is useful for monitoring devices, but it can be exploited. If you need it, filter SNMP packets from unauthorized systems with interface ACLs. That isn't airtight: a spoofed packet from an address the ACL permits still gets through. The most effective protection is to turn SNMP off on any IOS device that doesn't need it, with <code>no snmp-server</code>.</p>
+
+    <div class="callout xref">
+      Spoofing and ICMP attacks were introduced in <a href="IT121_Session02.html#ip">Session 2</a> and <a href="IT121_Session03.html#ipservices">Session 3</a>, with dossiers in the <a href="bastion-security-kit/bastion-attack-log.html">Attack Log</a>. ICMP and SNMP hardening is in <a href="IT121_Session07.html#hardening">Session 7</a>.
+    </div>
+  </section>
+
+  <!-- ── IPV6 ACLS (14.7) ── -->
+  <section id="ipv6">
+    <div class="section-head">
+      <p class="kicker">Concept 7 · Module 14.7</p>
+      <h2>IPv6 ACLs</h2>
+      <p>IPv4 and IPv6 will run side by side for years, and attackers use the gap between them.</p>
+    </div>
+
+    <h3>Why IPv6 needs its own filtering</h3>
+    <p>In a <b>dual stack</b> network, devices run both IPv4 and IPv6. A threat actor can use IPv4 to exploit IPv6 there, through dual-stacked hosts, rogue Neighbor Discovery (NDP) messages, and tunneling. <b>Teredo tunneling</b> is one example: it gives IPv4/IPv6 hosts behind an IPv4 NAT device an IPv6 address automatically, by wrapping IPv6 packets inside IPv4 UDP packets. NetAcad's attack path:</p>
+    <ol>
+      <li>The threat actor gains a foothold in the IPv4 network.</li>
+      <li>The compromised host sends rogue router advertisements (RAs), so dual-stacked hosts pick up IPv6 addresses.</li>
+      <li>The attacker uses that foothold to pivot inside the network and compromise more hosts.</li>
+      <li>Traffic goes back out of the network.</li>
+    </ol>
+    <p>The defense includes filtering at the edge, using techniques such as IPv6 ACLs.</p>
+
+    <h3>How IPv6 ACLs differ</h3>
+    <table class="model-table">
+      <thead><tr><th></th><th>IPv4 ACL</th><th>IPv6 ACL</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Standard and extended</td><td>Both exist</td><td>No equivalent to a standard ACL. Every IPv6 ACL can filter on source and destination, like an extended ACL</td></tr>
+        <tr><td style="font-weight:700;">Numbered or named</td><td>Either</td><td>Must be named</td></tr>
+        <tr><td style="font-weight:700;">Create</td><td><code>access-list</code> or <code>ip access-list</code></td><td><code>ipv6 access-list NAME</code></td></tr>
+        <tr><td style="font-weight:700;">Apply to an interface</td><td><code>ip access-group</code></td><td><code>ipv6 traffic-filter</code></td></tr>
+        <tr><td style="font-weight:700;">Address format</td><td>Address plus wildcard mask</td><td>Prefix/prefix-length. <code>any</code> means ::/0, and <code>host</code> means one address</td></tr>
+        <tr><td style="font-weight:700;">Hidden last lines</td><td>Implicit deny</td><td>Implicit permits for NDP neighbor advertisements (NA) and neighbor solicitations (NS), then an implicit <code>deny ipv6 any any</code></td></tr>
+      </tbody>
+    </table>
+    <p>IPv6 ACEs also support optional parameters, including <code>dscp</code> (match the Traffic Class field, 0–63), <code>fragments</code>, <code>log</code> and <code>log-input</code>, <code>sequence</code>, and <code>time-range</code>.</p>
+    <p>The NDP permits matter. IPv6 uses NS and NA messages the way IPv4 uses ARP. If you type your own <code>deny ipv6 any any</code> at the end, it comes before the hidden NDP permits, and neighbor discovery stops working, unless you permit NA and NS yourself first:</p>
+<pre class="log">R1(config)# ipv6 access-list LAN-ONLY
+R1(config-ipv6-acl)# permit ipv6 2001:DB8:1:1::/64 any
+R1(config-ipv6-acl)# permit icmp any any nd-na
+R1(config-ipv6-acl)# permit icmp any any nd-ns
+R1(config-ipv6-acl)# deny ipv6 any any
+R1(config-ipv6-acl)# exit
+R1(config)# interface g0/0
+R1(config-if)# ipv6 traffic-filter LAN-ONLY in</pre>
+    <p>This ACL permits inbound traffic only from 2001:DB8:1:1::/64. If you configured just the first line, the result would be the same, because the hidden lines would supply the NDP permits and the deny.</p>
+  </section>
+
+  <!-- ── SECURE NETWORKS WITH FIREWALLS (15.1) ── -->
+  <section id="firewalls">
+    <div class="section-head">
+      <p class="kicker">Concept 8 · Module 15.1</p>
+      <h2>Secure Networks with Firewalls</h2>
+      <p>An ACL is one router's rulebook. A firewall is the system built around that job.</p>
+    </div>
+
+    <p>A <b>firewall</b> is a system, or group of systems, that enforces an access control policy between networks.</p>
+    <table class="model-table">
+      <thead><tr><th>Feature</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Common properties</td><td>Resistant to network attacks. The only transit point between the internal corporate network and external networks. Enforces the access control policy</td></tr>
+        <tr><td style="font-weight:700;">Benefits</td><td>Keeps sensitive hosts, resources, and applications away from untrusted users. Sanitizes protocol flow, so protocol flaws can't be exploited. Blocks malicious data from servers and clients. Simplifies security management by putting most network access control on a few firewalls</td></tr>
+        <tr><td style="font-weight:700;">Limitations</td><td>A misconfigured firewall can seriously hurt the network. Data from many applications can't pass through securely. Users may hunt for ways around it, which exposes the network. Performance can slow. Unauthorized traffic can be tunneled or disguised as legitimate traffic</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Firewall types</h3>
+    <table class="model-table">
+      <thead><tr><th>Type</th><th>How it filters</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Packet filtering (stateless)</td><td>Usually part of a router. Permits or denies by Layer 3 and Layer 4 information using a simple policy table lookup. Router ACLs are this kind</td></tr>
+        <tr><td style="font-weight:700;">Stateful</td><td>The most versatile and most common. Uses connection information kept in a state table. Classified at the network layer, but also analyzes Layers 4 and 5</td></tr>
+        <tr><td style="font-weight:700;">Application gateway (proxy)</td><td>Filters at Layers 3, 4, 5, and 7, mostly in software. The client connects to the proxy, and the proxy connects to the server on the client's behalf, so the server only ever sees the proxy</td></tr>
+        <tr><td style="font-weight:700;">Next-generation (NGFW)</td><td>Goes beyond stateful with integrated intrusion prevention, application awareness and control to see and block risky apps, upgrade paths for future information feeds, and techniques for evolving threats</td></tr>
+        <tr><td style="font-weight:700;">Host-based</td><td>Firewall software running on a server or PC</td></tr>
+        <tr><td style="font-weight:700;">Transparent</td><td>Filters IP traffic between a pair of bridged interfaces</td></tr>
+        <tr><td style="font-weight:700;">Hybrid</td><td>A combination of types. An application inspection firewall, for example, combines a stateful firewall with an application gateway</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Packet filtering firewalls: pros and cons</h3>
+    <table class="model-table">
+      <thead><tr><th>Advantages</th><th>Disadvantages</th></tr></thead>
+      <tbody>
+        <tr><td>Simple permit or deny rule sets</td><td>Susceptible to IP spoofing: an attacker can send arbitrary packets that meet the ACL criteria</td></tr>
+        <tr><td>Low impact on network performance</td><td>Don't reliably filter fragmented packets. Only the first fragment carries the TCP header, so later fragments pass unconditionally</td></tr>
+        <tr><td>Easy to implement and supported by most routers</td><td>Complex ACLs are hard to implement and maintain</td></tr>
+        <tr><td>An initial degree of security at the network layer</td><td>Can't dynamically filter some services. Sessions that negotiate ports on the fly force you to open a whole range</td></tr>
+        <tr><td>Almost all the tasks of a high-end firewall at much lower cost</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Stateful firewalls: benefits and limitations</h3>
+    <table class="model-table">
+      <thead><tr><th>Benefits</th><th>Limitations</th></tr></thead>
+      <tbody>
+        <tr><td>Often the primary means of defense, filtering unwanted or unnecessary traffic</td><td>Can't prevent application layer attacks, because they don't examine the actual contents of, say, an HTTP connection</td></tr>
+        <tr><td>Strengthen packet filtering with tighter control</td><td>Not every protocol is stateful. UDP and ICMP don't create connection information for a state table</td></tr>
+        <tr><td>Perform better than packet filters or proxy servers</td><td>Hard to track connections that use dynamic port negotiation or open several connections</td></tr>
+        <tr><td>Defend against spoofing and DoS by checking whether a packet belongs to an existing connection</td><td>Don't support user authentication</td></tr>
+        <tr><td>Provide more log information than a packet filter</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>Why <code>established</code> is only "basic" stateful:</b> it checks whether a segment has ACK or RST set, and that's all. It keeps no table of who actually opened a connection, so an attacker can craft a packet with the ACK bit set and it matches. A stateful firewall checks each packet against its record of real connections. It also covers more than TCP, though UDP and ICMP still get less support.
+    </div>
+
+    <div class="callout xref">
+      Firewall types and the <em>sekisho</em> checkpoint comparison first appeared in <a href="IT121_Session04.html#secdevices">Session 4</a>. Windows Firewall, a host-based firewall, is in Session 4's <a href="IT121_Session04.html#winsecurity">Windows security</a> section.
+    </div>
+  </section>
+
+  <!-- ── FIREWALLS IN NETWORK DESIGN (15.2) ── -->
+  <section id="design">
+    <div class="section-head">
+      <p class="kicker">Concept 9 · Module 15.2</p>
+      <h2>Firewalls in Network Design</h2>
+      <p>Firewall design comes down to which interface faces what, and what's allowed to cross between them.</p>
+    </div>
+
+    <h3>Common security architectures</h3>
+    <p>Firewall design is mostly about device interfaces permitting or denying traffic by source, destination, and type. Three common designs:</p>
+    <table class="model-table">
+      <thead><tr><th>Design</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Private and public</td><td>Two interfaces. The public (outside) network is untrusted and the private (inside) network is trusted. Traffic from private to public is permitted and inspected, and the inspected replies are allowed back. Traffic that starts on the public side and heads inside is generally blocked</td></tr>
+        <tr><td style="font-weight:700;">Demilitarized zone (DMZ)</td><td>Usually three interfaces: inside, outside, and DMZ. Public servers sit in the DMZ, so outsiders can reach them without reaching the inside network</td></tr>
+        <tr><td style="font-weight:700;">Zone-based policy firewall (ZPF)</td><td>Interfaces with similar functions are grouped into zones, and policy is written between zones. Covered in depth in Session 10</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Traffic rules in a DMZ design</h3>
+    <table class="model-table">
+      <thead><tr><th>From</th><th>To</th><th>Usually</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Private</td><td>Public or DMZ</td><td>Inspected and permitted. Inspected replies return</td></tr>
+        <tr><td style="font-weight:700;">DMZ</td><td>Private</td><td>Blocked</td></tr>
+        <tr><td style="font-weight:700;">DMZ</td><td>Public</td><td>Selectively permitted, based on service requirements</td></tr>
+        <tr><td style="font-weight:700;">Public</td><td>DMZ</td><td>Selectively permitted and inspected</td></tr>
+        <tr><td style="font-weight:700;">Public</td><td>Private</td><td>Blocked</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Zone-based policy firewalls, in brief</h3>
+    <p>A <b>zone</b> is a group of one or more interfaces with similar functions or features. If LAN 1 and LAN 2 need the same policy, they go in one zone. Three defaults to know:</p>
+    <ul>
+      <li>Traffic between interfaces in the <b>same</b> zone isn't subject to any policy and passes freely.</li>
+      <li>All zone-to-zone traffic is <b>blocked</b>. To permit it, you configure a policy that allows or inspects it.</li>
+      <li>The router's own <b>self zone</b> is the only exception to that default deny.</li>
+    </ul>
+
+    <h3>Layered defense</h3>
+    <p>A <b>layered defense</b> combines different types of firewalls in layers to add depth:</p>
+    <table class="model-table">
+      <thead><tr><th>Layer</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Network core security</td><td>Protects against malicious software and traffic anomalies, enforces network policies, ensures survivability</td></tr>
+        <tr><td style="font-weight:700;">Perimeter security</td><td>Secures the boundaries between zones</td></tr>
+        <tr><td style="font-weight:700;">Communications security</td><td>Provides information assurance</td></tr>
+        <tr><td style="font-weight:700;">Endpoint security</td><td>Provides identity and device security policy compliance</td></tr>
+      </tbody>
+    </table>
+    <p>Policy enforcement points between and inside the layers decide whether traffic is forwarded or discarded. Traffic that passes can go on to a screened firewall or <b>bastion host</b>, which applies more rules and discards suspect packets. Bastion Security's name uses the same word: a bastion is a fortification.</p>
+
+    <h3>What firewalls don't do</h3>
+    <ul>
+      <li>They typically don't stop intrusions from hosts already inside a network or zone.</li>
+      <li>They don't protect against rogue access points.</li>
+      <li>They don't replace backup and disaster recovery.</li>
+      <li>They're no substitute for informed administrators and users.</li>
+    </ul>
+
+    <h3>Firewall policy best practices</h3>
+    <ul>
+      <li>Position firewalls at security boundaries.</li>
+      <li>Deny all traffic by default, and permit only the services that are needed.</li>
+      <li>Control physical access to the firewall.</li>
+      <li>Monitor firewall logs regularly.</li>
+      <li>Use change management for firewall configuration changes.</li>
+      <li>Remember that firewalls mainly protect against technical attacks from outside.</li>
+    </ul>
+
+    <div class="callout xref">
+      The DMZ and zones of risk were introduced in <a href="IT121_Session07.html#segmentation">Session 7</a>. Defense in depth is in <a href="IT121_Session06.html#depth">Session 6</a>.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Wildcard masks</span>
+      <h3>The warehouse subnet</h3>
+      <p>Kaidō Freight's warehouse devices use 10.20.4.0/22. You need one ACE in standard ACL 10 that permits the whole subnet. What's the wildcard mask, and what's the ACE?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Subnet mask:</strong> /22 is 255.255.252.0.</p>
+          <p><strong>Wildcard:</strong> 255.255.255.255 − 255.255.252.0 = <b>0.0.3.255</b>. The 3 in the third octet lets the last two bits vary, which covers 10.20.4.x through 10.20.7.x.</p>
+          <p><strong>ACE:</strong> <code>access-list 10 permit 10.20.4.0 0.0.3.255</code></p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">ACE order</span>
+      <h3>The rule that never fires</h3>
+      <p>Tsukimi Sweets' consultant wrote this ACL to keep a guest laptop (192.168.1.50) off the office PC's subnet, but the laptop still gets through. Why?</p>
+<pre class="log">access-list 5 permit 192.168.1.0 0.0.0.255
+access-list 5 deny host 192.168.1.50</pre>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>The first ACE already matches.</strong> 192.168.1.50 is inside 192.168.1.0/24, so line 1 permits it and the router stops reading. Line 2 never gets a chance.</p>
+          <p><strong>Fix:</strong> most specific first. Put the <code>deny host 192.168.1.50</code> line above the permit. With a numbered ACL, that means removing and re-entering it, or using sequence numbers (for example, add it as sequence 5).</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Implicit deny</span>
+      <h3>The ACL that broke everything</h3>
+      <p>A Kaidō Freight admin wants to stop Telnet into the server subnet. They apply this ACL inbound on the router interface facing the office LAN. Five minutes later, nobody in the office can reach the servers at all. What happened?</p>
+<pre class="log">ip access-list extended NO-TELNET
+ deny tcp any 10.30.0.0 0.0.0.255 eq 23</pre>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>The implicit deny.</strong> The ACL has no permit statement. Telnet matches the deny, and every other packet falls through to the hidden <code>deny ip any any</code> at the end.</p>
+          <p><strong>Fix:</strong> add <code>permit ip any any</code> after the deny. Every ACL needs at least one permit.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Placement</span>
+      <h3>Guest Wi-Fi and the EHR servers</h3>
+      <p>At Kiriyama General, guest Wi-Fi (192.168.50.0/24) connects through router R1. The EHR servers (10.10.20.0/24) sit behind router R2. Guests should keep internet access but never reach the EHR subnet. Where would an extended ACL go, and where would a standard ACL go?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Extended ACL: near the source.</strong> Inbound on R1's guest-facing interface: <code>deny ip 192.168.50.0 0.0.0.255 10.10.20.0 0.0.0.255</code>, then <code>permit ip any any</code>. It names the destination, so guest traffic to the internet is unaffected, and blocked traffic never crosses the hospital network.</p>
+          <p><strong>Standard ACL: near the destination.</strong> Outbound on R2's interface facing the EHR subnet: <code>deny 192.168.50.0 0.0.0.255</code>, then <code>permit any</code>. A standard ACL only sees the source. Put on R1, it would cut guests off from the internet too.</p>
+          <p>The extended ACL is the better choice: it saves bandwidth and says exactly what the policy means.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Spoofing</span>
+      <h3>A private address from the internet</h3>
+      <p>Kaidō Freight's edge firewall log shows a burst of inbound SYN packets on the internet-facing interface, all with source addresses in 10.0.0.0/8. Kaidō's own LAN uses 10.x addresses internally. What's going on, and what ACE stops it?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Spoofed sources.</strong> 10.0.0.0/8 is RFC 1918 private space and isn't routed on the public internet, so no legitimate packet from outside can carry it. Someone is forging internal-looking addresses, likely for a SYN flood or to slip past rules that trust the inside range.</p>
+          <p><strong>ACE:</strong> inbound on the internet-facing interface, <code>deny ip 10.0.0.0 0.255.255.255 any</code>, along with the other anti-spoofing lines for 172.16.0.0/12, 192.168.0.0/16, loopback, link-local, and multicast.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Firewall types</span>
+      <h3>A risky app on port 443</h3>
+      <p>Kiriyama General wants to block an unapproved file-sharing app on staff PCs. It uses HTTPS on TCP 443, the same as the hospital's web-based EHR. The current edge device is a stateful firewall. Can it do the job? If not, what can?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Not well.</strong> A stateful firewall decides by addresses, ports, and connection state. Both apps look the same to it: TCP 443 connections started from inside. Blocking 443 would also block the EHR.</p>
+          <p><strong>A next-generation firewall (NGFW).</strong> Its application awareness and control can identify the app itself and block it, while the EHR's HTTPS traffic keeps flowing.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 9 reference. More sessions are added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+      {
+            "t": "Access control entry (ACE)",
+            "d": "One permit or deny statement in an ACL. Also called an ACL statement."
+      },
+      {
+            "t": "access-class",
+            "d": "The line configuration command that applies an ACL to the vty lines, to control remote management access. NetAcad's slide writes it as ip access-class."
+      },
+      {
+            "t": "ACL (Access Control List)",
+            "d": "Ordered statements that forward or drop packets based on header information. Standard ACLs filter by source IPv4 address only; extended ACLs also use destination, protocol, and ports."
+      },
+      {
+            "t": "any keyword",
+            "d": "Replaces the 255.255.255.255 wildcard mask: ignore the whole address and match any address. In IPv6 ACLs it means ::/0."
+      },
+      {
+            "t": "Application gateway firewall",
+            "d": "A proxy firewall that filters at OSI Layers 3, 4, 5, and 7, mostly in software."
+      },
+      {
+            "t": "Bastion host",
+            "d": "A hardened system, reached after screening, that applies more rules to traffic and discards suspect packets."
+      },
+      {
+            "t": "Demilitarized zone (DMZ)",
+            "d": "A small network between the trusted private network and the internet, where public-facing web and mail servers go."
+      },
+      {
+            "t": "Dual stack",
+            "d": "A network where devices run both the IPv4 and IPv6 protocol stacks at the same time."
+      },
+      {
+            "t": "established keyword",
+            "d": "An extended ACL option, TCP only, that matches only segments with the ACK or RST flag set, so replies to inside connections get in but new outside connections don't. A basic, first-generation stateful feature."
+      },
+      {
+            "t": "Extended ACL",
+            "d": "An ACL that filters on source and/or destination IPv4 address, plus protocol and TCP or UDP ports. Numbered 100-199 or 2000-2699. Place it close to the source."
+      },
+      {
+            "t": "Firewall",
+            "d": "A device that filters traffic between a trusted network and an untrusted one, based on a defined rule set."
+      },
+      {
+            "t": "Host keyword",
+            "d": "Replaces the 0.0.0.0 wildcard mask: every bit must match, so the ACE matches exactly one host."
+      },
+      {
+            "t": "Host-based firewall",
+            "d": "Firewall software running on an individual server or PC."
+      },
+      {
+            "t": "Hybrid firewall",
+            "d": "A combination of firewall types, such as an application inspection firewall that combines stateful and application gateway filtering."
+      },
+      {
+            "t": "Implicit deny",
+            "d": "The hidden last statement of every ACL, which denies any packet that matched no ACE. An ACL needs at least one permit or it blocks everything."
+      },
+      {
+            "t": "Inbound ACL",
+            "d": "An ACL that filters packets as they enter an interface, before they're routed. Denied packets never cost a routing lookup."
+      },
+      {
+            "t": "ip access-group",
+            "d": "The interface configuration command that applies an IPv4 ACL to an interface, inbound or outbound."
+      },
+      {
+            "t": "ip access-list",
+            "d": "The global configuration command that creates a named standard or extended IPv4 ACL, or edits an existing ACL by sequence number."
+      },
+      {
+            "t": "IP spoofing",
+            "d": "Forging the source IP address on a packet so the traffic, or the blame for it, appears to come from somewhere else."
+      },
+      {
+            "t": "IPv6 ACL",
+            "d": "An ACL for IPv6 traffic. Must be named, has no standard type, and ends with implicit permits for NDP NA and NS messages followed by an implicit deny ipv6 any any."
+      },
+      {
+            "t": "ipv6 traffic-filter",
+            "d": "The interface configuration command that applies an IPv6 ACL to an interface."
+      },
+      {
+            "t": "Layered defense",
+            "d": "Combining different types of firewalls and security measures in layers (network core, perimeter, communications, endpoint) to add depth."
+      },
+      {
+            "t": "Named ACL",
+            "d": "An ACL identified by a descriptive name instead of a number. The preferred method; created with ip access-list."
+      },
+      {
+            "t": "NGFW (Next-Generation Firewall)",
+            "d": "A firewall that goes beyond stateful filtering with integrated intrusion prevention and application awareness and control."
+      },
+      {
+            "t": "Numbered ACL",
+            "d": "An ACL identified by number. The range tells IOS the type: 1-99 and 1300-1999 are standard, 100-199 and 2000-2699 are extended."
+      },
+      {
+            "t": "Outbound ACL",
+            "d": "An ACL that filters packets after they're routed, as they leave an interface, no matter which interface they came in on."
+      },
+      {
+            "t": "Packet filtering firewall",
+            "d": "A stateless firewall, usually part of a router, that permits or denies traffic by Layer 3 and Layer 4 information."
+      },
+      {
+            "t": "Self zone",
+            "d": "In a zone-based policy firewall, the zone representing the router itself. The only exception to the default deny between zones."
+      },
+      {
+            "t": "Sequence number",
+            "d": "The number IOS assigns to each ACE. Shown by show access-lists, and used to delete or insert individual ACEs."
+      },
+      {
+            "t": "show access-lists",
+            "d": "Displays every ACL with its sequence numbers and match counters."
+      },
+      {
+            "t": "Standard ACL",
+            "d": "An ACL that filters only on the source IPv4 address. Numbered 1-99 or 1300-1999. Place it close to the destination."
+      },
+      {
+            "t": "Stateful firewall",
+            "d": "A firewall that filters using connection information kept in a state table, analyzing OSI Layers 3 through 5."
+      },
+      {
+            "t": "Teredo tunneling",
+            "d": "An IPv6 transition technology that gives hosts behind an IPv4 NAT device an IPv6 address by wrapping IPv6 packets inside IPv4 UDP packets."
+      },
+      {
+            "t": "Transparent firewall",
+            "d": "A firewall that filters IP traffic between a pair of bridged interfaces."
+      },
+      {
+            "t": "Wildcard mask",
+            "d": "A 32-bit mask that tells an ACE which address bits to check: 0 means match, 1 means ignore. Calculate it by subtracting the subnet mask from 255.255.255.255."
+      },
+      {
+            "t": "Zone-based policy firewall (ZPF)",
+            "d": "A firewall design that groups interfaces into zones. Traffic within a zone flows freely; traffic between zones is blocked unless a policy permits or inspects it."
+      }
+];
+
+  const QUIZ = [
+      {
+            "q": "In a wildcard mask, what does a binary 1 mean?",
+            "choices": [
+                  "Match the corresponding address bit",
+                  "Ignore the corresponding address bit",
+                  "Deny the packet",
+                  "The bit belongs to the network portion"
+            ],
+            "correct": 1,
+            "explain": "Wildcard masks are the reverse of subnet masks: 0 means match the bit, 1 means ignore it."
+      },
+      {
+            "q": "Which wildcard mask matches the 14 hosts in the subnet 192.168.3.32/28?",
+            "choices": [
+                  "0.0.0.15",
+                  "0.0.0.16",
+                  "255.255.255.240",
+                  "0.0.0.31"
+            ],
+            "correct": 0,
+            "explain": "A /28 mask is 255.255.255.240. Subtract it from 255.255.255.255 to get 0.0.0.15."
+      },
+      {
+            "q": "Which numbered ranges identify standard IPv4 ACLs?",
+            "choices": [
+                  "100 to 199 and 2000 to 2699",
+                  "1 to 199",
+                  "1000 to 2699",
+                  "1 to 99 and 1300 to 1999"
+            ],
+            "correct": 3,
+            "explain": "Standard ACLs use 1-99 and 1300-1999. Extended ACLs use 100-199 and 2000-2699."
+      },
+      {
+            "q": "A packet's source address doesn't match any ACE in the ACL applied to the interface. What happens to it?",
+            "choices": [
+                  "It is forwarded, because no rule denied it",
+                  "It is discarded by the implicit deny",
+                  "It is logged and forwarded",
+                  "It is sent back to the source"
+            ],
+            "correct": 1,
+            "explain": "Every ACL ends with a hidden implicit deny, so a packet that matches no ACE is discarded."
+      },
+      {
+            "q": "Where should an extended ACL be placed?",
+            "choices": [
+                  "As close to the destination as possible",
+                  "As close to the source as possible",
+                  "On the router's vty lines only",
+                  "On every interface in the network"
+            ],
+            "correct": 1,
+            "explain": "Extended ACLs can name the destination, so placing them near the source drops unwanted traffic before it crosses the network. Standard ACLs go near the destination."
+      },
+      {
+            "q": "Which ACL keyword permits only TCP segments that have the ACK or RST flag set?",
+            "choices": [
+                  "host",
+                  "any",
+                  "established",
+                  "log"
+            ],
+            "correct": 2,
+            "explain": "The established keyword matches only replies (ACK or RST set), so inside hosts' connections can return but outside hosts can't start new ones."
+      },
+      {
+            "q": "Which command displays the sequence numbers of ACL entries?",
+            "choices": [
+                  "show running-config",
+                  "show access-lists",
+                  "show ip interface brief",
+                  "show startup-config"
+            ],
+            "correct": 1,
+            "explain": "show access-lists displays sequence numbers and match counters. show running-config does not display sequence numbers."
+      },
+      {
+            "q": "How many ACLs can be applied to a single router interface?",
+            "choices": [
+                  "One per interface in total",
+                  "Two per interface, one standard and one extended",
+                  "One per interface, per protocol, per direction",
+                  "Unlimited, processed in order of number"
+            ],
+            "correct": 2,
+            "explain": "The rule is one ACL per interface, per protocol, per direction. An interface could have one IPv4 ACL inbound and another IPv4 ACL outbound, for example."
+      },
+      {
+            "q": "Which command applies an IPv6 ACL to an interface?",
+            "choices": [
+                  "ip access-group",
+                  "ipv6 access-group",
+                  "ipv6 traffic-filter",
+                  "ipv6 access-list"
+            ],
+            "correct": 2,
+            "explain": "IPv6 ACLs are created with ipv6 access-list and applied to an interface with ipv6 traffic-filter. ip access-group applies IPv4 ACLs."
+      },
+      {
+            "q": "Which ICMP message type should be blocked inbound from the internet?",
+            "choices": [
+                  "Echo reply",
+                  "Redirect",
+                  "Unreachable",
+                  "Source quench"
+            ],
+            "correct": 1,
+            "explain": "ICMP echo and redirect messages should be blocked inbound. Echo reply, source quench, and unreachable are allowed in."
+      },
+      {
+            "q": "Which type of firewall filters information at Layers 3, 4, 5, and 7 and connects to the remote server on the client's behalf?",
+            "choices": [
+                  "Packet filtering firewall",
+                  "Stateful firewall",
+                  "Transparent firewall",
+                  "Application gateway firewall"
+            ],
+            "correct": 3,
+            "explain": "An application gateway (proxy) firewall filters at Layers 3, 4, 5, and 7. The server only sees the connection from the proxy."
+      },
+      {
+            "q": "In a DMZ firewall design, how is traffic that starts in the DMZ and travels to the private network usually handled?",
+            "choices": [
+                  "It is usually blocked",
+                  "It is permitted and inspected",
+                  "It is selectively permitted based on service requirements",
+                  "It passes freely because both are inside the firewall"
+            ],
+            "correct": 0,
+            "explain": "Traffic from the DMZ to the private network is usually blocked. If a DMZ server is compromised, the inside network stays out of reach."
+      }
+];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
