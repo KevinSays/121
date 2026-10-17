@@ -150,6 +150,28 @@
   .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
   pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
   pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
 </style>
 
 <header class="hero">
@@ -216,20 +238,39 @@
     <h3>What an ACL is</h3>
     <p>An <b>access control list (ACL)</b> is a series of IOS commands that filter packets based on information in the packet header. A router has no ACLs by default. Once you apply one to an interface, the router checks every packet passing through that interface to decide whether it can be forwarded.</p>
     <p>An ACL is a sequential list of permit or deny statements called <b>access control entries (ACEs)</b>. ACEs are also commonly called ACL statements. Routers use ACLs to identify traffic for several jobs:</p>
-    <table class="model-table">
-      <thead><tr><th>Task</th><th>Example policy</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Limit traffic to improve performance</td><td>Block video traffic to reduce the network load</td></tr>
-        <tr><td style="font-weight:700;">Provide traffic flow control</td><td>Accept routing updates only from a known source</td></tr>
-        <tr><td style="font-weight:700;">Provide a basic level of security</td><td>Restrict the Human Resources network to authorized users</td></tr>
-        <tr><td style="font-weight:700;">Filter by traffic type</td><td>Permit email into the network, but deny Telnet</td></tr>
-        <tr><td style="font-weight:700;">Screen hosts for access to services</td><td>Limit access to some file types to certain user groups</td></tr>
-        <tr><td style="font-weight:700;">Prioritize classes of traffic</td><td>Identify voice traffic so QoS can forward it first</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Limit traffic to improve performance</b><span><span class="k">Example policy:</span> Block video traffic to reduce the network load</span></div>
+      <div class="fcard"><b>Provide traffic flow control</b><span><span class="k">Example policy:</span> Accept routing updates only from a known source</span></div>
+      <div class="fcard"><b>Provide a basic level of security</b><span><span class="k">Example policy:</span> Restrict the Human Resources network to authorized users</span></div>
+      <div class="fcard"><b>Filter by traffic type</b><span><span class="k">Example policy:</span> Permit email into the network, but deny Telnet</span></div>
+      <div class="fcard"><b>Screen hosts for access to services</b><span><span class="k">Example policy:</span> Limit access to some file types to certain user groups</span></div>
+      <div class="fcard"><b>Prioritize classes of traffic</b><span><span class="k">Example policy:</span> Identify voice traffic so QoS can forward it first</span></div>
+    </div>
 
     <h3>Packet filtering: standard and extended</h3>
     <p><b>Packet filtering</b> controls access by examining packets and forwarding or discarding them based on given criteria. It can happen at Layer 3 or Layer 4. Cisco routers support two types of ACL:</p>
+    <figure class="fig">
+      <svg viewBox="0 0 480 186" role="img" aria-label="Packet header fields an ACL can check. A standard ACL checks only the source IP address. An extended ACL checks source IP, destination IP, protocol, source port, and destination port.">
+        <g font-size="12" fill="var(--muted)" text-anchor="middle"><text x="252" y="24">LAYER 3</text><text x="404" y="24">LAYER 4</text></g>
+        <g stroke="var(--border)" stroke-width="1.5" fill="none"><path d="M150 32 H354 M150 28 V36 M354 28 V36"/><path d="M360 32 H448 M360 28 V36 M448 28 V36"/></g>
+        <g font-size="13" font-weight="700" fill="var(--text)"><text x="14" y="78">STANDARD</text><text x="14" y="146">EXTENDED</text></g>
+        <g font-size="12" text-anchor="middle">
+          <g fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2">
+            <rect x="150" y="54" width="66" height="38"/>
+            <rect x="150" y="122" width="66" height="38"/><rect x="219" y="122" width="66" height="38"/><rect x="288" y="122" width="66" height="38"/><rect x="360" y="122" width="42" height="38"/><rect x="406" y="122" width="42" height="38"/>
+          </g>
+          <g fill="none" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4 3">
+            <rect x="219" y="54" width="66" height="38"/><rect x="288" y="54" width="66" height="38"/><rect x="360" y="54" width="42" height="38"/><rect x="406" y="54" width="42" height="38"/>
+          </g>
+          <g fill="var(--accent-2)" font-weight="700">
+            <text x="183" y="78">Src IP</text>
+            <text x="183" y="146">Src IP</text><text x="252" y="146">Dst IP</text><text x="321" y="146">Protocol</text><text x="381" y="146">SrcP</text><text x="427" y="146">DstP</text>
+          </g>
+          <g fill="var(--muted)"><text x="252" y="78">Dst IP</text><text x="321" y="78">Protocol</text><text x="381" y="78">SrcP</text><text x="427" y="78">DstP</text></g>
+        </g>
+      </svg>
+      <figcaption>What each ACL type can see. Gold fields are checked; dashed fields are ignored. SrcP and DstP are the TCP or UDP source and destination ports.</figcaption>
+    </figure>
     <table class="model-table">
       <thead><tr><th>Type</th><th>Filters on</th><th>Numbered ranges</th></tr></thead>
       <tbody>
@@ -241,6 +282,25 @@
     <p>One edge to know: IOS does accept hyphens in ACL names, and NetAcad's own examples use them (NO-ACCESS, NO-FTP-ACCESS). On the quiz, go with the rule as written.</p>
 
     <h3>Inbound and outbound</h3>
+    <figure class="fig">
+      <svg viewBox="0 0 480 150" role="img" aria-label="A packet passes through the inbound ACL, then the router's routing lookup, then the outbound ACL. A packet denied inbound never reaches the routing lookup.">
+        <defs><marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+        <g stroke="var(--muted)" stroke-width="2" marker-end="url(#ah1)"><path d="M10 62 H54"/><path d="M162 62 H192"/><path d="M290 62 H320"/><path d="M428 62 H468"/></g>
+        <g stroke-width="2">
+          <rect x="58" y="38" width="104" height="48" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          <rect x="196" y="38" width="94" height="48" rx="24" fill="var(--surface-2)" stroke="var(--border)"/>
+          <rect x="324" y="38" width="104" height="48" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        </g>
+        <g font-size="13" font-weight="700" text-anchor="middle">
+          <text x="110" y="60" fill="var(--accent)">INBOUND</text><text x="110" y="76" fill="var(--accent)">ACL</text>
+          <text x="243" y="60" fill="var(--text)">ROUTING</text><text x="243" y="76" fill="var(--text)">LOOKUP</text>
+          <text x="376" y="60" fill="var(--accent)">OUTBOUND</text><text x="376" y="76" fill="var(--accent)">ACL</text>
+        </g>
+        <path d="M110 86 V118" stroke="var(--danger)" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#ah1)"/>
+        <text x="122" y="128" font-size="12" fill="var(--danger)">denied here: no lookup spent</text>
+      </svg>
+      <figcaption>The two checkpoints sit on either side of the routing decision.</figcaption>
+    </figure>
     <table class="model-table">
       <thead><tr><th>Direction</th><th>When it filters</th><th>Best used when</th></tr></thead>
       <tbody>
@@ -250,13 +310,38 @@
     </table>
 
     <h3>How the router reads an ACL</h3>
+    <div class="split">
+      <div>
     <p>For a packet entering an interface with an inbound standard ACL:</p>
-    <ol>
-      <li>The router extracts the source IPv4 address from the packet header.</li>
-      <li>It starts at the top of the ACL and compares that address to each ACE in order.</li>
-      <li>At the first match, it permits or denies the packet. The remaining ACEs are not checked.</li>
-      <li>If nothing matches, the packet is discarded.</li>
-    </ol>
+      <ol>
+        <li>The router extracts the source IPv4 address from the packet header.</li>
+        <li>It starts at the top of the ACL and compares that address to each ACE in order.</li>
+        <li>At the first match, it permits or denies the packet. The remaining ACEs are not checked.</li>
+        <li>If nothing matches, the packet is discarded.</li>
+      </ol>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 330" role="img" aria-label="ACL processing: a packet is checked against ACE 10, then ACE 20. A match at either stops processing with a deny or permit. A packet matching nothing reaches the hidden implicit deny and is discarded.">
+          <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+          <rect x="20" y="16" width="150" height="36" rx="18" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="95" y="39" font-size="13" font-weight="700" text-anchor="middle" fill="var(--text)">PACKET IN</text>
+          <g stroke="var(--muted)" stroke-width="2" marker-end="url(#ah2)" fill="none">
+            <path d="M95 52 V88"/><path d="M95 136 V180"/><path d="M95 228 V266"/>
+            <path d="M300 112 H342"/><path d="M300 204 H342"/><path d="M300 290 H342"/>
+          </g>
+          <g font-size="12" fill="var(--muted)"><text x="104" y="164">no match</text><text x="104" y="252">no match</text><text x="304" y="104">match</text><text x="304" y="196">match</text></g>
+          <g stroke-width="1.5" fill="var(--surface)" stroke="var(--border)">
+            <rect x="20" y="90" width="280" height="44"/><rect x="20" y="182" width="280" height="44"/>
+          </g>
+          <rect x="20" y="268" width="280" height="44" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <g font-size="12.5" fill="var(--text)"><text x="32" y="117">10  deny host 192.168.11.10</text><text x="32" y="209">20  permit 192.168.10.0 0.0.0.255</text></g>
+          <text x="32" y="295" font-size="12.5" fill="var(--muted)">(hidden)  implicit deny any</text>
+          <g stroke-width="2"><rect x="346" y="90" width="118" height="44" fill="var(--danger-soft)" stroke="var(--danger)"/><rect x="346" y="182" width="118" height="44" fill="var(--correct-soft)" stroke="var(--correct)"/><rect x="346" y="268" width="118" height="44" fill="var(--danger-soft)" stroke="var(--danger)"/></g>
+          <g font-size="12.5" font-weight="700" text-anchor="middle"><text x="405" y="117" fill="var(--danger)">DENY · stop</text><text x="405" y="209" fill="var(--correct)">PERMIT · stop</text><text x="405" y="295" fill="var(--danger)">DISCARD</text></g>
+        </svg>
+        <figcaption>First match wins, and the router stops reading. Anything that reaches the bottom hits the implicit deny.</figcaption>
+      </figure>
+    </div>
     <p>Step 4 happens because every ACL ends with an <b>implicit deny</b>: a hidden last ACE that blocks all traffic. It never shows in the configuration, but it's always there. So an ACL must contain at least one permit statement, or it denies everything.</p>
 
     <div class="callout analogy">
@@ -277,11 +362,44 @@
       <p>A wildcard mask tells an ACE which bits of an address have to match. It looks like a subnet mask, but it reads backwards.</p>
     </div>
 
+    <div class="split">
+      <div>
     <p>Every IPv4 ACE uses a 32-bit <b>wildcard mask</b> to decide which bits of the address to examine. (OSPF uses wildcard masks too.) Like a subnet mask, it uses ANDing to pick bits. Unlike a subnet mask, the meaning of 0 and 1 is reversed:</p>
     <ul>
       <li><b>Wildcard bit 0:</b> match the corresponding bit in the address</li>
       <li><b>Wildcard bit 1:</b> ignore the corresponding bit</li>
     </ul>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 214" role="img" aria-label="Wildcard mask 0.0.0.15 applied to 192.168.3.32. The first three octets and the first four bits of the last octet must match. The last four bits are ignored, so any address from 192.168.3.32 through 192.168.3.47 matches.">
+          <text x="240" y="20" font-size="12" text-anchor="middle" fill="var(--accent)" font-weight="700">permit 192.168.3.32 0.0.0.15</text>
+          <g font-size="11.5" fill="var(--muted)" text-anchor="middle"><text x="150" y="44">octets 1–3</text><text x="337" y="44">octet 4, bit by bit</text></g>
+          <g font-size="12.5" font-weight="700" fill="var(--text)"><text x="14" y="76">ADDRESS</text><text x="14" y="122">WILDCARD</text></g>
+          <g stroke-width="2" fill="var(--accent-2-soft)" stroke="var(--accent-2)">
+            <rect x="104" y="54" width="92" height="34"/><rect x="104" y="100" width="92" height="34"/>
+            <rect x="210" y="54" width="30" height="34"/><rect x="242" y="54" width="30" height="34"/><rect x="274" y="54" width="30" height="34"/><rect x="306" y="54" width="30" height="34"/>
+            <rect x="210" y="100" width="30" height="34"/><rect x="242" y="100" width="30" height="34"/><rect x="274" y="100" width="30" height="34"/><rect x="306" y="100" width="30" height="34"/>
+          </g>
+          <g stroke-width="1.5" fill="none" stroke="var(--border)" stroke-dasharray="4 3">
+            <rect x="338" y="54" width="30" height="34"/><rect x="370" y="54" width="30" height="34"/><rect x="402" y="54" width="30" height="34"/><rect x="434" y="54" width="30" height="34"/>
+            <rect x="338" y="100" width="30" height="34"/><rect x="370" y="100" width="30" height="34"/><rect x="402" y="100" width="30" height="34"/><rect x="434" y="100" width="30" height="34"/>
+          </g>
+          <g font-size="13" text-anchor="middle" fill="var(--text)">
+            <text x="150" y="76">192.168.3</text><text x="150" y="122">0.0.0</text>
+            <text x="225" y="76">0</text><text x="257" y="76">0</text><text x="289" y="76">1</text><text x="321" y="76">0</text>
+            <text x="225" y="122">0</text><text x="257" y="122">0</text><text x="289" y="122">0</text><text x="321" y="122">0</text>
+          </g>
+          <g font-size="13" text-anchor="middle" fill="var(--muted)">
+            <text x="353" y="76">0</text><text x="385" y="76">0</text><text x="417" y="76">0</text><text x="449" y="76">0</text>
+            <text x="353" y="122">1</text><text x="385" y="122">1</text><text x="417" y="122">1</text><text x="449" y="122">1</text>
+          </g>
+          <g fill="none" stroke-width="1.5"><path d="M104 142 V148 H336 V142" stroke="var(--accent-2)"/><path d="M338 142 V148 H464 V142" stroke="var(--muted)"/></g>
+          <g font-size="12" font-weight="700" text-anchor="middle"><text x="220" y="166" fill="var(--accent-2)">0 bits: must match</text><text x="401" y="166" fill="var(--muted)">1 bits: ignored</text></g>
+          <text x="240" y="200" font-size="12" text-anchor="middle" fill="var(--text)">Any last octet 0010xxxx matches: .32 to .47</text>
+        </svg>
+        <figcaption>Gold bits are checked; dashed bits can be anything. That one wildcard mask covers the whole 192.168.3.32/28 subnet.</figcaption>
+      </figure>
+    </div>
 
     <table class="model-table">
       <thead><tr><th>Wildcard mask</th><th>Last octet in binary</th><th>Meaning</th></tr></thead>
@@ -307,10 +425,10 @@
 
     <h3>The host and any keywords</h3>
     <p>IOS has two keywords for the most common masks:</p>
-    <ul>
-      <li><b><code>host</code></b> replaces the 0.0.0.0 mask: every bit must match, so it filters one host. <code>permit host 192.168.10.10</code> equals <code>permit 192.168.10.10 0.0.0.0</code>.</li>
-      <li><b><code>any</code></b> replaces the 255.255.255.255 mask: ignore the whole address and accept anything. <code>permit any</code> equals <code>permit 0.0.0.0 255.255.255.255</code>.</li>
-    </ul>
+    <div class="fcards">
+      <div class="fcard"><b>host</b><span><b><code>host</code></b> replaces the 0.0.0.0 mask: every bit must match, so it filters one host. <code>permit host 192.168.10.10</code> equals <code>permit 192.168.10.10 0.0.0.0</code>.</span></div>
+      <div class="fcard"><b>any</b><span><b><code>any</code></b> replaces the 255.255.255.255 mask: ignore the whole address and accept anything. <code>permit any</code> equals <code>permit 0.0.0.0 255.255.255.255</code>.</span></div>
+    </div>
 
     <div class="callout">
       <b>The two rules to memorize:</b> in a wildcard mask, 0 means match and 1 means ignore. To build one from a subnet mask, subtract the mask from 255.255.255.255. If your answer has 255s on the left and 0s on the right, you've written a subnet mask by mistake.
@@ -359,6 +477,28 @@ R1(config-std-nacl)# permit any</pre>
     <h3>Extended ACLs</h3>
     <p>A <b>numbered extended ACL</b> adds protocol, destination, and ports:</p>
 <pre class="log">Router(config)# access-list access-list-number {deny | permit | remark text} protocol source source-wildcard [operator {port}] destination destination-wildcard [operator {port}] [established] [log]</pre>
+    <figure class="fig">
+      <svg viewBox="0 0 480 116" role="img" aria-label="An extended ACE broken into parts: access-list is the command, 100 is the number, permit is the action, tcp is the protocol, 192.168.10.0 0.0.0.255 is the source and wildcard, any is the destination, and eq 80 is the port.">
+        <rect x="10" y="12" width="460" height="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+        <g font-size="12" fill="var(--text)" lengthAdjust="spacingAndGlyphs">
+          <text x="20" y="37" textLength="79.2" lengthAdjust="spacingAndGlyphs" fill="var(--muted)">access-list</text>
+          <text x="106.4" y="37" textLength="21.6" lengthAdjust="spacingAndGlyphs" font-weight="700">100</text>
+          <text x="135.2" y="37" textLength="43.2" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="var(--correct)">permit</text>
+          <text x="185.6" y="37" textLength="21.6" lengthAdjust="spacingAndGlyphs" font-weight="700">tcp</text>
+          <text x="214.4" y="37" textLength="158.4" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="var(--accent-2)">192.168.10.0 0.0.0.255</text>
+          <text x="380" y="37" textLength="21.6" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="var(--accent-2)">any</text>
+          <text x="408.8" y="37" textLength="36" lengthAdjust="spacingAndGlyphs" font-weight="700">eq 80</text>
+        </g>
+        <g fill="none" stroke="var(--muted)" stroke-width="1.5">
+          <path d="M20 58 V63 H99 V58"/><path d="M106 58 V63 H128 V58"/><path d="M135 58 V63 H178 V58"/><path d="M186 58 V63 H207 V58"/><path d="M214 58 V63 H373 V58"/><path d="M380 58 V63 H402 V58"/><path d="M409 58 V63 H445 V58"/>
+        </g>
+        <g font-size="11.5" text-anchor="middle" fill="var(--muted)">
+          <text x="117" y="82">number</text><text x="196" y="82">protocol</text><text x="391" y="82">destination</text>
+          <text x="60" y="102">command</text><text x="157" y="102">action</text><text x="293" y="102">source + wildcard</text><text x="427" y="102">port</text>
+        </g>
+      </svg>
+      <figcaption>One extended ACE, read left to right. This one lets the 192.168.10.0/24 LAN reach any host on TCP port 80 (www).</figcaption>
+    </figure>
     <table class="model-table">
       <thead><tr><th>Parameter</th><th>Meaning</th></tr></thead>
       <tbody>
@@ -389,6 +529,31 @@ R1(config)# access-list 100 permit tcp any any eq 80</pre>
 R1(config)# interface g0/0/0
 R1(config-if)# ip access-group 120 out</pre>
     <p>Here G0/0/0 faces the inside 192.168.10.0/24 LAN, so "out" means traffic leaving the router toward the inside hosts. Only replies to connections those hosts started get through.</p>
+    <figure class="fig">
+      <svg viewBox="0 0 480 236" role="img" aria-label="ACL 120 with the established keyword, applied outbound toward the inside LAN. A new connection from outside, a SYN with no ACK, is dropped. A reply to an inside host's request, with ACK set, passes. A forged packet with the ACK bit set also passes.">
+        <defs>
+          <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--danger)"/></marker>
+          <marker id="ahg2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--correct)"/></marker>
+          <marker id="ahy2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)"/></marker>
+        </defs>
+        <g font-size="13" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="60" y="22">OUTSIDE</text><text x="240" y="22" fill="var(--accent)">R1 · ACL 120</text><text x="420" y="22">INSIDE</text></g>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="60" y="38">any host</text><text x="240" y="38">established, out</text><text x="420" y="38">192.168.10.0/24</text></g>
+        <g stroke="var(--border)" stroke-width="2"><path d="M60 48 V222"/><path d="M420 48 V222"/></g>
+        <rect x="228" y="48" width="24" height="174" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+        <g stroke-width="2.5" fill="none">
+          <path d="M62 92 H222" stroke="var(--danger)" marker-end="url(#ahr)"/>
+          <path d="M62 152 H416" stroke="var(--correct)" marker-end="url(#ahg2)"/>
+          <path d="M62 206 H416" stroke="var(--accent-2)" stroke-dasharray="6 4" marker-end="url(#ahy2)"/>
+        </g>
+        <g stroke="var(--danger)" stroke-width="3"><path d="M232 84 L248 100 M248 84 L232 100"/></g>
+        <g font-size="12" font-weight="700">
+          <text x="70" y="82" fill="var(--danger)">new: SYN, no ACK</text><text x="262" y="97" fill="var(--danger)">dropped</text>
+          <text x="70" y="142" fill="var(--correct)">reply: ACK set</text><text x="262" y="142" fill="var(--correct)">passes</text>
+          <text x="70" y="196" fill="var(--accent-2)">forged: ACK set</text><text x="262" y="196" fill="var(--accent-2)">passes too</text>
+        </g>
+      </svg>
+      <figcaption>The ACE only asks "is ACK or RST set?" That stops new outside connections, but a crafted packet with ACK set slips through. See the callout under Concept 8.</figcaption>
+    </figure>
 
     <h3>Named extended ACLs</h3>
     <p>A <b>named extended ACL</b> is created the same way as a named standard one, with <code>ip access-list extended NAME</code>. The prompt changes to <code>R1(config-ext-nacl)#</code>. NetAcad's example uses two ACLs on the same inside interface: SURFING lets inside web traffic out, and BROWSING lets only the returning web traffic back in.</p>
@@ -481,16 +646,34 @@ Router(config-line)# access-class {acl-# | name} {in | out}</pre>
         <tr><td style="font-weight:700;">Standard</td><td>As close to the <b>destination</b> as possible</td><td>It only knows the source. Placed near the source, it would block that source from <em>everywhere</em>, not just from the one destination</td></tr>
       </tbody>
     </table>
+    <figure class="fig wide">
+      <svg viewBox="0 0 640 250" role="img" aria-label="Topology: source network 192.168.10.0/24 connects to R1, then R2, then R3. R3 connects to destination 192.168.30.0/24 and to a second network, 192.168.31.0/24. An extended ACL goes inbound on R1, next to the source. A standard ACL goes outbound on R3's interface facing 192.168.30.0/24.">
+        <g stroke="var(--border)" stroke-width="3"><path d="M134 110 H176"/><path d="M224 110 H296"/><path d="M344 110 H416"/><path d="M464 110 H510"/><path d="M440 134 V172"/></g>
+        <g stroke-width="1.5">
+          <rect x="10" y="88" width="124" height="44" fill="var(--surface-2)" stroke="var(--border)"/>
+          <rect x="510" y="88" width="122" height="44" fill="var(--surface-2)" stroke="var(--border)"/>
+          <rect x="380" y="172" width="122" height="44" fill="var(--surface-2)" stroke="var(--border)"/>
+          <g fill="var(--surface)" stroke="var(--muted)"><circle cx="200" cy="110" r="24"/><circle cx="320" cy="110" r="24"/><circle cx="440" cy="110" r="24"/></g>
+        </g>
+        <g font-size="12" text-anchor="middle" fill="var(--text)">
+          <text x="72" y="115">192.168.10.0/24</text><text x="571" y="115">192.168.30.0/24</text><text x="441" y="199">192.168.31.0/24</text>
+          <g font-weight="700" font-size="13"><text x="200" y="115">R1</text><text x="320" y="115">R2</text><text x="440" y="115">R3</text></g>
+        </g>
+        <g font-size="11.5" fill="var(--muted)" text-anchor="middle"><text x="72" y="150">source</text><text x="571" y="150">destination</text></g>
+        <g stroke-width="2"><rect x="100" y="18" width="204" height="44" fill="var(--accent-2-soft)" stroke="var(--accent-2)"/><rect x="380" y="18" width="188" height="44" fill="var(--correct-soft)" stroke="var(--correct)"/></g>
+        <g stroke-width="2" stroke-dasharray="4 3" fill="none"><path d="M168 62 L168 104" stroke="var(--accent-2)"/><path d="M490 62 L490 104" stroke="var(--correct)"/></g>
+        <g font-size="12" font-weight="700" text-anchor="middle"><text x="202" y="39" fill="var(--accent-2)">EXTENDED ACL</text><text x="474" y="39" fill="var(--correct)">STANDARD ACL</text></g>
+        <g font-size="11.5" text-anchor="middle"><text x="202" y="55" fill="var(--accent-2)">R1, inbound from source</text><text x="474" y="55" fill="var(--correct)">R3 G0/0/0, outbound</text></g>
+        <text x="10" y="240" font-size="11.5" fill="var(--muted)">Goal: stop 192.168.10.0/24 from reaching 192.168.30.0/24, and nothing else.</text>
+      </svg>
+      <figcaption>NetAcad's standard ACL example: block 192.168.10.0/24 from reaching 192.168.30.0/24, which sits behind R3. Applied inbound on R3's link from the rest of the network, the ACL would also block .10 traffic headed for R3's other LAN, 192.168.31.0/24. Applied outbound on R3's G0/0/0, the interface facing 192.168.30.0/24, it blocks only what it should.</figcaption>
+    </figure>
     <p>Placement can also depend on:</p>
-    <table class="model-table">
-      <thead><tr><th>Factor</th><th>What it means</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Extent of organizational control</td><td>You can only place ACLs on devices you control. If you don't own the source network, you can't filter there</td></tr>
-        <tr><td style="font-weight:700;">Bandwidth</td><td>Filtering at the source keeps bandwidth-heavy unwanted traffic off the links</td></tr>
-        <tr><td style="font-weight:700;">Ease of configuration</td><td>One ACL at the destination is easier to set up but wastes bandwidth. Extended ACLs on every source router save bandwidth but mean more ACLs to manage</td></tr>
-      </tbody>
-    </table>
-    <p>NetAcad's standard ACL example: block 192.168.10.0/24 from reaching 192.168.30.0/24, which sits behind R3. Applied inbound on R3's link from the rest of the network, the ACL would also block .10 traffic headed for R3's other LAN, 192.168.31.0/24. Applied outbound on R3's G0/0/0, the interface facing 192.168.30.0/24, it blocks only what it should.</p>
+    <div class="fcards">
+      <div class="fcard"><b>Extent of organizational control</b><span>You can only place ACLs on devices you control. If you don't own the source network, you can't filter there</span></div>
+      <div class="fcard"><b>Bandwidth</b><span>Filtering at the source keeps bandwidth-heavy unwanted traffic off the links</span></div>
+      <div class="fcard"><b>Ease of configuration</b><span>One ACL at the destination is easier to set up but wastes bandwidth. Extended ACLs on every source router save bandwidth but mean more ACLs to manage</span></div>
+    </div>
 
     <div class="callout">
       <b>How to remember placement:</b> a standard ACL only sees who sent the packet, not where it's going. Push it right up against the thing you're protecting, so the sender is blocked from that one place and nowhere else.
@@ -507,17 +690,14 @@ Router(config-line)# access-class {acl-# | name} {in | out}</pre>
 
     <h3>Spoofing</h3>
     <p>IP address spoofing replaces the real source address with a different one. Attackers use it to hide who they are, and most DoS attacks use some kind of spoofing. Some source addresses should <b>never</b> arrive from the internet, so an inbound ACL on the internet-facing interface can drop them:</p>
-    <table class="model-table">
-      <thead><tr><th>Source address block</th><th>Why it can't legitimately come from the internet</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">All zeros (0.0.0.0/8)</td><td>Means "this network." Not a valid sender</td></tr>
-        <tr><td style="font-weight:700;">Broadcast (255.255.255.255)</td><td>A broadcast address is never a sender</td></tr>
-        <tr><td style="font-weight:700;">127.0.0.0/8</td><td>Loopback: only ever the device itself</td></tr>
-        <tr><td style="font-weight:700;">169.254.0.0/16</td><td>Link-local (APIPA): never routed</td></tr>
-        <tr><td style="font-weight:700;">RFC 1918 private (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)</td><td>Private addresses aren't routed on the public internet</td></tr>
-        <tr><td style="font-weight:700;">224.0.0.0/4</td><td>Multicast: a group address, not a sender</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard dont"><b>All zeros (0.0.0.0/8)</b><span>Means "this network." Not a valid sender</span></div>
+      <div class="fcard dont"><b>Broadcast (255.255.255.255)</b><span>A broadcast address is never a sender</span></div>
+      <div class="fcard dont"><b>127.0.0.0/8</b><span>Loopback: only ever the device itself</span></div>
+      <div class="fcard dont"><b>169.254.0.0/16</b><span>Link-local (APIPA): never routed</span></div>
+      <div class="fcard dont"><b>RFC 1918 private (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)</b><span>Private addresses aren't routed on the public internet</span></div>
+      <div class="fcard dont"><b>224.0.0.0/4</b><span>Multicast: a group address, not a sender</span></div>
+    </div>
 <pre class="log">R1(config)# access-list 150 deny ip 0.0.0.0 0.255.255.255 any
 R1(config)# access-list 150 deny ip 10.0.0.0 0.255.255.255 any
 R1(config)# access-list 150 deny ip 127.0.0.0 0.255.255.255 any
@@ -536,18 +716,29 @@ R1(config-if)# ip access-group 150 in</pre>
 
     <h3>ICMP</h3>
     <p>Block ICMP <b>echo</b> and <b>redirect</b> messages inbound. Allow only the ICMP messages the network needs:</p>
-    <table class="model-table">
-      <thead><tr><th>Direction</th><th>ICMP message</th><th>Why allow it</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Inbound</td><td>Echo reply</td><td>Lets inside users ping external hosts</td></tr>
-        <tr><td style="font-weight:700;">Inbound</td><td>Source quench</td><td>Asks the sender to slow down</td></tr>
-        <tr><td style="font-weight:700;">Inbound</td><td>Unreachable</td><td>Generated for packets an ACL administratively denied</td></tr>
-        <tr><td style="font-weight:700;">Outbound</td><td>Echo</td><td>Lets inside users ping external hosts</td></tr>
-        <tr><td style="font-weight:700;">Outbound</td><td>Parameter problem</td><td>Tells a host about packet header problems</td></tr>
-        <tr><td style="font-weight:700;">Outbound</td><td>Packet too big</td><td>Needed for MTU discovery</td></tr>
-        <tr><td style="font-weight:700;">Outbound</td><td>Source quench</td><td>Throttles traffic when necessary</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard do"><b>Allow inbound</b>
+        <ul>
+          <li><b>Echo reply</b>: Lets inside users ping external hosts</li>
+          <li><b>Source quench</b>: Asks the sender to slow down</li>
+          <li><b>Unreachable</b>: Generated for packets an ACL administratively denied</li>
+        </ul>
+      </div>
+      <div class="fcard do"><b>Allow outbound</b>
+        <ul>
+          <li><b>Echo</b>: Lets inside users ping external hosts</li>
+          <li><b>Parameter problem</b>: Tells a host about packet header problems</li>
+          <li><b>Packet too big</b>: Needed for MTU discovery</li>
+          <li><b>Source quench</b>: Throttles traffic when necessary</li>
+        </ul>
+      </div>
+      <div class="fcard dont"><b>Block</b>
+        <ul>
+          <li>Echo and redirect, inbound</li>
+          <li>All other ICMP message types, outbound</li>
+        </ul>
+      </div>
+    </div>
     <p>As a rule, block all other ICMP message types outbound.</p>
 
     <h3>SNMP</h3>
@@ -567,7 +758,21 @@ R1(config-if)# ip access-group 150 in</pre>
     </div>
 
     <h3>Why IPv6 needs its own filtering</h3>
-    <p>In a <b>dual stack</b> network, devices run both IPv4 and IPv6. A threat actor can use IPv4 to exploit IPv6 there, through dual-stacked hosts, rogue Neighbor Discovery (NDP) messages, and tunneling. <b>Teredo tunneling</b> is one example: it gives IPv4/IPv6 hosts behind an IPv4 NAT device an IPv6 address automatically, by wrapping IPv6 packets inside IPv4 UDP packets. NetAcad's attack path:</p>
+    <p>In a <b>dual stack</b> network, devices run both IPv4 and IPv6. A threat actor can use IPv4 to exploit IPv6 there, through dual-stacked hosts, rogue Neighbor Discovery (NDP) messages, and tunneling.</p>
+    <p><b>Teredo tunneling</b> is one example: it gives IPv4/IPv6 hosts behind an IPv4 NAT device an IPv6 address automatically, by wrapping IPv6 packets inside IPv4 UDP packets.</p>
+    <figure class="fig">
+      <svg viewBox="0 0 480 128" role="img" aria-label="Teredo encapsulation: an IPv4 header and a UDP header wrap a complete IPv6 packet, made of an IPv6 header and payload.">
+        <text x="10" y="20" font-size="11.5" fill="var(--muted)">the IPv4 network sees: an ordinary UDP packet</text>
+        <rect x="10" y="30" width="460" height="68" fill="var(--surface-2)" stroke="var(--muted)" stroke-width="1.5"/>
+        <g stroke="var(--border)" stroke-width="1.5" fill="var(--surface)"><rect x="18" y="40" width="80" height="48"/><rect x="102" y="40" width="74" height="48"/></g>
+        <rect x="184" y="38" width="278" height="52" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="6 4"/>
+        <g stroke="var(--accent-2)" stroke-width="1.5" fill="var(--surface)"><rect x="192" y="46" width="82" height="36"/><rect x="280" y="46" width="174" height="36"/></g>
+        <g font-size="12.5" font-weight="700" text-anchor="middle"><text x="58" y="69" fill="var(--text)">IPv4 hdr</text><text x="139" y="69" fill="var(--text)">UDP hdr</text><text x="233" y="69" fill="var(--accent-2)">IPv6 hdr</text><text x="367" y="69" fill="var(--accent-2)">IPv6 payload</text></g>
+        <text x="323" y="116" font-size="11.5" text-anchor="middle" fill="var(--accent-2)">inside: a complete IPv6 packet</text>
+      </svg>
+      <figcaption>Teredo puts the whole IPv6 packet inside an IPv4 UDP packet, so it can pass through an IPv4 NAT device.</figcaption>
+    </figure>
+    <p>NetAcad's attack path:</p>
     <ol>
       <li>The threat actor gains a foothold in the IPv4 network.</li>
       <li>The compromised host sends rogue router advertisements (RAs), so dual-stacked hosts pick up IPv6 addresses.</li>
@@ -610,14 +815,32 @@ R1(config-if)# ipv6 traffic-filter LAN-ONLY in</pre>
     </div>
 
     <p>A <b>firewall</b> is a system, or group of systems, that enforces an access control policy between networks.</p>
-    <table class="model-table">
-      <thead><tr><th>Feature</th><th>Details</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Common properties</td><td>Resistant to network attacks. The only transit point between the internal corporate network and external networks. Enforces the access control policy</td></tr>
-        <tr><td style="font-weight:700;">Benefits</td><td>Keeps sensitive hosts, resources, and applications away from untrusted users. Sanitizes protocol flow, so protocol flaws can't be exploited. Blocks malicious data from servers and clients. Simplifies security management by putting most network access control on a few firewalls</td></tr>
-        <tr><td style="font-weight:700;">Limitations</td><td>A misconfigured firewall can seriously hurt the network. Data from many applications can't pass through securely. Users may hunt for ways around it, which exposes the network. Performance can slow. Unauthorized traffic can be tunneled or disguised as legitimate traffic</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Common properties</b>
+        <ul>
+          <li>Resistant to network attacks.</li>
+          <li>The only transit point between the internal corporate network and external networks.</li>
+          <li>Enforces the access control policy.</li>
+        </ul>
+      </div>
+      <div class="fcard do"><b>Benefits</b>
+        <ul>
+          <li>Keeps sensitive hosts, resources, and applications away from untrusted users.</li>
+          <li>Sanitizes protocol flow, so protocol flaws can't be exploited.</li>
+          <li>Blocks malicious data from servers and clients.</li>
+          <li>Simplifies security management by putting most network access control on a few firewalls.</li>
+        </ul>
+      </div>
+      <div class="fcard dont"><b>Limitations</b>
+        <ul>
+          <li>A misconfigured firewall can seriously hurt the network.</li>
+          <li>Data from many applications can't pass through securely.</li>
+          <li>Users may hunt for ways around it, which exposes the network.</li>
+          <li>Performance can slow.</li>
+          <li>Unauthorized traffic can be tunneled or disguised as legitimate traffic.</li>
+        </ul>
+      </div>
+    </div>
 
     <h3>Firewall types</h3>
     <table class="model-table">
@@ -632,30 +855,65 @@ R1(config-if)# ipv6 traffic-filter LAN-ONLY in</pre>
         <tr><td style="font-weight:700;">Hybrid</td><td>A combination of types. An application inspection firewall, for example, combines a stateful firewall with an application gateway</td></tr>
       </tbody>
     </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 176" role="img" aria-label="OSI layers each firewall type examines. Packet filtering: Layers 3 and 4. Stateful: Layers 3, 4, and 5. Application gateway: Layers 3, 4, 5, and 7.">
+        <g font-size="12" font-weight="700" text-anchor="middle" fill="var(--muted)"><text x="199" y="24">L3</text><text x="259" y="24">L4</text><text x="319" y="24">L5</text><text x="379" y="24">L6</text><text x="439" y="24">L7</text></g>
+        <g font-size="12.5" font-weight="700" fill="var(--text)"><text x="14" y="62">PACKET FILTER</text><text x="14" y="106">STATEFUL</text><text x="14" y="150">APP GATEWAY</text></g>
+        <g fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2">
+          <rect x="170" y="40" width="58" height="34"/><rect x="230" y="40" width="58" height="34"/>
+          <rect x="170" y="84" width="58" height="34"/><rect x="230" y="84" width="58" height="34"/><rect x="290" y="84" width="58" height="34"/>
+          <rect x="170" y="128" width="58" height="34"/><rect x="230" y="128" width="58" height="34"/><rect x="290" y="128" width="58" height="34"/><rect x="410" y="128" width="58" height="34"/>
+        </g>
+        <g fill="none" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4 3">
+          <rect x="290" y="40" width="58" height="34"/><rect x="350" y="40" width="58" height="34"/><rect x="410" y="40" width="58" height="34"/>
+          <rect x="350" y="84" width="58" height="34"/><rect x="410" y="84" width="58" height="34"/>
+          <rect x="350" y="128" width="58" height="34"/>
+        </g>
+      </svg>
+      <figcaption>How deep each type looks. L3 is network, L4 transport, L5 session, L6 presentation, L7 application. Gold layers are examined; dashed ones are not.</figcaption>
+    </figure>
 
     <h3>Packet filtering firewalls: pros and cons</h3>
-    <table class="model-table">
-      <thead><tr><th>Advantages</th><th>Disadvantages</th></tr></thead>
-      <tbody>
-        <tr><td>Simple permit or deny rule sets</td><td>Susceptible to IP spoofing: an attacker can send arbitrary packets that meet the ACL criteria</td></tr>
-        <tr><td>Low impact on network performance</td><td>Don't reliably filter fragmented packets. Only the first fragment carries the TCP header, so later fragments pass unconditionally</td></tr>
-        <tr><td>Easy to implement and supported by most routers</td><td>Complex ACLs are hard to implement and maintain</td></tr>
-        <tr><td>An initial degree of security at the network layer</td><td>Can't dynamically filter some services. Sessions that negotiate ports on the fly force you to open a whole range</td></tr>
-        <tr><td>Almost all the tasks of a high-end firewall at much lower cost</td><td></td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard do"><b>Advantages</b>
+        <ul>
+          <li>Simple permit or deny rule sets</li>
+          <li>Low impact on network performance</li>
+          <li>Easy to implement and supported by most routers</li>
+          <li>An initial degree of security at the network layer</li>
+          <li>Almost all the tasks of a high-end firewall at much lower cost</li>
+        </ul>
+      </div>
+      <div class="fcard dont"><b>Disadvantages</b>
+        <ul>
+          <li>Susceptible to IP spoofing: an attacker can send arbitrary packets that meet the ACL criteria</li>
+          <li>Don't reliably filter fragmented packets. Only the first fragment carries the TCP header, so later fragments pass unconditionally</li>
+          <li>Complex ACLs are hard to implement and maintain</li>
+          <li>Can't dynamically filter some services. Sessions that negotiate ports on the fly force you to open a whole range</li>
+        </ul>
+      </div>
+    </div>
 
     <h3>Stateful firewalls: benefits and limitations</h3>
-    <table class="model-table">
-      <thead><tr><th>Benefits</th><th>Limitations</th></tr></thead>
-      <tbody>
-        <tr><td>Often the primary means of defense, filtering unwanted or unnecessary traffic</td><td>Can't prevent application layer attacks, because they don't examine the actual contents of, say, an HTTP connection</td></tr>
-        <tr><td>Strengthen packet filtering with tighter control</td><td>Not every protocol is stateful. UDP and ICMP don't create connection information for a state table</td></tr>
-        <tr><td>Perform better than packet filters or proxy servers</td><td>Hard to track connections that use dynamic port negotiation or open several connections</td></tr>
-        <tr><td>Defend against spoofing and DoS by checking whether a packet belongs to an existing connection</td><td>Don't support user authentication</td></tr>
-        <tr><td>Provide more log information than a packet filter</td><td></td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard do"><b>Benefits</b>
+        <ul>
+          <li>Often the primary means of defense, filtering unwanted or unnecessary traffic</li>
+          <li>Strengthen packet filtering with tighter control</li>
+          <li>Perform better than packet filters or proxy servers</li>
+          <li>Defend against spoofing and DoS by checking whether a packet belongs to an existing connection</li>
+          <li>Provide more log information than a packet filter</li>
+        </ul>
+      </div>
+      <div class="fcard dont"><b>Limitations</b>
+        <ul>
+          <li>Can't prevent application layer attacks, because they don't examine the actual contents of, say, an HTTP connection</li>
+          <li>Not every protocol is stateful. UDP and ICMP don't create connection information for a state table</li>
+          <li>Hard to track connections that use dynamic port negotiation or open several connections</li>
+          <li>Don't support user authentication</li>
+        </ul>
+      </div>
+    </div>
 
     <div class="callout">
       <b>Why <code>established</code> is only "basic" stateful:</b> it checks whether a segment has ACK or RST set, and that's all. It keeps no table of who actually opened a connection, so an attacker can craft a packet with the ACK bit set and it matches. A stateful firewall checks each packet against its record of real connections. It also covers more than TCP, though UDP and ICMP still get less support.
@@ -676,65 +934,117 @@ R1(config-if)# ipv6 traffic-filter LAN-ONLY in</pre>
 
     <h3>Common security architectures</h3>
     <p>Firewall design is mostly about device interfaces permitting or denying traffic by source, destination, and type. Three common designs:</p>
-    <table class="model-table">
-      <thead><tr><th>Design</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Private and public</td><td>Two interfaces. The public (outside) network is untrusted and the private (inside) network is trusted. Traffic from private to public is permitted and inspected, and the inspected replies are allowed back. Traffic that starts on the public side and heads inside is generally blocked</td></tr>
-        <tr><td style="font-weight:700;">Demilitarized zone (DMZ)</td><td>Usually three interfaces: inside, outside, and DMZ. Public servers sit in the DMZ, so outsiders can reach them without reaching the inside network</td></tr>
-        <tr><td style="font-weight:700;">Zone-based policy firewall (ZPF)</td><td>Interfaces with similar functions are grouped into zones, and policy is written between zones. Covered in depth in Session 10</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Private and public</b><span>Two interfaces. The public (outside) network is untrusted and the private (inside) network is trusted. Traffic from private to public is permitted and inspected, and the inspected replies are allowed back. Traffic that starts on the public side and heads inside is generally blocked</span></div>
+      <div class="fcard"><b>Demilitarized zone (DMZ)</b><span>Usually three interfaces: inside, outside, and DMZ. Public servers sit in the DMZ, so outsiders can reach them without reaching the inside network</span></div>
+      <div class="fcard"><b>Zone-based policy firewall (ZPF)</b><span>Interfaces with similar functions are grouped into zones, and policy is written between zones. Covered in depth in Session 10</span></div>
+    </div>
 
     <h3>Traffic rules in a DMZ design</h3>
+    <div class="split">
+      <div>
     <table class="model-table">
-      <thead><tr><th>From</th><th>To</th><th>Usually</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Private</td><td>Public or DMZ</td><td>Inspected and permitted. Inspected replies return</td></tr>
-        <tr><td style="font-weight:700;">DMZ</td><td>Private</td><td>Blocked</td></tr>
-        <tr><td style="font-weight:700;">DMZ</td><td>Public</td><td>Selectively permitted, based on service requirements</td></tr>
-        <tr><td style="font-weight:700;">Public</td><td>DMZ</td><td>Selectively permitted and inspected</td></tr>
-        <tr><td style="font-weight:700;">Public</td><td>Private</td><td>Blocked</td></tr>
-      </tbody>
-    </table>
+        <thead><tr><th>From</th><th>To</th><th>Usually</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;">Private</td><td>Public or DMZ</td><td>Inspected and permitted. Inspected replies return</td></tr>
+          <tr><td style="font-weight:700;">DMZ</td><td>Private</td><td>Blocked</td></tr>
+          <tr><td style="font-weight:700;">DMZ</td><td>Public</td><td>Selectively permitted, based on service requirements</td></tr>
+          <tr><td style="font-weight:700;">Public</td><td>DMZ</td><td>Selectively permitted and inspected</td></tr>
+          <tr><td style="font-weight:700;">Public</td><td>Private</td><td>Blocked</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 330" role="img" aria-label="A three-legged firewall with public, private, and DMZ networks. Private to public is permitted and inspected. Public to private is blocked. Public and DMZ traffic is selectively permitted in both directions. DMZ to private is blocked.">
+          <defs>
+            <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--correct)"/></marker>
+            <marker id="ahy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)"/></marker>
+          </defs>
+          <g stroke="var(--border)" stroke-width="4"><path d="M120 176 H190"/><path d="M290 176 H360"/><path d="M240 206 V250"/></g>
+          <g stroke-width="2">
+            <rect x="10" y="150" width="110" height="52" fill="var(--surface-2)" stroke="var(--border)"/>
+            <rect x="360" y="150" width="110" height="52" fill="var(--surface-2)" stroke="var(--border)"/>
+            <rect x="185" y="250" width="110" height="52" fill="var(--surface-2)" stroke="var(--border)"/>
+            <rect x="190" y="146" width="100" height="60" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          </g>
+          <g font-size="13" font-weight="700" text-anchor="middle">
+            <text x="65" y="174" fill="var(--text)">PUBLIC</text><text x="415" y="174" fill="var(--text)">PRIVATE</text><text x="240" y="274" fill="var(--text)">DMZ</text><text x="240" y="181" fill="var(--accent)">FIREWALL</text>
+          </g>
+          <g font-size="11" fill="var(--muted)" text-anchor="middle"><text x="65" y="191">outside</text><text x="415" y="191">inside</text><text x="240" y="291">web, mail</text></g>
+          <path d="M405 140 C350 30 130 30 75 140" fill="none" stroke="var(--correct)" stroke-width="2.5" marker-end="url(#ahg)"/>
+          <text x="240" y="34" font-size="12" font-weight="700" text-anchor="middle" fill="var(--correct)">private → public: inspected, replies return</text>
+          <path d="M80 140 C140 100 330 100 395 140" fill="none" stroke="var(--danger)" stroke-width="2.5" stroke-dasharray="6 4"/>
+          <g stroke="var(--danger)" stroke-width="3"><path d="M232 102 L248 118 M248 102 L232 118"/></g>
+          <text x="240" y="138" font-size="12" font-weight="700" text-anchor="middle" fill="var(--danger)">public → private: blocked</text>
+          <path d="M70 210 C80 260 120 280 178 280" fill="none" stroke="var(--accent-2)" stroke-width="2.5" marker-start="url(#ahy)" marker-end="url(#ahy)"/>
+          <text x="10" y="318" font-size="12" font-weight="700" fill="var(--accent-2)">public ↔ DMZ: selective</text>
+          <path d="M302 280 C360 280 400 260 410 210" fill="none" stroke="var(--danger)" stroke-width="2.5" stroke-dasharray="6 4"/>
+          <g stroke="var(--danger)" stroke-width="3"><path d="M368 254 L384 270 M384 254 L368 270"/></g>
+          <text x="470" y="318" font-size="12" font-weight="700" text-anchor="end" fill="var(--danger)">DMZ → private: blocked</text>
+        </svg>
+        <figcaption>If a DMZ server is compromised, the attacker still faces a blocked path to the inside network.</figcaption>
+      </figure>
+    </div>
 
     <h3>Zone-based policy firewalls, in brief</h3>
+    <div class="split">
+      <div>
     <p>A <b>zone</b> is a group of one or more interfaces with similar functions or features. If LAN 1 and LAN 2 need the same policy, they go in one zone. Three defaults to know:</p>
-    <ul>
-      <li>Traffic between interfaces in the <b>same</b> zone isn't subject to any policy and passes freely.</li>
-      <li>All zone-to-zone traffic is <b>blocked</b>. To permit it, you configure a policy that allows or inspects it.</li>
-      <li>The router's own <b>self zone</b> is the only exception to that default deny.</li>
-    </ul>
+      <ul>
+        <li>Traffic between interfaces in the <b>same</b> zone isn't subject to any policy and passes freely.</li>
+        <li>All zone-to-zone traffic is <b>blocked</b>. To permit it, you configure a policy that allows or inspects it.</li>
+        <li>The router's own <b>self zone</b> is the only exception to that default deny.</li>
+      </ul>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 250" role="img" aria-label="Zone-based policy firewall: LAN 1 and LAN 2 share the INSIDE zone and pass traffic freely. Traffic from the INSIDE zone to the OUTSIDE zone is blocked unless a policy permits or inspects it. The router itself is the self zone.">
+          <rect x="14" y="20" width="176" height="210" rx="14" fill="var(--correct-soft)" stroke="var(--correct)" stroke-width="2" stroke-dasharray="6 4"/>
+          <rect x="330" y="70" width="136" height="110" rx="14" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="6 4"/>
+          <g font-size="12" font-weight="700"><text x="28" y="42" fill="var(--correct)">ZONE: INSIDE</text><text x="344" y="92" fill="var(--accent-2)">ZONE: OUTSIDE</text></g>
+          <g stroke-width="1.5" fill="var(--surface)" stroke="var(--border)"><rect x="40" y="62" width="120" height="40"/><rect x="40" y="166" width="120" height="40"/><rect x="352" y="112" width="92" height="40"/></g>
+          <g font-size="13" text-anchor="middle" fill="var(--text)"><text x="100" y="87">LAN 1</text><text x="100" y="191">LAN 2</text><text x="398" y="137">Internet</text></g>
+          <path d="M64 104 V164" stroke="var(--correct)" stroke-width="2.5"/>
+          <text x="72" y="139" font-size="11.5" fill="var(--correct)">passes freely</text>
+          <rect x="210" y="100" width="100" height="56" rx="8" fill="var(--surface-2)" stroke="var(--muted)" stroke-width="1.5"/>
+          <g font-size="12" text-anchor="middle"><text x="260" y="124" font-weight="700" fill="var(--text)">ROUTER</text><text x="260" y="142" fill="var(--muted)">self zone</text></g>
+          <g stroke="var(--danger)" stroke-width="2.5" stroke-dasharray="6 4"><path d="M190 128 H210"/><path d="M310 128 H330"/></g>
+          <g font-size="11.5" text-anchor="middle" fill="var(--danger)"><text x="260" y="180">zone to zone:</text><text x="260" y="196">blocked unless</text><text x="260" y="212">a policy allows</text></g>
+        </svg>
+        <figcaption>Same zone, no policy needed. Different zones, nothing crosses until you write one.</figcaption>
+      </figure>
+    </div>
 
     <h3>Layered defense</h3>
     <p>A <b>layered defense</b> combines different types of firewalls in layers to add depth:</p>
-    <table class="model-table">
-      <thead><tr><th>Layer</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Network core security</td><td>Protects against malicious software and traffic anomalies, enforces network policies, ensures survivability</td></tr>
-        <tr><td style="font-weight:700;">Perimeter security</td><td>Secures the boundaries between zones</td></tr>
-        <tr><td style="font-weight:700;">Communications security</td><td>Provides information assurance</td></tr>
-        <tr><td style="font-weight:700;">Endpoint security</td><td>Provides identity and device security policy compliance</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Network core security</b><span>Protects against malicious software and traffic anomalies, enforces network policies, ensures survivability</span></div>
+      <div class="fcard"><b>Perimeter security</b><span>Secures the boundaries between zones</span></div>
+      <div class="fcard"><b>Communications security</b><span>Provides information assurance</span></div>
+      <div class="fcard"><b>Endpoint security</b><span>Provides identity and device security policy compliance</span></div>
+    </div>
     <p>Policy enforcement points between and inside the layers decide whether traffic is forwarded or discarded. Traffic that passes can go on to a screened firewall or <b>bastion host</b>, which applies more rules and discards suspect packets. Bastion Security's name uses the same word: a bastion is a fortification.</p>
 
-    <h3>What firewalls don't do</h3>
-    <ul>
-      <li>They typically don't stop intrusions from hosts already inside a network or zone.</li>
-      <li>They don't protect against rogue access points.</li>
-      <li>They don't replace backup and disaster recovery.</li>
-      <li>They're no substitute for informed administrators and users.</li>
-    </ul>
-
-    <h3>Firewall policy best practices</h3>
-    <ul>
-      <li>Position firewalls at security boundaries.</li>
-      <li>Deny all traffic by default, and permit only the services that are needed.</li>
-      <li>Control physical access to the firewall.</li>
-      <li>Monitor firewall logs regularly.</li>
-      <li>Use change management for firewall configuration changes.</li>
-      <li>Remember that firewalls mainly protect against technical attacks from outside.</li>
-    </ul>
+    <h3>Firewall limits and best practices</h3>
+    <div class="fcards">
+      <div class="fcard dont"><b>What firewalls don't do</b>
+        <ul>
+          <li>They typically don't stop intrusions from hosts already inside a network or zone.</li>
+          <li>They don't protect against rogue access points.</li>
+          <li>They don't replace backup and disaster recovery.</li>
+          <li>They're no substitute for informed administrators and users.</li>
+        </ul>
+      </div>
+      <div class="fcard do"><b>Firewall policy best practices</b>
+        <ul>
+          <li>Position firewalls at security boundaries.</li>
+          <li>Deny all traffic by default, and permit only the services that are needed.</li>
+          <li>Control physical access to the firewall.</li>
+          <li>Monitor firewall logs regularly.</li>
+          <li>Use change management for firewall configuration changes.</li>
+          <li>Remember that firewalls mainly protect against technical attacks from outside.</li>
+        </ul>
+      </div>
+    </div>
 
     <div class="callout xref">
       The DMZ and zones of risk were introduced in <a href="IT121_Session07.html#segmentation">Session 7</a>. Defense in depth is in <a href="IT121_Session06.html#depth">Session 6</a>.

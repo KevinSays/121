@@ -146,6 +146,28 @@
     .diagram-grid{ grid-template-columns:1fr; }
     .factrow{ flex-direction:column; }
   }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure.fig svg text, .split > figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
 </style>
 
 <header class="hero">
@@ -213,16 +235,13 @@
     </table>
 
     <h3>Where data actually walks out the door</h3>
-    <table class="model-table">
-      <thead><tr><th>Vector</th><th>Example</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Email / messaging</td><td>Sensitive files attached and sent outside the organization, by mistake or on purpose</td></tr>
-        <tr><td style="font-weight:700;">Unencrypted devices</td><td>A stolen or lost laptop/phone with no disk encryption hands over everything on it</td></tr>
-        <tr><td style="font-weight:700;">Cloud storage</td><td>A misconfigured, publicly-shared cloud folder or bucket</td></tr>
-        <tr><td style="font-weight:700;">Removable media</td><td>A USB drive that leaves the building with a copy of a database</td></tr>
-        <tr><td style="font-weight:700;">Improper access control</td><td>Someone can see data they were never supposed to have access to in the first place</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Email / messaging</b><span><span class="k">Example:</span> Sensitive files attached and sent outside the organization, by mistake or on purpose</span></div>
+      <div class="fcard"><b>Unencrypted devices</b><span><span class="k">Example:</span> A stolen or lost laptop/phone with no disk encryption hands over everything on it</span></div>
+      <div class="fcard"><b>Cloud storage</b><span><span class="k">Example:</span> A misconfigured, publicly-shared cloud folder or bucket</span></div>
+      <div class="fcard"><b>Removable media</b><span><span class="k">Example:</span> A USB drive that leaves the building with a copy of a database</span></div>
+      <div class="fcard"><b>Improper access control</b><span><span class="k">Example:</span> Someone can see data they were never supposed to have access to in the first place</span></div>
+    </div>
 
     <div class="callout">
       <b>Data loss isn't always an "attack."</b> An unencrypted laptop left in a taxi and a hacker exfiltrating a database cause the same outcome, data in the wrong hands, through very different mechanisms. Both matter to a SOC.
@@ -242,14 +261,11 @@
     </div>
 
     <h3>How hacking has evolved</h3>
-    <table class="model-table">
-      <thead><tr><th>Era</th><th>What defined it</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Early days</td><td>Individuals driven by curiosity and bragging rights — exploring systems, early viruses, phone network exploration</td></tr>
-        <tr><td style="font-weight:700;">Rise of cybercrime</td><td>Attacks shift toward money — credit card theft, early malware-for-profit, the first organized groups</td></tr>
-        <tr><td style="font-weight:700;">Today</td><td>Professionalized, blended, and often state-backed — ransomware-as-a-service, supply-chain compromise, attacks combining social engineering, malware, and protocol abuse in a single campaign</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Early days</b><span>Individuals driven by curiosity and bragging rights — exploring systems, early viruses, phone network exploration</span></div>
+      <div class="fcard"><b>Rise of cybercrime</b><span>Attacks shift toward money — credit card theft, early malware-for-profit, the first organized groups</span></div>
+      <div class="fcard"><b>Today</b><span>Professionalized, blended, and often state-backed — ransomware-as-a-service, supply-chain compromise, attacks combining social engineering, malware, and protocol abuse in a single campaign</span></div>
+    </div>
 
     <h3>Sharing threat information</h3>
     <p>Many attacks can be prevented if defenders share what they've seen. Two kinds of indicator get shared:</p>
@@ -275,20 +291,24 @@
       <p>Before you can understand how IP gets attacked, you need to know what's in an IP packet's header, and how much IPv6 simplified it.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>IPv4 header field</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Version</td><td>Identifies the IP version (4) — always the first thing read</td></tr>
-        <tr><td style="font-weight:700;">Header Length (IHL)</td><td>How long the header is — variable, because of the optional Options field</td></tr>
-        <tr><td style="font-weight:700;">Total Length</td><td>Size of the whole packet, header plus data</td></tr>
-        <tr><td style="font-weight:700;">Identification / Flags / Fragment Offset</td><td>Used to fragment a packet across multiple pieces and reassemble it correctly at the destination — a mechanism some attacks abuse</td></tr>
-        <tr><td style="font-weight:700;">TTL (Time to Live)</td><td>Decremented by every router a packet crosses; discarded at zero — prevents packets from looping forever, and is what makes traceroute work</td></tr>
-        <tr><td style="font-weight:700;">Protocol</td><td>Tells the destination which upper-layer protocol (TCP, UDP, ICMP) the payload belongs to</td></tr>
-        <tr><td style="font-weight:700;">Header Checksum</td><td>Basic error-check on the header itself, recalculated at every hop</td></tr>
-        <tr><td style="font-weight:700;">Source / Destination Address</td><td>The addressing everything downstream trusts — and the field IP spoofing forges</td></tr>
-        <tr><td style="font-weight:700;">Options</td><td>Rarely-used optional field, part of why the IPv4 header is variable length</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 222" role="img" aria-label="The IPv4 header drawn 32 bits wide. Row one: version, header length, Differentiated Services (DS), total length. Row two: identification, flags, fragment offset. Row three: TTL, protocol, header checksum. Then the source address, the destination address, and optional options.">
+        <g font-size="10.5" fill="var(--muted)"><text x="40" y="22">bit 0</text><text x="240" y="22" text-anchor="middle">16</text><text x="440" y="22" text-anchor="end">31</text></g>
+        <rect x="40.0" y="30" width="50.0" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="65.0" y="49" font-size="10" text-anchor="middle" fill="var(--text)">Version</text><rect x="90.0" y="30" width="50.0" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="115.0" y="49" font-size="10" text-anchor="middle" fill="var(--text)">IHL</text><rect x="140.0" y="30" width="100.0" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="190.0" y="49" font-size="11.5" text-anchor="middle" fill="var(--muted)">DS</text><rect x="240.0" y="30" width="200.0" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="340.0" y="49" font-size="11.5" text-anchor="middle" fill="var(--text)">Total Length</text><rect x="40.0" y="60" width="200.0" height="30" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="1.5"/><text x="140.0" y="79" font-size="11.5" text-anchor="middle" fill="var(--text)">Identification</text><rect x="240.0" y="60" width="37.5" height="30" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="1.5"/><text x="258.75" y="79" font-size="10" text-anchor="middle" fill="var(--text)">Flags</text><rect x="277.5" y="60" width="162.5" height="30" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="1.5"/><text x="358.75" y="79" font-size="11.5" text-anchor="middle" fill="var(--text)">Fragment Offset</text><rect x="40.0" y="90" width="100.0" height="30" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="1.5"/><text x="90.0" y="109" font-size="11.5" text-anchor="middle" fill="var(--text)">TTL</text><rect x="140.0" y="90" width="100.0" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="190.0" y="109" font-size="11.5" text-anchor="middle" fill="var(--text)">Protocol</text><rect x="240.0" y="90" width="200.0" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="340.0" y="109" font-size="11.5" text-anchor="middle" fill="var(--text)">Header Checksum</text><rect x="40.0" y="120" width="400.0" height="30" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/><text x="240.0" y="139" font-size="11.5" text-anchor="middle" fill="var(--accent)" font-weight="700">Source Address</text><rect x="40.0" y="150" width="400.0" height="30" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/><text x="240.0" y="169" font-size="11.5" text-anchor="middle" fill="var(--accent)" font-weight="700">Destination Address</text><rect x="40.0" y="180" width="400.0" height="30" fill="none" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4 3"/><text x="240.0" y="199" font-size="11.5" text-anchor="middle" fill="var(--muted)">Options</text>
+      </svg>
+      <figcaption>The header, 32 bits per row. Gold marks the fragmentation fields some attacks abuse, plus TTL, which makes traceroute work. Red marks the addresses, which IP spoofing forges.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>Version</b><span>Identifies the IP version (4) — always the first thing read</span></div>
+      <div class="fcard"><b>Header Length (IHL)</b><span>How long the header is — variable, because of the optional Options field</span></div>
+      <div class="fcard"><b>Total Length</b><span>Size of the whole packet, header plus data</span></div>
+      <div class="fcard"><b>Identification / Flags / Fragment Offset</b><span>Used to fragment a packet across multiple pieces and reassemble it correctly at the destination — a mechanism some attacks abuse</span></div>
+      <div class="fcard"><b>TTL (Time to Live)</b><span>Decremented by every router a packet crosses; discarded at zero — prevents packets from looping forever, and is what makes traceroute work</span></div>
+      <div class="fcard"><b>Protocol</b><span>Tells the destination which upper-layer protocol (TCP, UDP, ICMP) the payload belongs to</span></div>
+      <div class="fcard"><b>Header Checksum</b><span>Basic error-check on the header itself, recalculated at every hop</span></div>
+      <div class="fcard"><b>Source / Destination Address</b><span>The addressing everything downstream trusts — and the field IP spoofing forges</span></div>
+      <div class="fcard"><b>Options</b><span>Rarely-used optional field, part of why the IPv4 header is variable length</span></div>
+    </div>
 
     <div class="callout analogy">
       <span class="lbl">Think of it like… couriers on the highway</span>
@@ -308,15 +328,12 @@
       <p>IP has no built-in way to verify a source address. Everything in this section exploits that one trust gap.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">IP spoofing</td><td>Forges the source IP address so traffic — or the blame for it — appears to come from somewhere else</td></tr>
-        <tr><td style="font-weight:700;">ICMP reconnaissance</td><td>Ping sweeps map which hosts are alive before an attack even starts</td></tr>
-        <tr><td style="font-weight:700;">ICMP redirect</td><td>A forged redirect message tricks a host into routing its traffic through an attacker-controlled path</td></tr>
-        <tr><td style="font-weight:700;">Amplification &amp; reflection</td><td>A small spoofed request (e.g. to a DNS or NTP server) triggers a huge response — sent to the victim, not the attacker</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>IP spoofing</b><span>Forges the source IP address so traffic — or the blame for it — appears to come from somewhere else</span></div>
+      <div class="fcard"><b>ICMP reconnaissance</b><span>Ping sweeps map which hosts are alive before an attack even starts</span></div>
+      <div class="fcard"><b>ICMP redirect</b><span>A forged redirect message tricks a host into routing its traffic through an attacker-controlled path</span></div>
+      <div class="fcard"><b>Amplification &amp; reflection</b><span>A small spoofed request (e.g. to a DNS or NTP server) triggers a huge response — sent to the victim, not the attacker</span></div>
+    </div>
 
     <p>Spoofing comes in two forms. In <b>non-blind spoofing</b>, the attacker can see the traffic between the host and the target, so they can read the target's replies. In <b>blind spoofing</b>, the attacker can't see that traffic. Blind spoofing is used in DoS attacks, where the attacker doesn't need the replies.</p>
 

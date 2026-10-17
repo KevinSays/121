@@ -150,6 +150,28 @@
   .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
   pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
   pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
 </style>
 
 <header class="hero">
@@ -192,7 +214,7 @@
     <div class="section-head">
       <p class="kicker">Overview</p>
       <h2>What Session 7 covers</h2>
-      <p>Module 12 goes layer by layer through system and network defense: physical security, application security, hardened services, segmentation, wireless and mobile devices, resilience, and embedded systems. Module 13 covers access control: how a system decides who you are, what you may do, and how it keeps a record of what you did. Expect a lot of terms this week. The tables are built to be scanned, so use them as your checklist.</p>
+      <p>Module 12 goes layer by layer through system and network defense: physical security, application security, hardened services, segmentation, wireless and mobile devices, resilience, and embedded systems. Module 13 covers access control: how a system decides who you are, what you may do, and how it keeps a record of what you did. Expect a lot of terms this week. The cards and tables are built to be scanned, so use them as your checklist.</p>
     </div>
     <ul class="obj-list">
       <li>Explain how physical security measures are implemented to protect network equipment</li>
@@ -219,36 +241,51 @@
 
     <h3>Fencing and physical barriers</h3>
     <p>Barriers are usually the outermost and most visible layer. They include perimeter fences, security gates, <b>bollards</b> (short posts that stop vehicles), vehicle entry barriers, and guard shelters. Fence height decides who it stops:</p>
-    <table class="model-table">
-      <thead><tr><th>Height</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">1 m (3–4 ft)</td><td>Deters casual trespassers only</td></tr>
-        <tr><td style="font-weight:700;">2 m (6–7 ft)</td><td>Too high for a casual trespasser to climb</td></tr>
-        <tr><td style="font-weight:700;">2.5 m (8 ft)</td><td>Offers limited delay to a determined intruder</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 222" role="img" aria-label="Three fences drawn to scale beside a person. A 1 meter fence deters casual trespassers only. A 2 meter fence is too high for a casual trespasser to climb. A 2.5 meter fence with a top guard offers limited delay to a determined intruder.">
+        <path d="M10 190 H470" stroke="var(--border)" stroke-width="2"/>
+        <g stroke="var(--text)" stroke-width="2"><rect x="70" y="140" width="80" height="50" fill="none"/><path d="M90 140 V190"/><path d="M110 140 V190"/><path d="M130 140 V190"/><path d="M70 150 H150 M70 180 H150"/><rect x="200" y="90" width="80" height="100" fill="none"/><path d="M220 90 V190"/><path d="M240 90 V190"/><path d="M260 90 V190"/><path d="M200 100 H280 M200 180 H280"/><rect x="330" y="65" width="80" height="125" fill="none"/><path d="M350 65 V190"/><path d="M370 65 V190"/><path d="M390 65 V190"/><path d="M330 75 H410 M330 180 H410"/></g>
+        <path d="M330 65 l8 -10 l8 10 l8 -10 l8 10 l8 -10 l8 10 l8 -10 l8 10 l8 -10 l8 10" fill="none" stroke="var(--danger)" stroke-width="1.5"/>
+        <g stroke="var(--muted)" stroke-width="2" fill="none"><circle cx="445" cy="111" r="8"/><path d="M445 119 V160 M445 160 L433 190 M445 160 L457 190 M433 136 H457"/></g>
+        <g font-size="13" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="110" y="130">1 m</text><text x="240" y="80">2 m</text><text x="370" y="45">2.5 m</text></g>
+        <g font-size="11.5" text-anchor="middle"><text x="110" y="210" fill="var(--muted)">deters casual</text><text x="240" y="210" fill="var(--muted)">too high to climb</text><text x="370" y="210" fill="var(--danger)">delays determined</text></g>
+      </svg>
+      <figcaption>Drawn to scale. The tallest fence also carries a top guard, like barbed or concertina wire, as high-security areas do.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>1 m (3–4 ft)</b><span>Deters casual trespassers only</span></div>
+      <div class="fcard"><b>2 m (6–7 ft)</b><span>Too high for a casual trespasser to climb</span></div>
+      <div class="fcard"><b>2.5 m (8 ft)</b><span>Offers limited delay to a determined intruder</span></div>
+    </div>
     <p>High-security areas add a top guard, like barbed or concertina wire. Fences need regular maintenance, local rules may limit what you can build, and vehicles should never park next to one, since a car roof makes a good ladder.</p>
 
     <h3>Biometrics</h3>
     <p><b>Biometrics</b> are a person's physiological or behavioral characteristics: face, fingerprint, hand geometry, iris, retina, signature, or voice. When choosing a biometric system, weigh accuracy, speed, user acceptance, uniqueness, resistance to counterfeiting, reliability, storage needs, enrollment time, and how intrusive the scan is. Accuracy matters most, and it's measured by error type:</p>
-    <table class="model-table">
-      <thead><tr><th>Error</th><th>What happens</th><th>Why it matters</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Type I: false rejection</td><td>A legitimate user is turned away</td><td>Annoying and costly, like a lost sale at a checkout</td></tr>
-        <tr><td style="font-weight:700;">Type II: false acceptance</td><td>An impostor is let in</td><td>A security breach. Usually treated as the most important error</td></tr>
-        <tr><td style="font-weight:700;">Crossover error rate (CER)</td><td>The point where the false rejection rate equals the false acceptance rate</td><td>The usual single measure of a system's overall accuracy. Lower is better</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 240" role="img" aria-label="Biometric error rates. As matching gets stricter, false acceptances fall and false rejections rise. The point where the two curves cross is the crossover error rate.">
+        <path d="M60 30 V210 H450" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+        <path d="M70 40 C150 160 250 195 430 200" fill="none" stroke="var(--danger)" stroke-width="2.5"/>
+        <path d="M70 200 C250 195 350 160 430 40" fill="none" stroke="var(--accent-2)" stroke-width="2.5"/>
+        <path d="M250 176 V210" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <circle cx="250" cy="176.5" r="6" fill="var(--surface)" stroke="var(--text)" stroke-width="2"/>
+        <text x="250" y="156" font-size="13" font-weight="700" text-anchor="middle" fill="var(--text)">CER</text>
+        <g font-size="12" font-weight="700"><text x="100" y="30" fill="var(--danger)">false acceptance (Type II)</text><text x="400" y="58" text-anchor="end" fill="var(--accent-2)">false rejection (Type I)</text></g>
+        <g font-size="11.5" fill="var(--muted)"><text x="14" y="24">error rate</text><text x="450" y="230" text-anchor="end">stricter matching →</text></g>
+      </svg>
+      <figcaption>Tighten the matching and impostors get in less often, but real users get turned away more. The crossing point is the CER: the lower it sits, the more accurate the system.</figcaption>
+    </figure>
+    <div class="fcards wide">
+      <div class="fcard"><b>Type I: false rejection</b><span><span class="k">What happens:</span> A legitimate user is turned away</span><span><span class="k">Why it matters:</span> Annoying and costly, like a lost sale at a checkout</span></div>
+      <div class="fcard"><b>Type II: false acceptance</b><span><span class="k">What happens:</span> An impostor is let in</span><span><span class="k">Why it matters:</span> A security breach. Usually treated as the most important error</span></div>
+      <div class="fcard"><b>Crossover error rate (CER)</b><span><span class="k">What happens:</span> The point where the false rejection rate equals the false acceptance rate</span><span><span class="k">Why it matters:</span> The usual single measure of a system's overall accuracy. Lower is better</span></div>
+    </div>
 
     <h3>Surveillance, guards, and RFID</h3>
-    <table class="model-table">
-      <thead><tr><th>Control</th><th>Strengths</th><th>Weaknesses</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Video and electronic surveillance</td><td>Watches areas when nobody is there, records for long periods, links to motion detection and alerts. In high-security sites, cover every entrance, exit, loading bay, stairwell, and refuse area</td><td>Someone still has to respond</td></tr>
-        <tr><td style="font-weight:700;">Guards and escorts</td><td>Respond instantly, adapt to new situations, and make decisions on the spot</td><td>Cost, limited ability to track high volumes of traffic, human error</td></tr>
-        <tr><td style="font-weight:700;">RFID asset tags</td><td>Readers hidden in door frames flag any tagged asset that leaves a secure area. Reads many tags at once, with no line of sight and no visible tag needed</td><td>Only tracks what's tagged</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Video and electronic surveillance</b><span><span class="k">Strengths:</span> Watches areas when nobody is there, records for long periods, links to motion detection and alerts. In high-security sites, cover every entrance, exit, loading bay, stairwell, and refuse area</span><span><span class="k">Weaknesses:</span> Someone still has to respond</span></div>
+      <div class="fcard"><b>Guards and escorts</b><span><span class="k">Strengths:</span> Respond instantly, adapt to new situations, and make decisions on the spot</span><span><span class="k">Weaknesses:</span> Cost, limited ability to track high volumes of traffic, human error</span></div>
+      <div class="fcard"><b>RFID asset tags</b><span><span class="k">Strengths:</span> Readers hidden in door frames flag any tagged asset that leaves a secure area. Reads many tags at once, with no line of sight and no visible tag needed</span><span><span class="k">Weaknesses:</span> Only tracks what's tagged</span></div>
+    </div>
   </section>
 
   <!-- ── APPLICATION SECURITY (12.2) ── -->
@@ -260,39 +297,40 @@
     </div>
 
     <h3>The development process</h3>
-    <table class="model-table">
-      <thead><tr><th>Stage</th><th>What happens</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Developing and testing</td><td>Code is written, tested, and debugged in a development environment, which is less restricted than production. Version control tracks changes, sandboxes keep work from being overwritten, and quality assurance (QA) finds defects</td></tr>
-        <tr><td style="font-weight:700;">Staging and production</td><td>Staging closely matches production, so developers can confirm the software runs under the real security settings before it's deployed</td></tr>
-        <tr><td style="font-weight:700;">Provisioning and deprovisioning</td><td>Creating or updating software, and removing it. A self-service portal can automate both</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 120" role="img" aria-label="Software moves from developing and testing, to staging, to production. Provisioning creates or updates software and deprovisioning removes it.">
+        <defs><marker id="a7a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+        <g stroke-width="2"><rect x="10" y="20" width="136" height="48" fill="var(--surface-2)" stroke="var(--border)"/><rect x="172" y="20" width="136" height="48" fill="var(--accent-2-soft)" stroke="var(--accent-2)"/><rect x="334" y="20" width="136" height="48" fill="var(--accent-soft)" stroke="var(--accent)"/></g>
+        <g stroke="var(--muted)" stroke-width="2" marker-end="url(#a7a)"><path d="M146 44 H168"/><path d="M308 44 H330"/></g>
+        <g font-size="12.5" font-weight="700" text-anchor="middle"><text x="78" y="49" fill="var(--text)">DEVELOP + TEST</text><text x="240" y="49" fill="var(--accent-2)">STAGING</text><text x="402" y="49" fill="var(--accent)">PRODUCTION</text></g>
+        <g font-size="10.5" text-anchor="middle" fill="var(--muted)"><text x="78" y="88">less restricted</text><text x="78" y="104">version control, QA</text><text x="240" y="88">matches production</text><text x="240" y="104">real security settings</text><text x="402" y="88">provision: create</text><text x="402" y="104">deprovision: remove</text></g>
+      </svg>
+      <figcaption>Code moves right only after it has proven itself in the stage before.</figcaption>
+    </figure>
+    <div class="fcards wide">
+      <div class="fcard"><b>Developing and testing</b><span>Code is written, tested, and debugged in a development environment, which is less restricted than production. Version control tracks changes, sandboxes keep work from being overwritten, and quality assurance (QA) finds defects</span></div>
+      <div class="fcard"><b>Staging and production</b><span>Staging closely matches production, so developers can confirm the software runs under the real security settings before it's deployed</span></div>
+      <div class="fcard"><b>Provisioning and deprovisioning</b><span>Creating or updating software, and removing it. A self-service portal can automate both</span></div>
+    </div>
 
     <h3>Secure coding techniques</h3>
-    <table class="model-table">
-      <thead><tr><th>Technique</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Normalization</td><td>Converts input to its simplest known form, so each string has one representation and malicious input stands out. Also organizes database data to protect integrity</td></tr>
-        <tr><td style="font-weight:700;">Stored procedure</td><td>A group of precompiled SQL statements kept in the database. It takes input as parameters, which cuts traffic and speeds results</td></tr>
-        <tr><td style="font-weight:700;">Obfuscation and camouflage</td><td>Obfuscation hides data with random characters. Camouflage swaps it for realistic fake data. Both make reverse engineering harder</td></tr>
-        <tr><td style="font-weight:700;">Code reuse</td><td>Building on existing software saves time and money, but can carry old vulnerabilities in with it</td></tr>
-        <tr><td style="font-weight:700;">SDKs and third-party libraries</td><td>Ready-made code that speeds development. A flaw in one library can affect every application that uses it</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Normalization</b><span>Converts input to its simplest known form, so each string has one representation and malicious input stands out. Also organizes database data to protect integrity</span></div>
+      <div class="fcard"><b>Stored procedure</b><span>A group of precompiled SQL statements kept in the database. It takes input as parameters, which cuts traffic and speeds results</span></div>
+      <div class="fcard"><b>Obfuscation and camouflage</b><span>Obfuscation hides data with random characters. Camouflage swaps it for realistic fake data. Both make reverse engineering harder</span></div>
+      <div class="fcard"><b>Code reuse</b><span>Building on existing software saves time and money, but can carry old vulnerabilities in with it</span></div>
+      <div class="fcard"><b>SDKs and third-party libraries</b><span>Ready-made code that speeds development. A flaw in one library can affect every application that uses it</span></div>
+    </div>
 
     <h3>Input validation</h3>
     <p>Many attacks work by feeding an application malformed data, to confuse it, crash it, or make it reveal too much. NetAcad's example: a newsletter sends confirmation links, attackers alter the links to change usernames, emails, or subscription status, then automate it to flood the database with thousands of fake subscribers. A <b>validation rule</b> checks that data falls inside the limits the database designer set:</p>
-    <table class="model-table">
-      <thead><tr><th>Check</th><th>What it tests</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Size</td><td>The number of characters</td></tr>
-        <tr><td style="font-weight:700;">Format</td><td>That data matches the required format</td></tr>
-        <tr><td style="font-weight:700;">Consistency</td><td>That codes in related data items agree</td></tr>
-        <tr><td style="font-weight:700;">Range</td><td>That a value is between a minimum and a maximum</td></tr>
-        <tr><td style="font-weight:700;">Check digit</td><td>An extra calculated digit that detects errors</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Size</b><span>The number of characters</span></div>
+      <div class="fcard"><b>Format</b><span>That data matches the required format</span></div>
+      <div class="fcard"><b>Consistency</b><span>That codes in related data items agree</span></div>
+      <div class="fcard"><b>Range</b><span>That a value is between a minimum and a maximum</span></div>
+      <div class="fcard"><b>Check digit</b><span>An extra calculated digit that detects errors</span></div>
+    </div>
 
     <h3>Integrity checks</h3>
     <p>An <b>integrity check</b> uses a hash function to take a snapshot of data, then compares later snapshots to confirm nothing changed. A <b>checksum</b> is one example: the sender and receiver each compute a value, and if the two match, the data arrived intact. Common hash functions are MD5, SHA-1, SHA-256, and SHA-512. Integrity is also protected by:</p>
@@ -305,17 +343,14 @@
     <h3>Other practices</h3>
     <p><b>Code signing</b> digitally signs executables, which proves who wrote them and that the code hasn't changed since. <b>Secure cookies</b> are sent only over HTTPS, so the data they hold isn't exposed over plain HTTP.</p>
 
-    <table class="model-table">
-      <thead><tr><th>Threat to applications</th><th>How to manage it</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Unauthorized access to data centers, computer rooms, and wiring closets</td><td>Policies, standards, and procedures for staff and visitors</td></tr>
-        <tr><td style="font-weight:700;">Server and system downtime</td><td>Business continuity and disaster recovery plans for critical applications</td></tr>
-        <tr><td style="font-weight:700;">OS and application vulnerabilities</td><td>An update policy, and regular patching</td></tr>
-        <tr><td style="font-weight:700;">Unauthorized access to systems</td><td>Multi-factor authentication and log monitoring</td></tr>
-        <tr><td style="font-weight:700;">Data loss</td><td>Data classification standards and backup procedures</td></tr>
-        <tr><td style="font-weight:700;">Software development vulnerabilities</td><td>Testing before launch</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Unauthorized access to data centers, computer rooms, and wiring closets</b><span><span class="k">How to manage it:</span> Policies, standards, and procedures for staff and visitors</span></div>
+      <div class="fcard"><b>Server and system downtime</b><span><span class="k">How to manage it:</span> Business continuity and disaster recovery plans for critical applications</span></div>
+      <div class="fcard"><b>OS and application vulnerabilities</b><span><span class="k">How to manage it:</span> An update policy, and regular patching</span></div>
+      <div class="fcard"><b>Unauthorized access to systems</b><span><span class="k">How to manage it:</span> Multi-factor authentication and log monitoring</span></div>
+      <div class="fcard"><b>Data loss</b><span><span class="k">How to manage it:</span> Data classification standards and backup procedures</span></div>
+      <div class="fcard"><b>Software development vulnerabilities</b><span><span class="k">How to manage it:</span> Testing before launch</span></div>
+    </div>
 
     <div class="callout xref">
       Hashing as an integrity tool first came up in <a href="IT121_Session06.html#integrity">Session 6</a>.
@@ -333,29 +368,23 @@
     <p>Start by finding the doors. A <b>port scanner</b> sends a message to each port and reads the response, which shows whether the port is open and what's using it. Attackers run the same scans, so you want to see the results first. The goal is that only necessary ports are exposed.</p>
 
     <h3>Network and routing services</h3>
-    <table class="model-table">
-      <thead><tr><th>Service</th><th>What attackers do</th><th>How to harden it</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">DHCP</td><td>Target the server to deny devices their addresses, or run a rogue DHCP server</td><td>DHCP snooping blocks rogue servers. Also: physically secure the server, patch it, put it behind a firewall, review DHCP logs, run antivirus, remove unused services, and close unused ports</td></tr>
-        <tr><td style="font-weight:700;">DNS</td><td>Tamper with name resolution (Session 3's DNS poisoning)</td><td><b>DNSSEC</b> adds digital signatures. Also: keep DNS software updated, hide the version string, separate internal and external DNS servers, restrict transactions by client IP, sign transactions and zones, limit zone transfers and dynamic updates, and log</td></tr>
-        <tr><td style="font-weight:700;">ICMP</td><td>Use it for reconnaissance, denial of service, and covert channels</td><td>Many networks filter ICMP requests</td></tr>
-        <tr><td style="font-weight:700;">RIP</td><td>Attack routers and routing updates to hurt performance or redirect traffic</td><td>Use routing with authentication, and keep routers patched. (RIP picks routes by hop count, with a maximum of 15 hops)</td></tr>
-        <tr><td style="font-weight:700;">NTP</td><td>Attack time servers to break certificate-based communication and hide their tracks</td><td>NTP authentication, so devices only trust a verified time server</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>DHCP</b><span><span class="k">What attackers do:</span> Target the server to deny devices their addresses, or run a rogue DHCP server</span><span><span class="k">How to harden it:</span> DHCP snooping blocks rogue servers. Also: physically secure the server, patch it, put it behind a firewall, review DHCP logs, run antivirus, remove unused services, and close unused ports</span></div>
+      <div class="fcard"><b>DNS</b><span><span class="k">What attackers do:</span> Tamper with name resolution (Session 3's DNS poisoning)</span><span><span class="k">How to harden it:</span> <b>DNSSEC</b> adds digital signatures. Also: keep DNS software updated, hide the version string, separate internal and external DNS servers, restrict transactions by client IP, sign transactions and zones, limit zone transfers and dynamic updates, and log</span></div>
+      <div class="fcard"><b>ICMP</b><span><span class="k">What attackers do:</span> Use it for reconnaissance, denial of service, and covert channels</span><span><span class="k">How to harden it:</span> Many networks filter ICMP requests</span></div>
+      <div class="fcard"><b>RIP</b><span><span class="k">What attackers do:</span> Attack routers and routing updates to hurt performance or redirect traffic</span><span><span class="k">How to harden it:</span> Use routing with authentication, and keep routers patched. (RIP picks routes by hop count, with a maximum of 15 hops)</span></div>
+      <div class="fcard"><b>NTP</b><span><span class="k">What attackers do:</span> Attack time servers to break certificate-based communication and hide their tracks</span><span><span class="k">How to harden it:</span> NTP authentication, so devices only trust a verified time server</span></div>
+    </div>
 
     <h3>Secure protocols</h3>
-    <table class="model-table">
-      <thead><tr><th>Insecure</th><th>Secure replacement</th><th>Why</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Telnet (TCP 23)</td><td>SSH (TCP 22)</td><td>Telnet sends usernames, passwords, and data in plaintext that anyone running Wireshark can read. SSH encrypts the whole session</td></tr>
-        <tr><td style="font-weight:700;">Plain file copy</td><td>SCP</td><td>Uses SSH to transfer files with authentication and confidentiality</td></tr>
-        <tr><td style="font-weight:700;">Older SNMP versions</td><td>SNMPv3</td><td>The current standard. Uses cryptography to stop eavesdropping and detect tampering</td></tr>
-        <tr><td style="font-weight:700;">HTTP (port 80)</td><td>HTTPS (SSL/TLS)</td><td>TLS is the updated, more secure replacement for SSL. It encrypts traffic between client and server</td></tr>
-        <tr><td style="font-weight:700;">FTP</td><td>FTPS</td><td>FTP logs in with a plaintext username and password. FTPS adds SSL/TLS</td></tr>
-        <tr><td style="font-weight:700;">POP (110) and IMAP (143)</td><td>POP or IMAP over SSL/TLS, and S/MIME</td><td>TLS encrypts mail in transit. S/MIME signs and encrypts messages, for authentication, integrity, and nonrepudiation</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Telnet (TCP 23) → SSH (TCP 22)</b><span><span class="k">Why:</span> Telnet sends usernames, passwords, and data in plaintext that anyone running Wireshark can read. SSH encrypts the whole session</span></div>
+      <div class="fcard"><b>Plain file copy → SCP</b><span><span class="k">Why:</span> Uses SSH to transfer files with authentication and confidentiality</span></div>
+      <div class="fcard"><b>Older SNMP versions → SNMPv3</b><span><span class="k">Why:</span> The current standard. Uses cryptography to stop eavesdropping and detect tampering</span></div>
+      <div class="fcard"><b>HTTP (port 80) → HTTPS (SSL/TLS)</b><span><span class="k">Why:</span> TLS is the updated, more secure replacement for SSL. It encrypts traffic between client and server</span></div>
+      <div class="fcard"><b>FTP → FTPS</b><span><span class="k">Why:</span> FTP logs in with a plaintext username and password. FTPS adds SSL/TLS</span></div>
+      <div class="fcard"><b>POP (110) and IMAP (143) → POP or IMAP over SSL/TLS, and S/MIME</b><span><span class="k">Why:</span> TLS encrypts mail in transit. S/MIME signs and encrypts messages, for authentication, integrity, and nonrepudiation</span></div>
+    </div>
 
     <div class="callout analogy">
       <span class="lbl">Think of it like… patrolling the walls</span>
@@ -376,6 +405,8 @@
 
     <h3>The DMZ and zones of risk</h3>
     <p>A <b>demilitarized zone (DMZ)</b> is a small network between the trusted private network and the internet. Web and mail servers go there, so outsiders can reach them without touching the internal network. Most networks have two to four zones:</p>
+    <div class="split">
+      <div>
     <table class="model-table">
       <thead><tr><th>Zone</th><th>Risk</th><th>Trust</th></tr></thead>
       <tbody>
@@ -385,9 +416,42 @@
         <tr><td style="font-weight:700;">Internet</td><td>High</td><td>Low</td></tr>
       </tbody>
     </table>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 200" role="img" aria-label="Four zones in a row: private LAN, extranet, DMZ, and internet. Trust is highest at the private LAN and falls toward the internet. Risk rises from the private LAN toward the internet.">
+          <defs><marker id="a7z" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--correct)"/></marker><marker id="a7r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--danger)"/></marker></defs>
+          <g stroke-width="2">
+            <rect x="10" y="30" width="112" height="70" fill="var(--correct-soft)" stroke="var(--correct)"/>
+            <rect x="127" y="30" width="112" height="70" fill="var(--surface-2)" stroke="var(--border)"/>
+            <rect x="244" y="30" width="112" height="70" fill="var(--accent-2-soft)" stroke="var(--accent-2)"/>
+            <rect x="361" y="30" width="109" height="70" fill="var(--danger-soft)" stroke="var(--danger)"/>
+          </g>
+          <g font-size="12.5" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="66" y="70">PRIVATE LAN</text><text x="183" y="70">EXTRANET</text><text x="300" y="70">DMZ</text><text x="415" y="70">INTERNET</text></g>
+          <path d="M466 136 H14" stroke="var(--correct)" stroke-width="2.5" marker-end="url(#a7z)"/>
+          <path d="M14 176 H466" stroke="var(--danger)" stroke-width="2.5" marker-end="url(#a7r)"/>
+          <g font-size="12" font-weight="700" text-anchor="middle"><text x="240" y="128" fill="var(--correct)">trust rises this way</text><text x="240" y="168" fill="var(--danger)">risk rises this way</text></g>
+        </svg>
+        <figcaption>The closer a zone is to the internet, the less you trust what's in it.</figcaption>
+      </figure>
+    </div>
 
     <h3>Zero trust</h3>
     <p>Firewalls manage two directions of traffic. <b>North-south</b> traffic moves into and out of the organization's network. <b>East-west</b> traffic moves between servers inside the data center. Automatically trusting everyone inside lets an attacker who gets in move freely. The <b>zero trust</b> model monitors every user constantly, whatever their status or role. Module 13 comes back to it in <a href="#acconcepts">Concept 9</a>.</p>
+    <figure class="fig">
+      <svg viewBox="0 0 480 224" role="img" aria-label="North-south traffic moves between the internet and the data center. East-west traffic moves between servers inside the data center.">
+        <defs><marker id="a7n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/></marker><marker id="a7e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)"/></marker></defs>
+        <rect x="180" y="10" width="120" height="34" rx="17" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="240" y="32" font-size="12.5" font-weight="700" text-anchor="middle" fill="var(--text)">INTERNET</text>
+        <rect x="20" y="100" width="440" height="114" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text x="34" y="120" font-size="11.5" fill="var(--muted)">DATA CENTER</text>
+        <g stroke-width="1.5" fill="var(--surface)" stroke="var(--border)"><rect x="60" y="140" width="80" height="44"/><rect x="200" y="140" width="80" height="44"/><rect x="340" y="140" width="80" height="44"/></g>
+        <g font-size="12" text-anchor="middle" fill="var(--text)"><text x="100" y="166">server</text><text x="240" y="166">server</text><text x="380" y="166">server</text></g>
+        <path d="M240 48 V136" stroke="var(--accent)" stroke-width="2.5" marker-start="url(#a7n)" marker-end="url(#a7n)"/>
+        <g stroke="var(--accent-2)" stroke-width="2.5" marker-start="url(#a7e)" marker-end="url(#a7e)"><path d="M144 162 H196"/><path d="M284 162 H336"/></g>
+        <g font-size="12" font-weight="700"><text x="252" y="80" fill="var(--accent)">north-south</text><text x="240" y="206" text-anchor="middle" fill="var(--accent-2)">east-west</text></g>
+      </svg>
+      <figcaption>Zero trust watches both directions. Trusting everything east-west is how an attacker who gets in moves freely.</figcaption>
+    </figure>
   </section>
 
   <!-- ── WIRELESS & MOBILE (12.5) ── -->
@@ -399,16 +463,30 @@
     </div>
 
     <h3>Wireless security standards</h3>
-    <table class="model-table">
-      <thead><tr><th>Standard</th><th>What it added</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">WEP</td><td>The first wireless security protocol, with 64- or 128-bit keys. Broken</td></tr>
-        <tr><td style="font-weight:700;">WPA</td><td>The response to WEP's weaknesses. 256-bit keys, message integrity checks (MIC) to detect altered data, and TKIP for better key handling. WPA-PSK (pre-shared key) is its most common setup. AES later replaced TKIP</td></tr>
-        <tr><td style="font-weight:700;">WPA2</td><td>Made AES mandatory and replaced TKIP with CCMP, an AES-based protocol</td></tr>
-        <tr><td style="font-weight:700;">WPA3</td><td>Builds on WPA2 with stronger cryptography and better key exchange</td></tr>
-        <tr><td style="font-weight:700;">WPS</td><td>Connects devices with a PIN. The PIN can be brute-forced, so <b>disable WPS</b></td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 136" role="img" aria-label="Wireless security from oldest to newest: WEP, which is broken; WPA with TKIP and MIC; WPA2 with mandatory AES and CCMP; WPA3 with stronger cryptography. WPS should be disabled because its PIN can be brute-forced.">
+        <defs><marker id="a7w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+        <g stroke-width="2">
+          <rect x="10" y="16" width="100" height="52" fill="var(--danger-soft)" stroke="var(--danger)"/>
+          <rect x="130" y="16" width="100" height="52" fill="var(--surface-2)" stroke="var(--border)"/>
+          <rect x="250" y="16" width="100" height="52" fill="var(--accent-2-soft)" stroke="var(--accent-2)"/>
+          <rect x="370" y="16" width="100" height="52" fill="var(--correct-soft)" stroke="var(--correct)"/>
+        </g>
+        <g stroke="var(--muted)" stroke-width="2" marker-end="url(#a7w)"><path d="M110 42 H126"/><path d="M230 42 H246"/><path d="M350 42 H366"/></g>
+        <g font-size="13" font-weight="700" text-anchor="middle"><text x="60" y="38" fill="var(--danger)">WEP</text><text x="180" y="38" fill="var(--text)">WPA</text><text x="300" y="38" fill="var(--accent-2)">WPA2</text><text x="420" y="38" fill="var(--correct)">WPA3</text></g>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="60" y="57">broken</text><text x="180" y="57">TKIP + MIC</text><text x="300" y="57">AES / CCMP</text><text x="420" y="57">better crypto</text></g>
+        <rect x="10" y="90" width="460" height="34" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text x="240" y="112" font-size="12" font-weight="700" text-anchor="middle" fill="var(--danger)">WPS: the PIN can be brute-forced, so disable it</text>
+      </svg>
+      <figcaption>Each standard answered the weaknesses of the one before. WPS is a side door, not a step in the line.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>WEP</b><span>The first wireless security protocol, with 64- or 128-bit keys. Broken</span></div>
+      <div class="fcard"><b>WPA</b><span>The response to WEP's weaknesses. 256-bit keys, message integrity checks (MIC) to detect altered data, and TKIP for better key handling. WPA-PSK (pre-shared key) is its most common setup. AES later replaced TKIP</span></div>
+      <div class="fcard"><b>WPA2</b><span>Made AES mandatory and replaced TKIP with CCMP, an AES-based protocol</span></div>
+      <div class="fcard"><b>WPA3</b><span>Builds on WPA2 with stronger cryptography and better key exchange</span></div>
+      <div class="fcard"><b>WPS</b><span>Connects devices with a PIN. The PIN can be brute-forced, so <b>disable WPS</b></span></div>
+    </div>
 
     <h3>Authentication</h3>
     <p>The original 802.11 standard had two methods. <b>Open system authentication</b> lets any device connect; use it only where security doesn't matter. <b>Shared key authentication</b> authenticates and encrypts between the client and the access point. For enterprise networks, <b>EAP</b> (Extensible Authentication Protocol) is the framework: the access point collects the user's ID and password and relays them to an authentication server, which approves or denies the connection.</p>
@@ -424,15 +502,12 @@
     <p>A <b>rogue access point</b> is any unauthorized device that bridges wireless clients onto the network, often imitating a real one to steal data. <b>Mutual authentication</b>, where both sides authenticate each other before connecting, defeats it.</p>
 
     <h3>Mobile communication methods</h3>
-    <table class="model-table">
-      <thead><tr><th>Method</th><th>What it is</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Wi-Fi and Bluetooth</td><td>Wireless signals for network and short-range connections</td></tr>
-        <tr><td style="font-weight:700;">Near-field communication (NFC)</td><td>Contactless communication over a few centimeters, such as tap-to-pay</td></tr>
-        <tr><td style="font-weight:700;">Infrared (IR)</td><td>Short-range, line-of-sight communication, like a phone acting as a TV remote</td></tr>
-        <tr><td style="font-weight:700;">USB</td><td>The only wired method. Used for storage, tethering, and connecting forensic acquisition devices during an investigation</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Wi-Fi and Bluetooth</b><span>Wireless signals for network and short-range connections</span></div>
+      <div class="fcard"><b>Near-field communication (NFC)</b><span>Contactless communication over a few centimeters, such as tap-to-pay</span></div>
+      <div class="fcard"><b>Infrared (IR)</b><span>Short-range, line-of-sight communication, like a phone acting as a TV remote</span></div>
+      <div class="fcard"><b>USB</b><span>The only wired method. Used for storage, tethering, and connecting forensic acquisition devices during an investigation</span></div>
+    </div>
 
     <h3>Managing and protecting mobile devices</h3>
     <p>Company devices may be corporate-owned, or <b>corporate-owned, personally enabled (COPE)</b>; others are BYOD. Mobile device management covers:</p>
@@ -442,14 +517,11 @@
       <li><b>Application management:</b> allow listing signed apps so users install only trusted ones, plus strong passwords for apps that need credentials</li>
     </ul>
     <p>Threats include theft, loss, unauthorized access, and OS, application, and network risks. Users also bypass the device's own limits:</p>
-    <table class="model-table">
-      <thead><tr><th>Bypass</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Jailbreaking</td><td>Removes Apple's restriction to approved apps</td></tr>
-        <tr><td style="font-weight:700;">Rooting</td><td>Bypasses Android's security architecture for full administrative access</td></tr>
-        <tr><td style="font-weight:700;">Sideloading</td><td>Installs unapproved apps from outside the approved store. Less invasive, still a risk</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard dont"><b>Jailbreaking</b><span>Removes Apple's restriction to approved apps</span></div>
+      <div class="fcard dont"><b>Rooting</b><span>Bypasses Android's security architecture for full administrative access</span></div>
+      <div class="fcard dont"><b>Sideloading</b><span>Installs unapproved apps from outside the approved store. Less invasive, still a risk</span></div>
+    </div>
     <p>Tools can detect jailbroken or rooted devices, mark them noncompliant, and cut their access. Safeguards include screen locks, biometric authentication, <b>context-aware authentication</b> (machine learning that judges access by the user's normal behavior), remote wiping, and full device encryption. <b>GPS</b> locates a device to within about 5 meters. Geolocation and geofencing drive location-based push notifications, which attackers have started using to capture data.</p>
 
     <div class="callout xref">
@@ -467,18 +539,17 @@
 
     <h3>High availability</h3>
     <p><b>High availability</b> describes systems designed to avoid downtime as much as possible. It rests on three design principles:</p>
-    <table class="model-table">
-      <thead><tr><th>Principle</th><th>How</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Eliminate single points of failure</td><td>Find every component whose failure takes the whole system down, then add hot standby devices, redundant components, and multiple paths</td></tr>
-        <tr><td style="font-weight:700;">Provide reliable crossover</td><td>Redundant power supplies, backup power, and backup communications that take over smoothly</td></tr>
-        <tr><td style="font-weight:700;">Detect failures as they occur</td><td>Active monitoring that spots failures, and can even trigger the backup system</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Eliminate single points of failure</b><span>Find every component whose failure takes the whole system down, then add hot standby devices, redundant components, and multiple paths</span></div>
+      <div class="fcard"><b>Provide reliable crossover</b><span>Redundant power supplies, backup power, and backup communications that take over smoothly</span></div>
+      <div class="fcard"><b>Detect failures as they occur</b><span>Active monitoring that spots failures, and can even trigger the backup system</span></div>
+    </div>
     <p>A <b>single point of failure</b> can be hardware, a process, a piece of data, a utility, or even one highly skilled staff member. The fix is to stop relying on any single element.</p>
 
     <h3>The five nines</h3>
     <p>A popular availability goal is <b>five nines</b>: 99.999% uptime. Here's what each extra nine buys you:</p>
+    <div class="split">
+      <div>
     <table class="model-table">
       <thead><tr><th>Availability</th><th>Maximum downtime per year</th></tr></thead>
       <tbody>
@@ -487,19 +558,41 @@
         <tr><td style="font-weight:700;">99.999% (five nines)</td><td>About 5.26 minutes</td></tr>
       </tbody>
     </table>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 170" role="img" aria-label="Maximum downtime per year, drawn to scale: about 8.8 hours at three nines, about 53 minutes at four nines, and about 5.26 minutes at five nines.">
+          <text x="100" y="18" font-size="11.5" fill="var(--muted)">max downtime per year, to scale</text>
+          <g font-size="12.5" font-weight="700" fill="var(--text)"><text x="14" y="54">99.9%</text><text x="14" y="104">99.99%</text><text x="14" y="154">99.999%</text></g>
+          <g fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"><rect x="100" y="34" width="360" height="30"/><rect x="100" y="84" width="36" height="30"/><rect x="100" y="134" width="4" height="30"/></g>
+          <g font-size="12" font-weight="700" fill="var(--accent)"><text x="450" y="54" text-anchor="end">≈ 8.8 h</text><text x="146" y="104">≈ 53 min</text><text x="114" y="154">≈ 5.26 min</text></g>
+        </svg>
+        <figcaption>Each extra nine cuts the allowed downtime by a factor of ten.</figcaption>
+      </figure>
+    </div>
     <p>Common steps toward it: <b>standardized systems</b> that use the same components, so parts are easy to stock and swap; <b>clustering</b>, where several devices appear to users as one, so one can fail without an outage; and <b>shared component systems</b>, where a whole system can stand in for one that failed.</p>
 
     <h3>Redundancy techniques</h3>
-    <table class="model-table">
-      <thead><tr><th>Technique</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">N+1 redundancy</td><td>Every component (N) has at least one backup (+1), like a car's four tires and a spare. It survives losing one of each component, but it isn't a fully redundant system</td></tr>
-        <tr><td style="font-weight:700;">RAID</td><td>Spreads data across several drives. <b>Mirroring</b> duplicates data on a second drive, <b>striping</b> spreads consecutive segments across drives, and <b>parity</b> adds checksums so lost data can be rebuilt. Every level except RAID 0 survives losing a disk. Hardware or software based</td></tr>
-        <tr><td style="font-weight:700;">Spanning Tree Protocol (STP)</td><td>Keeps redundant switch links loop-free by blocking extra paths, then unblocks one if the active link or switch fails</td></tr>
-        <tr><td style="font-weight:700;">Router redundancy</td><td>A standby router shares a virtual IP address with the forwarding router, and end devices use that virtual IP as their default gateway. If the standby stops hearing the forwarding router's periodic messages, it takes over. This is <b>first-hop redundancy</b></td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>N+1 redundancy</b><span>Every component (N) has at least one backup (+1), like a car's four tires and a spare. It survives losing one of each component, but it isn't a fully redundant system</span></div>
+      <div class="fcard"><b>RAID</b><span>Spreads data across several drives. <b>Mirroring</b> duplicates data on a second drive, <b>striping</b> spreads consecutive segments across drives, and <b>parity</b> adds checksums so lost data can be rebuilt. Every level except RAID 0 survives losing a disk. Hardware or software based</span></div>
+      <div class="fcard"><b>Spanning Tree Protocol (STP)</b><span>Keeps redundant switch links loop-free by blocking extra paths, then unblocks one if the active link or switch fails</span></div>
+      <div class="fcard"><b>Router redundancy</b><span>A standby router shares a virtual IP address with the forwarding router, and end devices use that virtual IP as their default gateway. If the standby stops hearing the forwarding router's periodic messages, it takes over. This is <b>first-hop redundancy</b></span></div>
+    </div>
 
+    <figure class="fig">
+      <svg viewBox="0 0 480 214" role="img" aria-label="Router redundancy. A forwarding router and a standby router share one virtual IP address, which end devices use as their default gateway. The routers exchange periodic messages.">
+        <g stroke-width="2"><rect x="50" y="20" width="150" height="46" fill="var(--correct-soft)" stroke="var(--correct)"/><rect x="280" y="20" width="150" height="46" fill="var(--surface-2)" stroke="var(--border)"/></g>
+        <g font-size="12.5" font-weight="700" text-anchor="middle"><text x="125" y="48" fill="var(--correct)">FORWARDING</text><text x="355" y="48" fill="var(--text)">STANDBY</text></g>
+        <path d="M200 43 H280" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <g font-size="10.5" text-anchor="middle" fill="var(--muted)"><text x="240" y="36">periodic</text><text x="240" y="58">messages</text></g>
+        <g stroke="var(--border)" stroke-width="2"><path d="M125 66 L210 100"/><path d="M355 66 L270 100" stroke-dasharray="5 4"/><path d="M160 134 V160 M240 134 V160 M320 134 V160"/></g>
+        <rect x="110" y="100" width="260" height="34" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="240" y="122" font-size="12" font-weight="700" text-anchor="middle" fill="var(--accent-2)">virtual IP · default gateway</text>
+        <g stroke-width="1.5" fill="var(--surface)" stroke="var(--border)"><rect x="130" y="160" width="60" height="36"/><rect x="210" y="160" width="60" height="36"/><rect x="290" y="160" width="60" height="36"/></g>
+        <g font-size="12" text-anchor="middle" fill="var(--text)"><text x="160" y="183">PC</text><text x="240" y="183">PC</text><text x="320" y="183">PC</text></g>
+      </svg>
+      <figcaption>First-hop redundancy. The PCs only know the virtual IP, so when the standby stops hearing the forwarding router's messages and takes over, nothing on the PCs has to change.</figcaption>
+    </figure>
     <h3>Location redundancy</h3>
     <table class="model-table">
       <thead><tr><th>Replication</th><th>Timing</th><th>Trade-off</th></tr></thead>
@@ -553,41 +646,32 @@
     <p>Stuxnet (one of the Malware Case File lab's incidents) targeted <b>SCADA</b> (Supervisory Control and Data Acquisition) systems, a type of industrial control system (ICS) used in manufacturing, energy, and communications. SCADA was designed before anyone connected it to IT networks or the internet, so security wasn't part of the design. Separate the SCADA network from the organization's LAN.</p>
 
     <h3>Embedded systems and IoT</h3>
-    <table class="model-table">
-      <thead><tr><th>Term</th><th>What it means</th><th>Security concern</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Internet of Things (IoT)</td><td>Technologies that connect everyday devices to the internet: cars, machines, appliances, locks, cameras, and sensors</td><td>Greatly expands the attack surface. Infected IoT devices have launched some of the largest DDoS attacks in history</td></tr>
-        <tr><td style="font-weight:700;">Embedded system</td><td>A computer built into a device, like a smart TV, HVAC controller, medical device, or car</td><td>Vulnerable to <b>timing attacks</b>, a <b>side-channel attack</b> that learns from how long the system takes to respond. Power use, electromagnetic leaks, and sound can leak information too</td></tr>
-        <tr><td style="font-weight:700;">System on Chip (SoC)</td><td>A small single-board computer, like a Raspberry Pi or Arduino, that integrates the processor and peripherals. Some use an FPGA, a chip that can be reprogrammed in the field</td><td>Often poor authentication, and many can't be patched. They require a level of implied trust</td></tr>
-        <tr><td style="font-weight:700;">Real-time operating system (RTOS)</td><td>A small OS for IoT that switches tasks quickly and focuses on timing</td><td>Code injection, DoS, and priority inversion (a lower-priority task preempting a higher-priority one)</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Internet of Things (IoT)</b><span><span class="k">What it means:</span> Technologies that connect everyday devices to the internet: cars, machines, appliances, locks, cameras, and sensors</span><span><span class="k">Security concern:</span> Greatly expands the attack surface. Infected IoT devices have launched some of the largest DDoS attacks in history</span></div>
+      <div class="fcard"><b>Embedded system</b><span><span class="k">What it means:</span> A computer built into a device, like a smart TV, HVAC controller, medical device, or car</span><span><span class="k">Security concern:</span> Vulnerable to <b>timing attacks</b>, a <b>side-channel attack</b> that learns from how long the system takes to respond. Power use, electromagnetic leaks, and sound can leak information too</span></div>
+      <div class="fcard"><b>System on Chip (SoC)</b><span><span class="k">What it means:</span> A small single-board computer, like a Raspberry Pi or Arduino, that integrates the processor and peripherals. Some use an FPGA, a chip that can be reprogrammed in the field</span><span><span class="k">Security concern:</span> Often poor authentication, and many can't be patched. They require a level of implied trust</span></div>
+      <div class="fcard"><b>Real-time operating system (RTOS)</b><span><span class="k">What it means:</span> A small OS for IoT that switches tasks quickly and focuses on timing</span><span><span class="k">Security concern:</span> Code injection, DoS, and priority inversion (a lower-priority task preempting a higher-priority one)</span></div>
+    </div>
     <p>IoT devices talk over short-, medium-, and long-range methods, including cellular (4G, 5G), radio, and <b>Zigbee</b>, a protocol set for wireless personal area networks. An IoT search engine like <b>Shodan</b> shows whether a device is exposed. To secure IoT: secure the wireless network, know exactly which devices are on your network and what each does, install security software where you can, and secure the phones and apps used to control them.</p>
 
     <h3>VoIP</h3>
     <p>VoIP is only as secure as the network under it. Attackers want free calls, eavesdropping, or to disrupt service. Countermeasures: encrypt voice packets, use SSH to manage gateways and switches, change default passwords, use an IDS to catch attacks like ARP poisoning, use VoIP-aware firewalls, and use strong authentication against <b>registration spoofing</b> (rerouting a victim's incoming calls), <b>proxy impersonation</b> (a rogue proxy), and <b>call hijacking</b> (rerouting calls in transit).</p>
 
     <h3>Special-purpose systems</h3>
-    <table class="model-table">
-      <thead><tr><th>Sector</th><th>Examples</th><th>Risks</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Medical</td><td>Pacemakers, insulin pumps, implants, and defibrillators with wireless, remote monitoring, and NFC</td><td>Patient safety, leaked records, and a foothold into the hospital network</td></tr>
-        <tr><td style="font-weight:700;">Automotive</td><td>In-vehicle systems that record speed, location, and braking</td><td>Unauthorized tracking, jamming, and spoofing. Use secure software design, encrypted controller communication, and firewalls</td></tr>
-        <tr><td style="font-weight:700;">Aviation</td><td>Flight control and communication systems, and drones (UAVs)</td><td>Hard-coded logins, insecure protocols, and backdoors. Drones face hijacking, Wi-Fi attacks, GPS spoofing, jamming, and deauthentication</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Medical</b><span><span class="k">Examples:</span> Pacemakers, insulin pumps, implants, and defibrillators with wireless, remote monitoring, and NFC</span><span><span class="k">Risks:</span> Patient safety, leaked records, and a foothold into the hospital network</span></div>
+      <div class="fcard"><b>Automotive</b><span><span class="k">Examples:</span> In-vehicle systems that record speed, location, and braking</span><span><span class="k">Risks:</span> Unauthorized tracking, jamming, and spoofing. Use secure software design, encrypted controller communication, and firewalls</span></div>
+      <div class="fcard"><b>Aviation</b><span><span class="k">Examples:</span> Flight control and communication systems, and drones (UAVs)</span><span><span class="k">Risks:</span> Hard-coded logins, insecure protocols, and backdoors. Drones face hijacking, Wi-Fi attacks, GPS spoofing, jamming, and deauthentication</span></div>
+    </div>
 
     <h3>Deception technologies</h3>
     <p>Deception adds a fake layer to distract attackers, learn their methods, and warn of attacks.</p>
-    <table class="model-table">
-      <thead><tr><th>Tool</th><th>What it is</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Honeypot</td><td>A decoy system that mimics a real server and is left exposed. Everything the attacker does there is logged</td></tr>
-        <tr><td style="font-weight:700;">Honeynet</td><td>A collection of honeypots that mimics a whole network</td></tr>
-        <tr><td style="font-weight:700;">Honeyfile</td><td>A dummy file that attracts an attacker but holds nothing real</td></tr>
-        <tr><td style="font-weight:700;">DNS sinkhole</td><td>Stops hostnames for specified URLs from resolving, steering users away from malicious sites</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Honeypot</b><span>A decoy system that mimics a real server and is left exposed. Everything the attacker does there is logged</span></div>
+      <div class="fcard"><b>Honeynet</b><span>A collection of honeypots that mimics a whole network</span></div>
+      <div class="fcard"><b>Honeyfile</b><span>A dummy file that attracts an attacker but holds nothing real</span></div>
+      <div class="fcard"><b>DNS sinkhole</b><span>Stops hostnames for specified URLs from resolving, steering users away from malicious sites</span></div>
+    </div>
   </section>
 
   <!-- ── ACCESS CONTROLS (13.1) ── -->
@@ -598,38 +682,41 @@
       <p>Access control decides who gets in and what they can touch. It comes in three kinds, and AAA is the framework that ties them together.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Type</th><th>What it is</th><th>Examples</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Physical</td><td>Barriers that prevent direct contact with systems</td><td>Guards, fences, motion detectors, laptop locks, locked doors, swipe cards, guard dogs, video cameras, mantraps (entries that stagger people through and trap intruders), alarms</td></tr>
-        <tr><td style="font-weight:700;">Logical</td><td>Hardware and software that manage access to resources and systems</td><td>Encryption, smart cards, passwords, biometrics, ACLs, protocols, firewalls, routers, IDS, and <b>clipping levels</b> (an allowed number of errors before an alert)</td></tr>
-        <tr><td style="font-weight:700;">Administrative</td><td>Policies and procedures, focused on personnel and business practices</td><td>Policies, procedures, hiring practices, background checks, data classification, security training, and performance reviews</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Physical</b><span><span class="k">What it is:</span> Barriers that prevent direct contact with systems</span><span><span class="k">Examples:</span> Guards, fences, motion detectors, laptop locks, locked doors, swipe cards, guard dogs, video cameras, mantraps (entries that stagger people through and trap intruders), alarms</span></div>
+      <div class="fcard"><b>Logical</b><span><span class="k">What it is:</span> Hardware and software that manage access to resources and systems</span><span><span class="k">Examples:</span> Encryption, smart cards, passwords, biometrics, ACLs, protocols, firewalls, routers, IDS, and <b>clipping levels</b> (an allowed number of errors before an alert)</span></div>
+      <div class="fcard"><b>Administrative</b><span><span class="k">What it is:</span> Policies and procedures, focused on personnel and business practices</span><span><span class="k">Examples:</span> Policies, procedures, hiring practices, background checks, data classification, security training, and performance reviews</span></div>
+    </div>
 
     <h3>AAA in access control</h3>
-    <table class="model-table">
-      <thead><tr><th>Service</th><th>Question it answers</th><th>How</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Authentication</td><td>Who are you?</td><td>A username or ID, verified by something you know, something you have, or something you are</td></tr>
-        <tr><td style="font-weight:700;">Authorization</td><td>What can you do?</td><td>Which resources a user can reach, which operations they can perform, and when. Often enforced with an ACL</td></tr>
-        <tr><td style="font-weight:700;">Accounting</td><td>What did you do?</td><td>Tracks what users access, for how long, and what they change, for auditing</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 140" role="img" aria-label="AAA in order. Authentication asks who are you. Authorization asks what can you do. Accounting asks what did you do. NetAcad's credit card comparison: who can use it, how much they can spend, what they bought.">
+        <defs><marker id="a7q" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+        <g stroke-width="2" fill="var(--surface-2)"><rect x="10" y="20" width="140" height="64" stroke="var(--accent)"/><rect x="170" y="20" width="140" height="64" stroke="var(--accent-2)"/><rect x="330" y="20" width="140" height="64" stroke="var(--correct)"/></g>
+        <g stroke="var(--muted)" stroke-width="2" marker-end="url(#a7q)"><path d="M150 52 H166"/><path d="M310 52 H326"/></g>
+        <g font-size="12" font-weight="700" text-anchor="middle"><text x="80" y="46" fill="var(--accent)">AUTHENTICATION</text><text x="240" y="46" fill="var(--accent-2)">AUTHORIZATION</text><text x="400" y="46" fill="var(--correct)">ACCOUNTING</text></g>
+        <g font-size="12" text-anchor="middle" fill="var(--text)"><text x="80" y="68">Who are you?</text><text x="240" y="68">What can you do?</text><text x="400" y="68">What did you do?</text></g>
+        <text x="10" y="108" font-size="11" fill="var(--muted)">credit card:</text>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="80" y="126">who can use it</text><text x="240" y="126">how much to spend</text><text x="400" y="126">what they bought</text></g>
+      </svg>
+      <figcaption>The three A’s always run in this order.</figcaption>
+    </figure>
+    <div class="fcards wide">
+      <div class="fcard"><b>Authentication</b><span><span class="k">Question it answers:</span> Who are you?</span><span><span class="k">How:</span> A username or ID, verified by something you know, something you have, or something you are</span></div>
+      <div class="fcard"><b>Authorization</b><span><span class="k">Question it answers:</span> What can you do?</span><span><span class="k">How:</span> Which resources a user can reach, which operations they can perform, and when. Often enforced with an ACL</span></div>
+      <div class="fcard"><b>Accounting</b><span><span class="k">Question it answers:</span> What did you do?</span><span><span class="k">How:</span> Tracks what users access, for how long, and what they change, for auditing</span></div>
+    </div>
     <p>NetAcad compares AAA to a credit card: it identifies who can use it, sets how much they can spend, and records what they bought.</p>
 
     <h3>Identification and federated identity</h3>
     <p><b>Identification</b> uses a <b>unique identifier</b>, usually a username, but possibly a PIN, smart card, or biometric, so the system can tie each action to one person. <b>Federated identity management</b> lets several organizations accept the same credentials, like signing in to many websites with one social login. The user gets single sign-on across the group. The cost: one compromised identity can cascade across every member, so share as little identifying information with partners as possible, and tie logins to authorized devices.</p>
 
     <h3>Authentication factors</h3>
-    <table class="model-table">
-      <thead><tr><th>Factor</th><th>Examples</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Something you know</td><td>Passwords, passphrases, PINs</td><td>At least eight characters, mixing upper and lowercase, numbers, and symbols. Use a different password for every system</td></tr>
-        <tr><td style="font-weight:700;">Something you have</td><td>Smart cards, security key fobs</td><td>Usually used as the second factor in 2FA</td></tr>
-        <tr><td style="font-weight:700;">Something you are</td><td>Physiological traits (fingerprint, face, retina, DNA) and behavioral traits (voice, gait, typing rhythm)</td><td>Needs a reader, software that digitizes the scan, and a database to compare against</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Something you know</b><span><span class="k">Examples:</span> Passwords, passphrases, PINs</span><span><span class="k">Notes:</span> At least eight characters, mixing upper and lowercase, numbers, and symbols. Use a different password for every system</span></div>
+      <div class="fcard"><b>Something you have</b><span><span class="k">Examples:</span> Smart cards, security key fobs</span><span><span class="k">Notes:</span> Usually used as the second factor in 2FA</span></div>
+      <div class="fcard"><b>Something you are</b><span><span class="k">Examples:</span> Physiological traits (fingerprint, face, retina, DNA) and behavioral traits (voice, gait, typing rhythm)</span><span><span class="k">Notes:</span> Needs a reader, software that digitizes the scan, and a database to compare against</span></div>
+    </div>
     <p><b>Multi-factor authentication (MFA)</b> uses at least two different factors, so a stolen password alone doesn't open the account. <b>Two-factor authentication (2FA)</b> is MFA with exactly two; the terms are often used interchangeably.</p>
 
     <h3>Authorization and accountability</h3>
@@ -651,28 +738,36 @@
 
     <h3>Zero trust</h3>
     <p>Traditionally, the network edge was the line between trusted and untrusted. In <b>zero trust</b>, every place an access decision is made is a perimeter. Passing one check doesn't earn trust anywhere else; you authenticate again for each resource. That contains breaches and limits an attacker's lateral movement. It has three pillars:</p>
-    <table class="model-table">
-      <thead><tr><th>Pillar</th><th>Covers</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Workforce</td><td>People (employees, contractors, partners, vendors) on personal or corporate devices. Only the right users on secure devices reach applications, wherever they are</td></tr>
-        <tr><td style="font-weight:700;">Workloads</td><td>Applications in the cloud and data centers talking to each other, like an API or container reaching a database</td></tr>
-        <tr><td style="font-weight:700;">Workplace</td><td>Every device that connects, including IoT: endpoints, servers, printers, cameras, HVAC, kiosks, infusion pumps, and industrial controls</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 206" role="img" aria-label="Left, the traditional model: one wall with one checkpoint, and everything inside is trusted. Right, zero trust: every resource has its own checkpoint.">
+        <g font-size="12.5" font-weight="700" text-anchor="middle"><text x="120" y="22" fill="var(--text)">TRADITIONAL</text><text x="360" y="22" fill="var(--accent)">ZERO TRUST</text></g>
+        <rect x="14" y="40" width="212" height="130" fill="var(--surface-2)" stroke="var(--text)" stroke-width="3"/>
+        <rect x="9" y="100" width="10" height="10" fill="var(--accent)"/>
+        <rect x="34" y="66" width="70" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="69" y="86" font-size="12" text-anchor="middle" fill="var(--text)">app</text><rect x="132" y="66" width="70" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="167" y="86" font-size="12" text-anchor="middle" fill="var(--text)">data</text><rect x="83" y="122" width="70" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="118" y="142" font-size="12" text-anchor="middle" fill="var(--text)">server</text>
+        <g fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 3"><rect x="264" y="58" width="86" height="46"/><rect x="370" y="58" width="86" height="46"/><rect x="317" y="114" width="86" height="46"/></g>
+        <rect x="272" y="66" width="70" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="307" y="86" font-size="12" text-anchor="middle" fill="var(--text)">app</text><rect x="378" y="66" width="70" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="413" y="86" font-size="12" text-anchor="middle" fill="var(--text)">data</text><rect x="325" y="122" width="70" height="30" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="360" y="142" font-size="12" text-anchor="middle" fill="var(--text)">server</text>
+        <rect x="259" y="76" width="10" height="10" fill="var(--accent)"/><rect x="365" y="76" width="10" height="10" fill="var(--accent)"/><rect x="312" y="132" width="10" height="10" fill="var(--accent)"/>
+        <line x1="240" y1="36" x2="240" y2="176" stroke="var(--border)" stroke-width="1"/>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="120" y="192">one check at the edge</text><text x="360" y="192">a check at every resource</text></g>
+      </svg>
+      <figcaption>Red squares are checkpoints. Inside a traditional wall, passing the gate once gets you everywhere; under zero trust, every access decision is its own perimeter.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>Workforce</b><span>People (employees, contractors, partners, vendors) on personal or corporate devices. Only the right users on secure devices reach applications, wherever they are</span></div>
+      <div class="fcard"><b>Workloads</b><span>Applications in the cloud and data centers talking to each other, like an API or container reaching a database</span></div>
+      <div class="fcard"><b>Workplace</b><span>Every device that connects, including IoT: endpoints, servers, printers, cameras, HVAC, kiosks, infusion pumps, and industrial controls</span></div>
+    </div>
 
     <h3>Access control models</h3>
     <p>The <b>principle of least privilege</b> gives users and processes only the access they need. The attack it guards against is <b>privilege escalation</b>: exploiting a vulnerability to gain more privilege than you should have.</p>
-    <table class="model-table">
-      <thead><tr><th>Model</th><th>Who decides access</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Discretionary (DAC)</td><td>The data's owner</td><td>The least restrictive. Owners set permissions (read, write, execute) for others, often with ACLs</td></tr>
-        <tr><td style="font-weight:700;">Mandatory (MAC)</td><td>The system, by comparing labels</td><td>The strictest. Every object has a security label and every user a clearance. Used in military and mission-critical systems</td></tr>
-        <tr><td style="font-weight:700;">Role-based (RBAC)</td><td>The user's job role</td><td>Privileges attach to roles, and people are assigned to roles. A type of non-discretionary control that suits large organizations. Can enforce DAC or MAC policies</td></tr>
-        <tr><td style="font-weight:700;">Attribute-based (ABAC)</td><td>Attributes of the user, the resource, and the environment</td><td>For example, the time of day the access is attempted</td></tr>
-        <tr><td style="font-weight:700;">Rule-based (also "RBAC")</td><td>Rules set by network security staff</td><td>Rules in an ACL, like permitted IP addresses or protocols. Users can't change them</td></tr>
-        <tr><td style="font-weight:700;">Time-based (TAC)</td><td>The time and day</td><td>Access only during set hours</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Discretionary (DAC)</b><span><span class="k">Who decides access:</span> The data's owner</span><span><span class="k">Notes:</span> The least restrictive. Owners set permissions (read, write, execute) for others, often with ACLs</span></div>
+      <div class="fcard"><b>Mandatory (MAC)</b><span><span class="k">Who decides access:</span> The system, by comparing labels</span><span><span class="k">Notes:</span> The strictest. Every object has a security label and every user a clearance. Used in military and mission-critical systems</span></div>
+      <div class="fcard"><b>Role-based (RBAC)</b><span><span class="k">Who decides access:</span> The user's job role</span><span><span class="k">Notes:</span> Privileges attach to roles, and people are assigned to roles. A type of non-discretionary control that suits large organizations. Can enforce DAC or MAC policies</span></div>
+      <div class="fcard"><b>Attribute-based (ABAC)</b><span><span class="k">Who decides access:</span> Attributes of the user, the resource, and the environment</span><span><span class="k">Notes:</span> For example, the time of day the access is attempted</span></div>
+      <div class="fcard"><b>Rule-based (also "RBAC")</b><span><span class="k">Who decides access:</span> Rules set by network security staff</span><span><span class="k">Notes:</span> Rules in an ACL, like permitted IP addresses or protocols. Users can't change them</span></div>
+      <div class="fcard"><b>Time-based (TAC)</b><span><span class="k">Who decides access:</span> The time and day</span><span><span class="k">Notes:</span> Access only during set hours</span></div>
+    </div>
     <div class="callout">
       <b>Watch the acronym:</b> role-based and rule-based access control both abbreviate to RBAC. On a quiz, read the description, not the letters. Roles and job functions mean role-based. ACL rules, IP addresses, and protocols mean rule-based.
     </div>
@@ -710,14 +805,11 @@
       <li>Grant no more access than the job needs, and review access regularly</li>
       <li>Restrict when users can log in (time of day) and from where (location)</li>
     </ul>
-    <table class="model-table">
-      <thead><tr><th>Location term</th><th>Meaning</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Geofencing</td><td>Triggers an action when a user enters or leaves a geographic boundary</td></tr>
-        <tr><td style="font-weight:700;">Geolocation</td><td>Identifies a device by where it is</td></tr>
-        <tr><td style="font-weight:700;">Geotagging</td><td>Adds location data to something, like a phone photo tagged with coordinates</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Geofencing</b><span>Triggers an action when a user enters or leaves a geographic boundary</span></div>
+      <div class="fcard"><b>Geolocation</b><span>Identifies a device by where it is</span></div>
+      <div class="fcard"><b>Geotagging</b><span>Adds location data to something, like a phone photo tagged with coordinates</span></div>
+    </div>
 
     <h3>Privileged accounts</h3>
     <p>Privileged accounts have elevated, unrestricted access, which makes them attackers' favorite target. Robust practices:</p>
@@ -740,16 +832,13 @@
 
     <h3>File access control</h3>
     <p><b>Permissions</b> limit what a user or group can do to a file or folder. Giving someone a whole drive is easier, but limiting them to the folder they need is least privilege, closely tied to <b>need to know</b>. If their computer is infected, the malware only reaches what they could.</p>
-    <table class="model-table">
-      <thead><tr><th>Permission</th><th>What users can do</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Full Control</td><td>See contents, change and delete existing files and folders, create new ones, and run programs</td></tr>
-        <tr><td style="font-weight:700;">Modify</td><td>Change and delete existing files and folders, but not create new ones</td></tr>
-        <tr><td style="font-weight:700;">Read and execute</td><td>See the contents of existing files and folders, and run programs</td></tr>
-        <tr><td style="font-weight:700;">Write</td><td>Create new files and folders, and change existing ones</td></tr>
-        <tr><td style="font-weight:700;">Read</td><td>See a folder's contents and open files and folders</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Full Control</b><span>See contents, change and delete existing files and folders, create new ones, and run programs</span></div>
+      <div class="fcard"><b>Modify</b><span>Change and delete existing files and folders, but not create new ones</span></div>
+      <div class="fcard"><b>Read and execute</b><span>See the contents of existing files and folders, and run programs</span></div>
+      <div class="fcard"><b>Write</b><span>Create new files and folders, and change existing ones</span></div>
+      <div class="fcard"><b>Read</b><span>See a folder's contents and open files and folders</span></div>
+    </div>
     <p>A <b>deny</b> on a network share overrides every other permission, even for administrators. New files and folders <b>inherit</b> their parent folder's permissions. When data moves or is copied:</p>
     <table class="model-table">
       <thead><tr><th>Action</th><th>Same volume</th><th>Different volume</th></tr></thead>
@@ -761,41 +850,32 @@
 
     <h3>Account policies in Windows</h3>
     <p>In a domain, the administrator sets a <b>domain security policy</b> in Active Directory that applies to every domain member. A standalone PC uses <b>Local Security Policy</b>, opened with <code>secpol.msc</code> (every edition except Home).</p>
-    <table class="model-table">
-      <thead><tr><th>Policy</th><th>NetAcad's example</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Password policy</td><td>Eight characters minimum, with three of four categories (uppercase, lowercase, numbers, symbols). A password can be reused only after 24 unique passwords</td></tr>
-        <tr><td style="font-weight:700;">Account lockout policy</td><td>Five wrong attempts locks the account for 30 minutes, then the counter resets</td></tr>
-        <tr><td style="font-weight:700;">Audit policy</td><td>Logs account logon events, account management, directory service access, object access, policy changes, privilege use, process tracking, and system events</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Password policy</b><span><span class="k">NetAcad's example:</span> Eight characters minimum, with three of four categories (uppercase, lowercase, numbers, symbols). A password can be reused only after 24 unique passwords</span></div>
+      <div class="fcard"><b>Account lockout policy</b><span><span class="k">NetAcad's example:</span> Five wrong attempts locks the account for 30 minutes, then the counter resets</span></div>
+      <div class="fcard"><b>Audit policy</b><span><span class="k">NetAcad's example:</span> Logs account logon events, account management, directory service access, object access, policy changes, privilege use, process tracking, and system events</span></div>
+    </div>
 
     <h3>Authentication management</h3>
-    <table class="model-table">
-      <thead><tr><th>Tool</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Single sign-on (SSO)</td><td>One set of credentials for many applications, so users only need to remember one strong password</td></tr>
-        <tr><td style="font-weight:700;">OAuth</td><td>A standard that lets third-party services use your account information from a provider like Google or Facebook</td></tr>
-        <tr><td style="font-weight:700;">Password vault</td><td>Stores credentials behind one strong password</td></tr>
-        <tr><td style="font-weight:700;">Knowledge-based authentication (KBA)</td><td>Resets a forgotten password using personal information or security questions</td></tr>
-        <tr><td style="font-weight:700;">HMAC</td><td>Hash-based message authentication code: a secret key combined with a hash function. The server computes its own HMAC with the user's key, and the two must match. IPsec VPNs and Cisco routing protocol authentication use it</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Single sign-on (SSO)</b><span>One set of credentials for many applications, so users only need to remember one strong password</span></div>
+      <div class="fcard"><b>OAuth</b><span>A standard that lets third-party services use your account information from a provider like Google or Facebook</span></div>
+      <div class="fcard"><b>Password vault</b><span>Stores credentials behind one strong password</span></div>
+      <div class="fcard"><b>Knowledge-based authentication (KBA)</b><span>Resets a forgotten password using personal information or security questions</span></div>
+      <div class="fcard"><b>HMAC</b><span>Hash-based message authentication code: a secret key combined with a hash function. The server computes its own HMAC with the user's key, and the two must match. IPsec VPNs and Cisco routing protocol authentication use it</span></div>
+    </div>
     <p>For new systems, choose SHA-256 or stronger. Avoid MD5 and SHA-1, which have known flaws.</p>
 
     <h3>Authentication protocols</h3>
-    <table class="model-table">
-      <thead><tr><th>Protocol</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">PAP</td><td>Sends the username and password in plaintext</td></tr>
-        <tr><td style="font-weight:700;">CHAP</td><td>The client sends a one-way hash, and the server compares it with the hash it expects</td></tr>
-        <tr><td style="font-weight:700;">EAP</td><td>The client's password is sent hashed to an authentication server that has a certificate (the client doesn't need one)</td></tr>
-        <tr><td style="font-weight:700;">802.1X</td><td>Port-based network access, with identity confirmed by a RADIUS server using credentials or a certificate</td></tr>
-        <tr><td style="font-weight:700;">RADIUS</td><td>Simple username and password checks. Encrypts only the password</td></tr>
-        <tr><td style="font-weight:700;">TACACS+</td><td>Encrypts all data between client and server</td></tr>
-        <tr><td style="font-weight:700;">Kerberos</td><td>Strong encryption, with the client and server each proving their identity to the other</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>PAP</b><span>Sends the username and password in plaintext</span></div>
+      <div class="fcard"><b>CHAP</b><span>The client sends a one-way hash, and the server compares it with the hash it expects</span></div>
+      <div class="fcard"><b>EAP</b><span>The client's password is sent hashed to an authentication server that has a certificate (the client doesn't need one)</span></div>
+      <div class="fcard"><b>802.1X</b><span>Port-based network access, with identity confirmed by a RADIUS server using credentials or a certificate</span></div>
+      <div class="fcard"><b>RADIUS</b><span>Simple username and password checks. Encrypts only the password</span></div>
+      <div class="fcard"><b>TACACS+</b><span>Encrypts all data between client and server</span></div>
+      <div class="fcard"><b>Kerberos</b><span>Strong encryption, with the client and server each proving their identity to the other</span></div>
+    </div>
 
     <div class="callout xref">
       Linux file permissions (<code>rwx</code> and <code>chmod</code>) were in <a href="IT121_Session05.html#filesystem">Session 5</a>. Least privilege first appeared as Session 6's <a href="IT121_Session06.html#layers">limiting</a> strategy.
@@ -810,23 +890,30 @@
       <p>The network security policy says who can connect and what they can do. AAA is the framework that enforces it at scale, and keeps the receipts.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Component</th><th>NetAcad's example</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Authentication</td><td>Proving identity with a username and password, challenge and response, or a token card</td></tr>
-        <tr><td style="font-weight:700;">Authorization</td><td>"User 'student' can access host server XYZ using SSH only."</td></tr>
-        <tr><td style="font-weight:700;">Accounting</td><td>"User 'student' accessed host server XYZ using SSH for 15 minutes."</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Authentication</b><span><span class="k">NetAcad's example:</span> Proving identity with a username and password, challenge and response, or a token card</span></div>
+      <div class="fcard"><b>Authorization</b><span><span class="k">NetAcad's example:</span> "User 'student' can access host server XYZ using SSH only."</span></div>
+      <div class="fcard"><b>Accounting</b><span><span class="k">NetAcad's example:</span> "User 'student' accessed host server XYZ using SSH for 15 minutes."</span></div>
+    </div>
 
     <h3>Local vs. server-based AAA</h3>
-    <table class="model-table">
-      <thead><tr><th>Method</th><th>How it works</th><th>Best for</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Local AAA (self-contained)</td><td>Checks usernames and passwords stored on the device itself</td><td>Small networks</td></tr>
-        <tr><td style="font-weight:700;">Server-based AAA</td><td>Checks a central AAA server, which can use Active Directory or LDAP for users and groups</td><td>Medium to large networks. More scalable and manageable, and the preferred method</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 214" role="img" aria-label="Local AAA: the user logs in to a router that checks its own stored usernames and passwords. Server-based AAA: the router checks with a central AAA server over TACACS+ on TCP 49 or RADIUS on UDP 1812 and 1813; the server can use Active Directory or LDAP.">
+        <defs><marker id="a7l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+        <g font-size="11.5" font-weight="700" fill="var(--muted)"><text x="10" y="18">LOCAL AAA · small networks</text><text x="10" y="118">SERVER-BASED AAA · medium to large</text></g>
+        <g stroke-width="1.5" fill="var(--surface)" stroke="var(--border)"><rect x="10" y="30" width="80" height="44"/><rect x="10" y="130" width="80" height="44"/></g>
+        <g stroke-width="2"><rect x="140" y="30" width="170" height="44" fill="var(--accent-soft)" stroke="var(--accent)"/><rect x="140" y="130" width="100" height="44" fill="var(--surface-2)" stroke="var(--border)"/><rect x="320" y="130" width="150" height="44" fill="var(--accent-soft)" stroke="var(--accent)"/></g>
+        <g stroke="var(--muted)" stroke-width="2" marker-end="url(#a7l)"><path d="M90 52 H136"/><path d="M90 152 H136"/><path d="M240 152 H316"/></g>
+        <g font-size="12.5" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="50" y="57">USER</text><text x="50" y="157">USER</text><text x="225" y="50" fill="var(--accent)">ROUTER</text><text x="190" y="157">ROUTER</text><text x="395" y="150" fill="var(--accent)">AAA SERVER</text></g>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="225" y="66">checks its own list</text><text x="395" y="166">AD or LDAP</text></g>
+        <text x="280" y="196" font-size="11.5" text-anchor="middle" fill="var(--text)">TACACS+ (TCP 49) or RADIUS (UDP 1812/1813)</text>
+      </svg>
+      <figcaption>Same login prompt for the user. The difference is where the router looks up the answer.</figcaption>
+    </figure>
+    <div class="fcards wide">
+      <div class="fcard"><b>Local AAA (self-contained)</b><span><span class="k">How it works:</span> Checks usernames and passwords stored on the device itself</span><span><span class="k">Best for:</span> Small networks</span></div>
+      <div class="fcard"><b>Server-based AAA</b><span><span class="k">How it works:</span> Checks a central AAA server, which can use Active Directory or LDAP for users and groups</span><span><span class="k">Best for:</span> Medium to large networks. More scalable and manageable, and the preferred method</span></div>
+    </div>
     <p>Devices talk to a central AAA server using RADIUS or TACACS+:</p>
     <table class="model-table">
       <thead><tr><th></th><th>TACACS+</th><th>RADIUS</th></tr></thead>
@@ -843,17 +930,14 @@
 
     <h3>AAA accounting</h3>
     <p>Centralized AAA sends accounting records from every device to one place, which makes auditing simpler. When a user authenticates, a <b>start</b> record begins; when they finish, a <b>stop</b> record ends it. Records include the username, date and time, and the exact commands entered, which helps troubleshooting and provides evidence against anyone acting maliciously.</p>
-    <table class="model-table">
-      <thead><tr><th>Accounting type</th><th>What it captures</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Network</td><td>All PPP sessions, with packet and byte counts</td></tr>
-        <tr><td style="font-weight:700;">Connection</td><td>Outbound connections from the AAA client, such as SSH</td></tr>
-        <tr><td style="font-weight:700;">EXEC</td><td>User terminal sessions: username, date, start and stop times, and the access server's IP</td></tr>
-        <tr><td style="font-weight:700;">System</td><td>System-level events, like reboots or accounting being turned on or off</td></tr>
-        <tr><td style="font-weight:700;">Command</td><td>Commands run at a given privilege level, with the time and the user</td></tr>
-        <tr><td style="font-weight:700;">Resource</td><td>Start and stop records for authenticated connections, plus stop records for connections that failed authentication</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Network</b><span>All PPP sessions, with packet and byte counts</span></div>
+      <div class="fcard"><b>Connection</b><span>Outbound connections from the AAA client, such as SSH</span></div>
+      <div class="fcard"><b>EXEC</b><span>User terminal sessions: username, date, start and stop times, and the access server's IP</span></div>
+      <div class="fcard"><b>System</b><span>System-level events, like reboots or accounting being turned on or off</span></div>
+      <div class="fcard"><b>Command</b><span>Commands run at a given privilege level, with the time and the user</span></div>
+      <div class="fcard"><b>Resource</b><span>Start and stop records for authenticated connections, plus stop records for connections that failed authentication</span></div>
+    </div>
   </section>
 
   <!-- ── FLASHCARDS ── -->

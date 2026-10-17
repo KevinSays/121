@@ -150,6 +150,28 @@
   .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
   pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
   pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure.fig svg text, .split > figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
 </style>
 
 <header class="hero">
@@ -218,15 +240,12 @@
       <p>Linux is an open-source operating system: anyone can read, change, and redistribute its source code. It's fast, stable, and runs on everything from routers to the servers behind most websites. For a SOC analyst, Linux isn't optional.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Why it matters</th><th>What that means for an analyst</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Open source</td><td>The code can be inspected and customized, so organizations can strip a system down to just what it needs</td></tr>
-        <tr><td style="font-weight:700;">The command line is the main interface</td><td>Almost everything can be done, scripted, and automated from the shell, including on a remote server with no GUI at all</td></tr>
-        <tr><td style="font-weight:700;">Security tools are built for it</td><td>Packet capture (tcpdump, Wireshark), IDS, SIEM, log management, and malware analysis tools mostly run on Linux. Distributions like <b>Security Onion</b> (monitoring) and <b>Kali Linux</b> (penetration testing) come with them preinstalled</td></tr>
-        <tr><td style="font-weight:700;">It's what the servers run</td><td>A large share of the web, DNS, mail, and cloud servers an analyst investigates are Linux hosts</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Open source</b><span><span class="k">What that means for an analyst:</span> The code can be inspected and customized, so organizations can strip a system down to just what it needs</span></div>
+      <div class="fcard"><b>The command line is the main interface</b><span><span class="k">What that means for an analyst:</span> Almost everything can be done, scripted, and automated from the shell, including on a remote server with no GUI at all</span></div>
+      <div class="fcard"><b>Security tools are built for it</b><span><span class="k">What that means for an analyst:</span> Packet capture (tcpdump, Wireshark), IDS, SIEM, log management, and malware analysis tools mostly run on Linux. Distributions like <b>Security Onion</b> (monitoring) and <b>Kali Linux</b> (penetration testing) come with them preinstalled</span></div>
+      <div class="fcard"><b>It's what the servers run</b><span><span class="k">What that means for an analyst:</span> A large share of the web, DNS, mail, and cloud servers an analyst investigates are Linux hosts</span></div>
+    </div>
 
     <div class="callout">
       <b>A distribution ("distro")</b> is the Linux kernel packaged with a set of tools, a package manager, and usually a desktop. Ubuntu, Debian, Fedora, Red Hat Enterprise Linux, Arch, and Kali are all distros. The commands in this session work the same way on nearly all of them.
@@ -241,18 +260,15 @@
       <p>The shell (usually <code>bash</code> or <code>zsh</code>) takes typed commands and runs them. You reach it through a <b>terminal emulator</b> window, or over the network with SSH.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;"><code>man</code></td><td>Opens the manual page for a command (<code>man ls</code>), which is the first place to look when you forget an option</td></tr>
-        <tr><td style="font-weight:700;"><code>pwd</code> / <code>cd</code> / <code>ls</code></td><td>Show the current directory, change directory, list what's in it</td></tr>
-        <tr><td style="font-weight:700;"><code>mkdir</code> / <code>cp</code> / <code>mv</code> / <code>rm</code></td><td>Make a directory, copy, move or rename, and remove files</td></tr>
-        <tr><td style="font-weight:700;"><code>cat</code> / <code>less</code></td><td>Print a whole file to the screen, or page through a long one</td></tr>
-        <tr><td style="font-weight:700;"><code>grep</code></td><td>Search text for a pattern (<code>grep "Failed password" auth.log</code>). Analysts use it constantly</td></tr>
-        <tr><td style="font-weight:700;"><code>sudo</code> / <code>su</code></td><td>Run one command as root, or switch to another user entirely</td></tr>
-        <tr><td style="font-weight:700;"><code>nano</code> / <code>vi</code></td><td>Terminal text editors, for when there's no GUI and a config file needs editing</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b><code>man</code></b><span>Opens the manual page for a command (<code>man ls</code>), which is the first place to look when you forget an option</span></div>
+      <div class="fcard"><b><code>pwd</code> / <code>cd</code> / <code>ls</code></b><span>Show the current directory, change directory, list what's in it</span></div>
+      <div class="fcard"><b><code>mkdir</code> / <code>cp</code> / <code>mv</code> / <code>rm</code></b><span>Make a directory, copy, move or rename, and remove files</span></div>
+      <div class="fcard"><b><code>cat</code> / <code>less</code></b><span>Print a whole file to the screen, or page through a long one</span></div>
+      <div class="fcard"><b><code>grep</code></b><span>Search text for a pattern (<code>grep "Failed password" auth.log</code>). Analysts use it constantly</span></div>
+      <div class="fcard"><b><code>sudo</code> / <code>su</code></b><span>Run one command as root, or switch to another user entirely</span></div>
+      <div class="fcard"><b><code>nano</code> / <code>vi</code></b><span>Terminal text editors, for when there's no GUI and a config file needs editing</span></div>
+    </div>
 
     <div class="callout">
       <b>In Linux, nearly everything is a text file.</b> Configuration lives in plain text under <code>/etc</code>, and logs are plain text under <code>/var/log</code>. That's why the objective for this subtopic is manipulating text files: reading, searching, and editing text is most of the job.
@@ -280,13 +296,10 @@
     </table>
 
     <h3>Finding what's running</h3>
-    <table class="model-table">
-      <thead><tr><th>Command</th><th>What it shows</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;"><code>netstat -tuln</code> or <code>ss -tuln</code></td><td>Listening TCP and UDP ports. <code>ss</code> is the newer replacement for <code>netstat</code> on most current distros</td></tr>
-        <tr><td style="font-weight:700;"><code>ps</code> (e.g. <code>ps aux</code>)</td><td>Running processes, including the server programs behind those ports</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b><code>netstat -tuln</code> or <code>ss -tuln</code></b><span>Listening TCP and UDP ports. <code>ss</code> is the newer replacement for <code>netstat</code> on most current distros</span></div>
+      <div class="fcard"><b><code>ps</code> (e.g. <code>ps aux</code>)</b><span>Running processes, including the server programs behind those ports</span></div>
+    </div>
 
     <div class="callout xref">
       Same idea as <code>netstat</code> on Windows in <a href="IT121_Session04.html#winconfig">Session 4</a>. An unexpected listening port is suspicious on either OS.
@@ -310,16 +323,13 @@
     </ul>
 
     <h3>Where the logs are</h3>
-    <table class="model-table">
-      <thead><tr><th>Log file</th><th>What it records</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;"><code>/var/log/auth.log</code> (Debian/Ubuntu) or <code>/var/log/secure</code> (Red Hat family)</td><td>Authentication events: logins, failed passwords, <code>sudo</code> use</td></tr>
-        <tr><td style="font-weight:700;"><code>/var/log/syslog</code> or <code>/var/log/messages</code></td><td>General system activity from many services</td></tr>
-        <tr><td style="font-weight:700;"><code>/var/log/kern.log</code> and <code>dmesg</code></td><td>Kernel messages: hardware, drivers, boot events</td></tr>
-        <tr><td style="font-weight:700;"><code>/var/log/cron</code></td><td>Scheduled jobs run by cron</td></tr>
-        <tr><td style="font-weight:700;">Application logs (e.g. <code>/var/log/apache2/</code>, <code>/var/log/nginx/</code>)</td><td>Per-service activity, like every request a web server handled</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b><code>/var/log/auth.log</code> (Debian/Ubuntu) or <code>/var/log/secure</code> (Red Hat family)</b><span>Authentication events: logins, failed passwords, <code>sudo</code> use</span></div>
+      <div class="fcard"><b><code>/var/log/syslog</code> or <code>/var/log/messages</code></b><span>General system activity from many services</span></div>
+      <div class="fcard"><b><code>/var/log/kern.log</code> and <code>dmesg</code></b><span>Kernel messages: hardware, drivers, boot events</span></div>
+      <div class="fcard"><b><code>/var/log/cron</code></b><span>Scheduled jobs run by cron</span></div>
+      <div class="fcard"><b>Application logs (e.g. <code>/var/log/apache2/</code>, <code>/var/log/nginx/</code>)</b><span>Per-service activity, like every request a web server handled</span></div>
+    </div>
 
     <div class="callout">
       <b><code>tail -f</code> is the live view.</b> <code>tail -f /var/log/auth.log</code> prints new lines as they're written, so you can watch logins happen in real time. On systemd-based distros, <code>journalctl</code> reads the same events from the system journal.
@@ -334,16 +344,23 @@
       <p>Linux has a single directory tree that starts at <code>/</code>. Drives and partitions are <b>mounted</b> into that tree instead of getting their own drive letters.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>File system type</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">ext2 / ext3 / ext4</td><td>The standard Linux file systems. ext3 added journaling, and ext4 is the current default on many distros</td></tr>
-        <tr><td style="font-weight:700;">NFS</td><td>Network File System: mounts a directory shared by another machine over the network</td></tr>
-        <tr><td style="font-weight:700;">swap</td><td>Disk space used as overflow when RAM is full</td></tr>
-        <tr><td style="font-weight:700;">CDFS, HFS+, APFS</td><td>Optical media, and Apple's older and current file systems, which Linux can also mount</td></tr>
-        <tr><td style="font-weight:700;">MBR (master boot record)</td><td>Not a file system, but you'll see it alongside them: the first sector of a partitioned disk, which stores how the file system is organized</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 170" role="img" aria-label="One Linux directory tree starting at slash. Configuration lives under /etc, logs under /var/log, and a drive is mounted into the tree instead of getting its own drive letter.">
+        <path d="M240 46 V70 M90 70 H390 M90 70 V100 M240 70 V100 M390 70 V100" fill="none" stroke="var(--border)" stroke-width="2"/>
+        <rect x="200" y="14" width="80" height="32" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+        <g stroke-width="1.5"><rect x="30" y="100" width="120" height="36" fill="var(--surface-2)" stroke="var(--border)"/><rect x="180" y="100" width="120" height="36" fill="var(--surface-2)" stroke="var(--border)"/><rect x="330" y="100" width="120" height="36" fill="none" stroke="var(--accent-2)" stroke-dasharray="5 4"/></g>
+        <g font-size="13" font-weight="700" text-anchor="middle"><text x="240" y="35" fill="var(--accent)">/</text><text x="90" y="123" fill="var(--text)">/etc</text><text x="240" y="123" fill="var(--text)">/var/log</text><text x="390" y="123" fill="var(--accent-2)">mounted drive</text></g>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="90" y="156">config files</text><text x="240" y="156">log files</text><text x="390" y="156">joins the tree</text></g>
+      </svg>
+      <figcaption>One tree, one root. A USB drive or a second disk shows up as a folder, not as a new drive letter.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>ext2 / ext3 / ext4</b><span>The standard Linux file systems. ext3 added journaling, and ext4 is the current default on many distros</span></div>
+      <div class="fcard"><b>NFS</b><span>Network File System: mounts a directory shared by another machine over the network</span></div>
+      <div class="fcard"><b>swap</b><span>Disk space used as overflow when RAM is full</span></div>
+      <div class="fcard"><b>CDFS, HFS+, APFS</b><span>Optical media, and Apple's older and current file systems, which Linux can also mount</span></div>
+      <div class="fcard"><b>MBR (master boot record)</b><span>Not a file system, but you'll see it alongside them: the first sector of a partitioned disk, which stores how the file system is organized</span></div>
+    </div>
 
     <h3>Permissions</h3>
     <p>Every file has an <b>owner</b>, a <b>group</b>, and <b>others</b>. Each of those three gets <b>r</b>ead, <b>w</b>rite, and e<b>x</b>ecute bits. In numbers, r=4, w=2, x=1, added up for each of the three.</p>
@@ -387,14 +404,17 @@
       <p>Unlike Windows, the Linux graphical interface is a separate, swappable layer on top of the OS. A server usually has no GUI at all.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Component</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Display server (X Window System / X11, or Wayland)</td><td>The low-level layer that draws to the screen and handles keyboard and mouse input</td></tr>
-        <tr><td style="font-weight:700;">Window manager</td><td>Controls where windows go and how they look, move, and resize</td></tr>
-        <tr><td style="font-weight:700;">Desktop environment (GNOME, KDE Plasma, Xfce, …)</td><td>The full package: window manager, panels, app menu, file manager, and settings</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 204" role="img" aria-label="The Linux GUI as stacked layers: a desktop environment on top of a window manager, on top of a display server, on top of the Linux OS and shell. The OS and shell work without the layers above.">
+        <rect x="40" y="14" width="400" height="40" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2"/><text x="56" y="39" font-size="12.5" font-weight="700" fill="var(--text)">DESKTOP ENVIRONMENT</text><text x="424" y="39" font-size="11" text-anchor="end" fill="var(--muted)">GNOME, KDE Plasma, Xfce</text><rect x="40" y="60" width="400" height="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text x="56" y="85" font-size="12.5" font-weight="700" fill="var(--text)">WINDOW MANAGER</text><text x="424" y="85" font-size="11" text-anchor="end" fill="var(--muted)">places and sizes windows</text><rect x="40" y="106" width="400" height="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text x="56" y="131" font-size="12.5" font-weight="700" fill="var(--text)">DISPLAY SERVER</text><text x="424" y="131" font-size="11" text-anchor="end" fill="var(--muted)">X11 or Wayland</text><rect x="40" y="152" width="400" height="40" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/><text x="56" y="177" font-size="12.5" font-weight="700" fill="var(--text)">LINUX OS + SHELL</text><text x="424" y="177" font-size="11" text-anchor="end" fill="var(--muted)">runs with or without a GUI</text>
+      </svg>
+      <figcaption>Each layer sits on the one below and can be swapped out. Take away the top three and the server still runs.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>Display server (X Window System / X11, or Wayland)</b><span>The low-level layer that draws to the screen and handles keyboard and mouse input</span></div>
+      <div class="fcard"><b>Window manager</b><span>Controls where windows go and how they look, move, and resize</span></div>
+      <div class="fcard"><b>Desktop environment (GNOME, KDE Plasma, Xfce, …)</b><span>The full package: window manager, panels, app menu, file manager, and settings</span></div>
+    </div>
 
     <div class="callout">
       <b>The GUI is optional, the shell isn't.</b> Many production servers never install a GUI, which uses fewer resources and leaves less software to attack. Even on a desktop, the terminal is one click away and is where real admin work happens.
@@ -409,18 +429,25 @@
       <p>Installing software, keeping it updated, watching processes, and checking for malware. This is day-to-day Linux host care.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Task</th><th>How</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Install / run applications</td><td>Use the distro's <b>package manager</b>: <code>apt</code> (Debian/Ubuntu), <code>dnf</code>/<code>yum</code> (Red Hat family), <code>pacman</code> (Arch). It pulls signed packages from trusted repositories</td></tr>
-        <tr><td style="font-weight:700;">Keep the system up to date</td><td><code>sudo apt update &amp;&amp; sudo apt upgrade</code> (or your distro's equivalent). This is patching, the same job Windows Update does</td></tr>
-        <tr><td style="font-weight:700;">Processes and forks</td><td>A new process is created by <b>forking</b> (copying) an existing one, so every process has a parent. <code>ps</code> lists them, <code>top</code> shows them live, and <code>kill</code> stops one by its PID</td></tr>
-        <tr><td style="font-weight:700;">Malware on a Linux host</td><td>Less common than on Windows, but real, and aimed mostly at servers: backdoors, cryptominers, botnet agents, and <b>rootkits</b></td></tr>
-        <tr><td style="font-weight:700;">Rootkit check</td><td>A rootkit hides itself by modifying the OS. Tools like <code>chkrootkit</code> scan for known rootkit signs</td></tr>
-        <tr><td style="font-weight:700;">Piping commands</td><td><code>|</code> sends one command's output into another: <code>ps aux | grep ssh</code>, or <code>cat auth.log | grep Failed | wc -l</code> to count failed logins</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Install / run applications</b><span>Use the distro's <b>package manager</b>: <code>apt</code> (Debian/Ubuntu), <code>dnf</code>/<code>yum</code> (Red Hat family), <code>pacman</code> (Arch). It pulls signed packages from trusted repositories</span></div>
+      <div class="fcard"><b>Keep the system up to date</b><span><code>sudo apt update &amp;&amp; sudo apt upgrade</code> (or your distro's equivalent). This is patching, the same job Windows Update does</span></div>
+      <div class="fcard"><b>Processes and forks</b><span>A new process is created by <b>forking</b> (copying) an existing one, so every process has a parent. <code>ps</code> lists them, <code>top</code> shows them live, and <code>kill</code> stops one by its PID</span></div>
+      <div class="fcard"><b>Malware on a Linux host</b><span>Less common than on Windows, but real, and aimed mostly at servers: backdoors, cryptominers, botnet agents, and <b>rootkits</b></span></div>
+      <div class="fcard"><b>Rootkit check</b><span>A rootkit hides itself by modifying the OS. Tools like <code>chkrootkit</code> scan for known rootkit signs</span></div>
+      <div class="fcard"><b>Piping commands</b><span><code>|</code> sends one command's output into another: <code>ps aux | grep ssh</code>, or <code>cat auth.log | grep Failed | wc -l</code> to count failed logins</span></div>
+    </div>
 
+    <figure class="fig">
+      <svg viewBox="0 0 480 110" role="img" aria-label="A pipeline: cat auth.log prints every line, grep Failed keeps only failed logins, and wc -l counts them.">
+        <g stroke-width="2" fill="var(--surface-2)" stroke="var(--border)"><rect x="10" y="20" width="130" height="40"/><rect x="170" y="20" width="130" height="40"/><rect x="330" y="20" width="90" height="40"/></g>
+        <g font-size="12.5" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="75" y="45">cat auth.log</text><text x="235" y="45">grep Failed</text><text x="375" y="45">wc -l</text></g>
+        <g font-size="22" font-weight="700" text-anchor="middle" fill="var(--accent)"><text x="155" y="48">|</text><text x="315" y="48">|</text></g>
+        <text x="450" y="46" font-size="16" font-weight="700" text-anchor="middle" fill="var(--accent-2)">#</text>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="75" y="82">every line</text><text x="235" y="82">failed logins only</text><text x="375" y="82">count lines</text><text x="450" y="82">a number</text></g>
+      </svg>
+      <figcaption>Each <code>|</code> hands one command’s output to the next. Small tools, chained, answer a real question.</figcaption>
+    </figure>
     <div class="callout">
       <b>A rootkit can lie to the tools you'd use to find it.</b> If the kernel or <code>ps</code> itself has been tampered with, a clean-looking process list proves nothing. That's why rootkit checks look for signs of tampering, and why a heavily compromised host is usually rebuilt instead of trusted.
     </div>
@@ -434,20 +461,17 @@
       <p>Everything so far comes down to one job: reduce what an attacker can reach, keep what's left patched, and protect the device even when someone has it in their hands.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Control</th><th>What it involves</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Operating system security (hardening)</td><td>Start from a secure baseline: remove unneeded programs and services, change default accounts and passwords, apply least privilege</td></tr>
-        <tr><td style="font-weight:700;">Antimalware</td><td>Antivirus, antispyware, and adware and phishing protection. Only install software from trusted sources</td></tr>
-        <tr><td style="font-weight:700;">Patch management</td><td>A planned process for testing and deploying updates across every system, not just whenever someone remembers</td></tr>
-        <tr><td style="font-weight:700;">Endpoint security</td><td>Host-based firewalls, host-based intrusion detection and prevention, and endpoint security suites (Concepts 9–10)</td></tr>
-        <tr><td style="font-weight:700;">Host encryption</td><td>Encrypt files or entire drives (e.g. BitLocker, EFS) so stolen data can't be read</td></tr>
-        <tr><td style="font-weight:700;">Boot integrity</td><td>UEFI <b>Secure Boot</b> only loads a signed, trusted bootloader and OS, which blocks bootkits that load before the OS can defend itself</td></tr>
-        <tr><td style="font-weight:700;">Physical protection</td><td>Cable locks, locked rooms and cabinets, badge access, and asset tags. Someone with physical access can bypass most software controls</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Operating system security (hardening)</b><span>Start from a secure baseline: remove unneeded programs and services, change default accounts and passwords, apply least privilege</span></div>
+      <div class="fcard"><b>Antimalware</b><span>Antivirus, antispyware, and adware and phishing protection. Only install software from trusted sources</span></div>
+      <div class="fcard"><b>Patch management</b><span>A planned process for testing and deploying updates across every system, not just whenever someone remembers</span></div>
+      <div class="fcard"><b>Endpoint security</b><span>Host-based firewalls, host-based intrusion detection and prevention, and endpoint security suites (Concepts 9–10)</span></div>
+      <div class="fcard"><b>Host encryption</b><span>Encrypt files or entire drives (e.g. BitLocker, EFS) so stolen data can't be read</span></div>
+      <div class="fcard"><b>Boot integrity</b><span>UEFI <b>Secure Boot</b> only loads a signed, trusted bootloader and OS, which blocks bootkits that load before the OS can defend itself</span></div>
+      <div class="fcard"><b>Physical protection</b><span>Cable locks, locked rooms and cabinets, badge access, and asset tags. Someone with physical access can bypass most software controls</span></div>
+    </div>
 
-    <p>Every row in that table depends on one thing: knowing what's <em>supposed</em> to be there. You can't remove unneeded services, spot an unauthorized program, or notice a device that doesn't belong unless you've first written down what normal looks like. That record is a <b>baseline configuration</b> (how each system should be set up) plus an <b>asset inventory</b> (every system, device, and piece of software you own). Defenders relied on the same idea long before computers existed.</p>
+    <p>Every control above depends on one thing: knowing what's <em>supposed</em> to be there. You can't remove unneeded services, spot an unauthorized program, or notice a device that doesn't belong unless you've first written down what normal looks like. That record is a <b>baseline configuration</b> (how each system should be set up) plus an <b>asset inventory</b> (every system, device, and piece of software you own). Defenders relied on the same idea long before computers existed.</p>
 
     <div class="callout analogy">
       <span class="lbl">Think of it like… the village that knew everyone</span>
@@ -457,27 +481,21 @@
     </div>
 
     <h3>Endpoint security options</h3>
-    <table class="model-table">
-      <thead><tr><th>Option</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Endpoint detection and response (EDR)</td><td>Continuously monitors, collects, and analyzes data from an endpoint, and responds to threats it detects</td></tr>
-        <tr><td style="font-weight:700;">Data loss prevention (DLP)</td><td>Centrally makes sure sensitive data isn't lost, misused, or accessed by unauthorized users</td></tr>
-        <tr><td style="font-weight:700;">Next-generation firewall (NGFW)</td><td>A network device that combines a traditional firewall with other filtering functions (<a href="IT121_Session04.html#secdevices">Session 4</a>)</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Endpoint detection and response (EDR)</b><span>Continuously monitors, collects, and analyzes data from an endpoint, and responds to threats it detects</span></div>
+      <div class="fcard"><b>Data loss prevention (DLP)</b><span>Centrally makes sure sensitive data isn't lost, misused, or accessed by unauthorized users</span></div>
+      <div class="fcard"><b>Next-generation firewall (NGFW)</b><span>A network device that combines a traditional firewall with other filtering functions (<a href="IT121_Session04.html#secdevices">Session 4</a>)</span></div>
+    </div>
 
     <h3>Apple's built-in protections</h3>
-    <table class="model-table">
-      <thead><tr><th>Feature</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Security-focused hardware and encrypted storage</td><td>A dedicated AES encryption engine that supports FileVault and Apple Data Protection</td></tr>
-        <tr><td style="font-weight:700;">Secure boot and secure biometric data</td><td>The Boot ROM only lets genuine Apple OS software run, and biometric data is processed in security hardware, apart from the OS and apps</td></tr>
-        <tr><td style="font-weight:700;">XProtect</td><td>Signature-based antimalware that blocks known malware and offers to remove it</td></tr>
-        <tr><td style="font-weight:700;">Malware Removal Tool (MRT)</td><td>Removes existing infections using rules Apple updates automatically, checking at restart and login</td></tr>
-        <tr><td style="font-weight:700;">Gatekeeper</td><td>Only allows authentic, digitally signed software from Apple-notarized developers to be installed</td></tr>
-        <tr><td style="font-weight:700;">Find My Mac</td><td>Locates a lost or stolen Mac, and can lock it or erase it remotely</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Security-focused hardware and encrypted storage</b><span>A dedicated AES encryption engine that supports FileVault and Apple Data Protection</span></div>
+      <div class="fcard"><b>Secure boot and secure biometric data</b><span>The Boot ROM only lets genuine Apple OS software run, and biometric data is processed in security hardware, apart from the OS and apps</span></div>
+      <div class="fcard"><b>XProtect</b><span>Signature-based antimalware that blocks known malware and offers to remove it</span></div>
+      <div class="fcard"><b>Malware Removal Tool (MRT)</b><span>Removes existing infections using rules Apple updates automatically, checking at restart and login</span></div>
+      <div class="fcard"><b>Gatekeeper</b><span>Only allows authentic, digitally signed software from Apple-notarized developers to be installed</span></div>
+      <div class="fcard"><b>Find My Mac</b><span>Locates a lost or stolen Mac, and can lock it or erase it remotely</span></div>
+    </div>
   </section>
 
   <!-- ── ANTIMALWARE PROTECTION (9.2) ── -->
@@ -489,25 +507,19 @@
     </div>
 
     <h3>How host-based antimalware detects malware</h3>
-    <table class="model-table">
-      <thead><tr><th>Method</th><th>How it works</th><th>Weak spot</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Signature-based</td><td>Matches files against a database of known malware "fingerprints"</td><td>Misses new or modified malware it has no signature for</td></tr>
-        <tr><td style="font-weight:700;">Heuristics-based</td><td>Looks for general traits common to malware, like suspicious code patterns</td><td>More false positives</td></tr>
-        <tr><td style="font-weight:700;">Behavior-based</td><td>Watches what a program actually does while it runs, e.g. mass-encrypting files</td><td>The malware has to start running before it's caught</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Signature-based</b><span><span class="k">How it works:</span> Matches files against a database of known malware "fingerprints"</span><span><span class="k">Weak spot:</span> Misses new or modified malware it has no signature for</span></div>
+      <div class="fcard"><b>Heuristics-based</b><span><span class="k">How it works:</span> Looks for general traits common to malware, like suspicious code patterns</span><span><span class="k">Weak spot:</span> More false positives</span></div>
+      <div class="fcard"><b>Behavior-based</b><span><span class="k">How it works:</span> Watches what a program actually does while it runs, e.g. mass-encrypting files</span><span><span class="k">Weak spot:</span> The malware has to start running before it's caught</span></div>
+    </div>
 
     <h3>Network-based malware protection</h3>
-    <table class="model-table">
-      <thead><tr><th>Layer</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Advanced malware protection (AMP)</td><td>Endpoint and network protection that keeps tracking files after they've been let in, so it can flag them later if they turn out to be malicious</td></tr>
-        <tr><td style="font-weight:700;">Email security appliance (ESA)</td><td>Filters spam and malicious attachments and links before they reach an inbox</td></tr>
-        <tr><td style="font-weight:700;">Web security appliance (WSA)</td><td>Filters web traffic and blocks known-bad sites and downloads</td></tr>
-        <tr><td style="font-weight:700;">Network Access Control (NAC)</td><td>Keeps non-compliant devices (unpatched, no antivirus) off the network</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Advanced malware protection (AMP)</b><span>Endpoint and network protection that keeps tracking files after they've been let in, so it can flag them later if they turn out to be malicious</span></div>
+      <div class="fcard"><b>Email security appliance (ESA)</b><span>Filters spam and malicious attachments and links before they reach an inbox</span></div>
+      <div class="fcard"><b>Web security appliance (WSA)</b><span>Filters web traffic and blocks known-bad sites and downloads</span></div>
+      <div class="fcard"><b>Network Access Control (NAC)</b><span>Keeps non-compliant devices (unpatched, no antivirus) off the network</span></div>
+    </div>
 
     <div class="callout xref">
       ESA, WSA, and NAC are the specialized appliances from <a href="IT121_Session04.html#secdevices">Session 4's security devices</a>, now seen as part of malware defense.
@@ -524,24 +536,18 @@
       <p>Session 4's IDS and IPS protect the network. The host-based versions run on each endpoint, where they can see things network sensors can't, such as traffic after it's decrypted or a system file being changed.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Tool</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Host-based firewall</td><td>Filters traffic in and out of one machine: Windows Defender Firewall, or <code>iptables</code>/<code>nftables</code> (with front ends like <code>ufw</code> and <code>firewalld</code>) on Linux. <b>TCP Wrappers</b> is an older rule-based access control and logging system for Linux services</td></tr>
-        <tr><td style="font-weight:700;">HIDS (host-based intrusion detection)</td><td>Monitors a host's logs, file integrity, registry or config changes, and running processes, and alerts on anything suspicious. OSSEC is a common open-source example</td></tr>
-        <tr><td style="font-weight:700;">HIPS (host-based intrusion prevention)</td><td>Same visibility as a HIDS, but it can also block the action, not just alert</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Host-based firewall</b><span>Filters traffic in and out of one machine: Windows Defender Firewall, or <code>iptables</code>/<code>nftables</code> (with front ends like <code>ufw</code> and <code>firewalld</code>) on Linux. <b>TCP Wrappers</b> is an older rule-based access control and logging system for Linux services</span></div>
+      <div class="fcard"><b>HIDS (host-based intrusion detection)</b><span>Monitors a host's logs, file integrity, registry or config changes, and running processes, and alerts on anything suspicious. OSSEC is a common open-source example</span></div>
+      <div class="fcard"><b>HIPS (host-based intrusion prevention)</b><span>Same visibility as a HIDS, but it can also block the action, not just alert</span></div>
+    </div>
 
     <h3>How a HIDS decides something is wrong</h3>
-    <table class="model-table">
-      <thead><tr><th>Approach</th><th>Idea</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Anomaly-based</td><td>Learn what normal looks like on this host, then flag deviations from it</td></tr>
-        <tr><td style="font-weight:700;">Policy-based</td><td>Flag anything that breaks a defined rule, e.g. "nothing may modify <code>/etc/passwd</code> except <code>passwd</code>"</td></tr>
-        <tr><td style="font-weight:700;">Signature-based</td><td>Match known attack patterns, the same idea as signature-based antimalware</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Anomaly-based</b><span>Learn what normal looks like on this host, then flag deviations from it</span></div>
+      <div class="fcard"><b>Policy-based</b><span>Flag anything that breaks a defined rule, e.g. "nothing may modify <code>/etc/passwd</code> except <code>passwd</code>"</span></div>
+      <div class="fcard"><b>Signature-based</b><span>Match known attack patterns, the same idea as signature-based antimalware</span></div>
+    </div>
   </section>
 
   <!-- ── APPLICATION SECURITY (9.4) ── -->
@@ -552,14 +558,20 @@
       <p>Every installed application adds to the <b>attack surface</b>, the total set of points where an attacker could try to get in. Application security shrinks that surface and makes unknown programs safe to examine.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Technique</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Block list (blacklist)</td><td>Name what's <em>not</em> allowed to run, and allow everything else. Easy to manage, but anything not on the list gets through</td></tr>
-        <tr><td style="font-weight:700;">Allow list (whitelist)</td><td>Name what <em>is</em> allowed to run, and block everything else. Much stronger, but more work to maintain</td></tr>
-        <tr><td style="font-weight:700;">Sandboxing</td><td>Run a suspicious file in an isolated environment and watch what it does: files touched, registry changes, network calls. Examples include Cuckoo Sandbox, ANY.RUN, and Cisco's Threat Grid</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 196" role="img" aria-label="A block list blocks known bad programs but lets unknown programs run. An allow list lets only approved programs run, so unknown programs are blocked too.">
+        <g font-size="12.5" font-weight="700" text-anchor="middle"><text x="120" y="24" fill="var(--danger)">BLOCK LIST</text><text x="360" y="24" fill="var(--correct)">ALLOW LIST</text></g>
+        <rect x="10" y="40" width="220" height="32" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="22" y="61" font-size="12" fill="var(--text)">known bad</text><text x="218" y="61" font-size="12" font-weight="700" text-anchor="end" fill="var(--muted)">blocked</text><rect x="250" y="40" width="220" height="32" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="262" y="61" font-size="12" fill="var(--text)">known bad</text><text x="458" y="61" font-size="12" font-weight="700" text-anchor="end" fill="var(--muted)">blocked</text><rect x="10" y="80" width="220" height="32" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="22" y="101" font-size="12" fill="var(--text)">unknown</text><text x="218" y="101" font-size="12" font-weight="700" text-anchor="end" fill="var(--danger)">runs</text><rect x="250" y="80" width="220" height="32" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="262" y="101" font-size="12" fill="var(--text)">unknown</text><text x="458" y="101" font-size="12" font-weight="700" text-anchor="end" fill="var(--muted)">blocked</text><rect x="10" y="120" width="220" height="32" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="22" y="141" font-size="12" fill="var(--text)">approved</text><text x="218" y="141" font-size="12" font-weight="700" text-anchor="end" fill="var(--correct)">runs</text><rect x="250" y="120" width="220" height="32" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="262" y="141" font-size="12" fill="var(--text)">approved</text><text x="458" y="141" font-size="12" font-weight="700" text-anchor="end" fill="var(--correct)">runs</text>
+        <rect x="10" y="80" width="220" height="32" fill="none" stroke="var(--danger)" stroke-width="2.5"/>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="120" y="182">easy, but the unknown gets in</text><text x="360" y="182">stronger, but more upkeep</text></g>
+      </svg>
+      <figcaption>The difference is what happens to a program nobody has seen before.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>Block list (blacklist)</b><span>Name what's <em>not</em> allowed to run, and allow everything else. Easy to manage, but anything not on the list gets through</span></div>
+      <div class="fcard"><b>Allow list (whitelist)</b><span>Name what <em>is</em> allowed to run, and block everything else. Much stronger, but more work to maintain</span></div>
+      <div class="fcard"><b>Sandboxing</b><span>Run a suspicious file in an isolated environment and watch what it does: files touched, registry changes, network calls. Examples include Cuckoo Sandbox, ANY.RUN, and Cisco's Threat Grid</span></div>
+    </div>
 
     <div class="callout">
       <b>Sandbox reports are how analysts learn what a piece of malware does</b> without risking a real machine. That's the "use malware investigation tools" objective: submit a sample, then read the behavior report. Many public sandboxes publish reports for samples others have already submitted.

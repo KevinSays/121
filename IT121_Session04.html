@@ -146,6 +146,28 @@
     .diagram-grid{ grid-template-columns:1fr; }
     .factrow{ flex-direction:column; }
   }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure.fig svg text, .split > figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
 </style>
 
 <header class="hero">
@@ -203,17 +225,14 @@
       <p>A specialized device does one job at the network boundary (filtering, detecting, tunneling, or gatekeeping) better than a general-purpose router or switch would.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Device</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Firewall</td><td>Filters traffic between a trusted network and an untrusted one, based on a defined rule set — the baseline perimeter control</td></tr>
-        <tr><td style="font-weight:700;">Intrusion Prevention System (IPS)</td><td>Sits inline with traffic and can actively block a detected threat in real time, not just alert on it</td></tr>
-        <tr><td style="font-weight:700;">Intrusion Detection System (IDS)</td><td>Monitors a copy of traffic out-of-band and alerts on suspicious activity, but doesn't sit inline and can't block it directly</td></tr>
-        <tr><td style="font-weight:700;">VPN concentrator / VPN-enabled router</td><td>Terminates encrypted tunnels from remote users or sites, extending the protected network over an untrusted one</td></tr>
-        <tr><td style="font-weight:700;">Network Access Control (NAC)</td><td>Checks a device's security posture (patch level, antivirus status) before granting it network access at all</td></tr>
-        <tr><td style="font-weight:700;">Specialized security appliances</td><td>Purpose-built devices for one traffic type — e.g. an email security appliance filtering spam and phishing, or a web security appliance filtering malicious sites</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Firewall</b><span>Filters traffic between a trusted network and an untrusted one, based on a defined rule set — the baseline perimeter control</span></div>
+      <div class="fcard"><b>Intrusion Prevention System (IPS)</b><span>Sits inline with traffic and can actively block a detected threat in real time, not just alert on it</span></div>
+      <div class="fcard"><b>Intrusion Detection System (IDS)</b><span>Monitors a copy of traffic out-of-band and alerts on suspicious activity, but doesn't sit inline and can't block it directly</span></div>
+      <div class="fcard"><b>VPN concentrator / VPN-enabled router</b><span>Terminates encrypted tunnels from remote users or sites, extending the protected network over an untrusted one</span></div>
+      <div class="fcard"><b>Network Access Control (NAC)</b><span>Checks a device's security posture (patch level, antivirus status) before granting it network access at all</span></div>
+      <div class="fcard"><b>Specialized security appliances</b><span>Purpose-built devices for one traffic type — e.g. an email security appliance filtering spam and phishing, or a web security appliance filtering malicious sites</span></div>
+    </div>
 
     <h3>Firewall types</h3>
     <table class="model-table">
@@ -247,18 +266,15 @@
       <p>Devices filter and block. Services do the supporting work that makes filtering, blocking, and investigating possible in the first place.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Service</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">AAA (Authentication, Authorization, Accounting)</td><td>Verifies identity, controls what an authenticated user is allowed to do, and logs what they actually did — usually via RADIUS or TACACS+</td></tr>
-        <tr><td style="font-weight:700;">Syslog</td><td>Centralizes log messages from routers, switches, servers, and security devices into one place, instead of leaving them scattered on each device</td></tr>
-        <tr><td style="font-weight:700;">NTP (Network Time Protocol)</td><td>Synchronizes clocks across every device on the network — without it, log timestamps from different devices can't be lined up to reconstruct an incident</td></tr>
-        <tr><td style="font-weight:700;">SNMP (Simple Network Management Protocol)</td><td>Lets a management station poll and monitor the health and status of network devices remotely</td></tr>
-        <tr><td style="font-weight:700;">Access control lists (ACLs)</td><td>Ordered statements that tell a device to forward or drop packets based on header information. A <b>standard ACL</b> filters only by source IPv4 address. An <b>extended ACL</b> can also filter by destination address, protocol, and source and destination ports</td></tr>
-        <tr><td style="font-weight:700;">Port mirroring</td><td>Switches isolate traffic, so a monitor plugged into one port can't see everything. Port mirroring copies the traffic passing through the switch and sends the copy out a port where an IDS or packet analyzer is attached; the original traffic is forwarded as usual</td></tr>
-        <tr><td style="font-weight:700;">NetFlow</td><td>Collects metadata about traffic flows crossing a device — who talked to whom, how much, how often — without capturing full packet contents</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>AAA (Authentication, Authorization, Accounting)</b><span>Verifies identity, controls what an authenticated user is allowed to do, and logs what they actually did — usually via RADIUS or TACACS+</span></div>
+      <div class="fcard"><b>Syslog</b><span>Centralizes log messages from routers, switches, servers, and security devices into one place, instead of leaving them scattered on each device</span></div>
+      <div class="fcard"><b>NTP (Network Time Protocol)</b><span>Synchronizes clocks across every device on the network — without it, log timestamps from different devices can't be lined up to reconstruct an incident</span></div>
+      <div class="fcard"><b>SNMP (Simple Network Management Protocol)</b><span>Lets a management station poll and monitor the health and status of network devices remotely</span></div>
+      <div class="fcard"><b>Access control lists (ACLs)</b><span>Ordered statements that tell a device to forward or drop packets based on header information. A <b>standard ACL</b> filters only by source IPv4 address. An <b>extended ACL</b> can also filter by destination address, protocol, and source and destination ports</span></div>
+      <div class="fcard"><b>Port mirroring</b><span>Switches isolate traffic, so a monitor plugged into one port can't see everything. Port mirroring copies the traffic passing through the switch and sends the copy out a port where an IDS or packet analyzer is attached; the original traffic is forwarded as usual</span></div>
+      <div class="fcard"><b>NetFlow</b><span>Collects metadata about traffic flows crossing a device — who talked to whom, how much, how often — without capturing full packet contents</span></div>
+    </div>
 
     <div class="callout">
       <b>NTP is easy to underrate.</b> A firewall log timestamped three seconds off from a server log sounds trivial. Then you try to prove which event happened first during an incident, and the timeline doesn't line up because the clocks never agreed.
@@ -332,15 +348,12 @@
     </table>
 
     <h3>Inside an NTFS volume</h3>
-    <table class="model-table">
-      <thead><tr><th>Part</th><th>What it holds</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Partition boot sector</td><td>The first 16 sectors of the drive, including the location of the MFT. The last 16 sectors hold a copy</td></tr>
-        <tr><td style="font-weight:700;">Master File Table (MFT)</td><td>The location of every file and directory on the partition, plus attributes like security information and timestamps</td></tr>
-        <tr><td style="font-weight:700;">System files</td><td>Hidden files with information about other volumes and file attributes</td></tr>
-        <tr><td style="font-weight:700;">File area</td><td>The main area where files and directories are stored</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Partition boot sector</b><span>The first 16 sectors of the drive, including the location of the MFT. The last 16 sectors hold a copy</span></div>
+      <div class="fcard"><b>Master File Table (MFT)</b><span>The location of every file and directory on the partition, plus attributes like security information and timestamps</span></div>
+      <div class="fcard"><b>System files</b><span>Hidden files with information about other volumes and file attributes</span></div>
+      <div class="fcard"><b>File area</b><span>The main area where files and directories are stored</span></div>
+    </div>
     <p>Formatting a partition doesn't remove all the old data, so it may still be recoverable. Securely wipe a drive before reusing it.</p>
 
     <h3>The boot process</h3>
@@ -359,21 +372,18 @@
       <p>The built-in tools you'll reach for first. No third-party software required: they're already on the box.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Tool</th><th>What it's for</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Task Manager</td><td>Real-time view of running processes, resource usage, and startup programs — the fastest way to spot something consuming CPU or network it shouldn't</td></tr>
-        <tr><td style="font-weight:700;">Event Viewer</td><td>Browses the Windows event logs (Application, Security, System) — the primary source of historical evidence for what happened on a host</td></tr>
-        <tr><td style="font-weight:700;">Microsoft Management Console (MMC)</td><td>A framework that hosts administrative snap-ins (like Computer Management, Services, or Group Policy) in one customizable window</td></tr>
-        <tr><td style="font-weight:700;">Services (services.msc)</td><td>Lists every Windows service, its status, and its startup type — used to start, stop, or disable background processes</td></tr>
-        <tr><td style="font-weight:700;">Windows PowerShell</td><td>A scripting shell and language for administration and automation — far more capable than the legacy Command Prompt</td></tr>
-        <tr><td style="font-weight:700;">netstat</td><td>Lists active network connections and listening ports from the command line — a first move when checking what a host is actually talking to</td></tr>
-        <tr><td style="font-weight:700;">Windows Management Instrumentation (WMI)</td><td>Manages remote computers: reads information about components, hardware and software statistics, and monitors their health</td></tr>
-        <tr><td style="font-weight:700;">nslookup</td><td>Tests DNS from the command line, e.g. <code>nslookup cisco.com</code> returns the server's address</td></tr>
-        <tr><td style="font-weight:700;">Server Message Block (SMB)</td><td>The protocol Windows uses to share files and other resources on remote hosts, reached with UNC paths like <code>\\server\share</code></td></tr>
-        <tr><td style="font-weight:700;">Task Scheduler</td><td>Runs programs or scripts automatically on a schedule or trigger — also a common persistence mechanism attackers abuse</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Task Manager</b><span>Real-time view of running processes, resource usage, and startup programs — the fastest way to spot something consuming CPU or network it shouldn't</span></div>
+      <div class="fcard"><b>Event Viewer</b><span>Browses the Windows event logs (Application, Security, System) — the primary source of historical evidence for what happened on a host</span></div>
+      <div class="fcard"><b>Microsoft Management Console (MMC)</b><span>A framework that hosts administrative snap-ins (like Computer Management, Services, or Group Policy) in one customizable window</span></div>
+      <div class="fcard"><b>Services (services.msc)</b><span>Lists every Windows service, its status, and its startup type — used to start, stop, or disable background processes</span></div>
+      <div class="fcard"><b>Windows PowerShell</b><span>A scripting shell and language for administration and automation — far more capable than the legacy Command Prompt</span></div>
+      <div class="fcard"><b>netstat</b><span>Lists active network connections and listening ports from the command line — a first move when checking what a host is actually talking to</span></div>
+      <div class="fcard"><b>Windows Management Instrumentation (WMI)</b><span>Manages remote computers: reads information about components, hardware and software statistics, and monitors their health</span></div>
+      <div class="fcard"><b>nslookup</b><span>Tests DNS from the command line, e.g. <code>nslookup cisco.com</code> returns the server's address</span></div>
+      <div class="fcard"><b>Server Message Block (SMB)</b><span>The protocol Windows uses to share files and other resources on remote hosts, reached with UNC paths like <code>\\server\share</code></span></div>
+      <div class="fcard"><b>Task Scheduler</b><span>Runs programs or scripts automatically on a schedule or trigger — also a common persistence mechanism attackers abuse</span></div>
+    </div>
 
     <div class="callout">
       <b>netstat and Task Scheduler both cut two ways.</b> They're legitimate administrative tools, and they're also exactly what you check when investigating a compromise. An unexpected listening port or an unfamiliar scheduled task is a classic sign that something else is running on the box.
@@ -388,18 +398,15 @@
       <p>Windows ships with real, functional security features. The trouble is usually a machine where they've been left off, out of date, or misconfigured, not a machine that lacks them.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Feature</th><th>What it protects against</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Windows Update</td><td>Patches known vulnerabilities — an unpatched system is exploitable by attacks that a patched one is already immune to</td></tr>
-        <tr><td style="font-weight:700;">User Account Control (UAC)</td><td>Prompts for confirmation before an action that requires administrator privileges, limiting the damage malware can do while running under a standard user account</td></tr>
-        <tr><td style="font-weight:700;">Windows Defender (Windows Security)</td><td>Built-in antivirus and antimalware protection, enabled by default</td></tr>
-        <tr><td style="font-weight:700;">Windows Firewall</td><td>Host-based firewall filtering inbound and outbound traffic on the machine itself, independent of any network firewall</td></tr>
-        <tr><td style="font-weight:700;">Local Security Policy</td><td>Configures account and audit policies on a single machine — password requirements, lockout thresholds, and what gets logged</td></tr>
-        <tr><td style="font-weight:700;">AppLocker</td><td>Restricts which files users or groups are allowed to run, so unapproved programs can't start</td></tr>
-        <tr><td style="font-weight:700;">BitLocker</td><td>Full-disk encryption — protects data at rest if a device is lost or stolen, since the drive is unreadable without the key</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Windows Update</b><span><span class="k">What it protects against:</span> Patches known vulnerabilities — an unpatched system is exploitable by attacks that a patched one is already immune to</span></div>
+      <div class="fcard"><b>User Account Control (UAC)</b><span><span class="k">What it protects against:</span> Prompts for confirmation before an action that requires administrator privileges, limiting the damage malware can do while running under a standard user account</span></div>
+      <div class="fcard"><b>Windows Defender (Windows Security)</b><span><span class="k">What it protects against:</span> Built-in antivirus and antimalware protection, enabled by default</span></div>
+      <div class="fcard"><b>Windows Firewall</b><span><span class="k">What it protects against:</span> Host-based firewall filtering inbound and outbound traffic on the machine itself, independent of any network firewall</span></div>
+      <div class="fcard"><b>Local Security Policy</b><span><span class="k">What it protects against:</span> Configures account and audit policies on a single machine — password requirements, lockout thresholds, and what gets logged</span></div>
+      <div class="fcard"><b>AppLocker</b><span><span class="k">What it protects against:</span> Restricts which files users or groups are allowed to run, so unapproved programs can't start</span></div>
+      <div class="fcard"><b>BitLocker</b><span><span class="k">What it protects against:</span> Full-disk encryption — protects data at rest if a device is lost or stolen, since the drive is unreadable without the key</span></div>
+    </div>
 
     <div class="callout">
       <b>UAC is a permission boundary, not a malware scanner.</b> It doesn't decide whether an action is malicious, only whether it needs elevated privilege to run. Malware that never needs admin rights can still do plenty of damage without ever triggering a prompt.

@@ -146,6 +146,28 @@
     .diagram-grid{ grid-template-columns:1fr; }
     .factrow{ flex-direction:column; }
   }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure.fig svg text, .split > figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
 </style>
 
 <header class="hero">
@@ -363,18 +385,15 @@
       The strongest castle wall doesn't help if the guard opens the gate. Picture a shinobi dressed as a traveling merchant with a believable story and the right name to drop. Nothing gets climbed or broken: the guard <b>lets him in</b>. Every technique below is a version of that disguise. The defense is the same too: check the pass, not the costume.
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Technique</th><th>What it is</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Phishing</td><td>Mass impersonation email/message to steal credentials or install malware. <em>Spear-phishing</em> targets a specific person; <em>whaling</em> targets executives. <em>Vishing</em> does it by phone; <em>smishing</em> does it by text.</td></tr>
-        <tr><td style="font-weight:700;">Pretexting</td><td>Fabricating a scenario/identity to extract info</td></tr>
-        <tr><td style="font-weight:700;">Baiting</td><td>Leaving infected media (USB drop) or an enticing offer</td></tr>
-        <tr><td style="font-weight:700;">Scareware</td><td>Coaxes a victim into installing fake antivirus/security software by frightening them into believing they're already infected</td></tr>
-        <tr><td style="font-weight:700;">Tailgating / piggybacking</td><td>Following someone through a secured door</td></tr>
-        <tr><td style="font-weight:700;">Shoulder surfing</td><td>Visual theft of credentials/PINs</td></tr>
-        <tr><td style="font-weight:700;">Dumpster diving</td><td>Retrieving discarded information from the trash — not just paper, but electronic media left on old drives too</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Phishing</b><span>Mass impersonation email/message to steal credentials or install malware. <em>Spear-phishing</em> targets a specific person; <em>whaling</em> targets executives. <em>Vishing</em> does it by phone; <em>smishing</em> does it by text.</span></div>
+      <div class="fcard"><b>Pretexting</b><span>Fabricating a scenario/identity to extract info</span></div>
+      <div class="fcard"><b>Baiting</b><span>Leaving infected media (USB drop) or an enticing offer</span></div>
+      <div class="fcard"><b>Scareware</b><span>Coaxes a victim into installing fake antivirus/security software by frightening them into believing they're already infected</span></div>
+      <div class="fcard"><b>Tailgating / piggybacking</b><span>Following someone through a secured door</span></div>
+      <div class="fcard"><b>Shoulder surfing</b><span>Visual theft of credentials/PINs</span></div>
+      <div class="fcard"><b>Dumpster diving</b><span>Retrieving discarded information from the trash — not just paper, but electronic media left on old drives too</span></div>
+    </div>
 
     <h3>Hacker ethics: White, Gray, and Black Hat</h3>
     <p>This is a separate axis from motivation. It's about legality and consent: the same skill set, sorted by whether the hacker had permission and what they did with what they found.</p>
@@ -417,15 +436,12 @@
     </table>
 
     <h3>Threat intelligence sources</h3>
-    <table class="model-table">
-      <thead><tr><th>Source</th><th>What it is</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Common vulnerabilities and exposures (CVE)</td><td>A public dictionary of known vulnerabilities, each with its own ID, sponsored by US-CERT and the US Department of Homeland Security</td></tr>
-        <tr><td style="font-weight:700;">The dark web</td><td>Encrypted web content that needs special software, authorization, or configuration to reach, and isn't indexed by normal search engines. Analysts watch it for stolen data and attack plans</td></tr>
-        <tr><td style="font-weight:700;">Indicator of compromise (IOC)</td><td>Evidence that a breach happened, with details about it, such as a malware signature or a malicious domain name</td></tr>
-        <tr><td style="font-weight:700;">Automated Indicator Sharing (AIS)</td><td>A CISA service for trading threat indicators in real time, using the structured language <b>STIX</b> and the exchange method <b>TAXII</b></td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Common vulnerabilities and exposures (CVE)</b><span>A public dictionary of known vulnerabilities, each with its own ID, sponsored by US-CERT and the US Department of Homeland Security</span></div>
+      <div class="fcard"><b>The dark web</b><span>Encrypted web content that needs special software, authorization, or configuration to reach, and isn't indexed by normal search engines. Analysts watch it for stolen data and attack plans</span></div>
+      <div class="fcard"><b>Indicator of compromise (IOC)</b><span>Evidence that a breach happened, with details about it, such as a malware signature or a malicious domain name</span></div>
+      <div class="fcard"><b>Automated Indicator Sharing (AIS)</b><span>A CISA service for trading threat indicators in real time, using the structured language <b>STIX</b> and the exchange method <b>TAXII</b></span></div>
+    </div>
 
     <div class="callout xref">
       IOCs, and the indicators of attack (IOAs) that go with them, come back in <a href="IT121_Session02.html#actors">Session 2</a>.

@@ -150,6 +150,28 @@
   .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
   pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
   pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure.fig svg text, .split > figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
 </style>
 
 <header class="hero">
@@ -270,28 +292,36 @@
     </div>
 
     <h3>Types of sensitive information</h3>
-    <table class="model-table">
-      <thead><tr><th>Type</th><th>What it includes</th><th>Bastion example</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Personal information</td><td>Anything that can identify a person: name, address, medical records, credit records (often called PII, personally identifiable information)</td><td>Kiriyama General's patient records</td></tr>
-        <tr><td style="font-weight:700;">Business information</td><td>Internal details that give a company its edge: trade secrets, customer lists, contracts, financials</td><td>Kaidō Freight's customer list and shipping rates</td></tr>
-        <tr><td style="font-weight:700;">Classified information</td><td>Government information labeled by sensitivity, such as top secret, secret, or confidential</td><td>None of Bastion's clients. Government agencies and their contractors handle it</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Personal information</b><span><span class="k">What it includes:</span> Anything that can identify a person: name, address, medical records, credit records (often called PII, personally identifiable information)</span><span><span class="k">Bastion example:</span> Kiriyama General's patient records</span></div>
+      <div class="fcard"><b>Business information</b><span><span class="k">What it includes:</span> Internal details that give a company its edge: trade secrets, customer lists, contracts, financials</span><span><span class="k">Bastion example:</span> Kaidō Freight's customer list and shipping rates</span></div>
+      <div class="fcard"><b>Classified information</b><span><span class="k">What it includes:</span> Government information labeled by sensitivity, such as top secret, secret, or confidential</span><span><span class="k">Bastion example:</span> None of Bastion's clients. Government agencies and their contractors handle it</span></div>
+    </div>
 
     <h3>Ways to protect it</h3>
-    <table class="model-table">
-      <thead><tr><th>Method</th><th>How it protects confidentiality</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Encryption</td><td>Scrambles data so only someone with the key can read it</td></tr>
-        <tr><td style="font-weight:700;">Authentication and access control</td><td>Verifies who someone is, then limits what they can open (Session 4's AAA)</td></tr>
-        <tr><td style="font-weight:700;">Tokenization</td><td>Replaces sensitive data, like a card number, with a random token. The token has no mathematical link to the original, so it's useless outside the system that issued it</td></tr>
-        <tr><td style="font-weight:700;">Digital rights management (DRM)</td><td>Controls how copyrighted digital content, like music, movies, and e-books, can be copied or used</td></tr>
-        <tr><td style="font-weight:700;">Information rights management (IRM)</td><td>The same idea applied to an organization's own documents and emails: who can open, forward, print, or edit them</td></tr>
-        <tr><td style="font-weight:700;">Data anonymization</td><td>Strips or alters identifying details so the data can't be traced back to a person, for example before sharing it for research</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Encryption</b><span>Scrambles data so only someone with the key can read it</span></div>
+      <div class="fcard"><b>Authentication and access control</b><span>Verifies who someone is, then limits what they can open (Session 4's AAA)</span></div>
+      <div class="fcard"><b>Tokenization</b><span>Replaces sensitive data, like a card number, with a random token. The token has no mathematical link to the original, so it's useless outside the system that issued it</span></div>
+      <div class="fcard"><b>Digital rights management (DRM)</b><span>Controls how copyrighted digital content, like music, movies, and e-books, can be copied or used</span></div>
+      <div class="fcard"><b>Information rights management (IRM)</b><span>The same idea applied to an organization's own documents and emails: who can open, forward, print, or edit them</span></div>
+      <div class="fcard"><b>Data anonymization</b><span>Strips or alters identifying details so the data can't be traced back to a person, for example before sharing it for research</span></div>
+    </div>
 
+    <figure class="fig">
+      <svg viewBox="0 0 480 206" role="img" aria-label="Encryption turns a card number into ciphertext with a key, and the key turns it back. Tokenization swaps the card number for a random token; only the issuer's lookup table links the two.">
+        <defs><marker id="a6a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker><marker id="a6b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)"/></marker></defs>
+        <g font-size="12" font-weight="700"><text x="10" y="18" fill="var(--accent-2)">ENCRYPTION</text><text x="10" y="128" fill="var(--correct)">TOKENIZATION</text></g>
+        <g stroke-width="1.5" fill="var(--surface)" stroke="var(--border)"><rect x="10" y="28" width="130" height="36"/><rect x="10" y="138" width="130" height="36"/></g>
+        <rect x="300" y="28" width="170" height="36" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2"/>
+        <rect x="300" y="138" width="170" height="36" fill="var(--correct-soft)" stroke="var(--correct)" stroke-width="2"/>
+        <g font-size="12.5" text-anchor="middle" fill="var(--text)"><text x="75" y="51">card number</text><text x="75" y="161">card number</text><text x="385" y="51">ciphertext</text><text x="385" y="161">random token</text></g>
+        <g stroke="var(--muted)" stroke-width="2" marker-end="url(#a6a)"><path d="M140 46 H296"/><path d="M140 156 H296"/></g>
+        <path d="M300 84 H144" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a6b)"/>
+        <g font-size="11.5" text-anchor="middle"><text x="218" y="40" fill="var(--muted)">+ key</text><text x="222" y="102" fill="var(--accent-2)">the key reverses it</text><text x="218" y="150" fill="var(--muted)">swap</text><text x="240" y="196" fill="var(--correct)">no way back: only the issuer's lookup table links them</text></g>
+      </svg>
+      <figcaption>Steal ciphertext and you still have a target: the key. Steal a token and you have nothing.</figcaption>
+    </figure>
     <div class="callout">
       <b>Tokenization vs. encryption:</b> encrypted data can be turned back into the original by anyone who gets the key. A token can't be reversed at all. Only the system that issued it keeps the lookup table. That's why a stolen token is worthless to an attacker, while stolen encrypted data is only as safe as the key.
     </div>
@@ -311,28 +341,34 @@
     </div>
 
     <h3>Levels of integrity need</h3>
-    <table class="model-table">
-      <thead><tr><th>Level</th><th>Who needs it</th><th>Why</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Critical</td><td>Healthcare, like Kiriyama General</td><td>Wrong prescription or allergy data can kill someone</td></tr>
-        <tr><td style="font-weight:700;">High</td><td>E-commerce and analytics businesses</td><td>Decisions and transactions depend on the data, so it's validated and verified often</td></tr>
-        <tr><td style="font-weight:700;">Mid</td><td>Public data, like search results and online sales listings</td><td>Some verification, and users know to trust it less</td></tr>
-        <tr><td style="font-weight:700;">Low</td><td>Blogs and personal social media pages</td><td>Mostly unverified opinion. Readers shouldn't rely on it</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 200" role="img" aria-label="Integrity need from highest to lowest: critical for healthcare, high for e-commerce and analytics, mid for public data, low for blogs and personal social media.">
+        <g font-size="12.5" font-weight="700" fill="var(--text)"><text x="14" y="41">CRITICAL</text><text x="14" y="83">HIGH</text><text x="14" y="125">MID</text><text x="14" y="167">LOW</text></g>
+        <rect x="100" y="20" width="360" height="32" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="2"/>
+        <rect x="100" y="62" width="270" height="32" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2"/>
+        <rect x="100" y="104" width="180" height="32" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/>
+        <rect x="100" y="146" width="90" height="32" fill="none" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <g font-size="12" fill="var(--text)"><text x="110" y="41">healthcare</text><text x="110" y="83">e-commerce, analytics</text><text x="110" y="125">public data</text><text x="110" y="167">blogs</text></g>
+        <text x="460" y="196" font-size="11" text-anchor="end" fill="var(--muted)">bar length = how much the data must be trusted</text>
+      </svg>
+      <figcaption>The worse the damage bad data would do, the more effort goes into protecting its integrity.</figcaption>
+    </figure>
+    <div class="fcards wide">
+      <div class="fcard"><b>Critical</b><span><span class="k">Who needs it:</span> Healthcare, like Kiriyama General</span><span><span class="k">Why:</span> Wrong prescription or allergy data can kill someone</span></div>
+      <div class="fcard"><b>High</b><span><span class="k">Who needs it:</span> E-commerce and analytics businesses</span><span><span class="k">Why:</span> Decisions and transactions depend on the data, so it's validated and verified often</span></div>
+      <div class="fcard"><b>Mid</b><span><span class="k">Who needs it:</span> Public data, like search results and online sales listings</span><span><span class="k">Why:</span> Some verification, and users know to trust it less</span></div>
+      <div class="fcard"><b>Low</b><span><span class="k">Who needs it:</span> Blogs and personal social media pages</span><span><span class="k">Why:</span> Mostly unverified opinion. Readers shouldn't rely on it</span></div>
+    </div>
 
     <p>Integrity is protected with access controls (only authorized people can change data), validation checks on what goes in, and hashing, which produces a fingerprint that changes if even one bit of the data changes. Hashing comes back in detail with cryptography in Module 18.</p>
 
     <h3>Keeping data available</h3>
-    <table class="model-table">
-      <thead><tr><th>Practice</th><th>What it involves</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Redundancy</td><td>No single point of failure: spare servers, extra network paths, RAID storage (Concept 4)</td></tr>
-        <tr><td style="font-weight:700;">Backups</td><td>Copies of data kept somewhere else. Both the backup system and the backed-up data have to be tested by actually restoring them</td></tr>
-        <tr><td style="font-weight:700;">Maintenance and patching</td><td>Planned updates so systems don't fail or get knocked offline by a known bug</td></tr>
-        <tr><td style="font-weight:700;">Disaster plan</td><td>Written, practiced steps so staff and the security team know how to respond and recover from a major disruption</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Redundancy</b><span>No single point of failure: spare servers, extra network paths, RAID storage (Concept 4)</span></div>
+      <div class="fcard"><b>Backups</b><span>Copies of data kept somewhere else. Both the backup system and the backed-up data have to be tested by actually restoring them</span></div>
+      <div class="fcard"><b>Maintenance and patching</b><span>Planned updates so systems don't fail or get knocked offline by a known bug</span></div>
+      <div class="fcard"><b>Disaster plan</b><span>Written, practiced steps so staff and the security team know how to respond and recover from a major disruption</span></div>
+    </div>
 
     <div class="callout">
       <b>A backup you've never restored is a hope, not a backup.</b> Ransomware attacks often succeed because the victim's backups turn out to be incomplete, out of date, or encrypted along with everything else.
@@ -347,14 +383,26 @@
       <p>Data is always in one of three states, and each state has its own risks. A good defense covers all three.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>State</th><th>What it means</th><th>Main risks</th><th>Typical protection</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">At rest</td><td>Stored and not being used: on a drive, in a database, in the cloud</td><td>Theft of the device, unauthorized access to the storage</td><td>Disk and file encryption, access control, physical security</td></tr>
-        <tr><td style="font-weight:700;">In transit</td><td>Moving from one device to another: over a cable, over Wi-Fi, or on a carried USB drive</td><td>Interception, alteration on the way, the transfer being blocked</td><td>Encryption in transit (like HTTPS or a VPN), mutual authentication</td></tr>
-        <tr><td style="font-weight:700;">In process</td><td>Being input, changed, computed, or output</td><td>Bad input, corruption, unauthorized changes</td><td>Input validation, integrity checks, access control on who can modify</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 182" role="img" aria-label="Three states of data. At rest: stored on a drive, database, or cloud; main risk is theft. In transit: moving over a cable, Wi-Fi, or a USB drive; main risk is interception. In process: input, modification, output; main risk is bad input.">
+        <defs><marker id="a6s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+        <g stroke-width="2" fill="var(--surface-2)"><rect x="10" y="14" width="140" height="130" stroke="var(--accent)"/><rect x="170" y="14" width="140" height="130" stroke="var(--accent-2)"/><rect x="330" y="14" width="140" height="130" stroke="var(--correct)"/></g>
+        <g font-size="12.5" font-weight="700" text-anchor="middle"><text x="80" y="38" fill="var(--accent)">AT REST</text><text x="240" y="38" fill="var(--accent-2)">IN TRANSIT</text><text x="400" y="38" fill="var(--correct)">IN PROCESS</text></g>
+        <g fill="var(--surface)" stroke="var(--text)" stroke-width="1.5"><path d="M55 62 V102 A25 7 0 0 0 105 102 V62"/><ellipse cx="80" cy="62" rx="25" ry="7"/></g>
+        <path d="M188 82 H292" stroke="var(--muted)" stroke-width="2" marker-end="url(#a6s)"/>
+        <rect x="222" y="72" width="30" height="20" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="1.5"/>
+        <g font-size="11.5" text-anchor="middle" fill="var(--text)"><text x="400" y="66">input</text><text x="400" y="96">modify</text><text x="400" y="126">output</text></g>
+        <g stroke="var(--muted)" stroke-width="1.5" marker-end="url(#a6s)"><path d="M400 71 V83"/><path d="M400 101 V113"/></g>
+        <g font-size="10.5" text-anchor="middle" fill="var(--muted)"><text x="80" y="128">drive · DB · cloud</text><text x="240" y="128">cable · Wi-Fi · USB</text></g>
+        <g font-size="11" text-anchor="middle" fill="var(--danger)"><text x="80" y="166">risk: theft</text><text x="240" y="166">risk: interception</text><text x="400" y="166">risk: bad input</text></g>
+      </svg>
+      <figcaption>Same data, three places it can be. Each place needs its own protection.</figcaption>
+    </figure>
+    <div class="fcards wide">
+      <div class="fcard"><b>At rest</b><span><span class="k">What it means:</span> Stored and not being used: on a drive, in a database, in the cloud</span><span><span class="k">Main risks:</span> Theft of the device, unauthorized access to the storage</span><span><span class="k">Typical protection:</span> Disk and file encryption, access control, physical security</span></div>
+      <div class="fcard"><b>In transit</b><span><span class="k">What it means:</span> Moving from one device to another: over a cable, over Wi-Fi, or on a carried USB drive</span><span><span class="k">Main risks:</span> Interception, alteration on the way, the transfer being blocked</span><span><span class="k">Typical protection:</span> Encryption in transit (like HTTPS or a VPN), mutual authentication</span></div>
+      <div class="fcard"><b>In process</b><span><span class="k">What it means:</span> Being input, changed, computed, or output</span><span><span class="k">Main risks:</span> Bad input, corruption, unauthorized changes</span><span><span class="k">Typical protection:</span> Input validation, integrity checks, access control on who can modify</span></div>
+    </div>
 
     <div class="callout analogy">
       <span class="lbl">Think of it like… the rice harvest</span>
@@ -362,16 +410,13 @@
     </div>
 
     <h3>Data at rest: where it's stored</h3>
-    <table class="model-table">
-      <thead><tr><th>Storage type</th><th>What it is</th><th>Security notes</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Direct-attached storage (DAS)</td><td>Storage connected to one computer: an internal drive or a plugged-in USB drive</td><td>Not shared by default. Hard to manage at scale, and only as safe as the one host it's attached to</td></tr>
-        <tr><td style="font-weight:700;">RAID</td><td>Redundant array of independent disks: several drives that the system treats as one</td><td>Improves performance and fault tolerance (a drive can fail without losing data). RAID is not a backup: deleted or encrypted files are gone on every disk at once</td></tr>
-        <tr><td style="font-weight:700;">Network-attached storage (NAS)</td><td>A storage device on the network that many authorized users can save to and read from</td><td>Centralized and easy to back up, but it's a single, valuable target</td></tr>
-        <tr><td style="font-weight:700;">Storage area network (SAN)</td><td>A dedicated high-speed network connecting servers to shared storage</td><td>Built for performance and scale in data centers. Needs its own access controls</td></tr>
-        <tr><td style="font-weight:700;">Cloud storage</td><td>Storage in a provider's data center, reached over the internet</td><td>Someone else runs the hardware, but you're still responsible for who can access your data (Module 17)</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Direct-attached storage (DAS)</b><span><span class="k">What it is:</span> Storage connected to one computer: an internal drive or a plugged-in USB drive</span><span><span class="k">Security notes:</span> Not shared by default. Hard to manage at scale, and only as safe as the one host it's attached to</span></div>
+      <div class="fcard"><b>RAID</b><span><span class="k">What it is:</span> Redundant array of independent disks: several drives that the system treats as one</span><span><span class="k">Security notes:</span> Improves performance and fault tolerance (a drive can fail without losing data). RAID is not a backup: deleted or encrypted files are gone on every disk at once</span></div>
+      <div class="fcard"><b>Network-attached storage (NAS)</b><span><span class="k">What it is:</span> A storage device on the network that many authorized users can save to and read from</span><span><span class="k">Security notes:</span> Centralized and easy to back up, but it's a single, valuable target</span></div>
+      <div class="fcard"><b>Storage area network (SAN)</b><span><span class="k">What it is:</span> A dedicated high-speed network connecting servers to shared storage</span><span><span class="k">Security notes:</span> Built for performance and scale in data centers. Needs its own access controls</span></div>
+      <div class="fcard"><b>Cloud storage</b><span><span class="k">What it is:</span> Storage in a provider's data center, reached over the internet</span><span><span class="k">Security notes:</span> Someone else runs the hardware, but you're still responsible for who can access your data (Module 17)</span></div>
+    </div>
 
     <h3>Data in transit and in process</h3>
     <p>Data in transit moves over wired networks, over wireless, or by <b>sneakernet</b>: someone physically carrying it on removable media like a USB drive. Each path needs protecting. <b>Mutual authentication</b>, where the client and the server each verify the other's identity, stops a device from connecting to an impostor such as Session 3's evil twin access point.</p>
@@ -386,25 +431,19 @@
       <p>The third dimension of the cube is what actually protects the data. Technology is the most visible kind of countermeasure, and most of it is either software running on a host or hardware sitting on the network.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Type</th><th>Examples</th><th>What they do</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Software-based</td><td>Software firewalls, network and port scanners, protocol analyzers, vulnerability scanners, host-based IDS</td><td>Control traffic to one host, find open ports, capture and examine traffic, find weaknesses, and watch a host for suspicious activity</td></tr>
-        <tr><td style="font-weight:700;">Hardware-based</td><td>Firewall appliances, IDS/IPS appliances, proxy servers, biometric access control</td><td>Filter or block traffic for a whole network, stand between users and the internet, and verify identity physically</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Software-based</b><span><span class="k">Examples:</span> Software firewalls, network and port scanners, protocol analyzers, vulnerability scanners, host-based IDS</span><span><span class="k">What they do:</span> Control traffic to one host, find open ports, capture and examine traffic, find weaknesses, and watch a host for suspicious activity</span></div>
+      <div class="fcard"><b>Hardware-based</b><span><span class="k">Examples:</span> Firewall appliances, IDS/IPS appliances, proxy servers, biometric access control</span><span><span class="k">What they do:</span> Filter or block traffic for a whole network, stand between users and the internet, and verify identity physically</span></div>
+    </div>
 
     <h3>Tools you'll see named on the exam</h3>
-    <table class="model-table">
-      <thead><tr><th>Tool</th><th>What it's for</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Port scanner</td><td>Finds which ports are open on a host, so you can spot services that shouldn't be listening</td></tr>
-        <tr><td style="font-weight:700;">Protocol analyzer</td><td>Captures and decodes traffic. It's how you learn what normal traffic looks like (a baseline) and find misconfigurations. Wireshark is one</td></tr>
-        <tr><td style="font-weight:700;">Vulnerability scanner</td><td>Checks systems against a list of known weaknesses and reports what needs fixing</td></tr>
-        <tr><td style="font-weight:700;">Proxy server</td><td>Makes requests to the internet on users' behalf, so the outside world sees one address instead of each user's</td></tr>
-        <tr><td style="font-weight:700;">Biometric access control</td><td>Verifies identity with a physical trait, like a fingerprint or face, before granting access</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Port scanner</b><span>Finds which ports are open on a host, so you can spot services that shouldn't be listening</span></div>
+      <div class="fcard"><b>Protocol analyzer</b><span>Captures and decodes traffic. It's how you learn what normal traffic looks like (a baseline) and find misconfigurations. Wireshark is one</span></div>
+      <div class="fcard"><b>Vulnerability scanner</b><span>Checks systems against a list of known weaknesses and reports what needs fixing</span></div>
+      <div class="fcard"><b>Proxy server</b><span>Makes requests to the internet on users' behalf, so the outside world sees one address instead of each user's</span></div>
+      <div class="fcard"><b>Biometric access control</b><span>Verifies identity with a physical trait, like a fingerprint or face, before granting access</span></div>
+    </div>
 
     <div class="callout xref">
       Firewalls, IDS, and IPS were covered in <a href="IT121_Session04.html#secdevices">Session 4</a>. Host-based firewalls and HIDS were covered in <a href="IT121_Session05.html#hips">Session 5</a>.
@@ -423,27 +462,21 @@
 
     <h3>The security policy</h3>
     <p>A <b>security policy</b> is a set of written security goals and rules for an organization. It shows the organization's commitment to security and sets the rules for how people behave. Most policies include these parts:</p>
-    <table class="model-table">
-      <thead><tr><th>Policy</th><th>What it covers</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Identification and authentication</td><td>Who is allowed to access network resources, and how their identity is verified</td></tr>
-        <tr><td style="font-weight:700;">Password policy</td><td>Password strength and how often passwords must change</td></tr>
-        <tr><td style="font-weight:700;">Acceptable use policy (AUP)</td><td>What users may and may not do on the organization's systems, such as banned websites or apps that hog bandwidth</td></tr>
-        <tr><td style="font-weight:700;">Remote access policy</td><td>How off-site users, like Kaidō Freight's drivers on VPN, may connect</td></tr>
-        <tr><td style="font-weight:700;">Network maintenance policy</td><td>How and when operating systems and applications get updated</td></tr>
-        <tr><td style="font-weight:700;">Incident handling policy</td><td>The procedures for responding to a security incident</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Identification and authentication</b><span>Who is allowed to access network resources, and how their identity is verified</span></div>
+      <div class="fcard"><b>Password policy</b><span>Password strength and how often passwords must change</span></div>
+      <div class="fcard"><b>Acceptable use policy (AUP)</b><span>What users may and may not do on the organization's systems, such as banned websites or apps that hog bandwidth</span></div>
+      <div class="fcard"><b>Remote access policy</b><span>How off-site users, like Kaidō Freight's drivers on VPN, may connect</span></div>
+      <div class="fcard"><b>Network maintenance policy</b><span>How and when operating systems and applications get updated</span></div>
+      <div class="fcard"><b>Incident handling policy</b><span>The procedures for responding to a security incident</span></div>
+    </div>
 
     <h3>Standards, guidelines, and procedures</h3>
-    <table class="model-table">
-      <thead><tr><th>Document</th><th>Mandatory?</th><th>Example</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Standard</td><td>Yes. A required rule everyone follows the same way</td><td>"All laptops use full-disk encryption."</td></tr>
-        <tr><td style="font-weight:700;">Guideline</td><td>No. A recommendation for doing something more securely</td><td>"Consider using a password manager."</td></tr>
-        <tr><td style="font-weight:700;">Procedure</td><td>Yes. Step-by-step instructions, often with screenshots, for doing a task the approved way</td><td>"How to enable BitLocker: step 1, open Control Panel…"</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Standard</b><span><span class="k">Mandatory?:</span> Yes. A required rule everyone follows the same way</span><span><span class="k">Example:</span> "All laptops use full-disk encryption."</span></div>
+      <div class="fcard"><b>Guideline</b><span><span class="k">Mandatory?:</span> No. A recommendation for doing something more securely</span><span><span class="k">Example:</span> "Consider using a password manager."</span></div>
+      <div class="fcard"><b>Procedure</b><span><span class="k">Mandatory?:</span> Yes. Step-by-step instructions, often with screenshots, for doing a task the approved way</span><span><span class="k">Example:</span> "How to enable BitLocker: step 1, open Control Panel…"</span></div>
+    </div>
     <p>Organizations don't have to write guidelines from scratch. Outside sources include <b>NIST</b> (the US National Institute of Standards and Technology), the <b>NSA's</b> security configuration guides, and the <b>Common Criteria</b>, an international standard for evaluating the security of IT products.</p>
 
     <div class="callout analogy">
@@ -460,58 +493,58 @@
       <p>Your job is to secure the organization's assets. Before you can plan any defense, you have to know three things: what you're protecting, where it's weak, and what could go wrong.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Term</th><th>Definition</th><th>Kaidō Freight example</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Asset</td><td>Anything of value to the organization that must be protected: servers, infrastructure devices, end devices, and the greatest asset, data</td><td>The domain controller, the routing database, the drivers' tablets</td></tr>
-        <tr><td style="font-weight:700;">Vulnerability</td><td>A weakness in a system or its design that a threat actor could exploit</td><td>A VPN appliance that's three patches behind</td></tr>
-        <tr><td style="font-weight:700;">Threat</td><td>Any potential danger to an asset</td><td>A ransomware gang scanning the internet for that VPN flaw</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Asset</b><span><span class="k">Definition:</span> Anything of value to the organization that must be protected: servers, infrastructure devices, end devices, and the greatest asset, data</span><span><span class="k">Kaidō Freight example:</span> The domain controller, the routing database, the drivers' tablets</span></div>
+      <div class="fcard"><b>Vulnerability</b><span><span class="k">Definition:</span> A weakness in a system or its design that a threat actor could exploit</span><span><span class="k">Kaidō Freight example:</span> A VPN appliance that's three patches behind</span></div>
+      <div class="fcard"><b>Threat</b><span><span class="k">Definition:</span> Any potential danger to an asset</span><span><span class="k">Kaidō Freight example:</span> A ransomware gang scanning the internet for that VPN flaw</span></div>
+    </div>
 
     <h3>Identify assets</h3>
     <p>Every device and every piece of information the organization owns or manages is an asset. Together they make up the <b>attack surface</b> (Session 1's term). As the organization grows, so does the list. <b>Asset management</b> means inventorying all of those assets, then developing and implementing policies and procedures to protect them. You also need to know where the critical information is stored and how people get to it.</p>
 
     <p><b>Asset classification</b> sorts assets into groups with common characteristics, so the most critical information gets the most protection. A labeling system shows how valuable, sensitive, and critical each item is. It takes four steps:</p>
-    <table class="model-table">
-      <thead><tr><th>Step</th><th>What you do</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">1. Choose the category</td><td>Information assets, software assets, physical assets, or services</td></tr>
-        <tr><td style="font-weight:700;">2. Establish accountability</td><td>Name an owner for every information asset and every piece of application software</td></tr>
-        <tr><td style="font-weight:700;">3. Set the criteria</td><td>Classify by confidentiality, value, time, access rights, and destruction</td></tr>
-        <tr><td style="font-weight:700;">4. Apply a schema</td><td>Label information the same way everywhere, so protection is uniform and monitoring is easier</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>1. Choose the category</b><span>Information assets, software assets, physical assets, or services</span></div>
+      <div class="fcard"><b>2. Establish accountability</b><span>Name an owner for every information asset and every piece of application software</span></div>
+      <div class="fcard"><b>3. Set the criteria</b><span>Classify by confidentiality, value, time, access rights, and destruction</span></div>
+      <div class="fcard"><b>4. Apply a schema</b><span>Label information the same way everywhere, so protection is uniform and monitoring is easier</span></div>
+    </div>
 
     <p><b>Asset standardization</b> picks the specific hardware and software products the organization uses. When something fails, a standard part can be swapped in fast. A non-standard environment needs more expertise to run and costs more in maintenance contracts and spare inventory.</p>
 
     <h3>The asset lifecycle</h3>
-    <table class="model-table">
-      <thead><tr><th>Stage</th><th>What happens</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Procurement</td><td>The organization buys the asset based on a documented need, and it's added to inventory</td></tr>
-        <tr><td style="font-weight:700;">Deployment</td><td>Staff inspect and test it, then tag it (a label or barcode) for tracking. It moves from inventory to in use</td></tr>
-        <tr><td style="font-weight:700;">Utilization</td><td>The longest stage. Performance is checked continuously, and upgrades, patches, license renewals, and compliance audits happen here</td></tr>
-        <tr><td style="font-weight:700;">Maintenance</td><td>Modifications and upgrades that extend the asset's productive life</td></tr>
-        <tr><td style="font-weight:700;">Disposal</td><td>All data is wiped first. The asset may be dismantled for parts, and hazardous parts go out under local guidelines</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 104" role="img" aria-label="Asset lifecycle: procurement, deployment, utilization (the longest stage), maintenance, then disposal. Maintenance returns the asset to utilization.">
+        <defs><marker id="a6l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+        <polygon points="10,30 84,30 92,50.0 84,70 10,70 18,50.0" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text x="53.0" y="54.0" font-size="9.5" font-weight="700" text-anchor="middle" fill="var(--text)">PROCUREMENT</text><text x="53.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">buy, inventory</text>
+        <polygon points="98,30 172,30 180,50.0 172,70 98,70 106,50.0" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text x="141.0" y="54.0" font-size="9.5" font-weight="700" text-anchor="middle" fill="var(--text)">DEPLOYMENT</text><text x="141.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">test, tag</text>
+        <polygon points="186,30 298,30 306,50.0 298,70 186,70 194,50.0" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="2"/><text x="248.0" y="54.0" font-size="9.5" font-weight="700" text-anchor="middle" fill="var(--text)">UTILIZATION</text><text x="248.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">longest stage</text>
+        <polygon points="312,30 386,30 394,50.0 386,70 312,70 320,50.0" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text x="355.0" y="54.0" font-size="9.5" font-weight="700" text-anchor="middle" fill="var(--text)">MAINTENANCE</text><text x="355.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">extend life</text>
+        <polygon points="400,30 462,30 470,50.0 462,70 400,70 408,50.0" fill="var(--surface-2)" stroke="var(--danger)" stroke-width="2"/><text x="437.0" y="54.0" font-size="9.5" font-weight="700" text-anchor="middle" fill="var(--text)">DISPOSAL</text><text x="437.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">wipe first</text>
+        <path d="M353 28 C353 8 250 8 250 26" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a6l)"/>
+      </svg>
+      <figcaption>Maintenance sends the asset back into use. Disposal only starts after every bit of data is wiped.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>Procurement</b><span>The organization buys the asset based on a documented need, and it's added to inventory</span></div>
+      <div class="fcard"><b>Deployment</b><span>Staff inspect and test it, then tag it (a label or barcode) for tracking. It moves from inventory to in use</span></div>
+      <div class="fcard"><b>Utilization</b><span>The longest stage. Performance is checked continuously, and upgrades, patches, license renewals, and compliance audits happen here</span></div>
+      <div class="fcard"><b>Maintenance</b><span>Modifications and upgrades that extend the asset's productive life</span></div>
+      <div class="fcard"><b>Disposal</b><span>All data is wiped first. The asset may be dismantled for parts, and hazardous parts go out under local guidelines</span></div>
+    </div>
 
     <h3>Identify vulnerabilities and threats</h3>
     <p><b>Threat identification</b> produces a list of the threats likely in your environment. Ask three questions about each system. What are its possible vulnerabilities? Who might want to exploit them to reach specific information assets? What are the consequences if they do and the assets are lost?</p>
     <p>NetAcad's example is an online banking system. Its threat list would include:</p>
-    <table class="model-table">
-      <thead><tr><th>Threat</th><th>What it looks like</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Internal system compromise</td><td>The attacker uses the exposed e-banking servers to break into internal bank systems</td></tr>
-        <tr><td style="font-weight:700;">Stolen customer data</td><td>Customers' personal and financial data is taken from the customer database</td></tr>
-        <tr><td style="font-weight:700;">Phony transactions from an external server</td><td>The attacker alters the application's code and makes transactions while impersonating a real user</td></tr>
-        <tr><td style="font-weight:700;">Phony transactions with a stolen PIN or smart card</td><td>The attacker steals a customer's identity and uses the account</td></tr>
-        <tr><td style="font-weight:700;">Insider attack</td><td>An employee finds a flaw and uses it to mount an attack</td></tr>
-        <tr><td style="font-weight:700;">Data input errors</td><td>A user enters wrong data or makes incorrect transaction requests</td></tr>
-        <tr><td style="font-weight:700;">Data center destruction</td><td>A disaster severely damages or destroys the data center</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Internal system compromise</b><span>The attacker uses the exposed e-banking servers to break into internal bank systems</span></div>
+      <div class="fcard"><b>Stolen customer data</b><span>Customers' personal and financial data is taken from the customer database</span></div>
+      <div class="fcard"><b>Phony transactions from an external server</b><span>The attacker alters the application's code and makes transactions while impersonating a real user</span></div>
+      <div class="fcard"><b>Phony transactions with a stolen PIN or smart card</b><span>The attacker steals a customer's identity and uses the account</span></div>
+      <div class="fcard"><b>Insider attack</b><span>An employee finds a flaw and uses it to mount an attack</span></div>
+      <div class="fcard"><b>Data input errors</b><span>A user enters wrong data or makes incorrect transaction requests</span></div>
+      <div class="fcard"><b>Data center destruction</b><span>A disaster severely damages or destroys the data center</span></div>
+    </div>
     <p>Notice that the last two aren't attacks at all. Threat identification covers anything that could cost you the asset, including mistakes and disasters.</p>
   </section>
 
@@ -523,14 +556,11 @@
       <p>Defense in depth uses multiple layers of security at the network edge, inside the network, and on the endpoints. The layers work together, so the failure of one safeguard doesn't weaken the others.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Line of defense</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">1. Edge router</td><td>Applies rules that allow or deny traffic, and passes connections meant for the internal LAN to the firewall</td></tr>
-        <tr><td style="font-weight:700;">2. Firewall</td><td>A checkpoint device that does additional filtering and tracks the state of each connection</td></tr>
-        <tr><td style="font-weight:700;">3. Internal router</td><td>Applies final filtering rules before traffic reaches its destination</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>1. Edge router</b><span>Applies rules that allow or deny traffic, and passes connections meant for the internal LAN to the firewall</span></div>
+      <div class="fcard"><b>2. Firewall</b><span>A checkpoint device that does additional filtering and tracks the state of each connection</span></div>
+      <div class="fcard"><b>3. Internal router</b><span>Applies final filtering rules before traffic reaches its destination</span></div>
+    </div>
 
     <figure>
       <svg viewBox="0 0 640 260" role="img" aria-label="Defense in depth drawn as nested layers. From outside in: edge router, firewall, internal router, then the assets in the center.">
@@ -553,26 +583,33 @@
     <p>Routers and firewalls aren't the only layers. IPS, Advanced Malware Protection (AMP), web and email content security, identity services, and network access control (Session 4's NAC) all add more.</p>
 
     <h3>Security onion vs. security artichoke</h3>
-    <table class="model-table">
-      <thead><tr><th>Analogy</th><th>The idea</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Security onion</td><td>A threat actor has to peel away the network's defenses layer by layer. Only after getting through every layer do they reach the target data or system</td></tr>
-        <tr><td style="font-weight:700;">Security artichoke</td><td>Borderless networks changed the picture, in the attacker's favor. Threat actors only need to remove certain "leaves," and each leaf may reveal sensitive data that isn't well secured. They chip away at the perimeter to reach the heart of the enterprise</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 228" role="img" aria-label="Left, the security onion: an attacker must cut through every ring to reach the data at the center. Right, the security artichoke: some leaves are already missing, so the attacker reaches the data through the gaps.">
+        <defs><marker id="a6o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--danger)"/></marker></defs>
+        <g font-size="12.5" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="120" y="16">ONION</text><text x="360" y="16">ARTICHOKE</text></g>
+        <g fill="none" stroke="var(--accent-2)" stroke-width="2"><circle cx="120" cy="115" r="90"/><circle cx="120" cy="115" r="68"/><circle cx="120" cy="115" r="46"/></g>
+        <g fill="var(--correct-soft)" stroke="var(--correct)" stroke-width="1.5"><ellipse cx="360" cy="60" rx="17" ry="33" transform="rotate(0 360 115)"/><ellipse cx="360" cy="60" rx="17" ry="33" transform="rotate(45 360 115)"/><ellipse cx="360" cy="60" rx="17" ry="33" transform="rotate(135 360 115)"/><ellipse cx="360" cy="60" rx="17" ry="33" transform="rotate(180 360 115)"/><ellipse cx="360" cy="60" rx="17" ry="33" transform="rotate(270 360 115)"/><ellipse cx="360" cy="60" rx="17" ry="33" transform="rotate(315 360 115)"/></g>
+        <g fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"><circle cx="120" cy="115" r="22"/><circle cx="360" cy="115" r="22"/></g>
+        <g font-size="11.5" font-weight="700" text-anchor="middle" fill="var(--accent)"><text x="120" y="119">data</text><text x="360" y="119">data</text></g>
+        <g stroke="var(--danger)" stroke-width="2.5" marker-end="url(#a6o)"><path d="M8 115 H94"/><path d="M476 115 H386"/><path d="M272 203 L342 133"/></g>
+        <g font-size="11" text-anchor="middle" fill="var(--muted)"><text x="120" y="222">cut through every layer</text><text x="370" y="222">go where leaves are missing</text></g>
+      </svg>
+      <figcaption>Borderless networks turned the onion into an artichoke. Attackers no longer have to start at the outer edge.</figcaption>
+    </figure>
+    <div class="fcards wide">
+      <div class="fcard"><b>Security onion</b><span>A threat actor has to peel away the network's defenses layer by layer. Only after getting through every layer do they reach the target data or system</span></div>
+      <div class="fcard"><b>Security artichoke</b><span>Borderless networks changed the picture, in the attacker's favor. Threat actors only need to remove certain "leaves," and each leaf may reveal sensitive data that isn't well secured. They chip away at the perimeter to reach the heart of the enterprise</span></div>
+    </div>
     <p>Don't confuse the security onion analogy with <b>Security Onion</b>, a suite of network security monitoring tools. Same name, different thing.</p>
 
     <h3>Defense-in-depth strategies</h3>
-    <table class="model-table">
-      <thead><tr><th>Strategy</th><th>What it means</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Layering</td><td>Multiple defenses that work together as one barrier</td></tr>
-        <tr><td style="font-weight:700;">Limiting</td><td>Each user gets only the access their job requires. Less access means fewer chances for a threat</td></tr>
-        <tr><td style="font-weight:700;">Diversity</td><td>The layers are different from each other, so a technique that gets through one doesn't get through all of them</td></tr>
-        <tr><td style="font-weight:700;">Obscurity</td><td>Don't reveal information attackers can use, like which OS a server runs or the make of its equipment</td></tr>
-        <tr><td style="font-weight:700;">Simplicity</td><td>Complexity doesn't guarantee security. A setup people can't configure correctly is as easy to break as a weak one</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Layering</b><span>Multiple defenses that work together as one barrier</span></div>
+      <div class="fcard"><b>Limiting</b><span>Each user gets only the access their job requires. Less access means fewer chances for a threat</span></div>
+      <div class="fcard"><b>Diversity</b><span>The layers are different from each other, so a technique that gets through one doesn't get through all of them</span></div>
+      <div class="fcard"><b>Obscurity</b><span>Don't reveal information attackers can use, like which OS a server runs or the make of its equipment</span></div>
+      <div class="fcard"><b>Simplicity</b><span>Complexity doesn't guarantee security. A setup people can't configure correctly is as easy to break as a weak one</span></div>
+    </div>
 
     <div class="callout">
       <b>Takeaway:</b> the artichoke doesn't make layers useless. It means you can't assume every attack starts at the outer edge. Devices and data that live outside the perimeter need protection of their own.
@@ -603,24 +640,28 @@
 
     <h3>Log files and log management</h3>
     <p>A log records events as they happen. Each <b>log entry</b> holds all the information about one event, and the entries together make up a <b>log file</b>. Security generates a lot of logs, so organizations need a <b>log management</b> process. It sets the procedures for:</p>
-    <table class="model-table">
-      <thead><tr><th>Procedure</th><th>The question it answers</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Generating</td><td>Which events get logged?</td></tr>
-        <tr><td style="font-weight:700;">Transmitting</td><td>How do logs get to where they're kept?</td></tr>
-        <tr><td style="font-weight:700;">Storing</td><td>Where are they kept, and for how long?</td></tr>
-        <tr><td style="font-weight:700;">Analyzing</td><td>Who reviews them, and how?</td></tr>
-        <tr><td style="font-weight:700;">Disposing</td><td>How are old logs safely removed?</td></tr>
-      </tbody>
-    </table>
+    <figure class="fig">
+      <svg viewBox="0 0 480 100" role="img" aria-label="Log management procedures in order: generating, transmitting, storing, analyzing, disposing.">
+        <polygon points="10,30 88,30 96,50.0 88,70 10,70 18,50.0" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text x="55.0" y="54.0" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text)">GENERATE</text><text x="55.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">which events?</text>
+        <polygon points="103,30 181,30 189,50.0 181,70 103,70 111,50.0" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/><text x="148.0" y="54.0" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text)">TRANSMIT</text><text x="148.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">how it moves</text>
+        <polygon points="196,30 274,30 282,50.0 274,70 196,70 204,50.0" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="2"/><text x="241.0" y="54.0" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text)">STORE</text><text x="241.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">kept where</text>
+        <polygon points="289,30 367,30 375,50.0 367,70 289,70 297,50.0" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="2"/><text x="334.0" y="54.0" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text)">ANALYZE</text><text x="334.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">who reviews</text>
+        <polygon points="382,30 460,30 468,50.0 460,70 382,70 390,50.0" fill="var(--surface-2)" stroke="var(--danger)" stroke-width="2"/><text x="427.0" y="54.0" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text)">DISPOSE</text><text x="427.0" y="90" font-size="10.5" text-anchor="middle" fill="var(--muted)">safe removal</text>
+      </svg>
+      <figcaption>A log entry’s life, from the event that creates it to its safe removal.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>Generating</b><span>Which events get logged?</span></div>
+      <div class="fcard"><b>Transmitting</b><span>How do logs get to where they're kept?</span></div>
+      <div class="fcard"><b>Storing</b><span>Where are they kept, and for how long?</span></div>
+      <div class="fcard"><b>Analyzing</b><span>Who reviews them, and how?</span></div>
+      <div class="fcard"><b>Disposing</b><span>How are old logs safely removed?</span></div>
+    </div>
 
-    <table class="model-table">
-      <thead><tr><th>Log type</th><th>What it records</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Operating system logs</td><td>Events tied to the OS, such as client requests and server responses (like successful user authentications) and usage information (the number and size of transactions over time)</td></tr>
-        <tr><td style="font-weight:700;">Application security logs</td><td>Output from network-based or system-based security software that detects malicious activity</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Operating system logs</b><span>Events tied to the OS, such as client requests and server responses (like successful user authentications) and usage information (the number and size of transactions over time)</span></div>
+      <div class="fcard"><b>Application security logs</b><span>Output from network-based or system-based security software that detects malicious activity</span></div>
+    </div>
     <p>Logs are useful for auditing and for spotting trends and long-term problems. They also give the organization documentation that it complies with laws and regulations.</p>
 
     <h3>Protocol analyzers</h3>
@@ -647,14 +688,11 @@
     </div>
 
     <h3>Business policies</h3>
-    <table class="model-table">
-      <thead><tr><th>Policy</th><th>What it covers</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Company policies</td><td>The rules of conduct and the responsibilities of both employees and employers. They protect workers' rights and the employer's business interests</td></tr>
-        <tr><td style="font-weight:700;">Employee policies</td><td>Created and kept by human resources: salary, pay schedule, benefits, work schedule, vacations, and more. New employees usually review and sign them</td></tr>
-        <tr><td style="font-weight:700;">Security policies</td><td>The security objectives, the rules of behavior for users and administrators, and the system requirements. The parts are in <a href="#policies">Concept 6</a>: identification and authentication, passwords, acceptable use, remote access, network maintenance, and incident handling</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards wide">
+      <div class="fcard"><b>Company policies</b><span>The rules of conduct and the responsibilities of both employees and employers. They protect workers' rights and the employer's business interests</span></div>
+      <div class="fcard"><b>Employee policies</b><span>Created and kept by human resources: salary, pay schedule, benefits, work schedule, vacations, and more. New employees usually review and sign them</span></div>
+      <div class="fcard"><b>Security policies</b><span>The security objectives, the rules of behavior for users and administrators, and the system requirements. The parts are in <a href="#policies">Concept 6</a>: identification and authentication, passwords, acceptable use, remote access, network maintenance, and incident handling</span></div>
+    </div>
 
     <p>A comprehensive security policy:</p>
     <ul>
@@ -678,18 +716,15 @@
     </ul>
 
     <h3>BYOD security best practices</h3>
-    <table class="model-table">
-      <thead><tr><th>Practice</th><th>What it means</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Password-protected access</td><td>Unique passwords for each device and account</td></tr>
-        <tr><td style="font-weight:700;">Manually control wireless connectivity</td><td>Turn off Wi-Fi and Bluetooth when not in use, and connect only to trusted networks</td></tr>
-        <tr><td style="font-weight:700;">Keep updated</td><td>Keep the OS and other software current. Updates often carry patches for the latest threats</td></tr>
-        <tr><td style="font-weight:700;">Back up data</td><td>Enable backups in case the device is lost or stolen</td></tr>
-        <tr><td style="font-weight:700;">Enable "Find my Device"</td><td>Subscribe to a device locator service that can remotely wipe the device</td></tr>
-        <tr><td style="font-weight:700;">Provide antivirus software</td><td>Provide antivirus for approved BYOD devices</td></tr>
-        <tr><td style="font-weight:700;">Use mobile device management (MDM) software</td><td>Lets IT apply security settings and software configurations to every device that connects to the company network</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Password-protected access</b><span>Unique passwords for each device and account</span></div>
+      <div class="fcard"><b>Manually control wireless connectivity</b><span>Turn off Wi-Fi and Bluetooth when not in use, and connect only to trusted networks</span></div>
+      <div class="fcard"><b>Keep updated</b><span>Keep the OS and other software current. Updates often carry patches for the latest threats</span></div>
+      <div class="fcard"><b>Back up data</b><span>Enable backups in case the device is lost or stolen</span></div>
+      <div class="fcard"><b>Enable "Find my Device"</b><span>Subscribe to a device locator service that can remotely wipe the device</span></div>
+      <div class="fcard"><b>Provide antivirus software</b><span>Provide antivirus for approved BYOD devices</span></div>
+      <div class="fcard"><b>Use mobile device management (MDM) software</b><span>Lets IT apply security settings and software configurations to every device that connects to the company network</span></div>
+    </div>
 
     <h3>Regulatory and standards compliance</h3>
     <p>Some rules come from outside the organization. Network security professionals need to know the laws and the codes of ethics that bind information systems security (INFOSEC) professionals. Many organizations are required to develop and implement security policies. Compliance regulations define what the organization must provide and its liability if it doesn't. Which regulations apply depends on the type of organization and the data it handles. Two examples among Bastion's clients:</p>

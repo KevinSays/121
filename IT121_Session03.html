@@ -146,6 +146,28 @@
     .diagram-grid{ grid-template-columns:1fr; }
     .factrow{ flex-direction:column; }
   }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure.fig svg text, .split > figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
 </style>
 
 <header class="hero">
@@ -202,30 +224,24 @@
       <p>ARP, DHCP, and DNS all trade identity verification for convenience. This is the section where that trade gets exploited.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">ARP cache poisoning</td><td>Manipulates ARP caches on the segment so the attacker's MAC address gets mapped to the default gateway's IP address — a classic man-in-the-middle</td></tr>
-        <tr><td style="font-weight:700;">MAC address spoofing</td><td>Alters the attacking host's MAC address to match a legitimate one, defeating MAC-based access controls</td></tr>
-        <tr><td style="font-weight:700;">DHCP starvation</td><td>Floods a DHCP server with fake DHCPDISCOVER messages until the whole address pool is leased out, denying service to real clients</td></tr>
-        <tr><td style="font-weight:700;">DHCP spoofing</td><td>A rogue DHCP server hands out false DNS server addresses, so a client's later visit to a legitimate site gets silently redirected to a fake one</td></tr>
-        <tr><td style="font-weight:700;">DNS shadowing</td><td>Compromises a legitimate parent domain, then creates malicious subdomains under it to use in further attacks</td></tr>
-        <tr><td style="font-weight:700;">DNS cache poisoning</td><td>Injects falsified information into a resolver's cache, redirecting users from a legitimate site to a malicious one</td></tr>
-        <tr><td style="font-weight:700;">DNS tunneling</td><td>Smuggles data inside DNS queries — a cybersecurity analyst's tell is queries running noticeably longer than average</td></tr>
-        <tr><td style="font-weight:700;">DNS amplification/reflection</td><td>Uses open DNS resolvers to multiply a small spoofed request into a much larger flood aimed at the victim, while hiding the true source</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>ARP cache poisoning</b><span>Manipulates ARP caches on the segment so the attacker's MAC address gets mapped to the default gateway's IP address — a classic man-in-the-middle</span></div>
+      <div class="fcard"><b>MAC address spoofing</b><span>Alters the attacking host's MAC address to match a legitimate one, defeating MAC-based access controls</span></div>
+      <div class="fcard"><b>DHCP starvation</b><span>Floods a DHCP server with fake DHCPDISCOVER messages until the whole address pool is leased out, denying service to real clients</span></div>
+      <div class="fcard"><b>DHCP spoofing</b><span>A rogue DHCP server hands out false DNS server addresses, so a client's later visit to a legitimate site gets silently redirected to a fake one</span></div>
+      <div class="fcard"><b>DNS shadowing</b><span>Compromises a legitimate parent domain, then creates malicious subdomains under it to use in further attacks</span></div>
+      <div class="fcard"><b>DNS cache poisoning</b><span>Injects falsified information into a resolver's cache, redirecting users from a legitimate site to a malicious one</span></div>
+      <div class="fcard"><b>DNS tunneling</b><span>Smuggles data inside DNS queries — a cybersecurity analyst's tell is queries running noticeably longer than average</span></div>
+      <div class="fcard"><b>DNS amplification/reflection</b><span>Uses open DNS resolvers to multiply a small spoofed request into a much larger flood aimed at the victim, while hiding the true source</span></div>
+    </div>
 
     <h3>DNS open resolvers and stealth techniques</h3>
     <p>A <b>DNS open resolver</b> answers queries from anyone, even clients outside its own domain. That makes it a target for cache poisoning, amplification and reflection, and <b>resource utilization attacks</b>, which are DoS attacks that use up the resolver's resources until it has to be restarted. Attackers also use DNS to hide their own servers:</p>
-    <table class="model-table">
-      <thead><tr><th>Stealth technique</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Fast flux</td><td>Hides phishing and malware sites behind a quickly changing set of compromised DNS hosts, whose IP addresses change within minutes. Botnets use it to stay hidden</td></tr>
-        <tr><td style="font-weight:700;">Double IP flux</td><td>Rapidly changes the hostname-to-IP mappings and also the authoritative name server, making the source even harder to find</td></tr>
-        <tr><td style="font-weight:700;">Domain generation algorithms (DGA)</td><td>Malware randomly generates domain names to use as meeting points with its command-and-control servers</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Fast flux</b><span>Hides phishing and malware sites behind a quickly changing set of compromised DNS hosts, whose IP addresses change within minutes. Botnets use it to stay hidden</span></div>
+      <div class="fcard"><b>Double IP flux</b><span>Rapidly changes the hostname-to-IP mappings and also the authoritative name server, making the source even harder to find</span></div>
+      <div class="fcard"><b>Domain generation algorithms (DGA)</b><span>Malware randomly generates domain names to use as meeting points with its command-and-control servers</span></div>
+    </div>
 
     <div class="callout">
       <b>Notice the DHCP spoofing detail:</b> the goal usually isn't the gateway itself. It's the DNS server address. Control what DNS server a victim uses, and you control where every domain name they type actually takes them.
@@ -249,40 +265,31 @@
       <p>Web applications and email are how most organizations do business, and how most of them get breached.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Attack</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">HTTP 302 cushioning</td><td>Abuses HTTP's own redirect response (302) to quietly bounce a victim toward a malicious site instead of the one they requested</td></tr>
-        <tr><td style="font-weight:700;">Spam</td><td>Bulk unsolicited email flooded to many users — a delivery vector for phishing and malware as much as a nuisance on its own</td></tr>
-        <tr><td style="font-weight:700;">SQL injection</td><td>Injects SQL commands into an insecure input field (often a login form) to manipulate or extract data straight from the backend database</td></tr>
-        <tr><td style="font-weight:700;">Malicious iFrames</td><td>An attacker adds HTML to a compromised web page so it loads content from another site, delivering spam ads, exploit kits, or other malware</td></tr>
-        <tr><td style="font-weight:700;">Cross-site scripting (XSS)</td><td>Injects malicious script into a trusted site's input fields — exploits the same missing input validation SQL injection does, but targets the browser instead of the database</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>HTTP 302 cushioning</b><span>Abuses HTTP's own redirect response (302) to quietly bounce a victim toward a malicious site instead of the one they requested</span></div>
+      <div class="fcard"><b>Spam</b><span>Bulk unsolicited email flooded to many users — a delivery vector for phishing and malware as much as a nuisance on its own</span></div>
+      <div class="fcard"><b>SQL injection</b><span>Injects SQL commands into an insecure input field (often a login form) to manipulate or extract data straight from the backend database</span></div>
+      <div class="fcard"><b>Malicious iFrames</b><span>An attacker adds HTML to a compromised web page so it loads content from another site, delivering spam ads, exploit kits, or other malware</span></div>
+      <div class="fcard"><b>Cross-site scripting (XSS)</b><span>Injects malicious script into a trusted site's input fields — exploits the same missing input validation SQL injection does, but targets the browser instead of the database</span></div>
+    </div>
 
     <h3>Email threats</h3>
-    <table class="model-table">
-      <thead><tr><th>Threat</th><th>How it works</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Attachment-based attacks</td><td>Malicious content embedded in business files, like an attachment that seems to come from the IT department</td></tr>
-        <tr><td style="font-weight:700;">Email spoofing</td><td>A forged sender address meant to trick the recipient into sending money or sensitive information</td></tr>
-        <tr><td style="font-weight:700;">Open mail relay</td><td>A mail server misconfigured to relay mail for anyone, abused to send spam or malware in bulk</td></tr>
-        <tr><td style="font-weight:700;">Homoglyphs</td><td>Characters that look the same as, or nearly the same as, legitimate ones, used to make fake links and domains look real</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Attachment-based attacks</b><span>Malicious content embedded in business files, like an attachment that seems to come from the IT department</span></div>
+      <div class="fcard"><b>Email spoofing</b><span>A forged sender address meant to trick the recipient into sending money or sensitive information</span></div>
+      <div class="fcard"><b>Open mail relay</b><span>A mail server misconfigured to relay mail for anyone, abused to send spam or malware in bulk</span></div>
+      <div class="fcard"><b>Homoglyphs</b><span>Characters that look the same as, or nearly the same as, legitimate ones, used to make fake links and domains look real</span></div>
+    </div>
 
     <h3>HTTP status codes</h3>
     <p>Every HTTP response carries a three-digit status code. Analysts read them in web logs to see what a client asked for and what happened. The first digit tells you the class:</p>
-    <table class="model-table">
-      <thead><tr><th>Class</th><th>Meaning</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">1xx Informational</td><td>A provisional response</td></tr>
-        <tr><td style="font-weight:700;">2xx Successful</td><td>The request was received, understood, and accepted</td></tr>
-        <tr><td style="font-weight:700;">3xx Redirection</td><td>The client must take further action, like following a redirect. HTTP 302 cushioning abuses this class</td></tr>
-        <tr><td style="font-weight:700;">4xx Client error</td><td>The client seems to have made an error</td></tr>
-        <tr><td style="font-weight:700;">5xx Server error</td><td>The server failed to carry out a valid request</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>1xx Informational</b><span>A provisional response</span></div>
+      <div class="fcard"><b>2xx Successful</b><span>The request was received, understood, and accepted</span></div>
+      <div class="fcard"><b>3xx Redirection</b><span>The client must take further action, like following a redirect. HTTP 302 cushioning abuses this class</span></div>
+      <div class="fcard"><b>4xx Client error</b><span>The client seems to have made an error</span></div>
+      <div class="fcard"><b>5xx Server error</b><span>The server failed to carry out a valid request</span></div>
+    </div>
 
     <div class="callout">
       <b>SQL injection and XSS are siblings.</b> Both exist because user input got treated as trusted code instead of untrusted data. One targets what the database executes. The other targets what a victim's browser renders.
@@ -297,14 +304,11 @@
       <p>A few standard countermeasures, plus the one that gets asked about the most: what actually happens, in order, when a worm is loose on the network.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Threat</th><th>Primary mitigation</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Virus / Trojan horse</td><td>Antivirus software</td></tr>
-        <tr><td style="font-weight:700;">Ping sweep (reconnaissance)</td><td>Block ICMP echo and echo-reply at the network edge</td></tr>
-        <tr><td style="font-weight:700;">Worm outbreak</td><td>The four-phase response below</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Virus / Trojan horse</b><span><span class="k">Primary mitigation:</span> Antivirus software</span></div>
+      <div class="fcard"><b>Ping sweep (reconnaissance)</b><span><span class="k">Primary mitigation:</span> Block ICMP echo and echo-reply at the network edge</span></div>
+      <div class="fcard"><b>Worm outbreak</b><span><span class="k">Primary mitigation:</span> The four-phase response below</span></div>
+    </div>
 
     <figure>
       <svg viewBox="0 0 480 200" role="img" aria-label="The four phases of worm mitigation: containment, inoculation, quarantine, treatment.">
@@ -437,24 +441,18 @@
       <p>Encryption standards got progressively better; some of the "extra" security measures never really worked at all.</p>
     </div>
 
-    <table class="model-table">
-      <thead><tr><th>Standard</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">WEP</td><td>The original — badly broken, a static shared key that's straightforward to crack. Do not use.</td></tr>
-        <tr><td style="font-weight:700;">WPA</td><td>An improvement over WEP, but still weaker than what followed it</td></tr>
-        <tr><td style="font-weight:700;">WPA2</td><td>Based on 802.11i, uses AES encryption — the baseline standard for a long time</td></tr>
-        <tr><td style="font-weight:700;">WPA3</td><td>The newest and most secure, with stronger protections than any predecessor</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>WEP</b><span>The original — badly broken, a static shared key that's straightforward to crack. Do not use.</span></div>
+      <div class="fcard"><b>WPA</b><span>An improvement over WEP, but still weaker than what followed it</span></div>
+      <div class="fcard"><b>WPA2</b><span>Based on 802.11i, uses AES encryption — the baseline standard for a long time</span></div>
+      <div class="fcard"><b>WPA3</b><span>The newest and most secure, with stronger protections than any predecessor</span></div>
+    </div>
 
     <h3>Personal vs. Enterprise authentication</h3>
-    <table class="model-table">
-      <thead><tr><th>Mode</th><th>How it authenticates</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:700;">Personal (PSK)</td><td>Every client uses the same pre-shared key — simple to set up, but the key has to be distributed and kept secret, and doesn't change per-user</td></tr>
-        <tr><td style="font-weight:700;">Enterprise (802.1X)</td><td>Centralized authentication via a RADIUS server, using EAP — each user authenticates with their own credentials, no shared secret to leak</td></tr>
-      </tbody>
-    </table>
+    <div class="fcards">
+      <div class="fcard"><b>Personal (PSK)</b><span>Every client uses the same pre-shared key — simple to set up, but the key has to be distributed and kept secret, and doesn't change per-user</span></div>
+      <div class="fcard"><b>Enterprise (802.1X)</b><span>Centralized authentication via a RADIUS server, using EAP — each user authenticates with their own credentials, no shared secret to leak</span></div>
+    </div>
 
     <div class="callout">
       <b>Two measures that feel like security but mostly aren't:</b> MAC filtering can be defeated by spoofing an allowed client's MAC address, which is trivial even for an amateur. SSID cloaking just hides the network name from casual view; a determined attacker can still find it. Neither replaces real encryption and authentication.
