@@ -1,0 +1,1549 @@
+<title>IT121 Session 15 – Testing, Threat Intelligence, Risk &amp; Incident Response</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 15</p>
+    <h1>Testing, Threat Intelligence, Risk &amp; Incident Response</h1>
+    <p class="lede">The last content session covers the full cycle of cyber threat management. Test your own network before attackers do, learn what threats are out there, find and score your weaknesses, decide which risks to treat and how, and when something does get through, investigate it, respond, and recover. Five modules, one shift: everything a Bastion analyst does after the alert.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Modules 23–27</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#testing">Security Testing</a>
+    <a href="#pentest">Pen Testing</a>
+    <a href="#intel">Threat Intel</a>
+    <a href="#profiling">Profiling</a>
+    <a href="#cvss">CVSS</a>
+    <a href="#devmgmt">Device Mgmt</a>
+    <a href="#risk">Risk</a>
+    <a href="#controls">Controls</a>
+    <a href="#forensics">Forensics</a>
+    <a href="#killchain">Kill Chain</a>
+    <a href="#diamond">Diamond Model</a>
+    <a href="#ir">Incident Response</a>
+    <a href="#dr">Disaster Recovery</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 15 covers</h2>
+      <p>Module 23 covers network security testing: assessment commands, testing techniques and tools, and penetration testing. Module 24 covers threat intelligence: the organizations and services that share information about threats. Module 25 covers endpoint vulnerability assessment: profiling, CVSS scoring, and secure device management. Module 26 covers risk management: calculating risk and choosing controls. Module 27 covers digital forensics and incident response: handling evidence, the Cyber Kill Chain, the Diamond Model, the NIST incident response process, and disaster recovery.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Use tools for network security testing</li>
+      <li>Evaluate threat intelligence sources</li>
+      <li>Explain how endpoint vulnerabilities are assessed and managed</li>
+      <li>Select security controls based on risk assessment outcomes</li>
+      <li>Use incident response models and forensic techniques to investigate security incidents</li>
+    </ul>
+  </section>
+
+  <!-- ── SECURITY ASSESSMENTS & TESTING TECHNIQUES (23.1–23.2) ── -->
+  <section id="testing">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Modules 23.1–23.3</p>
+      <h2>Network Security Testing</h2>
+      <p>Test your defenses on purpose, before someone else tests them for you.</p>
+    </div>
+
+    <h3>Security assessments and operations security</h3>
+    <p>Network security testing checks whether security controls actually work. It's part of <b>operations security</b>: the day-to-day work of maintaining the network's security once it's in place, which is the usual responsibility of a new member of a security operations team. Testing happens during system implementation and in regular checks afterward. An assessment often starts with the basic commands every analyst should know:</p>
+    <table class="model-table">
+      <thead><tr><th>Command</th><th>Gathers</th></tr></thead>
+      <tbody>
+        <tr><td><code>ipconfig</code> / <code>ip a</code></td><td>The host's own IP configuration (Windows / Linux)</td></tr>
+        <tr><td><code>ping</code></td><td>Whether a host is reachable</td></tr>
+        <tr><td><code>tracert</code> / <code>traceroute</code></td><td>The path packets take to a destination</td></tr>
+        <tr><td><code>nslookup</code></td><td>DNS name and address lookups</td></tr>
+        <tr><td><code>netstat</code></td><td>Active connections and listening ports on the host</td></tr>
+        <tr><td><code>arp -a</code></td><td>The ARP cache: IP-to-MAC mappings on the local segment</td></tr>
+        <tr><td><code>nbtstat</code></td><td>Windows NetBIOS name resolution, for troubleshooting NetBIOS problems</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Testing techniques</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Network scanning</b><span>Finds live hosts and open TCP and UDP ports. Every open port is a possible target.</span></div>
+      <div class="fcard"><b>Vulnerability scanning</b><span>Checks for default passwords, missing patches, open ports, misconfigurations, and active IP addresses. A <b>credentialed scan</b> logs in to each host, so it gathers more information and gives fewer false positives and false negatives.</span></div>
+      <div class="fcard"><b>Password cracking</b><span>Tests whether users' passwords are weak enough to be guessed.</span></div>
+      <div class="fcard"><b>Log review</b><span>Checks logs for signs of problems and for compliance.</span></div>
+      <div class="fcard"><b>Integrity checkers</b><span>Detect changes to critical files and configurations.</span></div>
+      <div class="fcard"><b>Penetration testing</b><span>Simulates a real attack to see how far an attacker could get. Covered in the next section.</span></div>
+    </div>
+    <p>Larger SOCs also use <b>security orchestration, automation, and response (SOAR)</b>: platforms that automatically collect threat data from many sources and respond to routine, low-level events without a human, so analysts can focus on the rest.</p>
+
+    <h3>Testing tools</h3>
+    <table class="model-table">
+      <thead><tr><th>Tool</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Nmap / Zenmap</td><td>A low-level network scanner (Zenmap is its GUI). Finds hosts, open ports, services, and operating systems. Can use <b>decoy hosts</b> to hide where a scan really comes from</td></tr>
+        <tr><td style="font-weight:700;">SuperScan</td><td>A Windows port-scanning tool</td></tr>
+        <tr><td style="font-weight:700;">Nessus</td><td>A vulnerability scanner</td></tr>
+        <tr><td style="font-weight:700;">Tripwire</td><td>Assesses and validates IT configurations against internal policies, best practices, and compliance standards</td></tr>
+        <tr><td style="font-weight:700;">L0phtcrack</td><td>Password auditing and recovery</td></tr>
+        <tr><td style="font-weight:700;">Metasploit</td><td>A penetration testing framework for developing and running exploit code against a target</td></tr>
+        <tr><td style="font-weight:700;">SIEM</td><td>Real-time reporting and long-term analysis of security events. In testing, it shows the details of the source of suspicious activity</td></tr>
+      </tbody>
+    </table>
+    <div class="callout xref">
+      <code>netstat</code>, <code>ping</code>, and other commands first appeared in <a href="IT121_Session04.html#winconfig">Session 4</a>. SIEMs are in <a href="IT121_Session12.html#endlogs">Session 12</a>.
+    </div>
+  </section>
+
+  <!-- ── PENETRATION TESTING (23.4) ── -->
+  <section id="pentest">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 23.4</p>
+      <h2>Penetration Testing</h2>
+      <p>Hire someone to attack you, with permission and rules, and learn where you'd really break.</p>
+    </div>
+    <p>A <b>penetration test</b> (pen test) uses real attackers' techniques, in a controlled and authorized way, to see how the organization's systems and people respond. It's done by hired testers, sometimes former attackers, under a written agreement that sets the <b>scope</b> (what may be tested) and the <b>rules of engagement</b> (how and when). Testing without that permission is a crime.</p>
+    <h3>The four phases</h3>
+    <div class="fcards">
+      <div class="fcard"><b>1 · Planning</b><span>Agree on goals, scope, rules of engagement, and timing.</span></div>
+      <div class="fcard"><b>2 · Discovery</b><span>Reconnaissance. <b>Passive</b> recon gathers information without touching the target: public websites, social media, leaked credentials. <b>Active</b> recon interacts with the target directly, such as scanning its ports.</span></div>
+      <div class="fcard"><b>3 · Attack</b><span>Try to exploit what discovery found, gain access, and see how far it goes.</span></div>
+      <div class="fcard"><b>4 · Reporting</b><span>Document what was found, how, the risk each finding poses, and how to fix it.</span></div>
+    </div>
+    <h3>How much the testers know</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Black box</b><span>Testers start with no inside knowledge, like an outside attacker.</span></div>
+      <div class="fcard"><b>Gray box</b><span>Testers get some information, such as a user account or network diagram.</span></div>
+      <div class="fcard"><b>White box</b><span>Testers get full knowledge, such as source code and configurations, for the most thorough test.</span></div>
+    </div>
+    <p>A <b>red team exercise</b> takes this further: a team plays a realistic adversary over a longer period, often testing detection and response as well as defenses. The defenders are the <b>blue team</b>.</p>
+    <div class="callout xref">
+      Pen tests and red teams as ways to evaluate controls are in <a href="IT121_Session13.html#frameworks">Session 13</a>.
+    </div>
+  </section>
+
+  <!-- ── THREAT INTELLIGENCE (24.1–24.2) ── -->
+  <section id="intel">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Modules 24.1–24.2</p>
+      <h2>Threat Intelligence</h2>
+      <p>No SOC sees every threat first. Threat intelligence is how defenders share what they've learned.</p>
+    </div>
+
+    <h3>Information sources</h3>
+    <div class="fcards">
+      <div class="fcard"><b>SANS</b><span>Training and research. Runs the <b>Internet Storm Center</b>, a free early-warning system for internet threats.</span></div>
+      <div class="fcard"><b>MITRE</b><span>Maintains the <b>CVE</b> list and the <b>ATT&amp;CK</b> knowledge base of attacker behavior.</span></div>
+      <div class="fcard"><b>FIRST</b><span>Forum of Incident Response and Security Teams. Helps incident response teams around the world collaborate, share information, and react quickly.</span></div>
+      <div class="fcard"><b>ISC2</b><span>Vendor-neutral education and career services, and certifications such as the CISSP.</span></div>
+      <div class="fcard"><b>CIS</b><span>Center for Internet Security. Through <b>MS-ISAC</b>, provides 24x7 threat warnings, advisories, and incident response help to state, local, tribal, and territorial (SLTT) governments.</span></div>
+      <div class="fcard"><b>Vendor reports, blogs, podcasts</b><span>Security vendors such as Cisco publish annual threat reports. Security news sites, blogs, and podcasts keep analysts current.</span></div>
+    </div>
+
+    <h3>Threat intelligence services and standards</h3>
+    <table class="model-table">
+      <thead><tr><th>Service or standard</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Cisco Talos</td><td>One of the largest commercial threat intelligence teams. Collects information about active, existing, and emerging threats, and feeds it to Cisco security products</td></tr>
+        <tr><td style="font-weight:700;">FireEye</td><td>Detects and blocks zero-day attacks with a signature-less engine that analyzes attacks statefully across every stage of their life cycle</td></tr>
+        <tr><td style="font-weight:700;">AIS</td><td>The U.S. Department of Homeland Security's free <b>Automated Indicator Sharing</b>: real-time exchange of threat indicators, such as malicious IP addresses and phishing senders, between government and private organizations</td></tr>
+        <tr><td style="font-weight:700;">CVE</td><td>Common Vulnerabilities and Exposures, maintained by MITRE: a dictionary giving each publicly known vulnerability a standard ID, such as CVE-2014-0160</td></tr>
+        <tr><td style="font-weight:700;">STIX</td><td>Structured Threat Information Expression: a standard format for describing threat information so it can be shared</td></tr>
+        <tr><td style="font-weight:700;">TAXII</td><td>Trusted Automated Exchange of Indicator Information: the protocol, over HTTPS, for exchanging STIX data</td></tr>
+        <tr><td style="font-weight:700;">CybOX</td><td>Cyber Observable Expression: a standard for describing observable network events, now folded into STIX</td></tr>
+        <tr><td style="font-weight:700;">Threat intelligence platform (TIP)</td><td>Gathers threat data from many feeds into one place and presents it in a usable form</td></tr>
+      </tbody>
+    </table>
+    <p>Shared intelligence often takes the form of <b>indicators of compromise (IOCs)</b>: concrete evidence of an attack, such as malicious IP addresses, domains, file hashes, or unusual registry changes. A SOC can load IOCs into its SIEM and IDS, and search archived data for them, the retrospective analysis from Session 13.</p>
+    <div class="callout xref">
+      File hashes as malware signatures are in <a href="IT121_Session11.html#hashing">Session 11</a>. Retrospective security analysis is in <a href="IT121_Session13.html#evaluation">Session 13</a>.
+    </div>
+  </section>
+
+  <!-- ── NETWORK AND SERVER PROFILING (25.1) ── -->
+  <section id="profiling">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 25.1</p>
+      <h2>Network and Server Profiling</h2>
+      <p>You can't spot abnormal until you know what normal looks like.</p>
+    </div>
+    <p>A <b>network baseline</b> describes normal network behavior, so deviations stand out. Building one is part of the discovery step of vulnerability management. A network profile includes:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Session duration</b><span>The time between the start of a data flow and its end</span></div>
+      <div class="fcard"><b>Total throughput</b><span>The amount of data passing between hosts in a given period</span></div>
+      <div class="fcard"><b>Ports used</b><span>The TCP and UDP processes available to accept data</span></div>
+      <div class="fcard"><b>Critical asset address space</b><span>The IP addresses of critical assets</span></div>
+    </div>
+    <p>A <b>server profile</b> sets the accepted operating parameters for a server:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Listening ports</b><span>The TCP and UDP daemons and ports that are allowed to be open</span></div>
+      <div class="fcard"><b>User accounts</b><span>The parameters defining user access and behavior</span></div>
+      <div class="fcard"><b>Service accounts</b><span>The type of service an application is allowed to run</span></div>
+      <div class="fcard"><b>Software environment</b><span>The tasks, processes, and applications permitted to run on the server</span></div>
+    </div>
+    <h3>Testing for vulnerabilities</h3>
+    <table class="model-table">
+      <thead><tr><th>Test</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Risk analysis</td><td>Evaluates the risk posed by vulnerabilities to a specific organization: likelihood of attack, likely threat actors, and the consequences of a successful exploit</td></tr>
+        <tr><td style="font-weight:700;">Vulnerability assessment</td><td>Uses software to scan servers and find known vulnerabilities</td></tr>
+        <tr><td style="font-weight:700;">Penetration testing</td><td>Uses authorized simulated attacks to test the strength of network security</td></tr>
+      </tbody>
+    </table>
+    <div class="callout xref">
+      Statistical data and baselines are in <a href="IT121_Session12.html#datatypes">Session 12</a>.
+    </div>
+  </section>
+
+  <!-- ── CVSS (25.2) ── -->
+  <section id="cvss">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 25.2</p>
+      <h2>Common Vulnerability Scoring System (CVSS)</h2>
+      <p>One number from 0 to 10 that tells everyone how bad a vulnerability is, and the metrics that explain why.</p>
+    </div>
+    <p>The <b>Common Vulnerability Scoring System (CVSS)</b> is a vendor-neutral, industry-standard way to rate the severity of vulnerabilities. A CVSS score is built from three metric groups:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Base metric group</b><span>The characteristics of the vulnerability itself, which don't change over time or between environments. Split into <b>Exploitability</b> metrics and <b>Impact</b> metrics.</span></div>
+      <div class="fcard"><b>Temporal metric group</b><span>Characteristics that change over time, such as whether exploit code is available or a patch has been released.</span></div>
+      <div class="fcard"><b>Environmental metric group</b><span>Adjusts the score for a specific organization's environment, such as how important the affected system is to it.</span></div>
+    </div>
+    <h3>Base metrics</h3>
+    <table class="model-table">
+      <thead><tr><th>Metric</th><th>Asks</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Attack vector (AV)</td><td>How close the attacker must be: network, adjacent network, local, or physical. The farther away an attacker can be, the higher the score</td></tr>
+        <tr><td style="font-weight:700;">Attack complexity (AC)</td><td>Conditions beyond the attacker's control that must exist for the exploit to work</td></tr>
+        <tr><td style="font-weight:700;">Privileges required (PR)</td><td>The level of access the attacker needs first: none, low, or high</td></tr>
+        <tr><td style="font-weight:700;">User interaction (UI)</td><td>Whether a user other than the attacker must take part, such as clicking a link</td></tr>
+        <tr><td style="font-weight:700;">Scope (S)</td><td>Whether the exploit can affect components beyond the vulnerable one</td></tr>
+        <tr><td style="font-weight:700;">Impact: C, I, A</td><td>The effect on confidentiality, integrity, and availability: none, low, or high</td></tr>
+      </tbody>
+    </table>
+    <h3>Severity ratings</h3>
+    <table class="model-table">
+      <thead><tr><th>Score</th><th>Rating</th></tr></thead>
+      <tbody>
+        <tr><td>0.0</td><td style="font-weight:700;">None</td></tr>
+        <tr><td>0.1 – 3.9</td><td style="font-weight:700;">Low</td></tr>
+        <tr><td>4.0 – 6.9</td><td style="font-weight:700;">Medium</td></tr>
+        <tr><td>7.0 – 8.9</td><td style="font-weight:700;">High</td></tr>
+        <tr><td>9.0 – 10.0</td><td style="font-weight:700;color:var(--danger);">Critical</td></tr>
+      </tbody>
+    </table>
+    <p>CVSS reports usually appear with a <b>vector string</b>, a compact summary of every metric value, such as <code>AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</code> (network attack, low complexity, no privileges, no user interaction, high impact on all three: a 9.8 Critical). The U.S. <b>National Vulnerability Database (NVD)</b> publishes CVSS scores for CVE entries.</p>
+  </section>
+
+  <!-- ── SECURE DEVICE MANAGEMENT (25.3) ── -->
+  <section id="devmgmt">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 25.3</p>
+      <h2>Secure Device Management</h2>
+      <p>Know every device you have, keep it configured correctly, and keep it patched.</p>
+    </div>
+    <h3>Responding to vulnerability risk</h3>
+    <p>Vulnerability management starts with <b>threat-vulnerability (T-V) pairing</b>: identifying threats and vulnerabilities, then matching each threat to the vulnerabilities it could exploit. Each pair is then handled with one of four strategies:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Risk avoidance</b><span>Stop doing the activity that creates the risk.</span></div>
+      <div class="fcard"><b>Risk reduction</b><span>Reduce the vulnerability, for example by patching or adding a control.</span></div>
+      <div class="fcard"><b>Risk sharing</b><span>Shift part of the risk to someone else, such as an insurer or a cloud provider.</span></div>
+      <div class="fcard"><b>Risk retention</b><span>Accept the risk and its consequences, usually because it's small or costly to fix.</span></div>
+    </div>
+    <h3>The vulnerability management life cycle</h3>
+    <div class="fcards">
+      <div class="fcard"><b>1 · Discover</b><span>Inventory all assets, build a network baseline, and identify vulnerabilities.</span></div>
+      <div class="fcard"><b>2 · Prioritize assets</b><span>Group assets and assign each a business value.</span></div>
+      <div class="fcard"><b>3 · Assess</b><span>Build a baseline risk profile, based on asset value, threats, and vulnerabilities.</span></div>
+      <div class="fcard"><b>4 · Report</b><span>Document the security risk level for each asset.</span></div>
+      <div class="fcard"><b>5 · Remediate</b><span>Fix vulnerabilities in order of risk.</span></div>
+      <div class="fcard"><b>6 · Verify</b><span>Confirm the fixes worked, through follow-up audits.</span></div>
+    </div>
+    <h3>Managing devices</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Asset management</b><span>Tracking every hardware and software asset: where it is, who's responsible, and what's installed.</span></div>
+      <div class="fcard"><b>Mobile device management (MDM)</b><span>Centrally enforcing security on phones and tablets, including company-owned and BYOD devices: encryption, PINs, remote wipe.</span></div>
+      <div class="fcard"><b>Configuration management</b><span>Keeping systems in known, approved configurations, and controlling changes.</span></div>
+      <div class="fcard"><b>Enterprise patch management</b><span>Testing and deploying updates across the organization. Done with <b>agent-based</b> tools on each host, <b>agentless</b> scanning, or <b>passive network monitoring</b> to spot unpatched systems.</span></div>
+    </div>
+    <div class="callout xref">
+      Patching and host hardening are in <a href="IT121_Session05.html#defending">Session 5</a>. BYOD is in <a href="IT121_Session06.html#byod">Session 6</a>.
+    </div>
+  </section>
+
+  <!-- ── RISK MANAGEMENT AND ASSESSMENT (26.1–26.2) ── -->
+  <section id="risk">
+    <div class="section-head">
+      <p class="kicker">Concept 7 · Modules 26.1–26.2</p>
+      <h2>Risk Management and Risk Assessment</h2>
+      <p>You can't remove all risk. You can measure it, and decide what to do about it.</p>
+    </div>
+    <h3>Risk management</h3>
+    <p><b>Risk</b> is the probability of loss due to a threat. It combines how likely a threat is to exploit a vulnerability with how bad the impact would be. (A weakness itself is a vulnerability, not a risk.) Risk management is an ongoing four-step process:</p>
+    <div class="fcards">
+      <div class="fcard"><b>1 · Frame</b><span>Identify threats across the organization and set the context: which risks matter, and how much risk the organization will tolerate.</span></div>
+      <div class="fcard"><b>2 · Assess</b><span>Determine how severe each identified risk is.</span></div>
+      <div class="fcard"><b>3 · Respond</b><span>Choose and carry out an action for each risk.</span></div>
+      <div class="fcard"><b>4 · Monitor</b><span>Watch for changes in risk and check that the responses keep working.</span></div>
+    </div>
+    <p>The four possible responses:</p>
+    <table class="model-table">
+      <thead><tr><th>Response</th><th>Meaning</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Avoidance</td><td>Stop the risky activity entirely</td><td>Don't store card numbers at all</td></tr>
+        <tr><td style="font-weight:700;">Mitigation (reduction)</td><td>Lower the likelihood or impact with controls</td><td>Add MFA and patching</td></tr>
+        <tr><td style="font-weight:700;">Transfer</td><td>Shift some of the risk to a third party</td><td>Buy cyber insurance</td></tr>
+        <tr><td style="font-weight:700;">Acceptance</td><td>Knowingly accept it, because it's small or fixing it costs more than it saves</td><td>Leave a low-value test server as is</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Calculating risk: quantitative analysis</h3>
+    <p><b>Quantitative</b> risk analysis assigns money values, which works for assets with a measurable value, such as items in an equipment database.</p>
+    <table class="model-table">
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Asset value (AV)</td><td>What the asset is worth</td></tr>
+        <tr><td style="font-weight:700;">Exposure factor (EF)</td><td>The percentage of the asset's value lost in one incident</td></tr>
+        <tr><td style="font-weight:700;">Single loss expectancy (SLE)</td><td><b>SLE = AV × EF</b>: the expected loss from one incident</td></tr>
+        <tr><td style="font-weight:700;">Annualized rate of occurrence (ARO)</td><td>How many times a year the incident is expected (0.25 means once every four years)</td></tr>
+        <tr><td style="font-weight:700;">Annualized loss expectancy (ALE)</td><td><b>ALE = SLE × ARO</b>: the expected loss per year</td></tr>
+      </tbody>
+    </table>
+    <p>The ALE tells you how much a control is worth. A control that costs less per year than the loss it prevents is usually justified.</p>
+
+    <h3>Qualitative analysis</h3>
+    <p><b>Qualitative</b> risk analysis uses ratings such as low, medium, and high instead of dollar figures. It's based on opinions, scenarios, and past events, such as earlier break-in attempts, and usually places each risk on a <b>likelihood × impact</b> matrix. It's faster and works for things that are hard to price, such as reputation, but it's less precise.</p>
+    <div class="callout xref">
+      Threat, vulnerability, exploit, and risk were first defined in <a href="IT121_Session01.html#tver">Session 1</a>.
+    </div>
+  </section>
+
+  <!-- ── SECURITY CONTROLS (26.3) ── -->
+  <section id="controls">
+    <div class="section-head">
+      <p class="kicker">Concept 8 · Module 26.3</p>
+      <h2>Security Controls</h2>
+      <p>Controls are classified by what they do, and when, relative to an incident.</p>
+    </div>
+    <div class="fcards">
+      <div class="fcard"><b>Preventive</b><span>Stop an incident before it happens. <span class="k">Examples:</span> firewalls, locks, MFA.</span></div>
+      <div class="fcard"><b>Deterrent</b><span>Discourage someone from trying. <span class="k">Examples:</span> a login warning banner listing the consequences of misuse, visible cameras.</span></div>
+      <div class="fcard"><b>Detective</b><span>Identify an incident while or after it happens. <span class="k">Examples:</span> IDS, log review, motion sensors.</span></div>
+      <div class="fcard"><b>Corrective</b><span>Act after a violation to fix the problem and restore the system to its normal state. <span class="k">Examples:</span> quarantining malware, patching the exploited flaw.</span></div>
+      <div class="fcard"><b>Recovery</b><span>Restore resources and capabilities after a violation. <span class="k">Examples:</span> backups and restores, fault-tolerant storage.</span></div>
+      <div class="fcard"><b>Compensative</b><span>An alternative used when the main control isn't possible or too costly. <span class="k">Example:</span> extra monitoring for a legacy system that can't be patched.</span></div>
+    </div>
+    <p>Corrective and recovery controls both work <em>after</em> a policy violation. Controls are also grouped by how they're implemented: <b>administrative</b> (policies, training), <b>technical</b> (firewalls, encryption), and <b>physical</b> (locks, guards). Choosing controls depends on the organization: its risk assessment results, budget, regulations, and how much risk it accepts.</p>
+    <div class="callout xref">
+      Defense in depth, layering many controls, is in <a href="IT121_Session06.html#depth">Session 6</a>.
+    </div>
+  </section>
+
+  <!-- ── EVIDENCE HANDLING AND ATTRIBUTION (27.1) ── -->
+  <section id="forensics">
+    <div class="section-head">
+      <p class="kicker">Concept 9 · Module 27.1</p>
+      <h2>Evidence Handling and Attack Attribution</h2>
+      <p>Digital forensics recovers and investigates material found on digital devices, in a way that holds up in court.</p>
+    </div>
+    <h3>The forensic process</h3>
+    <p>NIST describes four steps (in Special Publication 800-86):</p>
+    <div class="fcards">
+      <div class="fcard"><b>1 · Collection</b><span>Identify and gather possible sources of data, while protecting their integrity.</span></div>
+      <div class="fcard"><b>2 · Examination</b><span>Extract the relevant information from the collected data. That may mean decompressing or decrypting it, and filtering out what isn't relevant.</span></div>
+      <div class="fcard"><b>3 · Analysis</b><span>Draw conclusions from the data, linking people, places, times, and events.</span></div>
+      <div class="fcard"><b>4 · Reporting</b><span>Present the findings, how they were reached, and recommendations.</span></div>
+    </div>
+    <h3>Types of evidence</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Best evidence</b><span>Evidence in its original state, such as the actual storage device used by the accused.</span></div>
+      <div class="fcard"><b>Corroborating evidence</b><span>Evidence that supports another piece of evidence.</span></div>
+      <div class="fcard"><b>Indirect evidence</b><span>Also called circumstantial. Combined with other facts, it suggests a conclusion.</span></div>
+    </div>
+    <h3>Order of volatility</h3>
+    <p>Some evidence disappears the moment a computer is turned off. Collect the most volatile data first:</p>
+    <table class="model-table">
+      <thead><tr><th>Order</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td style="font-weight:700;">CPU registers and cache</td></tr>
+        <tr><td>2</td><td style="font-weight:700;">Routing table, ARP cache, process table, kernel statistics, RAM</td></tr>
+        <tr><td>3</td><td style="font-weight:700;">Temporary file systems</td></tr>
+        <tr><td>4</td><td style="font-weight:700;">Non-volatile storage, such as hard drives</td></tr>
+        <tr><td>5</td><td style="font-weight:700;">Remote logging and monitoring data</td></tr>
+        <tr><td>6</td><td style="font-weight:700;">Physical interconnections and topology</td></tr>
+        <tr><td>7</td><td style="font-weight:700;">Archival media, such as backup tapes</td></tr>
+      </tbody>
+    </table>
+
+    <p>The order trips people up, because the most important-sounding evidence, the hard drive, comes after things that seem trivial. The reason is about time, not importance, and the castle town had a version of it every winter.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… tracks in the snow</span>
+      A thief climbs the castle wall on a snowy night. By morning the magistrate's investigator has many clues: footprints in the fresh snow, a scrap of cloth on a nail, scratches in the stone, and the gate log. The footprints go first. They melt by noon, so they're sketched before anything else, even though the stone scratches might matter more. The cloth can wait an hour. The scratches and the log will still be there next month. That's the order of volatility: memory and network state are footprints in snow; the hard drive and the backup tapes are scratches in stone.
+    </div>
+
+    <h3>Chain of custody and integrity</h3>
+    <p><b>Chain of custody</b> is the documented record of who collected, handled, and stored evidence, when, and where, from collection to the courtroom. A gap lets the defense argue the evidence was tampered with. To preserve integrity, investigators work on a <b>copy</b>, never the original, use <b>write blockers</b> so the original can't be changed, and record a <b>hash</b> of the evidence at collection so they can prove later that the copy is identical.</p>
+
+    <h3>Attack attribution</h3>
+    <p><b>Attack attribution</b> means identifying who is responsible for an attack. Investigators look at the threat actor's techniques, tools, and infrastructure, compare IOCs with threat intelligence, validate whether the attacker's IP address is genuine or spoofed, and search incident databases and the internet for related attacks. <b>MITRE ATT&amp;CK</b> helps here: it's a global knowledge base of threat actor tactics, techniques, and procedures (TTPs), built from real-world observations.</p>
+    <div class="callout xref">
+      Hashing evidence to prove integrity is in <a href="IT121_Session11.html#hashing">Session 11</a>. Threat actors are in <a href="IT121_Session01.html#actors">Session 1</a>.
+    </div>
+  </section>
+
+  <!-- ── CYBER KILL CHAIN (27.2) ── -->
+  <section id="killchain">
+    <div class="section-head">
+      <p class="kicker">Concept 10 · Module 27.2</p>
+      <h2>The Cyber Kill Chain</h2>
+      <p>Seven steps every attacker must complete. Break any one, and the attack fails.</p>
+    </div>
+    <p>Developed by Lockheed Martin, the <b>Cyber Kill Chain</b> identifies the steps an adversary must complete to reach their goal. Defenders use it to see where in an attack they are, and where they could have stopped it.</p>
+    <figure class="fig wide">
+      <svg viewBox="0 0 640 170" role="img" aria-label="The seven steps of the Cyber Kill Chain in order: reconnaissance, weaponization, delivery, exploitation, installation, command and control, and actions on objectives. The earlier the chain is broken, the less damage.">
+        <g stroke-width="1.5" stroke="var(--border)" fill="var(--surface)">
+          <rect x="4" y="30" width="84" height="64"/><rect x="95" y="30" width="84" height="64"/><rect x="186" y="30" width="84" height="64"/><rect x="277" y="30" width="84" height="64"/><rect x="368" y="30" width="84" height="64"/><rect x="459" y="30" width="84" height="64"/><rect x="550" y="30" width="86" height="64" fill="var(--danger-soft)" stroke="var(--danger)"/>
+        </g>
+        <g font-size="18" font-weight="700" text-anchor="middle" fill="var(--accent)"><text x="46" y="56">1</text><text x="137" y="56">2</text><text x="228" y="56">3</text><text x="319" y="56">4</text><text x="410" y="56">5</text><text x="501" y="56">6</text><text x="593" y="56" fill="var(--danger)">7</text></g>
+        <g font-size="10.5" text-anchor="middle" fill="var(--text)"><text x="46" y="80">Recon</text><text x="137" y="80">Weaponize</text><text x="228" y="80">Deliver</text><text x="319" y="80">Exploit</text><text x="410" y="80">Install</text><text x="501" y="80">C2</text><text x="593" y="74">Actions on</text><text x="593" y="88">objectives</text></g>
+        <path d="M20 122 H620" stroke="var(--muted)" stroke-width="1.5"/><path d="M620 122 l-10 -6 v12 z" fill="var(--muted)"/>
+        <g font-size="11" fill="var(--muted)"><text x="20" y="146">break the chain early: less damage</text><text x="620" y="146" text-anchor="end">later: attacker reaches their goal</text></g>
+      </svg>
+      <figcaption>Each step depends on the one before it. Defenders want to stop the attack as far to the left as possible.</figcaption>
+    </figure>
+    <table class="model-table">
+      <thead><tr><th>Step</th><th>Attacker</th><th>Defender</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1. Reconnaissance</td><td>Researches the target: websites, employees on social media, scans for open ports</td><td>Watch for scans and unusual browsing of public sites. Limit what's published</td></tr>
+        <tr><td style="font-weight:700;">2. Weaponization</td><td>Pairs an exploit with a payload, such as malware in a document, ready to launch against a vulnerability it found</td><td>Keep up with threat intelligence about new exploits and malware</td></tr>
+        <tr><td style="font-weight:700;">3. Delivery</td><td>Sends the weapon: phishing email, malicious website, USB drive</td><td>Email and web filtering, user training, blocking removable media</td></tr>
+        <tr><td style="font-weight:700;">4. Exploitation</td><td>The exploit runs and takes advantage of the vulnerability</td><td>Patching, hardening, endpoint protection</td></tr>
+        <tr><td style="font-weight:700;">5. Installation</td><td>Installs a backdoor or remote access tool to stay in</td><td>HIDS, application allow-listing, file integrity monitoring</td></tr>
+        <tr><td style="font-weight:700;">6. Command and control (C2)</td><td>Opens a channel to its CnC server to control the compromised host</td><td>Block known CnC domains, watch DNS and outbound traffic</td></tr>
+        <tr><td style="font-weight:700;">7. Actions on objectives</td><td>Achieves the goal: steal data, encrypt it for ransom, launch a DDoS, move to other hosts</td><td>Detect data exfiltration, incident response, recovery</td></tr>
+      </tbody>
+    </table>
+
+    <p>The chain describes a digital attack, but the logic of it is very old. Any castle guard who studied how infiltrators worked knew the steps.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… a shinobi's mission against the castle</span>
+      A shinobi sent against a castle first watches it for days: guard changes, weak walls, which servants go to market (<b>reconnaissance</b>). He prepares his tools and a merchant's disguise to fit what he saw (<b>weaponization</b>). He walks in with a delivery of charcoal (<b>delivery</b>), slips through the unlocked postern he spotted (<b>exploitation</b>), and hides a rope at the wall for later (<b>installation</b>). He sets up a way to pass messages to his lord outside (<b>command and control</b>), and finally steals the plans or opens the gate at night (<b>actions on objectives</b>). Spot him at the market, turn away the charcoal cart, or find the rope, and the mission fails. The earlier, the better.
+    </div>
+    <div class="callout xref">
+      DNS-based command and control is in <a href="IT121_Session12.html#protocols">Session 12</a>.
+    </div>
+  </section>
+
+  <!-- ── DIAMOND MODEL (27.3) ── -->
+  <section id="diamond">
+    <div class="section-head">
+      <p class="kicker">Concept 11 · Module 27.3</p>
+      <h2>The Diamond Model of Intrusion Analysis</h2>
+      <p>Every intrusion event has four parts. Find one, and you can pivot to the others.</p>
+    </div>
+    <div class="split">
+      <div>
+        <p>The <b>Diamond Model</b> describes each intrusion event with four core features, the corners of a diamond:</p>
+        <ul>
+          <li><b>Adversary</b>: the party responsible for the intrusion.</li>
+          <li><b>Capability</b>: the tool or technique the adversary uses against the victim, such as malware or an exploit.</li>
+          <li><b>Infrastructure</b>: the physical or logical communication the adversary uses to deliver the capability and stay in control, such as IP addresses, domains, and email accounts.</li>
+          <li><b>Victim</b>: the target of the attack, whether a person, organization, system, or network.</li>
+        </ul>
+        <p>The model's power is <b>pivoting</b>: from a known piece, follow the edges to discover the others. Knowing the malware (capability) leads to its CnC domain (infrastructure), which leads to other victims and maybe the adversary.</p>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 300" role="img" aria-label="The Diamond Model. Four corners: adversary at the top, infrastructure on the left, capability on the right, and victim at the bottom. Edges connect every corner, so an analyst can pivot from one feature to the others.">
+          <path d="M240 40 L130 150 L240 260 L350 150 Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+          <path d="M240 40 V260 M130 150 H350" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <g fill="var(--surface)" stroke="var(--accent)" stroke-width="2"><circle cx="240" cy="40" r="10"/><circle cx="130" cy="150" r="10"/><circle cx="350" cy="150" r="10"/><circle cx="240" cy="260" r="10"/></g>
+          <g font-size="13" font-weight="700" fill="var(--text)"><text x="240" y="22" text-anchor="middle">ADVERSARY</text><text x="116" y="146" text-anchor="end">INFRA-</text><text x="116" y="162" text-anchor="end">STRUCTURE</text><text x="364" y="146">CAPA-</text><text x="364" y="162">BILITY</text><text x="240" y="290" text-anchor="middle">VICTIM</text></g>
+          <g font-size="10.5" fill="var(--muted)"><text x="176" y="84" text-anchor="end">uses</text><text x="304" y="84">develops</text><text x="176" y="226" text-anchor="end">connects to</text><text x="304" y="226">exploits</text></g>
+        </svg>
+        <figcaption>Every edge is a relationship an analyst can follow. Dashed lines show that every corner can pivot to every other.</figcaption>
+      </figure>
+    </div>
+    <h3>Meta-features</h3>
+    <p>Each event also records meta-features:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Timestamp</b><span>When the event started and stopped</span></div>
+      <div class="fcard"><b>Phase</b><span>Where it fits in a chain of steps, such as a Kill Chain step</span></div>
+      <div class="fcard"><b>Result</b><span>The outcome: success, failure, or unknown, and its effect on confidentiality, integrity, and availability</span></div>
+      <div class="fcard"><b>Direction</b><span>Which way the event moved, such as adversary-to-infrastructure or infrastructure-to-victim</span></div>
+      <div class="fcard"><b>Methodology</b><span>The general class of activity, such as phishing or a port scan</span></div>
+      <div class="fcard"><b>Resources</b><span>What the adversary used: software, knowledge, usernames and passwords, funding, or facilities</span></div>
+    </div>
+    <p>Linking events in time order creates an <b>activity thread</b>, the attack's story. The Diamond Model and the Kill Chain fit together: each event in the thread sits in one Kill Chain phase.</p>
+  </section>
+
+  <!-- ── INCIDENT RESPONSE (27.4) ── -->
+  <section id="ir">
+    <div class="section-head">
+      <p class="kicker">Concept 12 · Module 27.4</p>
+      <h2>Incident Response</h2>
+      <p>NIST Special Publication 800-61r2 is the standard playbook for handling a security incident.</p>
+    </div>
+    <h3>Establishing a CSIRC</h3>
+    <p>NIST recommends that an organization set up a <b>computer security incident response capability (CSIRC)</b>, built from three elements:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Policy</b><span>Details how incidents should be handled based on the organization's mission, size, and functions. Includes management's commitment, purpose and scope, definitions, organizational structure and authority, and severity ratings.</span></div>
+      <div class="fcard"><b>Plan</b><span>The roadmap for putting the policy into practice: strategy and goals, how the team communicates with the rest of the organization, and <b>metrics</b> for measuring how well incident response works.</span></div>
+      <div class="fcard"><b>Procedures</b><span>Detailed, technical step-by-step instructions the team follows during an incident.</span></div>
+    </div>
+    <p>Incident response involves many <b>stakeholders</b> beyond IT: management, legal, human resources, public relations, physical security, and sometimes law enforcement.</p>
+
+    <h3>The NIST incident response life cycle</h3>
+    <div class="split">
+      <div>
+        <div class="fcards">
+          <div class="fcard"><b>1 · Preparation</b><span>Build the CSIRC, train the team, gather tools, and put preventive controls in place before anything happens.</span></div>
+          <div class="fcard"><b>2 · Detection and Analysis</b><span>Spot signs of an incident from alerts, logs, and reports. Analyze them, decide whether it's real, document it, and set its priority.</span></div>
+          <div class="fcard"><b>3 · Containment, Eradication, and Recovery</b><span>Stop the spread, remove the threat, and restore systems to normal operation.</span></div>
+          <div class="fcard"><b>4 · Post-Incident Activity</b><span>Hold a lessons-learned review, keep the evidence, and improve preparation for next time.</span></div>
+        </div>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 300" role="img" aria-label="The NIST incident response life cycle: preparation leads to detection and analysis, which loops with containment, eradication, and recovery, then post-incident activity, which feeds back into preparation.">
+          <g stroke-width="1.5" stroke="var(--border)" fill="var(--surface)"><rect x="20" y="30" width="200" height="60" rx="8"/><rect x="260" y="30" width="200" height="60" rx="8"/><rect x="260" y="190" width="200" height="70" rx="8"/><rect x="20" y="190" width="200" height="70" rx="8"/></g>
+          <g font-size="12" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="120" y="65">1 · Preparation</text><text x="360" y="56">2 · Detection</text><text x="360" y="74">and Analysis</text><text x="360" y="214">3 · Containment,</text><text x="360" y="232">Eradication,</text><text x="360" y="250">and Recovery</text><text x="120" y="222">4 · Post-Incident</text><text x="120" y="240">Activity</text></g>
+          <g stroke="var(--accent)" stroke-width="2" fill="none"><path d="M220 60 H256"/><path d="M340 90 V186"/><path d="M380 186 V94"/><path d="M260 225 H224"/><path d="M120 190 V94"/></g>
+          <g fill="var(--accent)"><path d="M258 60 l-9 -5 v10 z"/><path d="M340 188 l-5 -9 h10 z"/><path d="M380 92 l-5 9 h10 z"/><path d="M222 225 l9 -5 v10 z"/><path d="M120 92 l-5 9 h10 z"/></g>
+          <g font-size="10.5" fill="var(--muted)"><text x="388" y="136">loop as</text><text x="388" y="150">needed</text><text x="130" y="140">lessons learned</text></g>
+        </svg>
+        <figcaption>Phases 2 and 3 often loop as more is found. Lessons learned feed back into preparation.</figcaption>
+      </figure>
+    </div>
+    <h3>Inside the phases</h3>
+    <ul>
+      <li><b>Detection and analysis</b> uses <b>precursors</b> (signs an incident may happen soon, such as a scan or a threat announcement) and <b>indicators</b> (signs one has happened or is happening, such as an IDS alert or a strange login).</li>
+      <li><b>Containment</b> strategies depend on the incident: disconnecting a host, blocking an address, disabling an account. Evidence is gathered with chain of custody while containing.</li>
+      <li><b>Eradication</b> after malware: restore systems from clean, recent backups; update and patch the OS and software on all hosts; rebuild hosts from installation media if there's no clean backup; and change passwords on affected accounts and devices.</li>
+      <li><b>Post-incident activity</b> asks what happened, how well the team did, what should change, and what precursors or indicators to watch for next time. Incidents may also need to be reported to authorities, customers, or regulators.</li>
+    </ul>
+    <div class="callout xref">
+      Escalating true positives from Tier 1 is in <a href="IT121_Session13.html#evaluation">Session 13</a>.
+    </div>
+  </section>
+
+  <!-- ── DISASTER RECOVERY (27.5) ── -->
+  <section id="dr">
+    <div class="section-head">
+      <p class="kicker">Concept 13 · Module 27.5</p>
+      <h2>Disaster Recovery</h2>
+      <p>Some events take whole systems down: fire, flood, or ransomware. Plan the way back before you need it.</p>
+    </div>
+    <h3>Types of disasters</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Natural</b><span>Geological (earthquakes, tsunamis), meteorological (floods, storms), health (pandemics), and others such as fires.</span></div>
+      <div class="fcard"><b>Human-caused</b><span>Labor events such as strikes, social or political events such as vandalism and sabotage, materials such as hazardous spills, and utility disruptions such as power outages. Cyberattacks belong here too.</span></div>
+    </div>
+    <h3>Planning</h3>
+    <p>A <b>disaster recovery plan (DRP)</b> covers how to restore IT systems and data after a disaster. To write one, management has to answer questions about each critical process: <b>what</b> the process is, <b>who</b> is responsible for it, <b>where</b> it's performed, and <b>why</b> it's critical. A <b>business continuity plan (BCP)</b> is broader: it covers keeping the whole business running, including moving critical systems to another location and <b>succession planning</b> for key people. The DRP is part of the BCP.</p>
+    <h3>Backups and restores</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Full backup</b><span>Copies everything. Slowest to make, simplest to restore.</span></div>
+      <div class="fcard"><b>Incremental backup</b><span>Copies only what changed since the last backup of any kind. Fast to make, but a restore needs the full backup plus every incremental after it.</span></div>
+      <div class="fcard"><b>Differential backup</b><span>Copies everything changed since the last full backup. A restore needs only the full backup plus the latest differential.</span></div>
+    </div>
+    <p>Backups must be stored off the device, and ideally offsite or offline, so a fire or ransomware doesn't destroy them along with the original. They must also be <b>tested</b>. A backup that has never been restored isn't proven to work. Network devices need backing up too. On a Cisco router, the configuration can be copied to a TFTP server and restored the same way:</p>
+<pre class="log">R1# copy running-config tftp:
+R1# copy tftp: running-config</pre>
+    <p>On Linux, <code>tar</code> archives files and <code>rsync</code> copies them efficiently to another system. Windows has built-in File History and backup tools.</p>
+    <div class="callout xref">
+      Redundancy and resilience are in <a href="IT121_Session07.html#resilience">Session 7</a>. Availability in the CIA triad is in <a href="IT121_Session01.html#cia">Session 1</a>.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Risk calculation</span>
+      <h3>Is the backup generator worth it?</h3>
+      <p>Kaidō Freight's dispatch server is worth $80,000. A regional power outage would damage about 25% of its value, through lost data and hardware damage. Outages like that are expected about once every two years. A generator and UPS would cost $7,500 a year. Calculate the ALE, and decide whether the control is justified.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>SLE</strong> = AV × EF = $80,000 × 0.25 = <b>$20,000</b>.</p>
+          <p><strong>ARO</strong> = once every two years = <b>0.5</b>.</p>
+          <p><strong>ALE</strong> = SLE × ARO = $20,000 × 0.5 = <b>$10,000 per year</b>.</p>
+          <p>The control costs $7,500 a year and prevents an expected $10,000 a year of loss, so it's <b>justified</b>, assuming it prevents most of the loss. This is risk <b>mitigation</b>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">CVSS</span>
+      <h3>Which patch first?</h3>
+      <p>Kiriyama General Hospital's vulnerability scan finds two issues. (A) A flaw in the public web server: <code>AV:N/AC:L/PR:N/UI:N</code>, high impact on C, I, and A, score 9.8. (B) A flaw on an internal kiosk: <code>AV:P/AC:L/PR:N/UI:R</code>, high confidentiality impact only, score 4.3. Which is more urgent, and what do the attack vectors tell you?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><b>A is Critical</b> (9.8) and <b>B is Medium</b> (4.3). Patch A first.</p>
+          <p>A's attack vector is <b>Network (N)</b>: anyone on the internet can try it, with no privileges and no user interaction. B's is <b>Physical (P)</b>: the attacker must touch the kiosk, and a user must take part (UI:R). The farther away an attacker can be, the higher the score. The environmental metrics could still raise B if that kiosk handles especially sensitive patient data.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Kill Chain</span>
+      <h3>Mapping the Tsukimi incident</h3>
+      <p>Put these events from a Tsukimi Sweets incident in Kill Chain order, and name each step: (a) the bookkeeper opens an "invoice" attachment; (b) the attacker reads Tsukimi's website and LinkedIn to learn who pays the bills; (c) a macro in the document exploits an unpatched spreadsheet program; (d) the attacker builds a malicious invoice document; (e) the infected PC starts beaconing to an unfamiliar domain; (f) a remote access tool is installed to survive reboots; (g) customer card data is copied out.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>(b) <b>Reconnaissance</b> → (d) <b>Weaponization</b> → (a) <b>Delivery</b> → (c) <b>Exploitation</b> → (f) <b>Installation</b> → (e) <b>Command and control</b> → (g) <b>Actions on objectives</b>.</p>
+          <p>The cheapest break points: training the bookkeeper (delivery), patching the spreadsheet program (exploitation), or DNS filtering that blocks the beacon (C2) before any data leaves.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Diamond Model</span>
+      <h3>Filling in the diamond</h3>
+      <p>Using the same Tsukimi incident, assign each item to a Diamond Model feature: the bookkeeper's PC; the malicious macro and remote access tool; the beaconing domain and the email account that sent the invoice; a criminal group that threat intelligence links to that domain. Then name one pivot.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><b>Victim</b>: the bookkeeper's PC (and Tsukimi Sweets). <b>Capability</b>: the macro and the remote access tool. <b>Infrastructure</b>: the domain and the sending email account. <b>Adversary</b>: the criminal group.</p>
+          <p><strong>Pivot:</strong> from the infrastructure (the domain) to other <b>victims</b>. Search Bastion's DNS logs for every client host that contacted it. Kaidō Freight or Kiriyama might be compromised too.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Forensics</span>
+      <h3>What to collect first</h3>
+      <p>A Kiriyama workstation is suspected of running memory-only malware. It's still powered on. A technician wants to shut it down and pull the hard drive. What should the responder do instead, and in what order?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>Don't power it off first. Memory-only malware lives in <b>RAM</b>, which is erased at shutdown. Follow the <b>order of volatility</b>: capture memory and live system state (running processes, network connections, ARP and routing tables) first, then temporary files, then image the hard drive with a write blocker, then gather remote logs.</p>
+          <p>Hash each image at collection, work only from copies, and record every handoff on the <b>chain of custody</b> form.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Incident response</span>
+      <h3>Which phase is this?</h3>
+      <p>Name the NIST incident response phase for each Bastion activity: (a) running a tabletop exercise with Kaidō Freight's managers; (b) deciding whether a cluster of failed-login alerts is a real attack; (c) disconnecting an infected PC from the network; (d) rebuilding the PC from installation media and patching it; (e) a meeting a week later about why the attack wasn't detected sooner.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>(a) <b>Preparation</b>. (b) <b>Detection and Analysis</b>. (c) and (d) <b>Containment, Eradication, and Recovery</b>: (c) is containment, and (d) is eradication and recovery. (e) <b>Post-Incident Activity</b>, the lessons learned, which feeds back into preparation.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Security controls</span>
+      <h3>Name the control type</h3>
+      <p>Classify each: (a) a login banner warning that misuse will be prosecuted; (b) nightly backups and fault-tolerant RAID storage; (c) the IDS; (d) the firewall; (e) quarantining a malware file after detection; (f) extra monitoring on an old machine that can't be patched.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>(a) <b>Deterrent</b>. (b) <b>Recovery</b>. (c) <b>Detective</b>. (d) <b>Preventive</b>. (e) <b>Corrective</b>. (f) <b>Compensative</b>. Corrective and recovery both act after a violation.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 15 reference. The last content session of the course.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+      {
+            "t": "Active reconnaissance",
+            "d": "Gathering information by interacting directly with the target, such as scanning its ports."
+      },
+      {
+            "t": "Activity thread",
+            "d": "Diamond Model events linked in time order to tell the story of an attack."
+      },
+      {
+            "t": "AIS",
+            "d": "Automated Indicator Sharing. A free DHS service for real-time exchange of threat indicators between government and private organizations."
+      },
+      {
+            "t": "ALE",
+            "d": "Annualized loss expectancy: the expected loss per year. ALE = SLE × ARO."
+      },
+      {
+            "t": "ARO",
+            "d": "Annualized rate of occurrence: how many times per year an incident is expected."
+      },
+      {
+            "t": "Attack attribution",
+            "d": "Identifying who is responsible for an attack, from techniques, tools, infrastructure, and threat intelligence."
+      },
+      {
+            "t": "Attack vector (CVSS)",
+            "d": "How close an attacker must be to exploit a vulnerability: network, adjacent, local, or physical. The farther away, the higher the score."
+      },
+      {
+            "t": "Best evidence",
+            "d": "Evidence in its original state, such as the actual storage device used."
+      },
+      {
+            "t": "Business continuity plan (BCP)",
+            "d": "A plan to keep the whole business running through a disaster, including moving critical systems and succession planning. Includes the DRP."
+      },
+      {
+            "t": "Chain of custody",
+            "d": "The documented record of who collected, handled, and stored evidence, when, and where."
+      },
+      {
+            "t": "Compensative control",
+            "d": "An alternative control used when the main control isn't possible or practical."
+      },
+      {
+            "t": "Corrective control",
+            "d": "A control that acts after a violation to fix the problem and restore the system to normal."
+      },
+      {
+            "t": "Corroborating evidence",
+            "d": "Evidence that supports another piece of evidence."
+      },
+      {
+            "t": "Credentialed scan",
+            "d": "A vulnerability scan that logs in to hosts, gathering more information with fewer false positives and negatives."
+      },
+      {
+            "t": "CSIRC",
+            "d": "Computer security incident response capability. NIST's model built from a policy, a plan, and procedures."
+      },
+      {
+            "t": "CVE",
+            "d": "Common Vulnerabilities and Exposures. MITRE's dictionary of standard IDs for publicly known vulnerabilities."
+      },
+      {
+            "t": "CVSS",
+            "d": "Common Vulnerability Scoring System. A vendor-neutral 0–10 severity score built from Base, Temporal, and Environmental metric groups."
+      },
+      {
+            "t": "Cyber Kill Chain",
+            "d": "Lockheed Martin's seven steps an attacker must complete: reconnaissance, weaponization, delivery, exploitation, installation, command and control, and actions on objectives."
+      },
+      {
+            "t": "Detective control",
+            "d": "A control that identifies an incident, such as an IDS."
+      },
+      {
+            "t": "Deterrent control",
+            "d": "A control that discourages an attack, such as a warning banner."
+      },
+      {
+            "t": "Diamond Model",
+            "d": "An intrusion analysis model describing each event by four features: adversary, capability, infrastructure, and victim."
+      },
+      {
+            "t": "Differential backup",
+            "d": "Copies everything changed since the last full backup."
+      },
+      {
+            "t": "Disaster recovery plan (DRP)",
+            "d": "A plan for restoring IT systems and data after a disaster."
+      },
+      {
+            "t": "Exposure factor (EF)",
+            "d": "The percentage of an asset's value lost in one incident."
+      },
+      {
+            "t": "FIRST",
+            "d": "Forum of Incident Response and Security Teams. Helps incident response teams collaborate and share information."
+      },
+      {
+            "t": "Full backup",
+            "d": "A copy of all data. Slowest to make, simplest to restore."
+      },
+      {
+            "t": "Incremental backup",
+            "d": "Copies only what changed since the last backup of any kind."
+      },
+      {
+            "t": "Indicator of compromise (IOC)",
+            "d": "Evidence of an attack, such as a malicious IP address, domain, or file hash."
+      },
+      {
+            "t": "Indirect evidence",
+            "d": "Also called circumstantial evidence. Suggests a conclusion when combined with other facts."
+      },
+      {
+            "t": "Internet Storm Center",
+            "d": "SANS's free early-warning system for internet threats."
+      },
+      {
+            "t": "L0phtcrack",
+            "d": "A password auditing and recovery tool."
+      },
+      {
+            "t": "Metasploit",
+            "d": "A penetration testing framework for developing and running exploit code."
+      },
+      {
+            "t": "MITRE ATT&CK",
+            "d": "A global knowledge base of threat actor tactics, techniques, and procedures based on real-world observations."
+      },
+      {
+            "t": "Network baseline",
+            "d": "A description of normal network behavior, used to spot deviations."
+      },
+      {
+            "t": "NIST incident response life cycle",
+            "d": "Preparation; Detection and Analysis; Containment, Eradication, and Recovery; Post-Incident Activity."
+      },
+      {
+            "t": "Nmap",
+            "d": "A network scanner that finds hosts, open ports, services, and operating systems. Can use decoy hosts. Zenmap is its GUI."
+      },
+      {
+            "t": "Order of volatility",
+            "d": "Collecting the most short-lived evidence first: registers and cache, then RAM and network state, then temporary files, disks, remote logs, and archives."
+      },
+      {
+            "t": "Passive reconnaissance",
+            "d": "Gathering information without touching the target, such as public websites and social media."
+      },
+      {
+            "t": "Penetration test phases",
+            "d": "Planning, discovery, attack, and reporting."
+      },
+      {
+            "t": "Qualitative risk analysis",
+            "d": "Rating risks with levels such as low, medium, and high, based on opinions, scenarios, and past events."
+      },
+      {
+            "t": "Quantitative risk analysis",
+            "d": "Rating risks in money values, using asset value, SLE, ARO, and ALE."
+      },
+      {
+            "t": "Recovery control",
+            "d": "A control that restores resources after a violation, such as backups or fault-tolerant storage."
+      },
+      {
+            "t": "Risk",
+            "d": "The probability of loss due to a threat: likelihood combined with impact."
+      },
+      {
+            "t": "Risk management steps",
+            "d": "Frame, Assess, Respond, and Monitor."
+      },
+      {
+            "t": "Risk responses",
+            "d": "Avoidance, mitigation (reduction), transfer (sharing), and acceptance (retention)."
+      },
+      {
+            "t": "SANS",
+            "d": "A security training and research organization that runs the Internet Storm Center."
+      },
+      {
+            "t": "Server profile",
+            "d": "A server's accepted operating parameters: listening ports, user accounts, service accounts, and software environment."
+      },
+      {
+            "t": "SLE",
+            "d": "Single loss expectancy: the expected loss from one incident. SLE = asset value × exposure factor."
+      },
+      {
+            "t": "SOAR",
+            "d": "Security orchestration, automation, and response: automatically collecting threat data and responding to low-level events without a human."
+      },
+      {
+            "t": "STIX",
+            "d": "Structured Threat Information Expression: a standard format for describing and sharing threat information."
+      },
+      {
+            "t": "T-V pairing",
+            "d": "Threat-vulnerability pairing: matching identified threats to the vulnerabilities they could exploit."
+      },
+      {
+            "t": "TAXII",
+            "d": "Trusted Automated Exchange of Indicator Information: the HTTPS-based protocol for exchanging STIX data."
+      },
+      {
+            "t": "Threat intelligence platform (TIP)",
+            "d": "A system that gathers threat data from many feeds and presents it in a usable form."
+      },
+      {
+            "t": "Tripwire",
+            "d": "A tool that assesses IT configurations against policies, best practices, and compliance standards."
+      },
+      {
+            "t": "Vulnerability management life cycle",
+            "d": "Discover, Prioritize assets, Assess, Report, Remediate, and Verify."
+      },
+      {
+            "t": "Weaponization",
+            "d": "The Kill Chain step where the attacker pairs an exploit with a payload, ready to use against a vulnerability found in reconnaissance."
+      },
+      {
+            "t": "Write blocker",
+            "d": "A device or tool that prevents any change to original evidence while it's copied."
+      }
+];
+
+  const QUIZ = [
+      {
+            "q": "Which Windows command troubleshoots NetBIOS name resolution?",
+            "choices": [
+                  "netstat",
+                  "nbtstat",
+                  "nslookup",
+                  "tracert"
+            ],
+            "correct": 1,
+            "explain": "nbtstat displays NetBIOS over TCP/IP statistics and name resolution information."
+      },
+      {
+            "q": "Which scanner can use decoy hosts to hide where a scan comes from?",
+            "choices": [
+                  "Tripwire",
+                  "L0phtcrack",
+                  "Nmap",
+                  "Nessus"
+            ],
+            "correct": 2,
+            "explain": "Nmap is a low-level scanner that can mix decoy source addresses into a scan."
+      },
+      {
+            "q": "Which tool is used for password auditing and recovery?",
+            "choices": [
+                  "Metasploit",
+                  "L0phtcrack",
+                  "Tripwire",
+                  "SuperScan"
+            ],
+            "correct": 1,
+            "explain": "L0phtcrack audits and recovers passwords."
+      },
+      {
+            "q": "What is a feature of a credentialed vulnerability scan?",
+            "choices": [
+                  "It's faster",
+                  "It returns fewer false positives and false negatives",
+                  "It needs no permission",
+                  "It only finds open ports"
+            ],
+            "correct": 1,
+            "explain": "Logging in lets the scanner gather more information, so its results are more accurate."
+      },
+      {
+            "q": "Which penetration test phase includes reconnaissance?",
+            "choices": [
+                  "Planning",
+                  "Discovery",
+                  "Attack",
+                  "Reporting"
+            ],
+            "correct": 1,
+            "explain": "The phases are planning, discovery, attack, and reporting. Discovery includes passive and active reconnaissance."
+      },
+      {
+            "q": "A tester finds an employee's password posted on social media. What type of reconnaissance is this?",
+            "choices": [
+                  "Active",
+                  "Passive",
+                  "Credentialed",
+                  "Physical"
+            ],
+            "correct": 1,
+            "explain": "Passive reconnaissance gathers information without directly interacting with the target's systems."
+      },
+      {
+            "q": "Which approach automatically collects threat data and responds to low-level events without human help?",
+            "choices": [
+                  "SIEM",
+                  "SOAR",
+                  "TIP",
+                  "IDS"
+            ],
+            "correct": 1,
+            "explain": "Security orchestration, automation, and response (SOAR) automates routine collection and response."
+      },
+      {
+            "q": "What does MITRE create and maintain?",
+            "choices": [
+                  "The Internet Storm Center",
+                  "The CVE list",
+                  "STIX",
+                  "AIS"
+            ],
+            "correct": 1,
+            "explain": "MITRE maintains Common Vulnerabilities and Exposures, a dictionary of standard vulnerability IDs."
+      },
+      {
+            "q": "Which DHS service enables real-time exchange of threat indicators between government and the private sector?",
+            "choices": [
+                  "CVE",
+                  "FIRST",
+                  "AIS",
+                  "Talos"
+            ],
+            "correct": 2,
+            "explain": "Automated Indicator Sharing (AIS) is a free DHS service."
+      },
+      {
+            "q": "Which protocol transports STIX threat information over HTTPS?",
+            "choices": [
+                  "CybOX",
+                  "TAXII",
+                  "SOAR",
+                  "SNMP"
+            ],
+            "correct": 1,
+            "explain": "TAXII is the application-layer protocol designed to exchange STIX data."
+      },
+      {
+            "q": "What is the main purpose of FIRST?",
+            "choices": [
+                  "To issue CVE IDs",
+                  "To help incident response teams collaborate and share information",
+                  "To sell security products",
+                  "To run the Internet Storm Center"
+            ],
+            "correct": 1,
+            "explain": "The Forum of Incident Response and Security Teams brings response teams together."
+      },
+      {
+            "q": "Which network profile element is the time between the start and end of a data flow?",
+            "choices": [
+                  "Total throughput",
+                  "Ports used",
+                  "Session duration",
+                  "Critical asset address space"
+            ],
+            "correct": 2,
+            "explain": "Session duration measures the length of a flow."
+      },
+      {
+            "q": "A victim had to click a link for an exploit to work. Which CVSS Base metric captures this?",
+            "choices": [
+                  "Attack vector",
+                  "Privileges required",
+                  "User interaction",
+                  "Scope"
+            ],
+            "correct": 2,
+            "explain": "User interaction records whether a user other than the attacker must take part."
+      },
+      {
+            "q": "Which CVSS Base metric class covers confidentiality, integrity, and availability?",
+            "choices": [
+                  "Exploitability",
+                  "Impact",
+                  "Temporal",
+                  "Environmental"
+            ],
+            "correct": 1,
+            "explain": "The Base group splits into Exploitability metrics and Impact metrics. Impact covers C, I, and A."
+      },
+      {
+            "q": "A CVSS score of 9.5 is rated as:",
+            "choices": [
+                  "Medium",
+                  "High",
+                  "Critical",
+                  "Severe"
+            ],
+            "correct": 2,
+            "explain": "9.0 to 10.0 is Critical. 7.0 to 8.9 is High."
+      },
+      {
+            "q": "Which vulnerability management life cycle step groups assets and assigns them business value?",
+            "choices": [
+                  "Discover",
+                  "Prioritize assets",
+                  "Assess",
+                  "Remediate"
+            ],
+            "correct": 1,
+            "explain": "The steps are Discover, Prioritize assets, Assess, Report, Remediate, and Verify."
+      },
+      {
+            "q": "A CEO buys insurance against a data breach lawsuit. Which risk response is this?",
+            "choices": [
+                  "Avoidance",
+                  "Mitigation",
+                  "Transfer",
+                  "Acceptance"
+            ],
+            "correct": 2,
+            "explain": "Insurance shifts part of the risk to a third party: transfer, also called sharing."
+      },
+      {
+            "q": "What is the first step in the risk management process?",
+            "choices": [
+                  "Assess",
+                  "Frame",
+                  "Respond",
+                  "Monitor"
+            ],
+            "correct": 1,
+            "explain": "The steps are Frame, Assess, Respond, and Monitor."
+      },
+      {
+            "q": "An asset is worth $50,000, the exposure factor is 40%, and the ARO is 0.5. What is the ALE?",
+            "choices": [
+                  "$10,000",
+                  "$20,000",
+                  "$25,000",
+                  "$40,000"
+            ],
+            "correct": 0,
+            "explain": "SLE = $50,000 × 0.4 = $20,000. ALE = $20,000 × 0.5 = $10,000."
+      },
+      {
+            "q": "A login banner warns that violations will be prosecuted. What type of control is it?",
+            "choices": [
+                  "Preventive",
+                  "Detective",
+                  "Deterrent",
+                  "Corrective"
+            ],
+            "correct": 2,
+            "explain": "A deterrent control discourages someone from attempting a violation."
+      },
+      {
+            "q": "Backups and fault-tolerant storage are which type of control?",
+            "choices": [
+                  "Detective",
+                  "Recovery",
+                  "Deterrent",
+                  "Compensative"
+            ],
+            "correct": 1,
+            "explain": "Recovery controls restore resources and capabilities after a violation."
+      },
+      {
+            "q": "Which NIST forensic step extracts relevant information from collected data?",
+            "choices": [
+                  "Collection",
+                  "Examination",
+                  "Analysis",
+                  "Reporting"
+            ],
+            "correct": 1,
+            "explain": "The steps are collection, examination, analysis, and reporting. Examination extracts the relevant data."
+      },
+      {
+            "q": "Which evidence should be collected first?",
+            "choices": [
+                  "Archival backup tapes",
+                  "The hard drive",
+                  "RAM and running processes",
+                  "Remote logs"
+            ],
+            "correct": 2,
+            "explain": "Follow the order of volatility: the most short-lived data, such as memory, goes first."
+      },
+      {
+            "q": "An attacker has admin access and a channel to its CnC server. Which Kill Chain step is this?",
+            "choices": [
+                  "Installation",
+                  "Exploitation",
+                  "Command and control",
+                  "Delivery"
+            ],
+            "correct": 2,
+            "explain": "Command and control is the channel the attacker uses to control the compromised host."
+      },
+      {
+            "q": "In the Diamond Model, what is the tool an adversary uses against the victim?",
+            "choices": [
+                  "Infrastructure",
+                  "Capability",
+                  "Resources",
+                  "Methodology"
+            ],
+            "correct": 1,
+            "explain": "Capability is the tool or technique, such as malware. Infrastructure is the communication used to deliver it."
+      },
+      {
+            "q": "Which Diamond Model meta-feature covers the software, knowledge, and credentials an adversary uses?",
+            "choices": [
+                  "Methodology",
+                  "Results",
+                  "Resources",
+                  "Direction"
+            ],
+            "correct": 2,
+            "explain": "Resources include software, knowledge, usernames and passwords, funding, and facilities."
+      },
+      {
+            "q": "Which CSIRC element includes metrics for measuring incident response effectiveness?",
+            "choices": [
+                  "Policy",
+                  "Plan",
+                  "Procedures",
+                  "Charter"
+            ],
+            "correct": 1,
+            "explain": "The plan element is the roadmap, including metrics for measuring capability and effectiveness."
+      },
+      {
+            "q": "Which phase of the NIST incident response life cycle includes removing malware and restoring systems?",
+            "choices": [
+                  "Preparation",
+                  "Detection and Analysis",
+                  "Containment, Eradication, and Recovery",
+                  "Post-Incident Activity"
+            ],
+            "correct": 2,
+            "explain": "Containment stops the spread, eradication removes the threat, and recovery restores normal operation."
+      },
+      {
+            "q": "Which plan includes the disaster recovery plan plus moving critical systems to another location and succession planning?",
+            "choices": [
+                  "Incident response plan",
+                  "Business continuity plan",
+                  "Risk management plan",
+                  "Patch management plan"
+            ],
+            "correct": 1,
+            "explain": "A business continuity plan is broader than a DRP and keeps the whole business running."
+      }
+];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
