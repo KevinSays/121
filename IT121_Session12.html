@@ -1,0 +1,1154 @@
+<title>IT121 Session 12 – Technologies, Protocols &amp; Network Security Data</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 12</p>
+    <h1>Technologies, Protocols &amp; Network Security Data</h1>
+    <p class="lede">This is the session where you start working like an analyst. First, how ordinary protocols such as DNS, HTTP, email, and ICMP get abused, and how the security tools you've already met can hide that abuse from you. Then the evidence itself: the alerts, sessions, packet captures, and logs a SOC collects, what each one can tell you, and how to read them.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 19 (19.1–19.2) &middot; Module 20 (20.1–20.3)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#protocols">Monitoring Protocols</a>
+    <a href="#sectech">Security Technologies</a>
+    <a href="#datatypes">Types of Data</a>
+    <a href="#endlogs">End Device Logs</a>
+    <a href="#netlogs">Network Logs</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 12 covers</h2>
+      <p>Module 19 looks at the network from a monitoring point of view: how common protocols behave, how threat actors misuse them, and how technologies such as NAT, encryption, Tor, and load balancing make that misuse harder to see. Module 20 covers the data an analyst works with: the four types of network security data, the logs end devices and servers keep, and the logs and records network devices produce.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Explain the behavior of common network protocols in the context of security monitoring</li>
+      <li>Explain how security technologies affect the ability to monitor common network protocols</li>
+      <li>Describe the types of data used in security monitoring</li>
+      <li>Describe the elements of an end device log file</li>
+      <li>Use different types of services to gather network data</li>
+    </ul>
+  </section>
+
+  <!-- ── MONITORING COMMON PROTOCOLS (19.1) ── -->
+  <section id="protocols">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 19.1</p>
+      <h2>Monitoring Common Protocols</h2>
+      <p>The protocols every network needs are the ones attackers like best, because their traffic is everywhere and rarely blocked.</p>
+    </div>
+
+    <h3>Syslog and NTP</h3>
+    <p><b>Syslog</b> sends event messages from devices to a central syslog server (UDP port 514). Those logs are an analyst's evidence, so attackers go after them. They may delete or alter log entries, or try to stop logging, to hide what they did. Sending logs to a separate, protected syslog server means an attacker who controls one device can't quietly edit its history.</p>
+    <p><b>Network Time Protocol (NTP)</b> keeps device clocks synchronized (UDP port 123), using a hierarchy of time sources. Accurate time is what lets an analyst line up events from many devices into one timeline. If clocks disagree, correlation falls apart. Attackers can target NTP to corrupt timestamps and muddy the trail, and they also abuse misconfigured NTP servers to amplify DDoS attacks.</p>
+
+    <h3>DNS</h3>
+    <p>Every host uses DNS, and most firewalls let it out, which makes it attractive for malware. It's used to:</p>
+    <ul>
+      <li><b>Reach command-and-control (CnC) servers.</b> Malware looks up a domain the attacker controls, and the DNS answers carry instructions.</li>
+      <li><b>Exfiltrate data.</b> Stolen data is encoded into the names being looked up. This is <b>DNS tunneling</b>. Each query reaches the attacker's own DNS server, which collects the pieces.</li>
+    </ul>
+    <figure class="fig wide">
+      <svg viewBox="0 0 640 150" role="img" aria-label="Anatomy of a DNS tunneling query. The query name c2VjcmV0LWRhdGE.a7.tun.example.net has three parts: an encoded chunk of stolen data, a sequence number, and the attacker-controlled domain whose name server receives the query.">
+        <text x="20" y="26" font-size="11.5" fill="var(--muted)">DNS query name looked up by the infected host</text>
+        <rect x="10" y="38" width="620" height="44" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="26" y="66" font-size="17" font-weight="700"><tspan fill="var(--danger)">c2VjcmV0LWRhdGE</tspan><tspan fill="var(--muted)">.</tspan><tspan fill="var(--accent-2)">a7</tspan><tspan fill="var(--muted)">.</tspan><tspan fill="var(--correct)">tun.example.net</tspan></text>
+        <g font-size="11">
+          <rect x="20" y="100" width="12" height="12" fill="var(--danger)"/><text x="40" y="110" fill="var(--danger)" font-weight="700">encoded stolen data</text><text x="40" y="126" fill="var(--muted)">random-looking, long</text>
+          <rect x="230" y="100" width="12" height="12" fill="var(--accent-2)"/><text x="250" y="110" fill="var(--accent-2)" font-weight="700">piece number</text><text x="250" y="126" fill="var(--muted)">reassembly order</text>
+          <rect x="390" y="100" width="12" height="12" fill="var(--correct)"/><text x="410" y="110" fill="var(--correct)" font-weight="700">attacker's domain</text><text x="410" y="126" fill="var(--muted)">its name server gets every query</text>
+        </g>
+      </svg>
+      <figcaption>The data rides in the name itself. "c2VjcmV0LWRhdGE" is Base64 for "secret-data."</figcaption>
+    </figure>
+    <p>Signs to look for: many lookups to one domain, unusually long or random-looking subdomains, lots of uncommon record types such as TXT, and DNS traffic from a host far above its normal volume. DNS logs and DNS proxy services make these patterns visible.</p>
+
+    <h3>HTTP and HTTPS</h3>
+    <p>Plain <b>HTTP</b> sends everything in clear text, so it can be read and altered in transit, and it's also how a lot of malware arrives. Attacks to know:</p>
+    <div class="fcards">
+      <div class="fcard dont"><b>Malicious iFrame</b><span>An <b>iFrame</b> (inline frame) is an HTML element that lets a page load content from another source. Attackers who compromise a legitimate site insert a hidden iFrame that loads malicious content from their own server. The visitor sees the normal site.</span></div>
+      <div class="fcard dont"><b>HTTP 302 cushioning</b><span>Uses chains of HTTP 302 "Found" redirects to bounce a browser through several sites before it lands on a malicious one. This hides where the attack really comes from.</span></div>
+      <div class="fcard dont"><b>Domain shadowing</b><span>An attacker steals the credentials for a legitimate domain and creates many subdomains under it to host malicious content. The subdomains inherit the parent domain's good reputation.</span></div>
+    </div>
+    <p><b>HTTPS</b> fixes HTTP's privacy problem with end-to-end encryption, and that's exactly what makes monitoring hard. An IPS can see the connection, but not the content. Session 11 covered how SOCs respond with TLS decryption, metadata, and endpoint monitoring.</p>
+
+    <h3>Email protocols</h3>
+    <table class="model-table">
+      <thead><tr><th>Protocol</th><th>Port</th><th>Job</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">SMTP</td><td>TCP 25</td><td>Sends email from a client to a server and between mail servers in different domains</td></tr>
+        <tr><td style="font-weight:700;">POP3</td><td>TCP 110</td><td>Downloads mail from the server to the client, usually removing it from the server</td></tr>
+        <tr><td style="font-weight:700;">IMAP</td><td>TCP 143</td><td>Retrieves mail while keeping it on the server, synchronized across devices</td></tr>
+      </tbody>
+    </table>
+    <p>Email is a leading way to deliver phishing and malware, and outbound SMTP can carry stolen data out. Webmail runs over HTTPS, so its content is hidden from network inspection. That's one reason organizations filter email with a dedicated security appliance.</p>
+
+    <h3>ICMP</h3>
+    <p>ICMP carries network diagnostics: ping, unreachable messages, and time exceeded. Attackers use it for <b>reconnaissance</b> (ping sweeps to find live hosts, and mapping the network), for <b>DoS</b> floods, and for <b>ICMP tunneling</b>, hiding data in the payload of echo messages to sneak it out. Rather than block ICMP entirely, which breaks troubleshooting, filter it. On the outside interface, permit only the inbound types internal users need, such as <b>echo reply</b>, <b>source quench</b>, and <b>destination unreachable</b>, and deny the rest.</p>
+
+    <div class="callout xref">
+      Syslog, NTP, and NetFlow as security services are in <a href="IT121_Session04.html#secservices">Session 4</a>. ICMP filtering with ACLs is in <a href="IT121_Session09.html#mitigate">Session 9</a>. Phishing and email-borne malware are in <a href="IT121_Session01.html#social">Session 1</a>.
+    </div>
+  </section>
+
+  <!-- ── SECURITY TECHNOLOGIES (19.2) ── -->
+  <section id="sectech">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 19.2</p>
+      <h2>Security Technologies</h2>
+      <p>Many of the tools that protect a network also take away part of the analyst's view. Know which ones, and what they hide.</p>
+    </div>
+
+    <div class="fcards">
+      <div class="fcard"><b>ACLs</b><span>ACLs can give a false sense of security. An attacker who learns which ports are allowed can send traffic that fits the rules, such as tunneling over DNS or HTTPS. On the other hand, logging denied packets tells you who is probing.</span></div>
+      <div class="fcard"><b>NAT and PAT</b><span>Hide internal addresses behind one or a few public addresses. An outside log entry shows the public address, not which inside host was responsible. To find the host, you need the router's translation logs, with accurate timestamps. This also complicates NetFlow, because flows are one-way records keyed on addresses and ports that NAT rewrites.</span></div>
+      <div class="fcard"><b>Encryption, encapsulation, and tunneling</b><span>VPNs and HTTPS keep data private, and also hide the payload from IDS and IPS. Tunneling wraps one protocol inside another, so malicious traffic can travel inside an allowed protocol.</span></div>
+      <div class="fcard"><b>Peer-to-peer (P2P)</b><span>Hosts connect directly to each other instead of through a server: file sharing, processor sharing, instant messaging. P2P file sharing can spread malware and leak data, and its traffic is hard to control.</span></div>
+      <div class="fcard"><b>Tor</b><span>A network of volunteer P2P hosts acting as routers, letting users browse anonymously. Traffic is wrapped in layers of encryption and relayed through several hosts. Useful for privacy, and also for threat actors hiding their location and CnC traffic.</span></div>
+      <div class="fcard"><b>Load balancing</b><span>Spreads traffic across several servers or paths. One name can resolve to many addresses, so traffic for one service is spread across many IPs. A <b>load balancing manager (LBM)</b> sends probe messages to check server health, and those probes can look like suspicious traffic.</span></div>
+    </div>
+
+    <h3>How Tor hides the path</h3>
+    <div class="split">
+      <div>
+        <p>Before sending, the Tor client wraps the message in three layers of encryption, one for each relay on its chosen path. Each relay strips off only its own layer, which reveals only the next hop. The entry relay knows who you are but not where you're going. The exit relay knows the destination but not who you are. No single relay knows both.</p>
+        <p>For a defender, Tor traffic from inside the network is a red flag in most organizations. It may be a user dodging policy, or malware hiding its CnC. Lists of known Tor relays let you detect or block it.</p>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 220" role="img" aria-label="Tor onion routing. The user's message is wrapped in three layers of encryption and passes through an entry relay, a middle relay, and an exit relay. Each relay removes one layer. Only the exit relay sends the plain request to the destination website.">
+          <g stroke="var(--muted)" stroke-width="1.5"><path d="M62 90 H96 M168 90 H196 M268 90 H296 M368 90 H392"/></g>
+          <g fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"><rect x="6" y="66" width="56" height="48"/><rect x="392" y="66" width="82" height="48"/></g>
+          <g font-size="11.5" text-anchor="middle" fill="var(--text)"><text x="34" y="94">User</text><text x="433" y="88">Website</text><text x="433" y="102" font-size="10" fill="var(--muted)">destination</text></g>
+          <rect x="96" y="56" width="72" height="68" rx="34" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+          <rect x="106" y="66" width="52" height="48" rx="24" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="1.5"/>
+          <rect x="116" y="76" width="32" height="28" rx="14" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <rect x="196" y="66" width="72" height="48" rx="24" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="1.5"/>
+          <rect x="212" y="76" width="40" height="28" rx="14" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <rect x="296" y="76" width="72" height="28" rx="14" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+          <g font-size="11" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="132" y="150">Entry</text><text x="232" y="150">Middle</text><text x="332" y="150">Exit</text></g>
+          <g font-size="10" text-anchor="middle" fill="var(--muted)"><text x="132" y="166">knows: you</text><text x="232" y="166">knows: neither</text><text x="332" y="166">knows: site</text></g>
+          <text x="240" y="30" font-size="11" text-anchor="middle" fill="var(--muted)">each relay peels one layer of encryption</text>
+          <text x="240" y="204" font-size="11" text-anchor="middle" fill="var(--danger)" font-weight="700">no single relay knows both ends</text>
+        </svg>
+        <figcaption>Three layers going in, one peeled at each relay. The website sees only the exit relay's address.</figcaption>
+      </figure>
+    </div>
+
+    <p>Tor's trick is easier to hold onto with a picture, and the castle town already ran a network that worked a lot like it.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the relay couriers of the Tōkaidō</span>
+      Letters along the Tōkaidō road traveled by relay: a courier ran to the next post station and handed the bundle to a fresh runner, who ran it to the next. Now imagine the sender seals the letter in three nested envelopes. The first station's clerk opens the outer one, which says only "take this to the second station." The second opens the next, which says "take this to the third." Only the third envelope names the real recipient. The first clerk knows who sent it but not where it's going. The last knows where it's going but not who sent it. That's Tor. For the magistrate's inspectors, that's the problem: no single station's records connect sender and recipient.
+    </div>
+
+    <div class="callout xref">
+      ACLs were configured in <a href="IT121_Session09.html#configure">Session 9</a>. Encryption's effect on monitoring is in <a href="IT121_Session11.html#applications">Session 11</a>.
+    </div>
+  </section>
+
+  <!-- ── TYPES OF SECURITY DATA (20.1) ── -->
+  <section id="datatypes">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 20.1</p>
+      <h2>Types of Security Data</h2>
+      <p>Four kinds of data, from a one-line alert to every byte on the wire.</p>
+    </div>
+    <div class="fcards">
+      <div class="fcard"><b>Alert data</b><span>Messages generated by an IDS or IPS when traffic violates a rule or matches the signature of a known exploit. Tools such as Snort and Suricata produce it, and Security Onion collects it. An alert is a lead to investigate, not proof.</span></div>
+      <div class="fcard"><b>Session and transaction data</b><span><b>Session data</b> is a record of a conversation between two hosts: its <b>5-tuple</b> (source IP, source port, destination IP, destination port, protocol), plus when it started, how long it lasted, and how many bytes moved. <b>Transaction data</b> is the individual messages exchanged within a session, such as the HTTP requests and responses a web server logs.</span></div>
+      <div class="fcard"><b>Full packet captures</b><span>The most detailed data: every packet, including the payload, so you can see the actual content of the conversation (emails, web pages, files). Captured with tools like tcpdump and viewed in Wireshark. It costs a lot of storage, so it's usually kept only briefly or for selected traffic.</span></div>
+      <div class="fcard"><b>Statistical data</b><span>Created by analyzing other network data, to describe normal behavior and predict or spot deviations. It's how you build a baseline. Tools such as Cisco Cognitive Intelligence use statistical analysis to find threats already inside the network, including ones that arrived through unmonitored channels like removable media.</span></div>
+    </div>
+
+    <p>Deciding which data to collect is a trade-off between detail and cost. Packet captures answer almost any question but fill disks fast. Session records are tiny, but can't show you what was said. The castle town's post stations faced the same choice.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the post station's ledger</span>
+      Every parcel that passes the post station goes into the ledger: who sent it, to whom, the hour, and the weight. The ledger is cheap to keep for years, and it shows patterns: a merchant who suddenly sends heavy parcels every night to a stranger in another province. But it can't say what was in them. To know that, an inspector has to open and copy every letter. That's thorough, but it takes a warehouse to store the copies. The ledger is session data (and NetFlow, later in this session). The copied letters are full packet capture. The inspector's yearly notes on what "normal" traffic looks like are statistical data.
+    </div>
+  </section>
+
+  <!-- ── END DEVICE LOGS (20.2) ── -->
+  <section id="endlogs">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 20.2</p>
+      <h2>End Device Logs</h2>
+      <p>Hosts and servers write down what happens to them. Know where to look and how to read an entry.</p>
+    </div>
+
+    <h3>Host logs and Windows event logs</h3>
+    <p>A <b>host-based intrusion detection system (HIDS)</b> runs on the host itself and records local events. Windows keeps its events in several logs, reviewed with <b>Event Viewer</b>:</p>
+    <table class="model-table">
+      <thead><tr><th>Windows log</th><th>Records</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Application</td><td>Events logged by applications</td></tr>
+        <tr><td style="font-weight:700;">System</td><td>Events logged by Windows system components, such as drivers and services</td></tr>
+        <tr><td style="font-weight:700;">Security</td><td>Security events: login attempts, and file or object management and access</td></tr>
+        <tr><td style="font-weight:700;">Setup</td><td>Events from installing software, including Windows updates</td></tr>
+      </tbody>
+    </table>
+    <p>Every Windows event has one of five <b>event types</b>:</p>
+    <div class="fcards">
+      <div class="fcard dont"><b>Error</b><span>A significant problem, such as loss of data or functionality</span></div>
+      <div class="fcard"><b>Warning</b><span>Not necessarily significant now, but may indicate a future problem</span></div>
+      <div class="fcard do"><b>Information</b><span>The successful operation of an application, driver, or service</span></div>
+      <div class="fcard do"><b>Success Audit</b><span>An audited security access attempt that succeeded, such as a successful login</span></div>
+      <div class="fcard dont"><b>Failure Audit</b><span>An audited security access attempt that failed, such as a failed login</span></div>
+    </div>
+    <p>A burst of Failure Audit login events followed by a Success Audit for the same account is a classic sign of a password-guessing attack that worked.</p>
+
+    <h3>Syslog messages</h3>
+    <p>Linux hosts and network devices use <b>syslog</b>. A syslog message has three parts: <b>PRI</b> (priority, combining the <b>facility</b>, which identifies the source such as the kernel, mail, or authentication, and the <b>severity</b>), the <b>HEADER</b> (timestamp and hostname), and the <b>MSG</b> (the text of the message). Severity runs from 0 to 7. The lower the number, the more urgent:</p>
+    <table class="model-table">
+      <thead><tr><th>Level</th><th>Name</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td style="font-weight:700;">Emergency</td><td>System is unusable</td></tr>
+        <tr><td>1</td><td style="font-weight:700;">Alert</td><td>Immediate action needed</td></tr>
+        <tr><td>2</td><td style="font-weight:700;">Critical</td><td>Critical condition</td></tr>
+        <tr><td>3</td><td style="font-weight:700;">Error</td><td>Error condition</td></tr>
+        <tr><td>4</td><td style="font-weight:700;">Warning</td><td>Warning condition</td></tr>
+        <tr><td>5</td><td style="font-weight:700;">Notice</td><td>Normal but significant condition</td></tr>
+        <tr><td>6</td><td style="font-weight:700;">Informational</td><td>Informational message</td></tr>
+        <tr><td>7</td><td style="font-weight:700;">Debugging</td><td>Debug-level message</td></tr>
+      </tbody>
+    </table>
+    <p>A common memory aid, from 0 to 7: "<b>E</b>very <b>A</b>wesome <b>C</b>isco <b>E</b>ngineer <b>W</b>ill <b>N</b>eed <b>I</b>ce-cream <b>D</b>aily."</p>
+
+    <h3>Server logs</h3>
+    <p>Servers keep their own logs, and those are essential evidence for attacks on the server. DNS servers log queries and responses. Web servers log every request. Apache's <b>access log</b> uses the <b>Common Log Format</b>, one line per request:</p>
+<pre class="log">203.0.113.45 - - [03/Mar/2025:14:02:11 -0500] "GET /track.php?id=1042 HTTP/1.1" 200 5120</pre>
+    <table class="model-table">
+      <thead><tr><th>Field</th><th>In the example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Client IP address</td><td><code>203.0.113.45</code></td></tr>
+        <tr><td style="font-weight:700;">Identity and user ID</td><td><code>- -</code> (a hyphen means the field is empty)</td></tr>
+        <tr><td style="font-weight:700;">Timestamp</td><td><code>[03/Mar/2025:14:02:11 -0500]</code>, with the time zone offset</td></tr>
+        <tr><td style="font-weight:700;">Request</td><td><code>"GET /track.php?id=1042 HTTP/1.1"</code>: method, resource, protocol</td></tr>
+        <tr><td style="font-weight:700;">Status code</td><td><code>200</code> (success; 404 is not found, 401/403 are refused, 500 is a server error)</td></tr>
+        <tr><td style="font-weight:700;">Size</td><td><code>5120</code> bytes returned</td></tr>
+      </tbody>
+    </table>
+    <p>Microsoft's IIS web server uses a different layout, the W3C Extended Log Format, but records similar fields.</p>
+
+    <h3>SIEM and log collection</h3>
+    <p>Logs scattered across hundreds of devices are hard to use. A <b>security information and event management (SIEM)</b> system collects them in one place and provides real-time reporting and long-term analysis of security events. Its core functions:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Aggregation</b><span>Collects logs from many sources and consolidates duplicate events</span></div>
+      <div class="fcard"><b>Correlation</b><span>Links related events from different systems to spot attacks no single log would show</span></div>
+      <div class="fcard"><b>Forensic analysis</b><span>Searches logs and event records to investigate an incident after the fact</span></div>
+      <div class="fcard"><b>Reporting</b><span>Dashboards and reports for monitoring and for compliance</span></div>
+    </div>
+    <p>Popular SIEM platforms include <b>Splunk</b> and <b>Security Onion with ELK</b> (Elasticsearch, Logstash, Kibana). Hosts often run a small agent that forwards their logs to the SIEM.</p>
+    <div class="callout xref">
+      Event Viewer was introduced in <a href="IT121_Session04.html#winconfig">Session 4</a>. Linux log files in <code>/var/log</code> are in <a href="IT121_Session05.html#admin">Session 5</a>.
+    </div>
+  </section>
+
+  <!-- ── NETWORK LOGS (20.3) ── -->
+  <section id="netlogs">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 20.3</p>
+      <h2>Network Logs</h2>
+      <p>Network devices and services see traffic that no single host does. Each one gives a different slice of it.</p>
+    </div>
+
+    <h3>tcpdump</h3>
+    <p><b>tcpdump</b> is a command-line packet analyzer. It can display packets in real time, or write them to a file (with <code>-w</code>) in the pcap format that Wireshark and other tools can open later. It captures full detail, including content, so it's a source of full packet captures.</p>
+<pre class="log">$ sudo tcpdump -i eth0 -w capture.pcap port 53
+$ tcpdump -r capture.pcap</pre>
+
+    <h3>NetFlow</h3>
+    <p><b>NetFlow</b> collects <b>metadata</b> about each flow, not the packets' content. A flow is a <b>one-way</b> stream of packets sharing the same 5-tuple. Each flow record holds the addresses, ports, and protocol, plus start and end times and packet and byte counts. It's the post station ledger: cheap to keep for a long time, and good at revealing who talked to whom and how much, without the content. Flow records go to a collector and can be viewed with tools such as <b>nfdump</b> and <b>FlowViewer</b>.</p>
+
+    <h3>Application visibility and control</h3>
+    <p>Port numbers no longer reliably tell you which application is running, since so much now runs over port 443. Cisco <b>Application Visibility and Control (AVC)</b> identifies applications by examining traffic more deeply. It has four modules:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Application Recognition</b><span>Cisco's Next Generation Network-Based Application Recognition (<b>NBAR2</b>) discovers and classifies applications, more than 1000 of them.</span></div>
+      <div class="fcard"><b>Metrics Collection</b><span>Flexible NetFlow exports traffic metrics for each application.</span></div>
+      <div class="fcard"><b>Management and Reporting</b><span>Collects, analyzes, and reports on the application data.</span></div>
+      <div class="fcard"><b>Control</b><span>Uses QoS to prioritize, limit, or block applications.</span></div>
+    </div>
+
+    <h3>Content filter and proxy logs</h3>
+    <p><b>Content filter</b> devices log what they block and why. Cisco's Email Security Appliance (ESA) logs messages filtered for spam and malware, and its Web Security Appliance (WSA) logs web traffic it filters. <b>Proxy servers</b> sit between users and the internet and make requests on their behalf, so their logs record every request: which user or host, the URL, the time, the result, and the browser's user agent. A <b>DNS proxy</b> service, such as Cisco Umbrella, logs and filters DNS lookups, which helps reveal malware that uses DNS.</p>
+
+    <h3>Logs from Cisco devices</h3>
+    <p>Cisco routers, switches, and firewalls send syslog messages in a standard format:</p>
+    <figure class="fig wide">
+      <svg viewBox="0 0 640 140" role="img" aria-label="Anatomy of a Cisco syslog message: percent LINK dash 3 dash UPDOWN colon Interface Gi0/0/1, changed state to down. LINK is the facility, 3 is the severity (error), UPDOWN is the mnemonic, and the rest is the description.">
+        <text x="20" y="26" font-size="11.5" fill="var(--muted)">Cisco device syslog message (a timestamp and sequence number usually come first)</text>
+        <rect x="10" y="38" width="620" height="44" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="22" y="66" font-size="15" font-weight="700"><tspan fill="var(--muted)">%</tspan><tspan fill="var(--correct)">LINK</tspan><tspan fill="var(--muted)">-</tspan><tspan fill="var(--danger)">3</tspan><tspan fill="var(--muted)">-</tspan><tspan fill="var(--accent-2)">UPDOWN</tspan><tspan fill="var(--muted)">: </tspan><tspan fill="var(--text)">Interface Gi0/0/1, changed state to down</tspan></text>
+        <g font-size="11" font-weight="700">
+          <rect x="20" y="100" width="12" height="12" fill="var(--correct)"/><text x="40" y="110" fill="var(--correct)">facility</text>
+          <rect x="150" y="100" width="12" height="12" fill="var(--danger)"/><text x="170" y="110" fill="var(--danger)">severity (3 = error)</text>
+          <rect x="340" y="100" width="12" height="12" fill="var(--accent-2)"/><text x="360" y="110" fill="var(--accent-2)">mnemonic</text>
+          <rect x="470" y="100" width="12" height="12" fill="var(--text)"/><text x="490" y="110" fill="var(--text)">description</text>
+        </g>
+      </svg>
+      <figcaption>Facility, severity, and mnemonic come first, then the human-readable description.</figcaption>
+    </figure>
+
+    <h3>Next-generation firewalls and IPS</h3>
+    <p>Next-generation firewall and IPS devices, such as Cisco Firepower, generate several kinds of events an analyst sees in their management console:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Connection events</b><span>Session data about the connections the device sees</span></div>
+      <div class="fcard"><b>Intrusion events</b><span>Generated when traffic matches an exploit signature or violates policy</span></div>
+      <div class="fcard"><b>Host or endpoint events</b><span>Information about devices discovered on the network</span></div>
+      <div class="fcard"><b>Network discovery events</b><span>Changes detected on the network, such as a new host or application</span></div>
+      <div class="fcard"><b>NetFlow events</b><span>Flow data the device collects or exports</span></div>
+    </div>
+    <div class="callout">
+      <b>Putting it together.</b> No single source tells the whole story. An intrusion alert says something matched a signature. NetFlow says how much data that host sent and where. The proxy log names the URL. The Windows security log shows who was logged in. Packet capture shows the actual content, if you kept it. Correlating them, with timestamps that agree thanks to NTP, is what a SIEM and an analyst do. Session 13 covers how analysts evaluate the alerts.
+    </div>
+    <div class="callout xref">
+      NetFlow was introduced as a security service in <a href="IT121_Session04.html#secservices">Session 4</a>.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">DNS</span>
+      <h3>The chatty dispatch PC</h3>
+      <p>Bastion's DNS logs show a dispatch PC at Kaidō Freight making about 9,000 lookups an hour, all to subdomains of one unfamiliar domain. Each subdomain is a long string like <code>Z3Vlc3Qtbm90ZXM0Mg.b19.tun.example.net</code>, and most queries ask for TXT records. Other PCs make a few hundred lookups an hour. What's likely going on?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>This looks like <b>DNS tunneling</b>. The long encoded labels carry chunks of data (here, Base64), the short label looks like a sequence number, and every query goes to the attacker's name server. The TXT answers can carry commands back, so the same channel may be <b>CnC</b>.</p>
+          <p><strong>Next steps:</strong> isolate the PC, block the domain at the DNS proxy, find out what data the host could reach, and check whether any other hosts are querying that domain.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">NAT and NTP</span>
+      <h3>Which PC was it?</h3>
+      <p>An outside organization reports that Kiriyama General Hospital's public address 198.51.100.20 attacked one of its servers at 02:14 UTC. Hundreds of hospital devices share that address through PAT. What do you need to identify the inside host, and what could stop you?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Need:</strong> the edge router's or firewall's <b>NAT/PAT translation logs</b> for that time. They map the public address and source port to an inside address. The report should also include the source port, and the inside address can then be tied to a device through DHCP logs.</p>
+          <p><strong>What could stop you:</strong> translation logging not turned on, logs not kept long enough, or <b>clocks out of sync</b>. If the router's time is off by even a minute, you may match the wrong connection. That's why every device should use NTP.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Windows logs</span>
+      <h3>Forty failures and a success</h3>
+      <p>On a Tsukimi Sweets office server, the Windows Security log shows 40 Failure Audit logon events for the account <code>admin</code> within two minutes, all from one workstation's address, then a Success Audit logon for <code>admin</code> from the same address. What happened, and what do you do?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>A <b>password-guessing attack</b> (brute force or dictionary) that <b>succeeded</b>. The failures are in the Security log because logon attempts are audited security events.</p>
+          <p><strong>Do:</strong> treat the account as compromised. Disable it or reset its password, investigate the source workstation for malware, review what the account did after logging in, and add account lockout so repeated failures stop being possible.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Server logs</span>
+      <h3>Reading the shop's access log</h3>
+      <p>Tsukimi Sweets' web server log contains hundreds of lines like these, from one address, in about a minute:</p>
+<pre class="log">192.0.2.77 - - [03/Mar/2025:09:41:02 -0500] "GET /admin/ HTTP/1.1" 404 312
+192.0.2.77 - - [03/Mar/2025:09:41:02 -0500] "GET /backup.zip HTTP/1.1" 404 312
+192.0.2.77 - - [03/Mar/2025:09:41:03 -0500] "GET /wp-login.php HTTP/1.1" 404 312
+192.0.2.77 - - [03/Mar/2025:09:41:03 -0500] "GET /.git/config HTTP/1.1" 404 312</pre>
+      <p>What is this, and which line would worry you most if it appeared?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>An automated <b>scan</b>: one client rapidly requesting common admin pages and sensitive files to see what exists. The 404 status codes mean none of these were found, so so far nothing was exposed.</p>
+          <p><strong>Worry:</strong> any of these requests with a <b>200</b> status and a large size, such as <code>/backup.zip</code> returning 200 with megabytes of data. That would mean a sensitive file was actually downloaded.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Types of data</span>
+      <h3>Did data leave?</h3>
+      <p>An IPS alert says a Kaidō Freight file server matched a signature for a known data-stealing malware family. The manager asks two questions: "Did data leave?" and "What exactly was taken?" Which type of security data answers each?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>"Did data leave?"</strong> Session data, such as <b>NetFlow</b>: look for flows from the file server to outside addresses and their byte counts. A large outbound transfer after the alert is a strong sign.</p>
+          <p><strong>"What was taken?"</strong> Only a <b>full packet capture</b> holds the content, and only if one was running and the traffic wasn't encrypted. Otherwise, the answer has to come from the host: file access logs and an investigation of the server.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Security technologies</span>
+      <h3>The connection that goes nowhere</h3>
+      <p>Firewall logs show a workstation at Kiriyama General Hospital making repeated encrypted connections to a changing set of outside addresses. A threat intelligence feed identifies every one of them as a known Tor entry relay. The user says they "just browse normally." Why is this a concern even though nothing was blocked?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>Tor hides the real destination, so the hospital can't tell where the traffic is going or what's in it. Either a user is deliberately getting around policy and monitoring, or <b>malware is using Tor for CnC</b>. Many malware families do.</p>
+          <p><strong>Do:</strong> check the workstation for malware and for an installed Tor client, and consider blocking known Tor relays at the edge, which policy at most organizations, especially in healthcare, would support.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 12 reference. More sessions are added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+      {
+            "t": "5-tuple",
+            "d": "The five values that identify a session or flow: source IP, source port, destination IP, destination port, and protocol."
+      },
+      {
+            "t": "Alert data",
+            "d": "Messages generated by an IDS or IPS when traffic violates a rule or matches a known exploit signature."
+      },
+      {
+            "t": "Application Visibility and Control (AVC)",
+            "d": "Cisco's system for identifying, measuring, reporting on, and controlling applications. Its four modules are Application Recognition, Metrics Collection, Management and Reporting, and Control."
+      },
+      {
+            "t": "Command and control (CnC)",
+            "d": "The server an attacker uses to send instructions to malware and receive stolen data. Malware often reaches it over DNS or HTTPS."
+      },
+      {
+            "t": "Common Log Format",
+            "d": "Apache's web access log format: client IP, identity, user ID, timestamp, request, status code, and size."
+      },
+      {
+            "t": "Content filter logs",
+            "d": "Logs from devices that filter email or web content, such as Cisco's ESA and WSA, recording what was blocked and why."
+      },
+      {
+            "t": "Correlation",
+            "d": "Linking related events from different sources to reveal attacks that no single log would show. A core SIEM function."
+      },
+      {
+            "t": "DNS proxy",
+            "d": "A service, such as Cisco Umbrella, that handles and logs DNS lookups for a network and can block malicious domains."
+      },
+      {
+            "t": "DNS tunneling",
+            "d": "Hiding data or commands inside DNS queries and responses, usually encoded into long subdomain names sent to an attacker-controlled domain."
+      },
+      {
+            "t": "Domain shadowing",
+            "d": "Using stolen credentials for a legitimate domain to create many malicious subdomains that inherit its good reputation."
+      },
+      {
+            "t": "Error (event type)",
+            "d": "A Windows event type for a significant problem, such as loss of data or functionality."
+      },
+      {
+            "t": "Event Viewer",
+            "d": "The Windows tool for reviewing the Application, System, Security, and Setup logs."
+      },
+      {
+            "t": "Failure Audit",
+            "d": "A Windows event type recording an audited security access attempt that failed, such as a failed login."
+      },
+      {
+            "t": "Full packet capture",
+            "d": "A record of entire packets, including payload, showing the actual content of conversations. The most detailed and most storage-hungry security data."
+      },
+      {
+            "t": "HIDS",
+            "d": "Host-based intrusion detection system. Software on a host that monitors and records events on that host."
+      },
+      {
+            "t": "HTTP 302 cushioning",
+            "d": "Using chains of HTTP 302 redirects to bounce a browser through several sites before it reaches a malicious one, hiding the attack's source."
+      },
+      {
+            "t": "ICMP tunneling",
+            "d": "Hiding data in the payload of ICMP messages, such as echo requests, to sneak it past filters."
+      },
+      {
+            "t": "iFrame",
+            "d": "An inline frame: an HTML element that loads content from another source into a page. Attackers inject hidden iFrames into compromised sites to load malicious content."
+      },
+      {
+            "t": "IMAP",
+            "d": "Internet Message Access Protocol (TCP 143). Retrieves email while keeping it on the server."
+      },
+      {
+            "t": "Information (event type)",
+            "d": "A Windows event type recording the successful operation of an application, driver, or service."
+      },
+      {
+            "t": "Load balancing manager (LBM)",
+            "d": "A device that spreads traffic across servers and sends probes to check their health. Its probes can look like suspicious traffic."
+      },
+      {
+            "t": "NAT/PAT",
+            "d": "Translating internal addresses to one or a few public addresses. Hides which inside host made a connection, so analysts need translation logs."
+      },
+      {
+            "t": "NBAR2",
+            "d": "Cisco's Next Generation Network-Based Application Recognition. Identifies and classifies applications in the AVC Application Recognition module."
+      },
+      {
+            "t": "NetFlow",
+            "d": "A Cisco technology that records metadata about one-way flows (5-tuple, times, packet and byte counts), not packet contents."
+      },
+      {
+            "t": "nfdump",
+            "d": "A command-line tool for viewing and analyzing NetFlow records."
+      },
+      {
+            "t": "NGIPS events",
+            "d": "Events from next-generation firewalls and IPS such as Cisco Firepower: connection, intrusion, host or endpoint, network discovery, and NetFlow events."
+      },
+      {
+            "t": "NTP",
+            "d": "Network Time Protocol (UDP 123). Synchronizes device clocks so events from many devices can be correlated. Also abused for DDoS amplification."
+      },
+      {
+            "t": "Peer-to-peer (P2P)",
+            "d": "Hosts connecting directly to each other instead of through a server, as in file sharing, processor sharing, and instant messaging."
+      },
+      {
+            "t": "POP3",
+            "d": "Post Office Protocol 3 (TCP 110). Downloads email from the server to the client."
+      },
+      {
+            "t": "Proxy logs",
+            "d": "Logs from a proxy server that record every request it makes for users: user or host, URL, time, result, and user agent."
+      },
+      {
+            "t": "Security log (Windows)",
+            "d": "The Windows log of security events, such as login attempts and file or object access."
+      },
+      {
+            "t": "Security Onion with ELK",
+            "d": "An open-source security monitoring platform using Elasticsearch, Logstash, and Kibana for log storage, processing, and visualization."
+      },
+      {
+            "t": "Session data",
+            "d": "A record of a conversation between two hosts: the 5-tuple, start time, duration, and amount of data."
+      },
+      {
+            "t": "SIEM",
+            "d": "Security information and event management. Collects logs centrally and provides real-time reporting and long-term analysis, through aggregation, correlation, forensic analysis, and reporting."
+      },
+      {
+            "t": "SMTP",
+            "d": "Simple Mail Transfer Protocol (TCP 25). Sends email from clients to servers and between mail servers in different domains."
+      },
+      {
+            "t": "Splunk",
+            "d": "A popular commercial SIEM and log analysis platform."
+      },
+      {
+            "t": "Statistical data",
+            "d": "Data created by analyzing other network data, used to describe normal behavior and predict or spot deviations."
+      },
+      {
+            "t": "Success Audit",
+            "d": "A Windows event type recording an audited security access attempt that succeeded, such as a successful login."
+      },
+      {
+            "t": "Syslog",
+            "d": "A standard for sending event messages to a central server (UDP 514). A message has PRI (facility and severity), HEADER (timestamp and hostname), and MSG parts."
+      },
+      {
+            "t": "Syslog facility",
+            "d": "The part of a syslog message's priority that identifies its source, such as the kernel, mail, or authentication."
+      },
+      {
+            "t": "Syslog severity",
+            "d": "Levels 0 to 7: Emergency, Alert, Critical, Error, Warning, Notice, Informational, Debugging. Lower numbers are more urgent."
+      },
+      {
+            "t": "tcpdump",
+            "d": "A command-line packet analyzer that displays captured packets in real time or writes them to a pcap file."
+      },
+      {
+            "t": "Tor",
+            "d": "A network of volunteer peer-to-peer relays that wraps traffic in layers of encryption, letting users browse anonymously. No single relay knows both source and destination."
+      },
+      {
+            "t": "Transaction data",
+            "d": "The individual messages exchanged within a session, such as HTTP requests and responses in a web server log."
+      },
+      {
+            "t": "Tunneling",
+            "d": "Carrying one protocol inside another. Used legitimately by VPNs, and by attackers to slip traffic through allowed protocols."
+      },
+      {
+            "t": "Warning (event type)",
+            "d": "A Windows event type for something not necessarily significant now that may indicate a future problem."
+      }
+];
+
+  const QUIZ = [
+      {
+            "q": "Which protocol synchronizes the time across network devices?",
+            "choices": [
+                  "SNMP",
+                  "NTP",
+                  "NetFlow",
+                  "Syslog"
+            ],
+            "correct": 1,
+            "explain": "NTP keeps device clocks synchronized using a hierarchy of time sources. Accurate time is essential for correlating logs."
+      },
+      {
+            "q": "Which port would a threat actor use when abusing NTP for a DDoS attack?",
+            "choices": [
+                  "25",
+                  "69",
+                  "123",
+                  "443"
+            ],
+            "correct": 2,
+            "explain": "NTP uses UDP port 123."
+      },
+      {
+            "q": "Which server daemon accepts messages from network devices to create log entries?",
+            "choices": [
+                  "SSH",
+                  "NTP",
+                  "Syslog",
+                  "AAA"
+            ],
+            "correct": 2,
+            "explain": "Devices send their event messages to a syslog server, which stores them as log entries."
+      },
+      {
+            "q": "Threat actors can use DNS to communicate with which type of server?",
+            "choices": [
+                  "Database",
+                  "NTP",
+                  "Command and control (CnC)",
+                  "Web"
+            ],
+            "correct": 2,
+            "explain": "Malware uses DNS to reach CnC servers and to exfiltrate data hidden in what looks like normal DNS traffic."
+      },
+      {
+            "q": "How does a malicious iFrame work?",
+            "choices": [
+                  "It redirects traffic to the wrong DNS server",
+                  "It lets the browser load content from another source, such as the attacker's server",
+                  "It encrypts the web page",
+                  "It hides data in DNS subdomains"
+            ],
+            "correct": 1,
+            "explain": "An iFrame loads content from another source into a page. Attackers inject hidden iFrames into compromised sites."
+      },
+      {
+            "q": "Why does HTTPS make security monitoring harder?",
+            "choices": [
+                  "It's faster than HTTP",
+                  "It carries larger payloads",
+                  "Its end-to-end encryption hides packet content from inspection",
+                  "It doesn't use authentication"
+            ],
+            "correct": 2,
+            "explain": "Analysts and IPS devices can't easily see inside encrypted HTTPS traffic."
+      },
+      {
+            "q": "Which protocol sends email between servers in different domains?",
+            "choices": [
+                  "POP3",
+                  "IMAP",
+                  "SMTP",
+                  "HTTP"
+            ],
+            "correct": 2,
+            "explain": "SMTP sends email to and between mail servers. POP3 and IMAP retrieve email from a server."
+      },
+      {
+            "q": "Which function does the Tor network provide?",
+            "choices": [
+                  "Load balancing",
+                  "Anonymous browsing",
+                  "Address translation",
+                  "Packet filtering"
+            ],
+            "correct": 1,
+            "explain": "Tor relays traffic through volunteer hosts in layers of encryption so users can browse anonymously."
+      },
+      {
+            "q": "How does NAT/PAT complicate security monitoring?",
+            "choices": [
+                  "It changes MAC addresses",
+                  "It encrypts the payload",
+                  "It hides internal IP addresses behind one or a few public addresses",
+                  "It blocks ICMP"
+            ],
+            "correct": 2,
+            "explain": "Outside logs show only the public address, so analysts need translation logs to find the inside host."
+      },
+      {
+            "q": "What potential problem does a load balancing manager (LBM) cause for monitoring?",
+            "choices": [
+                  "It needs more bandwidth",
+                  "Its probe messages may look like suspicious traffic",
+                  "It encrypts all links",
+                  "It blocks syslog"
+            ],
+            "correct": 1,
+            "explain": "LBMs send probes to check server health, and the probes can appear suspicious."
+      },
+      {
+            "q": "Which type of security data does an IDS or IPS generate when traffic matches a known threat signature?",
+            "choices": [
+                  "Session",
+                  "Transaction",
+                  "Statistical",
+                  "Alert"
+            ],
+            "correct": 3,
+            "explain": "Alert data is generated when traffic violates a rule or matches a signature."
+      },
+      {
+            "q": "Which type of security data describes or predicts network behavior?",
+            "choices": [
+                  "Alert",
+                  "Statistical",
+                  "Session",
+                  "Full packet capture"
+            ],
+            "correct": 1,
+            "explain": "Statistical data is created by analyzing other data, to build baselines and spot deviations."
+      },
+      {
+            "q": "Which two values are part of a 5-tuple?",
+            "choices": [
+                  "ACL number and IPS signature",
+                  "Protocol and source port",
+                  "MAC address and VLAN",
+                  "Hostname and user ID"
+            ],
+            "correct": 1,
+            "explain": "A 5-tuple is source IP, source port, destination IP, destination port, and protocol."
+      },
+      {
+            "q": "Which Windows log records login attempts and file or object access?",
+            "choices": [
+                  "Application",
+                  "System",
+                  "Security",
+                  "Setup"
+            ],
+            "correct": 2,
+            "explain": "The Security log records security events such as logins and object access."
+      },
+      {
+            "q": "Which Windows event type records the successful operation of an application, driver, or service?",
+            "choices": [
+                  "Warning",
+                  "Error",
+                  "Success Audit",
+                  "Information"
+            ],
+            "correct": 3,
+            "explain": "Information events record successful operation. Success Audit is for successful audited security access attempts."
+      },
+      {
+            "q": "Which syslog severity level is the most urgent?",
+            "choices": [
+                  "0 – Emergency",
+                  "3 – Error",
+                  "5 – Notice",
+                  "7 – Debugging"
+            ],
+            "correct": 0,
+            "explain": "Severity runs from 0 (Emergency, system unusable) to 7 (Debugging). Lower numbers are more urgent."
+      },
+      {
+            "q": "Which statement describes tcpdump?",
+            "choices": [
+                  "It records only flow metadata",
+                  "It's a command-line packet analyzer that can display captures live or write them to a file",
+                  "It's a SIEM",
+                  "It controls TCP applications"
+            ],
+            "correct": 1,
+            "explain": "tcpdump captures full packets and can show them in real time or save them to a pcap file."
+      },
+      {
+            "q": "Which statement describes NetFlow?",
+            "choices": [
+                  "It captures the entire contents of packets",
+                  "It collects metadata about flows, not the flow data itself",
+                  "It provides user access control",
+                  "It's viewed with Event Viewer"
+            ],
+            "correct": 1,
+            "explain": "NetFlow records who talked to whom, when, and how much, but not the content."
+      },
+      {
+            "q": "Which two are popular SIEM platforms?",
+            "choices": [
+                  "NetFlow and tcpdump",
+                  "Splunk and Security Onion with ELK",
+                  "Cisco Umbrella and NBAR2",
+                  "Event Viewer and syslog"
+            ],
+            "correct": 1,
+            "explain": "Splunk and Security Onion with ELK provide real-time reporting and long-term analysis of security events."
+      },
+      {
+            "q": "In Cisco AVC, which module uses NBAR2?",
+            "choices": [
+                  "Metrics Collection",
+                  "Control",
+                  "Application Recognition",
+                  "Management and Reporting"
+            ],
+            "correct": 2,
+            "explain": "NBAR2 discovers and classifies applications in the Application Recognition module."
+      }
+];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
