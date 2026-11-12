@@ -1,0 +1,1229 @@
+<title>IT121 Session 11 – Cryptography</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 11</p>
+    <h1>Cryptography</h1>
+    <p class="lede">Almost every security control in this course leans on cryptography somewhere: the VPN between two clouds, the hash in an integrity check, the padlock in the browser bar. This session opens the box. It covers how data is kept secret, how you prove it wasn't changed and who sent it, and the system of certificates that lets strangers on the internet trust each other at all.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 18 (18.1–18.7)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#confidentiality">Confidentiality</a>
+    <a href="#obscuring">Obscuring Data</a>
+    <a href="#integrity">Integrity &amp; Authenticity</a>
+    <a href="#hashing">Hashing</a>
+    <a href="#publickey">Public Key</a>
+    <a href="#pki">PKI</a>
+    <a href="#applications">Applications</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 11 covers</h2>
+      <p>Module 18 is the whole cryptography toolkit in one module. It starts with encryption for confidentiality and other ways to hide data, moves to hashing for integrity and authenticity, then to public key cryptography, digital signatures, and the public key infrastructure (PKI) that makes certificates trustworthy. It ends with where all of this shows up in practice, and why encryption makes a security analyst's job harder as well as easier.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Determine the encryption algorithm to use according to requirements</li>
+      <li>Use a technique to obscure data</li>
+      <li>Explain the role of cryptography in ensuring the integrity and authenticity of data</li>
+      <li>Explain how to use hashing tools</li>
+      <li>Use a digital signature</li>
+      <li>Use hashing to detect network interception</li>
+      <li>Explain how the use of cryptography affects cybersecurity operations</li>
+    </ul>
+    <div class="callout">
+      <b>The four goals of secure communication.</b> Keep these in mind for the whole session. Each tool below serves one or more of them.
+      <b>Confidentiality</b>: only the intended people can read it. <b>Integrity</b>: it wasn't changed on the way. <b>Origin authentication</b>: it really came from who it says. <b>Nonrepudiation</b>: the sender can't later deny sending it.
+    </div>
+  </section>
+
+  <!-- ── CONFIDENTIALITY (18.1) ── -->
+  <section id="confidentiality">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 18.1</p>
+      <h2>Confidentiality</h2>
+      <p>Encryption turns readable data into something only the right key can turn back.</p>
+    </div>
+
+    <h3>Encryption basics</h3>
+    <p><b>Encryption</b> uses an algorithm, called a <b>cipher</b>, and a <b>key</b> to turn readable <b>plaintext</b> into unreadable <b>ciphertext</b>. <b>Decryption</b> reverses it. The algorithms are public. The security comes from keeping the key secret and making it long enough that guessing every possible key, a <b>brute-force attack</b>, would take impossibly long. The study of making codes is <b>cryptography</b>; the study of breaking them is <b>cryptanalysis</b>.</p>
+
+    <h3>Symmetric and asymmetric encryption</h3>
+    <div class="split">
+      <div>
+        <p><b>Symmetric</b> encryption uses the <b>same key</b> to encrypt and decrypt. Both sides must already share that key, a <b>pre-shared key</b>. It's fast, so it's used for bulk data such as VPN traffic. Its weak point is key management: how do you get the key to the other side safely, and how many keys do you need when many people talk to each other?</p>
+        <p><b>Asymmetric</b> encryption uses a <b>key pair</b>: a <b>public key</b> anyone may have and a <b>private key</b> only the owner holds. Whatever one key encrypts, only the other key can decrypt. It solves the key-sharing problem, but it's much slower, so it's used for small jobs: exchanging keys, digital signatures, and certificates.</p>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 250" role="img" aria-label="Symmetric encryption: plaintext is encrypted with key K into ciphertext, then decrypted with the same key K. Asymmetric encryption: plaintext is encrypted with Bob's public key and decrypted only with Bob's private key.">
+          <text x="4" y="20" font-size="12" font-weight="700" fill="var(--accent)">SYMMETRIC · one shared key</text>
+          <text x="4" y="146" font-size="12" font-weight="700" fill="var(--accent-2)">ASYMMETRIC · a key pair</text>
+          <g stroke-width="1.5" stroke="var(--border)">
+            <rect x="2" y="34" width="80" height="40" fill="var(--surface)"/><rect x="102" y="34" width="80" height="40" fill="var(--surface-2)"/><rect x="202" y="34" width="80" height="40" fill="var(--surface)"/><rect x="302" y="34" width="80" height="40" fill="var(--surface-2)"/><rect x="398" y="34" width="80" height="40" fill="var(--surface)"/>
+            <rect x="2" y="160" width="80" height="40" fill="var(--surface)"/><rect x="102" y="160" width="80" height="40" fill="var(--surface-2)"/><rect x="202" y="160" width="80" height="40" fill="var(--surface)"/><rect x="302" y="160" width="80" height="40" fill="var(--surface-2)"/><rect x="398" y="160" width="80" height="40" fill="var(--surface)"/>
+          </g>
+          <g font-size="11.5" text-anchor="middle" fill="var(--text)">
+            <text x="42" y="59">plaintext</text><text x="142" y="59">encrypt</text><text x="242" y="59">ciphertext</text><text x="342" y="59">decrypt</text><text x="438" y="59">plaintext</text>
+            <text x="42" y="185">plaintext</text><text x="142" y="185">encrypt</text><text x="242" y="185">ciphertext</text><text x="342" y="185">decrypt</text><text x="438" y="185">plaintext</text>
+          </g>
+          <g stroke="var(--muted)" stroke-width="1.5"><path d="M82 54 H102 M182 54 H202 M282 54 H302 M382 54 H398 M82 180 H102 M182 180 H202 M282 180 H302 M382 180 H398"/></g>
+          <g font-size="11" text-anchor="middle" fill="var(--accent)" font-weight="700"><text x="142" y="96">key K</text><text x="342" y="96">same key K</text></g>
+          <g font-size="11" text-anchor="middle" font-weight="700"><text x="142" y="222" fill="var(--accent-2)">Bob's public key</text><text x="342" y="222" fill="var(--accent-2)">Bob's private key</text></g>
+          <text x="240" y="244" font-size="10.5" text-anchor="middle" fill="var(--muted)">anyone can lock it · only Bob can open it</text>
+        </svg>
+        <figcaption>Symmetric: one key, both ends. Asymmetric: lock with the public key, unlock only with the matching private key.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Symmetric algorithms</h3>
+    <table class="model-table">
+      <thead><tr><th>Algorithm</th><th>Key length</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">DES</td><td>56 bits</td><td>Data Encryption Standard. Legacy and easily broken today. Avoid it</td></tr>
+        <tr><td style="font-weight:700;">3DES</td><td>112 or 168 bits</td><td>Triple DES: runs DES three times. Stronger, but slow and being retired</td></tr>
+        <tr><td style="font-weight:700;">AES</td><td>128, 192, or 256 bits</td><td>Advanced Encryption Standard. Secure, efficient, and the recommended choice</td></tr>
+        <tr><td style="font-weight:700;">SEAL</td><td>160 bits</td><td>Software-Optimized Encryption Algorithm. A fast stream cipher with low CPU cost</td></tr>
+        <tr><td style="font-weight:700;">RC series</td><td>Varies</td><td>Rivest ciphers RC2, RC4, RC5, RC6. RC4 was widely used in old Wi-Fi (WEP) and SSL and is now considered broken</td></tr>
+      </tbody>
+    </table>
+    <p>Symmetric ciphers work in one of two ways. A <b>block cipher</b> encrypts fixed-size blocks of data at a time (AES uses 128-bit blocks; DES uses 64-bit). A <b>stream cipher</b> encrypts one bit or byte at a time (SEAL and RC4), which suits data that arrives continuously.</p>
+
+    <h3>Asymmetric algorithms</h3>
+    <table class="model-table">
+      <thead><tr><th>Algorithm</th><th>Typical key length</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Diffie-Hellman (DH)</td><td>512 – 4096 bits</td><td>Lets two parties agree on a shared secret key over an untrusted network without ever sending the key</td></tr>
+        <tr><td style="font-weight:700;">RSA</td><td>512 – 4096 bits</td><td>Encryption and digital signatures. Based on the difficulty of factoring very large numbers</td></tr>
+        <tr><td style="font-weight:700;">DSA / DSS</td><td>512 – 1024 bits (larger today)</td><td>Digital Signature Algorithm, defined in the Digital Signature Standard. Signatures only, not encryption</td></tr>
+        <tr><td style="font-weight:700;">ElGamal</td><td>512 – 1024 bits</td><td>Encryption and key exchange, built on Diffie-Hellman</td></tr>
+        <tr><td style="font-weight:700;">Elliptic curve (ECC)</td><td>160 bits and up</td><td>Same jobs with much shorter keys, so it's popular on phones and small devices</td></tr>
+      </tbody>
+    </table>
+    <p>Asymmetric keys look far longer than symmetric ones, but the numbers aren't comparable. A 2048-bit RSA key gives roughly the strength of a 112-bit symmetric key, because the math behind RSA has shortcuts that brute force on AES doesn't.</p>
+
+    <h3>Choosing: the two work together</h3>
+    <p>Real protocols use both. <b>Diffie-Hellman</b> (or RSA) safely establishes a shared secret, then fast <b>AES</b> encrypts the actual data with it. HTTPS, SSH, and IPsec VPNs all work this way. DH strength is chosen as a <b>DH group</b>: groups 1, 2, and 5 are too weak and shouldn't be used, while groups 14 and up (and the elliptic curve groups 19, 20, and 24) are current choices.</p>
+
+    <p>The key-sharing problem is the heart of this section, and it's older than computers. Anyone who's tried to get a secret to someone far away has run into it. Here's how it looks in the castle town.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the courier's locked box</span>
+      A merchant in the castle town sends letters to a partner in Edo by courier, in a box with a lock. If both own a copy of the same key, that's <b>symmetric</b>: quick and simple, but the key has to be carried there first, and a courier who copies it can read everything after. Now imagine the partner sends ahead a stack of <em>open padlocks</em> that only the partner's own key opens. Anyone can snap one shut on a box, but no one, not even the sender, can open it again except the partner. That's <b>asymmetric</b>: the open padlocks are the public key, and the one key that opens them is the private key. Snapping padlocks is slow work, so in practice the merchant locks one small box holding a fresh shared key, and uses that key for the rest of the season's letters. That's DH or RSA followed by AES.
+    </div>
+
+    <div class="callout xref">
+      Confidentiality as one side of the CIA triad is in <a href="IT121_Session06.html#confidentiality">Session 6</a>. Symmetric and asymmetric encryption first appeared briefly with cloud data in <a href="IT121_Session10.html#datasec">Session 10</a>.
+    </div>
+  </section>
+
+  <!-- ── OBSCURING DATA (18.2) ── -->
+  <section id="obscuring">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 18.2</p>
+      <h2>Obscuring Data</h2>
+      <p>Encryption isn't the only way to protect data. Sometimes you hide it, disguise it, or make it confusing on purpose.</p>
+    </div>
+    <div class="fcards">
+      <div class="fcard"><b>Data masking</b><span>Replaces sensitive data with realistic but fake values, so the data can be used (for testing, training, or analysis) without exposing the real information. Common techniques: <b>substitution</b> (swap real values for fake ones that look right) and <b>shuffling</b> (mix real values between records, so no row is a real person).</span></div>
+      <div class="fcard"><b>Steganography</b><span>Hides a message <em>inside</em> another file, such as an image, audio file, or video, so nobody knows a message exists at all. A common method changes the <b>least significant bit</b> of each pixel's color values, which changes the image too little for the eye to notice.</span></div>
+      <div class="fcard"><b>Social steganography</b><span>Hides a message in plain sight by writing something that means one thing to everyone and something else to a specific audience: inside jokes, slang, or references only the intended readers understand.</span></div>
+      <div class="fcard"><b>Steganalysis</b><span>Detecting that hidden information exists in a file. It looks for statistical oddities, file sizes that don't fit the content, or differences from a known original.</span></div>
+      <div class="fcard"><b>Obfuscation</b><span>Making data or code deliberately confusing so it's hard to understand, without hiding that it exists. Software developers obfuscate code to protect it from copying and reverse engineering. Attackers obfuscate malware to slip past antivirus.</span></div>
+    </div>
+    <div class="callout">
+      <b>Encryption vs. steganography.</b> Encryption hides what a message <em>says</em>, but everyone can see that there is a secret. Steganography hides that there <em>is</em> a message at all. They can be combined: encrypt the message, then hide the ciphertext in a picture.
+    </div>
+    <div class="callout xref">
+      Data states, and why test environments shouldn't hold live data, are in <a href="IT121_Session10.html#appsec">Session 10</a>. Malware that hides from antivirus is in <a href="IT121_Session05.html#antimalware">Session 5</a>.
+    </div>
+  </section>
+
+  <!-- ── INTEGRITY AND AUTHENTICITY (18.3) ── -->
+  <section id="integrity">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 18.3</p>
+      <h2>Integrity and Authenticity</h2>
+      <p>A hash proves data didn't change. Add a secret key and it also proves who sent it.</p>
+    </div>
+
+    <h3>Cryptographic hash functions</h3>
+    <p>A <b>hash function</b> takes data of any size and produces a short, fixed-length value called a <b>hash</b> (also a <b>digest</b> or fingerprint). A <b>cryptographic</b> hash function has these properties:</p>
+    <ul>
+      <li>The input can be <b>any length</b>.</li>
+      <li>The output is always a <b>fixed length</b>.</li>
+      <li>It's relatively <b>easy to compute</b> for any input.</li>
+      <li>It's <b>one way</b>: you can't work backward from the hash to the input.</li>
+      <li>It's <b>collision free</b>: it's computationally infeasible to find two different inputs with the same hash.</li>
+    </ul>
+    <p>Change one bit of the input and roughly half the output bits change. This is called the avalanche effect. Hashing isn't encryption: there is no key and nothing to decrypt.</p>
+
+    <h3>Hash algorithms</h3>
+    <table class="model-table">
+      <thead><tr><th>Algorithm</th><th>Hash length</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">MD5</td><td>128 bits</td><td>Legacy. Collisions can be created on purpose, so don't use it for security. Still fine for spotting accidental corruption</td></tr>
+        <tr><td style="font-weight:700;">SHA-1</td><td>160 bits</td><td>Legacy. Practical collisions have been demonstrated. Avoid</td></tr>
+        <tr><td style="font-weight:700;">SHA-2</td><td>224, 256, 384, or 512 bits</td><td>Current standard. SHA-256 is the most common. Use it</td></tr>
+        <tr><td style="font-weight:700;">SHA-3</td><td>224, 256, 384, or 512 bits</td><td>Newest standard, built on a different design than SHA-2. A strong alternative</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Why a plain hash isn't enough: HMAC</h3>
+    <p>A hash proves integrity, but only if you trust where the hash came from. An attacker in the middle can change a message, compute a fresh hash for the altered version, and send both. The receiver's check passes. A hash alone gives integrity against accidents, not against attackers.</p>
+    <p>A <b>keyed-hash message authentication code (HMAC)</b> fixes that by mixing a <b>secret key</b> into the hash. Only someone holding the key can produce the right HMAC. The receiver, who also has the key, recomputes it and compares. A match proves both <b>integrity</b> and <b>origin authentication</b>. HMAC is named after its hash: HMAC-SHA-256, for example. IPsec VPNs and routing protocol authentication use it.</p>
+
+    <div class="callout xref">
+      Integrity checks and checksums are in <a href="IT121_Session07.html#appsec">Session 7</a>. HMAC as an authentication method is in <a href="IT121_Session07.html#accounts">Session 7's accounts section</a>.
+    </div>
+  </section>
+
+  <!-- ── HASHING (18.4) ── -->
+  <section id="hashing">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 18.4</p>
+      <h2>Hashing</h2>
+      <p>Hashing tools in practice: checking files, storing passwords, and the attacks against both.</p>
+    </div>
+
+    <h3>Hashing tools</h3>
+    <p>Every operating system can compute a hash from the command line:</p>
+    <table class="model-table">
+      <thead><tr><th>Platform</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Windows (PowerShell)</td><td><code>Get-FileHash .\file.exe</code> (SHA-256 by default; add <code>-Algorithm MD5</code> or another to change it)</td></tr>
+        <tr><td style="font-weight:700;">Linux</td><td><code>sha256sum file</code>, <code>md5sum file</code></td></tr>
+        <tr><td style="font-weight:700;">macOS</td><td><code>shasum -a 256 file</code></td></tr>
+      </tbody>
+    </table>
+    <p>Two common uses: comparing a download's hash to the one its publisher posted, to confirm you got the real, unchanged file; and recording the hash of evidence when it's collected, so you can prove later that it wasn't altered. Security tools also look up file hashes against databases of known malware.</p>
+
+    <h3>Hashing passwords</h3>
+    <p>Systems shouldn't store passwords. They store the <b>hash</b> of each password. At login, the system hashes what you typed and compares the two hashes. If the password database is stolen, the attacker gets hashes, not passwords, and has to <b>crack</b> them by guessing:</p>
+    <div class="fcards">
+      <div class="fcard dont"><b>Dictionary attack</b><span>Hashes every word in a list of common passwords and words, and looks for a matching hash. Fast against weak passwords.</span></div>
+      <div class="fcard dont"><b>Brute-force attack</b><span>Tries every possible combination of characters. Given enough time it will always succeed, so the defense is making it take impossibly long.</span></div>
+      <div class="fcard dont"><b>Rainbow tables</b><span>Huge precomputed tables of passwords and their hashes. Instead of hashing guesses, the attacker just looks the stolen hash up.</span></div>
+    </div>
+
+    <h3>Salting</h3>
+    <p>A <b>salt</b> is a random value, unique to each user, added to the password before it's hashed and stored alongside the hash. Two users with the same password now get different hashes. Precomputed rainbow tables become useless, because the attacker would need a separate table for every possible salt. Salting is why a good password database leak exposes far less than a bad one. Purpose-built password hashing functions such as bcrypt, scrypt, and Argon2 add salting automatically and are deliberately slow, to make cracking even harder.</p>
+
+  </section>
+
+  <!-- ── PUBLIC KEY CRYPTOGRAPHY (18.5) ── -->
+  <section id="publickey">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 18.5</p>
+      <h2>Public Key Cryptography</h2>
+      <p>The same key pair gives you two different tools, depending on which key you lock with.</p>
+    </div>
+
+    <h3>Two ways to use a key pair</h3>
+    <div class="fcards">
+      <div class="fcard"><b>For confidentiality</b><span>Encrypt with the <b>receiver's public key</b>. Only the receiver's private key can decrypt it, so only the receiver can read it.</span></div>
+      <div class="fcard"><b>For authentication</b><span>Encrypt with the <b>sender's private key</b>. Anyone can decrypt it with the sender's public key, so it isn't secret, but a successful decryption proves only the sender could have produced it.</span></div>
+    </div>
+
+    <h3>Digital signatures</h3>
+    <p>A <b>digital signature</b> uses the authentication direction. Encrypting a whole document with a private key would be slow, so the sender signs a hash of it instead:</p>
+    <figure class="fig wide">
+      <svg viewBox="0 0 640 210" role="img" aria-label="Signing: the sender hashes the document, then encrypts the hash with the sender's private key, producing a signature sent with the document. Verifying: the receiver decrypts the signature with the sender's public key, hashes the received document, and compares the two hashes. A match means the signature is valid.">
+        <text x="6" y="18" font-size="12" font-weight="700" fill="var(--accent)">SIGN · sender</text>
+        <text x="6" y="122" font-size="12" font-weight="700" fill="var(--accent-2)">VERIFY · receiver</text>
+        <g stroke-width="1.5" stroke="var(--border)" fill="var(--surface)">
+          <rect x="6" y="30" width="134" height="52"/><rect x="166" y="30" width="134" height="52"/><rect x="326" y="30" width="148" height="52"/><rect x="500" y="30" width="134" height="52" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          <rect x="6" y="134" width="172" height="52"/><rect x="196" y="134" width="140" height="52"/><rect x="356" y="134" width="118" height="52"/><rect x="500" y="134" width="134" height="52" fill="var(--correct-soft)" stroke="var(--correct)"/>
+        </g>
+        <g font-size="11" text-anchor="middle" fill="var(--text)">
+          <text x="73" y="61">document</text>
+          <text x="233" y="53">hash the</text><text x="233" y="69">document</text>
+          <text x="400" y="53">encrypt hash with</text><text x="400" y="69">sender's PRIVATE key</text>
+          <text x="567" y="53" font-weight="700" fill="var(--accent)">signature</text><text x="567" y="69">sent with document</text>
+          <text x="92" y="157">decrypt signature</text><text x="92" y="173">with sender's PUBLIC key</text>
+          <text x="266" y="157">hash the received</text><text x="266" y="173">document again</text>
+          <text x="415" y="157">compare the</text><text x="415" y="173">two hashes</text>
+          <text x="567" y="157" font-weight="700" fill="var(--correct)">match =</text><text x="567" y="173" fill="var(--correct)">valid signature</text>
+        </g>
+        <g stroke="var(--muted)" stroke-width="1.5"><path d="M140 56 H166 M300 56 H326 M474 56 H500 M178 160 H196 M336 160 H356 M474 160 H500"/></g>
+      </svg>
+      <figcaption>The sender signs a hash with the private key. Anyone with the public key can check it, but only the private key could have made it.</figcaption>
+    </figure>
+    <p>A valid signature provides three things:</p>
+    <div class="fcards">
+      <div class="fcard do"><b>Authenticity</b><span>Proves the data was signed by the holder of that private key.</span></div>
+      <div class="fcard do"><b>Integrity</b><span>Proves the data hasn't changed since it was signed. Any change breaks the hash match.</span></div>
+      <div class="fcard do"><b>Nonrepudiation</b><span>A third party can accept the signature as proof the exchange happened. The signer can't credibly deny signing, because only they hold the private key.</span></div>
+    </div>
+    <p>Digital signatures are commonly built with <b>DSA</b> or <b>RSA</b>. Two everyday uses:</p>
+    <ul>
+      <li><b>Code signing</b>: the software publisher signs its programs and updates. Your computer checks the signature before installing, which confirms the code is from that publisher and wasn't tampered with since.</li>
+      <li><b>Digital certificates</b>: a certificate is itself a document signed by a trusted authority, binding a name to a public key. That's the next section.</li>
+    </ul>
+
+    <p>Signatures raise a question the math alone can't answer. If you check a signature with "the sender's public key," how do you know that key really belongs to the sender and not to an impostor who handed you theirs? People settled a version of that problem long ago, with seals.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the merchant's registered seal</span>
+      Edo-period merchants signed contracts with a carved personal seal, a <b>hanko</b>, pressed in red ink. Only the owner held the seal, so the impression proved who agreed. That's the private key making a signature. But a stranger can't tell a real seal from a forgery by looking. So important seals were recorded in an official seal register kept by the town and village authorities. A buyer in doubt could check the impression against the register. The register is the certificate authority, and the recorded impression is the certificate: a trusted third party vouching that <em>this</em> mark belongs to <em>this</em> person. Japan still registers seals this way today.
+    </div>
+  </section>
+
+  <!-- ── AUTHORITIES AND THE PKI TRUST SYSTEM (18.6) ── -->
+  <section id="pki">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 18.6</p>
+      <h2>Authorities and the PKI Trust System</h2>
+      <p>Public key infrastructure is how strangers decide whose public key to believe.</p>
+    </div>
+
+    <h3>What a PKI is</h3>
+    <p>A <b>public key infrastructure (PKI)</b> is the framework of hardware, software, people, policies, and procedures needed to create, manage, store, distribute, and revoke digital certificates. Its core pieces:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Certificate authority (CA)</b><span>The trusted third party that verifies identities and issues certificates, signing each one with its own private key. Like a government office issuing ID cards.</span></div>
+      <div class="fcard"><b>Digital certificate</b><span>An electronic document binding an identity (a person, server, or device) to a public key, signed by the CA. Certificates are public information. The standard format is <b>X.509</b>.</span></div>
+      <div class="fcard"><b>Registration authority (RA)</b><span>A subordinate that handles enrollment requests and verifies identity for the CA, so the CA doesn't have to do every check itself.</span></div>
+      <div class="fcard"><b>Certificate store</b><span>The trusted root CA certificates built into your OS and browser. Your device trusts any certificate that chains back to one of them.</span></div>
+    </div>
+
+    <h3>How trust works</h3>
+    <p>Your browser doesn't know your bank's public key in advance. The bank's server sends its certificate, and your browser checks the CA's signature on it using the CA's public key from the certificate store. If the signature verifies, the name matches the site you asked for, and the certificate hasn't expired or been revoked, the browser trusts the bank's public key. If any check fails, you get a certificate warning.</p>
+    <p>Certificates sometimes have to be cancelled early, for example when a private key is stolen. Two ways to check: a <b>certificate revocation list (CRL)</b>, a list of revoked serial numbers the CA publishes; and the <b>Online Certificate Status Protocol (OCSP)</b>, which asks the CA about one certificate in real time.</p>
+
+    <h3>PKI standards and certificate classes</h3>
+    <p>Besides X.509, the <b>Public-Key Cryptography Standards (PKCS)</b> define formats for things like certificate requests and key storage. CAs also issue certificates at different <b>classes</b>, depending on how carefully they verify identity:</p>
+    <table class="model-table">
+      <thead><tr><th>Class</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">0</td><td>Testing. No identity checks</td></tr>
+        <tr><td style="font-weight:700;">1</td><td>Individuals, with the focus on verifying email</td></tr>
+        <tr><td style="font-weight:700;">2</td><td>Organizations that need proof of identity</td></tr>
+        <tr><td style="font-weight:700;">3</td><td>Servers and software signing, with independent verification of identity and authority</td></tr>
+        <tr><td style="font-weight:700;">4</td><td>Online business transactions between companies</td></tr>
+        <tr><td style="font-weight:700;">5</td><td>Private organizations or government security</td></tr>
+      </tbody>
+    </table>
+    <p>A higher class means more verification, and so more trust in the binding between name and key.</p>
+
+    <h3>PKI topologies</h3>
+    <figure class="fig wide">
+      <svg viewBox="0 0 640 222" role="img" aria-label="Three PKI topologies. Single-root: one CA issues certificates directly to all users. Hierarchical: a root CA certifies subordinate CAs, which issue certificates to users. Cross-certified: two separate CAs certify each other, so users of one trust users of the other.">
+        <g stroke="var(--muted)" stroke-width="1.5">
+          <path d="M106 60 L46 140 M106 60 L106 140 M106 60 L166 140"/>
+          <path d="M320 40 L270 100 M320 40 L370 100 M270 100 L240 160 M270 100 L300 160 M370 100 L340 160 M370 100 L400 160"/>
+          <path d="M490 70 L466 140 M490 70 L514 140 M590 70 L566 140 M590 70 L614 140"/>
+        </g>
+        <path d="M512 62 H568" stroke="var(--accent)" stroke-width="2"/><path d="M568 62 l-8 -5 v10 z M512 62 l8 -5 v10 z" fill="var(--accent)"/>
+        <g fill="var(--surface)"><circle cx="106" cy="60" r="22"/><circle cx="320" cy="40" r="22"/><circle cx="490" cy="70" r="22"/><circle cx="590" cy="70" r="22"/><circle cx="270" cy="100" r="17"/><circle cx="370" cy="100" r="17"/></g>
+        <g fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2">
+          <circle cx="106" cy="60" r="22"/><circle cx="320" cy="40" r="22"/><circle cx="490" cy="70" r="22"/><circle cx="590" cy="70" r="22"/>
+        </g>
+        <g fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="1.5"><circle cx="270" cy="100" r="17"/><circle cx="370" cy="100" r="17"/></g>
+        <g fill="var(--surface)" stroke="var(--border)" stroke-width="1.5">
+          <rect x="34" y="140" width="24" height="24"/><rect x="94" y="140" width="24" height="24"/><rect x="154" y="140" width="24" height="24"/>
+          <rect x="228" y="160" width="24" height="24"/><rect x="288" y="160" width="24" height="24"/><rect x="328" y="160" width="24" height="24"/><rect x="388" y="160" width="24" height="24"/>
+          <rect x="454" y="140" width="24" height="24"/><rect x="502" y="140" width="24" height="24"/><rect x="554" y="140" width="24" height="24"/><rect x="602" y="140" width="24" height="24"/>
+        </g>
+        <g font-size="11" font-weight="700" text-anchor="middle" fill="var(--accent)"><text x="106" y="64">CA</text><text x="320" y="44">Root</text><text x="490" y="74">CA 1</text><text x="590" y="74">CA 2</text></g>
+        <g font-size="10" font-weight="700" text-anchor="middle" fill="var(--accent-2)"><text x="270" y="104">Sub</text><text x="370" y="104">Sub</text></g>
+        <g font-size="12" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="106" y="214">Single-root</text><text x="320" y="214">Hierarchical</text><text x="540" y="214">Cross-certified</text></g>
+      </svg>
+      <figcaption>Boxes are users or devices holding certificates. Large circles are root CAs, small ones subordinate CAs.</figcaption>
+    </figure>
+    <div class="fcards">
+      <div class="fcard"><b>Single-root</b><span>One CA issues every certificate. Simple, but it's a single point of failure: if that CA is compromised, the whole PKI is.</span></div>
+      <div class="fcard"><b>Hierarchical</b><span>A root CA certifies <b>subordinate CAs</b>, which issue the certificates. The root can stay offline and protected. Scales well. This is how the public internet works.</span></div>
+      <div class="fcard"><b>Cross-certified</b><span>Separate CAs certify each other, so users of one PKI can trust certificates from the other. Useful between partner organizations.</span></div>
+    </div>
+
+    <h3>Using hashes to detect interception</h3>
+    <p>A man-in-the-middle attacker can intercept a connection and present their <em>own</em> certificate. If it isn't signed by a trusted CA, the browser warns you. That's one reason never to click through a certificate warning. You can also check a certificate yourself: every certificate has a <b>fingerprint</b>, a hash of the whole certificate. Compare the fingerprint your browser shows with the real one, obtained through a separate trusted channel. If they differ, someone has substituted a certificate and is likely intercepting the traffic. SSH uses the same idea. The first time you connect to a server, it shows the server's key fingerprint for you to verify. If the fingerprint changes later, SSH warns loudly.</p>
+    <div class="callout xref">
+      Man-in-the-middle attacks through rogue access points are in <a href="IT121_Session03.html#wlanthreats">Session 3</a>. Trust in the cloud's shared model is in <a href="IT121_Session10.html#virtcloud">Session 10</a>.
+    </div>
+  </section>
+
+  <!-- ── APPLICATIONS AND IMPACTS (18.7) ── -->
+  <section id="applications">
+    <div class="section-head">
+      <p class="kicker">Concept 7 · Module 18.7</p>
+      <h2>Applications and Impacts of Cryptography</h2>
+      <p>Where PKI shows up every day, and what encryption does to a SOC's view of the network.</p>
+    </div>
+
+    <h3>Common PKI applications</h3>
+    <div class="fcards">
+      <div class="fcard"><b>SSL/TLS and HTTPS</b><span>Certificate-based authentication of web servers and encryption of web traffic</span></div>
+      <div class="fcard"><b>IPsec VPNs</b><span>Certificates authenticate the VPN peers, securing traffic between sites or for remote users</span></div>
+      <div class="fcard"><b>802.1X network access</b><span>Certificates authenticate devices before they're allowed onto the wired or wireless network</span></div>
+      <div class="fcard"><b>S/MIME email</b><span>Signs and encrypts email messages</span></div>
+      <div class="fcard"><b>Code signing</b><span>Proves software and updates come from the real publisher, unaltered</span></div>
+      <div class="fcard"><b>Other uses</b><span>Secure instant messaging, the Windows Encrypting File System (EFS), smart cards for two-factor authentication, and encrypted USB storage</span></div>
+    </div>
+
+    <h3>Encryption's impact on security operations</h3>
+    <p>Most web traffic is now encrypted with HTTPS, and that cuts both ways for defenders. Encryption protects users, but it also hides traffic from the tools that inspect it. An IPS or packet capture can see that a host is talking to a server on port 443, and for how long. It can't see what's inside. Attackers know this: malware increasingly uses HTTPS to download payloads and to talk to its command-and-control servers, because the traffic blends in.</p>
+    <p>Organizations respond in a few ways:</p>
+    <ul>
+      <li><b>SSL/TLS decryption</b> (SSL inspection): a device such as a decryption appliance or next-generation firewall decrypts traffic at the network edge, passes it to IPS and other inspection tools, then re-encrypts it. Users' devices must trust the appliance's certificate for this to work. Because it exposes private data, it needs clear policy, and categories like banking and health sites are often exempted.</li>
+      <li><b>Metadata analysis</b>: even without decrypting, analysts can study who talks to whom, when, how much, and the details of the certificate and TLS handshake. An unusual certificate or a strange pattern can reveal malware without reading a byte of content.</li>
+      <li><b>Endpoint monitoring</b>: traffic is plaintext on the endpoint before it's encrypted, so endpoint security tools can see what network tools can't.</li>
+    </ul>
+    <div class="callout">
+      <b>For analysts:</b> the course's point here is that a security analyst has to understand cryptography to do the job. You need to know what an alert can and can't see, recognize a certificate problem, and tell the difference between a protocol that's encrypted and one that isn't. Session 12 picks this up with how security technologies affect monitoring.
+    </div>
+    <div class="callout xref">
+      VPNs and IPS as security devices are in <a href="IT121_Session04.html#secdevices">Session 4</a>. 802.1X and AAA are in <a href="IT121_Session07.html#aaa">Session 7</a>.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Choosing algorithms</span>
+      <h3>Securing the depot link</h3>
+      <p>Kaidō Freight is setting up a VPN between its headquarters and a new depot. A contractor proposes DES for the data and DH group 2 for the key exchange, "because they're supported everywhere." What would you recommend instead, and why does the VPN use two kinds of algorithm at all?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Recommend:</strong> <b>AES</b> (128 or 256-bit) for the data, and DH group 14 or higher (or an elliptic curve group such as 19 or 20) for key exchange. DES's 56-bit key and DH group 2 are both too weak.</p>
+          <p><strong>Why two:</strong> asymmetric DH lets the two sites agree on a shared key safely over the internet, but it's slow. Symmetric AES is fast enough to encrypt all the traffic, but needs a shared key first. Each covers the other's weakness.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Hashing passwords</span>
+      <h3>The leaked customer database</h3>
+      <p>Tsukimi Sweets' old online shop is breached, and the attacker posts the customer table. Passwords were stored as unsalted MD5 hashes. Within a day, most of them are cracked. Why was it so quick, and what should the new shop do differently?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Why quick:</strong> unsalted hashes mean every customer with the same password has the same hash, and precomputed <b>rainbow tables</b> for MD5 already contain the hashes of common passwords. The attacker mostly looked them up. MD5 is also very fast to compute, so dictionary and brute-force guessing is fast too.</p>
+          <p><strong>Do differently:</strong> add a unique random <b>salt</b> per user, and use a slow, purpose-built password hashing function (bcrypt, scrypt, or Argon2) instead of a general hash. Then force password resets for every customer, and warn them to change the password anywhere they reused it.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Obscuring data</span>
+      <h3>Realistic test data</h3>
+      <p>Kiriyama General Hospital's developers want a copy of the patient database to test a new scheduling app. Compliance says real patient data can't leave production. Encrypting the copy doesn't help, because the developers would decrypt it to use it. What technique fits?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><b>Data masking.</b> Build the test copy by replacing names, dates of birth, and record numbers with realistic fake values (<b>substitution</b>) and mixing remaining fields between records (<b>shuffling</b>). The data keeps its shape, so the app can be tested properly, but no row describes a real patient.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Digital signatures</span>
+      <h3>"I never placed that order"</h3>
+      <p>A wholesale customer of Kaidō Freight claims they never approved a large shipping order and refuses to pay. The order was submitted through a portal that requires each customer to sign orders with a private key from a certificate Kaidō issued. Which property of digital signatures settles this, and what must be true for it to hold?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><b>Nonrepudiation.</b> The order's signature verifies with the customer's public key, so it was produced with the customer's private key. A third party can accept that as proof the customer signed it.</p>
+          <p><strong>What must be true:</strong> the private key stayed private. If the customer can show their key was stolen, and reported it so the certificate was revoked before the order, the argument weakens. That's why key protection and fast revocation (CRL or OCSP) matter.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">PKI trust</span>
+      <h3>The certificate warning at the clinic</h3>
+      <p>Staff at a Kiriyama branch clinic report that the hospital's internal portal suddenly shows a certificate warning on the clinic's guest Wi-Fi, but not on the staff network. Several staff clicked "continue anyway." What might be happening, and how could an analyst confirm it?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Possible cause:</strong> a <b>man-in-the-middle</b> on the guest network, such as a rogue access point, presenting its own certificate for the portal. Its certificate isn't signed by a CA the devices trust, so the browser warns.</p>
+          <p><strong>Confirm:</strong> compare the certificate <b>fingerprint</b> (its hash) seen on guest Wi-Fi against the real one seen on the staff network. Different fingerprints mean a substituted certificate. Anyone who clicked through should change their portal password, and the guest network should be checked for rogue APs.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Impact on monitoring</span>
+      <h3>Nothing in the IPS logs</h3>
+      <p>Endpoint protection on a Tsukimi Sweets office PC flags malware, and the malware has clearly been talking to a server on the internet. The network IPS logged nothing suspicious from that PC. How is that possible, and what could Bastion use to see this traffic next time?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>How:</strong> the malware used <b>HTTPS</b>. The IPS saw an ordinary-looking encrypted connection to port 443 and couldn't inspect the content.</p>
+          <p><strong>Options:</strong> <b>SSL/TLS decryption</b> at the edge so the IPS can inspect the traffic (with a policy covering privacy and exemptions); <b>metadata analysis</b> of destinations, timing, and certificate details; and relying on <b>endpoint monitoring</b>, which sees data before it's encrypted, as it did here.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 11 reference. More sessions are added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+      {
+            "t": "3DES",
+            "d": "Triple DES: runs DES three times, with a 112- or 168-bit key. Stronger than DES but slow, and being retired."
+      },
+      {
+            "t": "AES",
+            "d": "Advanced Encryption Standard. A symmetric block cipher with 128-, 192-, or 256-bit keys. Secure, efficient, and the recommended choice."
+      },
+      {
+            "t": "Asymmetric encryption",
+            "d": "Encryption with a key pair: what the public key encrypts, only the private key decrypts, and the reverse. Slow, so used for key exchange, signatures, and certificates."
+      },
+      {
+            "t": "Avalanche effect",
+            "d": "A one-bit change in a hash function's input changes roughly half the bits of the output."
+      },
+      {
+            "t": "Block cipher",
+            "d": "A symmetric cipher that encrypts fixed-size blocks of data at a time. AES uses 128-bit blocks."
+      },
+      {
+            "t": "Brute-force attack",
+            "d": "Trying every possible key or password until one works. Given enough time it always succeeds, so strong crypto makes it take impossibly long."
+      },
+      {
+            "t": "Certificate authority (CA)",
+            "d": "A trusted third party that verifies identities and issues digital certificates, signing each with its own private key."
+      },
+      {
+            "t": "Certificate classes",
+            "d": "Levels 0 through 5 describing how carefully a CA verified identity, from class 0 (testing, no checks) to class 5 (private organizations and government)."
+      },
+      {
+            "t": "Certificate revocation list (CRL)",
+            "d": "A list a CA publishes of certificates cancelled before their expiration date."
+      },
+      {
+            "t": "Ciphertext",
+            "d": "Encrypted, unreadable data."
+      },
+      {
+            "t": "Code signing",
+            "d": "A publisher digitally signs software and updates so users can verify the source and that the code wasn't altered."
+      },
+      {
+            "t": "Collision",
+            "d": "Two different inputs that produce the same hash. A good cryptographic hash makes finding one computationally infeasible."
+      },
+      {
+            "t": "Cross-certified topology",
+            "d": "A PKI design in which separate CAs certify each other, so users of each can trust the other's certificates."
+      },
+      {
+            "t": "Cryptanalysis",
+            "d": "The study of breaking codes and ciphers."
+      },
+      {
+            "t": "Cryptographic hash function",
+            "d": "A one-way function that turns input of any length into a fixed-length hash, is easy to compute, and is collision free."
+      },
+      {
+            "t": "Data masking",
+            "d": "Replacing sensitive data with realistic fake values, by substitution or shuffling, so it can be used without exposing the real information."
+      },
+      {
+            "t": "DES",
+            "d": "Data Encryption Standard. A legacy symmetric cipher with a 56-bit key, easily broken today."
+      },
+      {
+            "t": "DH group",
+            "d": "A set of Diffie-Hellman parameters that determines its strength. Groups 1, 2, and 5 are weak. Groups 14 and up, and elliptic curve groups 19, 20, and 24, are current."
+      },
+      {
+            "t": "Dictionary attack",
+            "d": "Cracking password hashes by hashing every word in a list of common passwords and looking for a match."
+      },
+      {
+            "t": "Diffie-Hellman (DH)",
+            "d": "An asymmetric algorithm that lets two parties agree on a shared secret key over an untrusted network without sending the key."
+      },
+      {
+            "t": "Digital certificate",
+            "d": "An electronic document, signed by a CA, that binds an identity to a public key. The standard format is X.509."
+      },
+      {
+            "t": "Digital signature",
+            "d": "A hash of a document encrypted with the signer's private key. Provides authenticity, integrity, and nonrepudiation."
+      },
+      {
+            "t": "DSA / DSS",
+            "d": "The Digital Signature Algorithm, defined in the Digital Signature Standard. Used for signatures, not encryption."
+      },
+      {
+            "t": "ElGamal",
+            "d": "An asymmetric algorithm for encryption and key exchange, built on Diffie-Hellman."
+      },
+      {
+            "t": "Elliptic curve cryptography (ECC)",
+            "d": "Asymmetric cryptography that gives the same strength as RSA with much shorter keys."
+      },
+      {
+            "t": "Fingerprint",
+            "d": "The hash of a certificate or key. Comparing fingerprints through a trusted channel can reveal a substituted certificate and a man-in-the-middle."
+      },
+      {
+            "t": "Hierarchical topology",
+            "d": "A PKI design in which a root CA certifies subordinate CAs, which issue certificates. Scales well; used on the public internet."
+      },
+      {
+            "t": "HMAC",
+            "d": "Keyed-hash message authentication code. A hash combined with a secret key, proving both integrity and origin authentication."
+      },
+      {
+            "t": "MD5",
+            "d": "A legacy 128-bit hash. Collisions can be created deliberately, so it shouldn't be used for security."
+      },
+      {
+            "t": "Nonrepudiation",
+            "d": "Proof, accepted by a third party, that an exchange took place, so the sender can't credibly deny it. Provided by digital signatures."
+      },
+      {
+            "t": "Obfuscation",
+            "d": "Making data or code deliberately confusing to understand, without hiding that it exists."
+      },
+      {
+            "t": "OCSP",
+            "d": "Online Certificate Status Protocol. Checks with the CA in real time whether a certificate has been revoked."
+      },
+      {
+            "t": "Origin authentication",
+            "d": "Proof that data came from who it claims to come from."
+      },
+      {
+            "t": "PKCS",
+            "d": "Public-Key Cryptography Standards: formats for certificate requests, key storage, and other PKI data."
+      },
+      {
+            "t": "Plaintext",
+            "d": "Readable data, before encryption."
+      },
+      {
+            "t": "Private key",
+            "d": "The half of a key pair that only its owner holds. Used to decrypt data sent to the owner and to create signatures."
+      },
+      {
+            "t": "Public key",
+            "d": "The half of a key pair anyone may have. Used to encrypt data for the owner and to verify the owner's signatures."
+      },
+      {
+            "t": "Public key infrastructure (PKI)",
+            "d": "The hardware, software, people, policies, and procedures used to create, manage, distribute, and revoke digital certificates."
+      },
+      {
+            "t": "Rainbow table",
+            "d": "A large precomputed table of passwords and their hashes, used to look up stolen hashes instead of guessing. Defeated by salting."
+      },
+      {
+            "t": "RC series",
+            "d": "Rivest ciphers RC2, RC4, RC5, and RC6. RC4 is a stream cipher once used in WEP and SSL, now considered broken."
+      },
+      {
+            "t": "Registration authority (RA)",
+            "d": "A subordinate that handles certificate enrollment requests and identity checks on behalf of a CA."
+      },
+      {
+            "t": "RSA",
+            "d": "An asymmetric algorithm for encryption and digital signatures, based on the difficulty of factoring large numbers."
+      },
+      {
+            "t": "Salt",
+            "d": "A random value, unique per user, added to a password before hashing, so identical passwords get different hashes and rainbow tables don't work."
+      },
+      {
+            "t": "SEAL",
+            "d": "Software-Optimized Encryption Algorithm. A fast symmetric stream cipher with a 160-bit key."
+      },
+      {
+            "t": "SHA-2",
+            "d": "The current standard family of hash functions, with 224-, 256-, 384-, or 512-bit outputs. SHA-256 is the most common."
+      },
+      {
+            "t": "SHA-3",
+            "d": "The newest hash standard, built on a different design than SHA-2."
+      },
+      {
+            "t": "Single-root topology",
+            "d": "A PKI design in which one CA issues every certificate. Simple, but a single point of failure."
+      },
+      {
+            "t": "Social steganography",
+            "d": "Hiding a message in plain sight, in words that mean something different to a specific audience."
+      },
+      {
+            "t": "SSL/TLS decryption",
+            "d": "Decrypting encrypted traffic at the network edge so IPS and other tools can inspect it, then re-encrypting it. Also called SSL inspection."
+      },
+      {
+            "t": "Steganalysis",
+            "d": "Detecting that hidden information exists in a file."
+      },
+      {
+            "t": "Steganography",
+            "d": "Hiding a message inside another file, such as an image or audio file, so no one knows the message exists."
+      },
+      {
+            "t": "Stream cipher",
+            "d": "A symmetric cipher that encrypts one bit or byte at a time, such as SEAL or RC4."
+      },
+      {
+            "t": "Symmetric encryption",
+            "d": "Encryption that uses the same pre-shared key to encrypt and decrypt. Fast, so used for bulk data."
+      },
+      {
+            "t": "X.509",
+            "d": "The standard format for digital certificates."
+      }
+];
+
+  const QUIZ = [
+      {
+            "q": "Which algorithm is used with symmetric encryption to provide confidentiality?",
+            "choices": [
+                  "RSA",
+                  "MD5",
+                  "AES",
+                  "ECC"
+            ],
+            "correct": 2,
+            "explain": "AES is a symmetric cipher. RSA and ECC are asymmetric, and MD5 is a hash function."
+      },
+      {
+            "q": "What is the main weakness of symmetric encryption?",
+            "choices": [
+                  "It's too slow for bulk data",
+                  "Both sides must already share the secret key",
+                  "It can't use keys longer than 56 bits",
+                  "It only provides integrity"
+            ],
+            "correct": 1,
+            "explain": "Symmetric encryption is fast, but getting the shared key to the other side safely, and managing many keys, is the hard part."
+      },
+      {
+            "q": "Which asymmetric algorithm lets two parties agree on a shared secret key without sending the key?",
+            "choices": [
+                  "DSA",
+                  "SHA-256",
+                  "Diffie-Hellman",
+                  "3DES"
+            ],
+            "correct": 2,
+            "explain": "Diffie-Hellman establishes a shared secret over an untrusted network. The key itself is never transmitted."
+      },
+      {
+            "q": "Which two properties belong to a cryptographic hash function?",
+            "choices": [
+                  "Input must be a fixed size; output varies",
+                  "Output is a fixed length; the function is one way",
+                  "It needs a secret key; it can be reversed",
+                  "Complex inputs produce longer hashes"
+            ],
+            "correct": 1,
+            "explain": "A cryptographic hash takes any-length input, produces fixed-length output, is easy to compute, is one way, and is collision free."
+      },
+      {
+            "q": "What does HMAC add to a plain hash?",
+            "choices": [
+                  "Encryption of the data",
+                  "A secret key, so it also proves origin",
+                  "A longer output",
+                  "Compression"
+            ],
+            "correct": 1,
+            "explain": "An attacker can recompute a plain hash after changing data. An HMAC requires the secret key, so a match proves both integrity and origin authentication."
+      },
+      {
+            "q": "Which hash algorithm should be used for new security work?",
+            "choices": [
+                  "MD5",
+                  "SHA-1",
+                  "SHA-256",
+                  "RC4"
+            ],
+            "correct": 2,
+            "explain": "MD5 and SHA-1 have known collision weaknesses. SHA-256, part of SHA-2, is the current standard. RC4 is a cipher, not a hash."
+      },
+      {
+            "q": "Which method tries every possible password until a match is found?",
+            "choices": [
+                  "Dictionary attack",
+                  "Brute-force attack",
+                  "Rainbow table",
+                  "Salting"
+            ],
+            "correct": 1,
+            "explain": "Brute force tries every combination. Given enough time it always succeeds."
+      },
+      {
+            "q": "What defeats precomputed rainbow tables?",
+            "choices": [
+                  "Using MD5",
+                  "Salting each password before hashing",
+                  "Encrypting the network link",
+                  "Shorter passwords"
+            ],
+            "correct": 1,
+            "explain": "A unique salt per user means a precomputed table would be needed for every possible salt, which isn't practical."
+      },
+      {
+            "q": "Which term describes hiding data inside an audio file?",
+            "choices": [
+                  "Obfuscation",
+                  "Steganography",
+                  "Steganalysis",
+                  "Data masking"
+            ],
+            "correct": 1,
+            "explain": "Steganography hides a message inside another file so no one knows the message exists."
+      },
+      {
+            "q": "Which term describes discovering that hidden information exists within a graphic file?",
+            "choices": [
+                  "Steganalysis",
+                  "Social steganography",
+                  "Obfuscation",
+                  "Cryptanalysis"
+            ],
+            "correct": 0,
+            "explain": "Steganalysis is detecting hidden information. Cryptanalysis is breaking ciphers."
+      },
+      {
+            "q": "Which technique replaces sensitive values with realistic fake ones so the data can be used for testing?",
+            "choices": [
+                  "Steganography",
+                  "Data masking",
+                  "Hashing",
+                  "Obfuscation"
+            ],
+            "correct": 1,
+            "explain": "Data masking uses substitution or shuffling so the data keeps its shape without exposing real values."
+      },
+      {
+            "q": "To sign a document digitally, which key does the sender use?",
+            "choices": [
+                  "The receiver's public key",
+                  "The sender's public key",
+                  "The sender's private key",
+                  "A shared symmetric key"
+            ],
+            "correct": 2,
+            "explain": "The sender encrypts the document's hash with their own private key. Anyone can verify it with the sender's public key."
+      },
+      {
+            "q": "An e-commerce site must keep proof that a customer's transaction took place. Which digital signature property is required?",
+            "choices": [
+                  "Confidentiality of the public key",
+                  "Integrity of signed data",
+                  "Authenticity of signed data",
+                  "Nonrepudiation of the transaction"
+            ],
+            "correct": 3,
+            "explain": "Nonrepudiation means a third party accepts the signature as proof the exchange happened, and the signer can't deny it."
+      },
+      {
+            "q": "Which technology uses a trusted third party to issue credentials accepted as an authoritative identity?",
+            "choices": [
+                  "Hashing algorithms",
+                  "PKI certificates",
+                  "Symmetric keys",
+                  "Data masking"
+            ],
+            "correct": 1,
+            "explain": "A PKI certificate authority is a trusted third party that issues certificates binding identities to public keys."
+      },
+      {
+            "q": "Which PKI topology has a root CA that certifies subordinate CAs?",
+            "choices": [
+                  "Single-root",
+                  "Hierarchical",
+                  "Cross-certified",
+                  "Peer-to-peer"
+            ],
+            "correct": 1,
+            "explain": "In a hierarchical PKI the root CA certifies subordinate CAs, which issue certificates. It scales well and lets the root stay offline."
+      },
+      {
+            "q": "Which two are common PKI applications?",
+            "choices": [
+                  "NTP and FTP",
+                  "HTTPS web traffic and 802.1X authentication",
+                  "File permissions and FTP",
+                  "Syslog and SNMP"
+            ],
+            "correct": 1,
+            "explain": "PKI applications include SSL/TLS and HTTPS, IPsec VPNs, 802.1X, S/MIME email, code signing, EFS, and smart cards."
+      },
+      {
+            "q": "How can a security analyst inspect network traffic that is encrypted with SSL/TLS?",
+            "choices": [
+                  "Use a syslog server",
+                  "Require IPsec VPN access",
+                  "Deploy an SSL/TLS decryption appliance",
+                  "Disable HTTPS"
+            ],
+            "correct": 2,
+            "explain": "A decryption appliance decrypts the traffic and passes it to IPS and other tools to find threats hidden by encryption."
+      },
+      {
+            "q": "How can a certificate fingerprint help detect a man-in-the-middle?",
+            "choices": [
+                  "It encrypts the session",
+                  "It's a hash of the certificate; a mismatch with the real one reveals a substituted certificate",
+                  "It speeds up the TLS handshake",
+                  "It replaces the CA's signature"
+            ],
+            "correct": 1,
+            "explain": "Comparing the fingerprint (hash) you see with the real one from a trusted channel shows whether someone substituted their own certificate."
+      }
+];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
