@@ -1,0 +1,336 @@
+<title>IT121 Lab – Hash Check</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  a.back-link{ display:inline-block; margin-bottom:14px; font-family:var(--mono); font-size:.85rem; font-weight:600; color:var(--accent); text-decoration:none; border-bottom:1.5px solid var(--accent); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,4.4vw,3.1rem); line-height:1.05; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:64ch; font-size:1.08rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.1rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  .res-list{ margin:0; padding-left:1.3em; font-size:.95rem; }
+  .res-list li{ margin-bottom:.5em; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+  .fillin{ width:100%; min-width:140px; font-family:var(--mono); font-size:.85rem; padding:.45em .6em; background:var(--surface-2); border:1px solid var(--border); color:var(--text); }
+  .fillin:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  .fillin::placeholder{ color:var(--muted); opacity:.6; }
+
+  .steps{ counter-reset:step; list-style:none; margin:20px 0; padding:0; }
+  .steps li{ position:relative; padding:10px 0 16px 48px; border-bottom:1px dashed var(--border); font-size:.95rem; }
+  .steps li:last-child{ border-bottom:none; }
+  .steps li::before{ counter-increment:step; content:counter(step); position:absolute; left:0; top:8px; width:30px; height:30px;
+    border:1px solid var(--accent); color:var(--accent); font-family:var(--mono); font-weight:700; font-size:.85rem;
+    display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); }
+  .steps code{ font-family:var(--mono); background:var(--surface-2); border:1px solid var(--border); padding:1px 6px; font-size:.88em; color:var(--accent); }
+
+  .ws-pane{ background:var(--surface-2); border:1px solid var(--border); box-shadow:var(--shadow); font-family:var(--mono); font-size:.82rem; padding:18px 20px; margin:20px 0; overflow-x:auto; line-height:1.7; }
+  .ws-pane .i1{ padding-left:1.6em; }
+  .ws-pane .i2{ padding-left:3.2em; }
+  .ws-pane .field{ color:var(--accent); }
+  .ws-pane .value{ color:var(--text); }
+  .ws-pane .note{ color:var(--muted); font-style:italic; }
+  .ws-pane .hdr{ color:var(--accent-2); font-weight:700; }
+
+  .reflect{ background:var(--surface); border:1px solid var(--border); padding:18px 20px; margin-bottom:14px; box-shadow:var(--shadow); }
+  .reflect .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent-2); margin-right:.5em; }
+  .reflect textarea{ width:100%; margin-top:10px; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:.7em .9em; resize:vertical; min-height:64px; }
+  .reflect textarea:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .obj-list{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+
+  @media print{
+    body{ background:#fff; color:#111; background-image:none; }
+    nav.index, .back-to-top, a.back-link{ display:none; }
+    .callout, .obj-list li, .model-table, .ws-pane, .reflect, .fact{ box-shadow:none; }
+    section{ break-inside:avoid; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html">↩ Contents</a>
+    <p class="eyebrow">IT121 · Hands-On Lab</p>
+    <h1>Hash Check</h1>
+    <p class="lede">Session 6 says a hash tells you whether a file changed. This lab makes you prove it: hash a file, change one character, hash it again, and then verify a real download against the hash its publisher posted. It's the same check a Bastion analyst runs before trusting a tool, and before handing a piece of evidence to anyone else.</p>
+    <div class="factrow">
+      <span class="fact"><b>Side project</b> Builds on Session 6 · Module 10.1</span>
+      <span class="fact"><b>Time</b> ~30 min</span>
+      <span class="fact"><b>Difficulty</b> Beginner</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="../index.html" class="toc-link">↩ Contents</a>
+    <a href="#objectives">Objectives</a>
+    <a href="#part1">Part 1</a>
+    <a href="#part2">Part 2</a>
+    <a href="#part3">Part 3</a>
+    <a href="#part4">Part 4</a>
+    <a href="#reflect">Reflection</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OBJECTIVES ── -->
+  <section id="objectives">
+    <div class="section-head">
+      <p class="kicker">Objectives</p>
+      <h2>What you'll do</h2>
+    </div>
+    <ul class="obj-list">
+      <li>Compute a SHA-256 hash from the command line on Windows, Linux, or macOS</li>
+      <li>Show that a one-character change produces a completely different hash</li>
+      <li>Show what a hash does <em>not</em> depend on (the file's name and location)</li>
+      <li>Verify a real download against its publisher's posted hash</li>
+    </ul>
+
+    <h3>Required resources</h3>
+    <ul class="res-list">
+      <li>Any computer: Windows (PowerShell), Linux, or macOS (Terminal)</li>
+      <li>A plain text editor (Notepad, TextEdit in plain-text mode, nano, etc.)</li>
+      <li>An internet connection for Part 4</li>
+    </ul>
+
+    <table class="model-table">
+      <thead><tr><th>Platform</th><th>Command to hash a file with SHA-256</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Windows (PowerShell)</td><td><code>Get-FileHash .\notes.txt</code> (SHA-256 is the default)</td></tr>
+        <tr><td style="font-weight:700;">Linux</td><td><code>sha256sum notes.txt</code></td></tr>
+        <tr><td style="font-weight:700;">macOS</td><td><code>shasum -a 256 notes.txt</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── PART 1 ── -->
+  <section id="part1">
+    <div class="section-head">
+      <p class="kicker">Part 1</p>
+      <h2>Hash a file you made</h2>
+      <p>Start with a file whose contents you know exactly.</p>
+    </div>
+    <ol class="steps">
+      <li>Make a new folder called <code>hashlab</code> somewhere easy to find, like your Desktop or Documents.</li>
+      <li>In a text editor, create a file named <code>notes.txt</code> in that folder containing exactly one line: <code>Watch log: all quiet at gate 7</code>. Save it.</li>
+      <li>Open PowerShell or a terminal, change into the folder (<code>cd</code>), and run the hash command for your platform from the table above.</li>
+      <li>Run the same command a second time. Compare the two results character by character.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Item</th><th>Your result</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">First 8 characters of the hash</td><td><input class="fillin" type="text" placeholder="e.g. 3f1c9a0b"></td></tr>
+        <tr><td style="font-weight:700;">Last 8 characters of the hash</td><td><input class="fillin" type="text" placeholder="e.g. 4be0e07b"></td></tr>
+        <tr><td style="font-weight:700;">Total length of the hash (count the characters)</td><td><input class="fillin" type="text" placeholder="number of hex characters"></td></tr>
+        <tr><td style="font-weight:700;">Did the second run match the first?</td><td><input class="fillin" type="text" placeholder="yes / no"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── PART 2 ── -->
+  <section id="part2">
+    <div class="section-head">
+      <p class="kicker">Part 2</p>
+      <h2>Change one character</h2>
+      <p>Now see the avalanche effect for yourself.</p>
+    </div>
+    <ol class="steps">
+      <li>Open <code>notes.txt</code> and change <code>7</code> to <code>1</code>. Change nothing else. Save it.</li>
+      <li>Hash it again and fill in the table.</li>
+      <li>Change it back to <code>7</code>, save, and hash once more.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Item</th><th>Your result</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">First 8 characters after changing 7 → 1</td><td><input class="fillin" type="text" placeholder="first 8 hex characters"></td></tr>
+        <tr><td style="font-weight:700;">Roughly how much of the hash changed?</td><td><input class="fillin" type="text" placeholder="a few / about half / nearly all"></td></tr>
+        <tr><td style="font-weight:700;">After changing it back to 7, does it match Part 1?</td><td><input class="fillin" type="text" placeholder="yes / no"></td></tr>
+      </tbody>
+    </table>
+
+    <p>Here's the same effect on three tiny inputs, computed with SHA-256. Notice the third one: the only difference from the first is an invisible newline at the end.</p>
+    <div class="ws-pane">
+      <div><span class="field">"hello"</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="value">2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824</span></div>
+      <div><span class="field">"Hello"</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="value">185f8db32271fe25f561a6fc938b2e264306ec304eda518007d1764826381969</span></div>
+      <div><span class="field">"hello\n"</span>&nbsp;&nbsp;<span class="value">5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03</span></div>
+    </div>
+    <div class="callout">
+      <b>Why your hash won't match a classmate's:</b> if someone pressed Enter after the line, or their editor saved Windows-style line endings or a byte-order mark, their file contains different bytes even though it <em>looks</em> identical. The hash is computed on bytes, not on what you see on screen. Compare with a classmate and see whether yours match.
+    </div>
+  </section>
+
+  <!-- ── PART 3 ── -->
+  <section id="part3">
+    <div class="section-head">
+      <p class="kicker">Part 3</p>
+      <h2>What doesn't change the hash</h2>
+      <p>A hash covers a file's contents. Find out what else it ignores.</p>
+    </div>
+    <ol class="steps">
+      <li>Copy <code>notes.txt</code> to a new file named <code>evidence-copy.txt</code> (in File Explorer/Finder, or with <code>Copy-Item</code> / <code>cp</code>). Hash the copy.</li>
+      <li>Rename the copy to <code>totally-different-name.log</code>, move it into a subfolder, and hash it again.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Item</th><th>Your result</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Does the copy's hash match the original?</td><td><input class="fillin" type="text" placeholder="yes / no"></td></tr>
+        <tr><td style="font-weight:700;">After renaming and moving it?</td><td><input class="fillin" type="text" placeholder="yes / no"></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>This is why investigators hash evidence.</b> The name, folder, and timestamps can all change as a file is copied around. The hash recorded when it was collected shows the <em>contents</em> are still exactly the same. You'll see this again in the digital forensics module at the end of the course.
+    </div>
+  </section>
+
+  <!-- ── PART 4 ── -->
+  <section id="part4">
+    <div class="section-head">
+      <p class="kicker">Part 4</p>
+      <h2>Verify a real download</h2>
+      <p>Now do it for real, with a file someone else published.</p>
+    </div>
+    <ol class="steps">
+      <li>Pick a vendor that publishes SHA-256 hashes for its downloads. Good choices: the Wireshark installer (its download page links to a signatures file listing SHA-256 values), or any free open-source tool your instructor suggests. Avoid multi-gigabyte files like operating system images unless you have a fast connection.</li>
+      <li>Download the file <strong>from the vendor's own site</strong>, and find the published SHA-256 value for that exact file and version.</li>
+      <li>Hash your download with your platform's command.</li>
+      <li>Compare the two values. On Linux, if the vendor provides a checksum file, <code>sha256sum -c SHA256SUMS --ignore-missing</code> does the comparison for you.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Item</th><th>Your result</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">File name and version</td><td><input class="fillin" type="text" placeholder="e.g. tool-installer-4.2.1.exe"></td></tr>
+        <tr><td style="font-weight:700;">Where you found the published hash (page or file name)</td><td><input class="fillin" type="text" placeholder="vendor page / checksum file"></td></tr>
+        <tr><td style="font-weight:700;">Published hash, first and last 8 characters</td><td><input class="fillin" type="text" placeholder="xxxxxxxx…xxxxxxxx"></td></tr>
+        <tr><td style="font-weight:700;">Your computed hash, first and last 8 characters</td><td><input class="fillin" type="text" placeholder="xxxxxxxx…xxxxxxxx"></td></tr>
+        <tr><td style="font-weight:700;">Verdict</td><td><input class="fillin" type="text" placeholder="match — trust it / mismatch — delete it"></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>Safety note:</b> you don't need to <em>install</em> anything for this lab. Hash the file, record the result, and delete it if you don't want it. If your hash doesn't match, don't run the file. Download it again from the vendor's site and check again.
+    </div>
+  </section>
+
+  <!-- ── REFLECTION ── -->
+  <section id="reflect">
+    <div class="section-head">
+      <p class="kicker">Reflection</p>
+      <h2>Write it up</h2>
+      <p>Short answers, in your own words. These aren't auto-graded. This is where you show you understand what the hash proved, not just that you copied it.</p>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">1.</span>In Part 2 you changed one character. Why is it useful that the whole hash changed instead of just one character of it?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">2.</span>Which of the three security principles (confidentiality, integrity, availability) did this lab test? Could someone who has your <code>notes.txt</code> hash work out what the file says? Why or why not?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">3.</span>An attacker takes over a download mirror and replaces both the installer <em>and</em> the hash posted on that mirror's page. Would your Part 4 check catch it? What would?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">4.</span>Using Part 3, explain why an investigator records a file's hash at the moment it's collected as evidence.</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">5.</span>Some vendors still publish MD5 hashes. If MD5 is broken for security, why might a matching MD5 still be worth checking, and what can't it prove?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Hands-on lab — optional side project building on Session 6.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
