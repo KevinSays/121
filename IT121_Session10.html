@@ -1,0 +1,1289 @@
+<title>IT121 Session 10 – Zone-Based Policy Firewalls &amp; Cloud Security</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 10</p>
+    <h1>Zone-Based Policy Firewalls &amp; Cloud Security</h1>
+    <p class="lede">Session 9 ended with a quick look at zones. This session builds one: group a router's interfaces into zones, decide what may cross between them and in which direction, and write that decision as a policy. Then it follows the data off the premises, into virtual machines and rented cloud services, where some of the walls belong to somebody else.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 16 (16.1–16.3) &middot; Module 17 (17.1–17.6)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#zpfoverview">ZPF Overview</a>
+    <a href="#zpfoperation">ZPF Operation</a>
+    <a href="#zpfconfig">Configure a ZPF</a>
+    <a href="#virtcloud">Virtualization &amp; Cloud</a>
+    <a href="#domains">Cloud Domains</a>
+    <a href="#infra">Infrastructure</a>
+    <a href="#appsec">Applications</a>
+    <a href="#datasec">Data</a>
+    <a href="#vms">Protecting VMs</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 10 covers</h2>
+      <p>Module 16 is the last of the firewall modules and the most hands-on: what a zone-based policy firewall (ZPF) is, how it decides what to do with each packet, and the five steps to configure one on a Cisco router. Module 17 moves to cloud security: how virtualization and cloud services work, the domains of cloud security, and how to protect cloud infrastructure, applications, data, and virtual machines.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Explain how zone-based policy firewalls are used to help secure a network</li>
+      <li>Explain the operation of a zone-based policy firewall</li>
+      <li>Configure a zone-based policy firewall with the CLI</li>
+      <li>Describe ways to manage threats to the private and public cloud</li>
+      <li>Explain the domains of cloud security</li>
+      <li>Explain mitigation of threats to the cloud platform infrastructure</li>
+      <li>Recommend cloud security applications</li>
+      <li>Explain how to secure cloud data</li>
+      <li>Explain how to secure VM instances</li>
+    </ul>
+  </section>
+
+  <!-- ── ZPF OVERVIEW (16.1) ── -->
+  <section id="zpfoverview">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 16.1</p>
+      <h2>ZPF Overview</h2>
+      <p>Instead of attaching rules to each interface, a ZPF groups interfaces into zones and writes rules between zones.</p>
+    </div>
+
+    <h3>Two ways to build an IOS firewall</h3>
+    <p>Cisco IOS routers support two firewall configuration models:</p>
+    <div class="fcards">
+      <div class="fcard"><b>Classic Firewall</b><span>The older model. Inspection rules and ACLs are applied interface by interface. It gets hard to manage once a router has more than two or three interfaces, because every interface needs its own ACLs and inspection actions.</span></div>
+      <div class="fcard"><b>Zone-based policy firewall (ZPF)</b><span>Interfaces are assigned to zones, and inspection policies are applied to traffic moving <em>between</em> zones. Adding an interface usually just means putting it in the right zone.</span></div>
+    </div>
+    <p>Both models can be enabled on the same router at the same time, but they can't be combined on a single interface. An interface that's a zone member can't also use classic IP inspection.</p>
+
+    <h3>Benefits of a ZPF</h3>
+    <ul>
+      <li>It's <b>not dependent on ACLs</b>.</li>
+      <li>The router's security posture is to <b>block unless explicitly allowed</b>.</li>
+      <li>Policies are easy to read and troubleshoot, because they're written in the <b>Cisco Common Classification Policy Language (C3PL)</b>, the same structured class-map / policy-map language IOS uses elsewhere.</li>
+      <li><b>One policy</b> affects any given traffic, instead of needing multiple ACLs and inspection actions.</li>
+      <li>Virtual and physical interfaces can both be grouped into zones, and policies apply to <b>unidirectional</b> traffic between zones.</li>
+    </ul>
+
+    <h3>Designing the zones</h3>
+    <p>Designing a ZPF comes before typing any commands. The steps:</p>
+    <div class="fcards">
+      <div class="fcard"><b>1 · Determine the zones</b><span>Divide the infrastructure into zones with different security levels. Focus on separating the network into zones, not on how each zone will be enforced yet.</span></div>
+      <div class="fcard"><b>2 · Establish policies between zones</b><span>For each pair of source and destination zones, define the sessions that clients in the source zone may open to servers in the destination zone.</span></div>
+      <div class="fcard"><b>3 · Design the physical infrastructure</b><span>With the zones and traffic requirements known, plan the physical layout, keeping security and availability in mind. This includes how many devices sit between the most-secure and least-secure zones.</span></div>
+      <div class="fcard"><b>4 · Identify subsets and merge requirements</b><span>For each firewall device, identify zone subsets connected to its interfaces, and merge the traffic requirements into a policy for that device.</span></div>
+    </div>
+    <p>Most designs end up with a few common zones. The <b>private</b> (inside, trusted) zone holds internal LANs. The <b>public</b> (outside, untrusted) zone holds interfaces that connect outside the organization. A <b>DMZ</b> zone holds public-facing servers when there is one. And every ZPF router has a built-in <b>self zone</b>, covered next.</p>
+
+    <p>A gate with its own rulebook works fine when a fortress has two gates. Picture one with a dozen, each keeping its own separate list. Every change means updating every list, and sooner or later two of them disagree. A ZPF fixes that by moving the rules off the gates.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the wards of the castle town</span>
+      Session 9's gate guard read one list at one gate. A ZPF organizes the whole town into <b>wards</b> instead: the samurai quarter, the merchant quarter, the road outside the walls. People move freely inside their own ward. Crossing from one ward into another needs a written order from the magistrate that names <em>both</em> wards and the <em>direction</em>: "merchants may go out to the road." That order doesn't let road travelers walk in uninvited. A ward with no order covering a crossing stays shut to it. The castle keep itself is its own ward, the self zone, with its own rules.
+    </div>
+
+    <div class="callout xref">
+      Zones and the "blocked unless a policy allows" default were introduced in <a href="IT121_Session09.html#design">Session 9</a>. Stateful firewalls, which the ZPF <code>inspect</code> action builds on, are in <a href="IT121_Session09.html#firewalls">Session 9's firewall section</a>.
+    </div>
+  </section>
+
+  <!-- ── ZPF OPERATION (16.2) ── -->
+  <section id="zpfoperation">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 16.2</p>
+      <h2>ZPF Operation</h2>
+      <p>Three actions, plus a short table of rules that says what happens to every packet. Learn the table and most ZPF questions answer themselves.</p>
+    </div>
+
+    <h3>The three actions</h3>
+    <p>Each policy matches traffic into classes and gives each class one action:</p>
+    <div class="fcards">
+      <div class="fcard do"><b>Inspect</b><span>Stateful inspection. The router tracks the connection and automatically allows the return traffic from the same flow. Similar to the classic <code>ip inspect</code> command. The usual choice for traffic leaving a trusted zone.</span></div>
+      <div class="fcard dont"><b>Drop</b><span>Discards the traffic, like a <code>deny</code> statement in an ACL. A <code>log</code> option can record what was dropped.</span></div>
+      <div class="fcard"><b>Pass</b><span>Forwards the traffic <em>without</em> tracking the connection, like a <code>permit</code> statement in an ACL. Because pass is stateless and one-way, the return traffic needs its own policy in the opposite direction.</span></div>
+    </div>
+
+    <h3>Zone pairs are one-way</h3>
+    <div class="split">
+      <div>
+        <p>A policy is applied to a <b>zone pair</b>: a source zone and a destination zone. The pair has a direction. A PRIVATE&nbsp;→&nbsp;PUBLIC zone pair covers sessions that <em>start</em> in PRIVATE. It says nothing about sessions that start in PUBLIC.</p>
+        <p>With <code>inspect</code>, that one-way pair is enough for normal browsing: the router remembers the outbound session and lets the replies back in. To let outside hosts start sessions to a DMZ web server, you'd need a separate PUBLIC&nbsp;→&nbsp;DMZ zone pair with its own policy.</p>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 240" role="img" aria-label="Two zones, PRIVATE and PUBLIC. A zone pair from PRIVATE to PUBLIC with an inspect policy lets inside hosts start sessions, and reply traffic returns automatically. Sessions that start in PUBLIC have no zone pair and are dropped.">
+          <rect x="8" y="30" width="122" height="196" rx="14" fill="var(--correct-soft)" stroke="var(--correct)" stroke-width="2" stroke-dasharray="6 4"/>
+          <rect x="350" y="30" width="122" height="196" rx="14" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="6 4"/>
+          <g font-size="11.5" font-weight="700" text-anchor="middle"><text x="69" y="52" fill="var(--correct)">PRIVATE</text><text x="411" y="52" fill="var(--accent-2)">PUBLIC</text></g>
+          <g stroke-width="1.5" fill="var(--surface)" stroke="var(--border)"><rect x="22" y="86" width="94" height="58"/><rect x="364" y="86" width="94" height="58"/></g>
+          <g font-size="12.5" text-anchor="middle" fill="var(--text)"><text x="69" y="120">Inside LAN</text><text x="411" y="120">Internet</text></g>
+          <text x="240" y="84" font-size="11" text-anchor="middle" fill="var(--correct)">PRIVATE → PUBLIC · inspect</text>
+          <path d="M118 98 H352" stroke="var(--correct)" stroke-width="2.5"/>
+          <path d="M362 98 l-10 -6 v12 z" fill="var(--correct)"/>
+          <path d="M362 132 H128" stroke="var(--correct)" stroke-width="2" stroke-dasharray="3 3"/>
+          <path d="M118 132 l10 -6 v12 z" fill="var(--correct)"/>
+          <text x="240" y="152" font-size="11" text-anchor="middle" fill="var(--muted)">replies return automatically</text>
+          <path d="M380 200 H262" stroke="var(--danger)" stroke-width="2.5" stroke-dasharray="6 4"/>
+          <g stroke="var(--danger)" stroke-width="3"><path d="M240 190 l16 20 M256 190 l-16 20"/></g>
+          <g font-size="11" fill="var(--danger)"><text x="232" y="198" text-anchor="end">new session from outside</text><text x="232" y="214" text-anchor="end">no zone pair · dropped</text></g>
+        </svg>
+        <figcaption>One zone pair, one direction. Inspect remembers the session, so replies come home without a second policy.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Rules for transit traffic</h3>
+    <p>Transit traffic passes <em>through</em> the router from one interface to another. What happens to it depends on whether each interface is in a zone and whether a policy exists:</p>
+    <table class="model-table">
+      <thead><tr><th>Source interface in a zone?</th><th>Destination interface in a zone?</th><th>Zone pair exists?</th><th>Policy exists?</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>No</td><td>No</td><td>N/A</td><td>N/A</td><td style="font-weight:700;color:var(--correct);">Pass</td></tr>
+        <tr><td>Yes</td><td>No</td><td>N/A</td><td>N/A</td><td style="font-weight:700;color:var(--danger);">Drop</td></tr>
+        <tr><td>No</td><td>Yes</td><td>N/A</td><td>N/A</td><td style="font-weight:700;color:var(--danger);">Drop</td></tr>
+        <tr><td>Yes (same zone)</td><td>Yes (same zone)</td><td>Not needed</td><td>N/A</td><td style="font-weight:700;color:var(--correct);">Pass</td></tr>
+        <tr><td>Yes</td><td>Yes (different zone)</td><td>No</td><td>N/A</td><td style="font-weight:700;color:var(--danger);">Drop</td></tr>
+        <tr><td>Yes</td><td>Yes (different zone)</td><td>Yes</td><td>No</td><td style="font-weight:700;color:var(--danger);">Drop</td></tr>
+        <tr><td>Yes</td><td>Yes (different zone)</td><td>Yes</td><td>Yes</td><td style="font-weight:700;color:var(--accent);">Apply the policy</td></tr>
+      </tbody>
+    </table>
+    <p>Read the table as three ideas. Traffic between two interfaces that are both outside every zone isn't touched, which is how the router behaved before the ZPF existed. Traffic between a zone member and a non-member is always dropped. And traffic between two different zones crosses only when a zone pair <em>and</em> a policy say so.</p>
+
+    <h3>Rules for the self zone</h3>
+    <p>The <b>self zone</b> is the router itself. It's system-defined, it has no interfaces assigned to it, and it covers traffic sent <em>to</em> the router (an SSH session to manage it, a routing update) or <em>from</em> the router. The self zone is the exception to the default deny:</p>
+    <table class="model-table">
+      <thead><tr><th>Source</th><th>Destination</th><th>Zone pair exists?</th><th>Policy exists?</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Self zone</td><td>A zone</td><td>No</td><td>N/A</td><td style="font-weight:700;color:var(--correct);">Pass</td></tr>
+        <tr><td>Self zone</td><td>A zone</td><td>Yes</td><td>Yes</td><td style="font-weight:700;color:var(--accent);">Apply the policy</td></tr>
+        <tr><td>A zone</td><td>Self zone</td><td>No</td><td>N/A</td><td style="font-weight:700;color:var(--correct);">Pass</td></tr>
+        <tr><td>A zone</td><td>Self zone</td><td>Yes</td><td>Yes</td><td style="font-weight:700;color:var(--accent);">Apply the policy</td></tr>
+      </tbody>
+    </table>
+    <p>So until you write a self-zone policy, anyone in any zone can reach the router itself. If you want to limit who can manage the router, you configure zone pairs with <code>self</code> as the source or destination.</p>
+
+    <div class="callout xref">
+      The router's own management traffic, SSH and SNMP, came up in <a href="IT121_Session04.html#secservices">Session 4</a>. Stateful versus stateless filtering is in <a href="IT121_Session09.html#firewalls">Session 9</a>.
+    </div>
+  </section>
+
+  <!-- ── CONFIGURE A ZPF (16.3) ── -->
+  <section id="zpfconfig">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 16.3</p>
+      <h2>Configure a ZPF</h2>
+      <p>Five steps, always in this order. Each step builds a piece that the next step refers to by name.</p>
+    </div>
+
+    <figure class="fig wide">
+      <svg viewBox="0 0 640 120" role="img" aria-label="The five ZPF configuration steps as a chain. Step 1, create zones with zone security. Step 2, define traffic classes with class-map type inspect. Step 3, define the firewall policy with policy-map type inspect, which uses the class map. Step 4, apply the policy to a zone pair with zone-pair security and service-policy type inspect. Step 5, assign interfaces to zones with zone-member security.">
+        <g stroke-width="1.5" fill="var(--surface)" stroke="var(--border)">
+          <rect x="6" y="30" width="112" height="76" rx="8"/><rect x="132" y="30" width="112" height="76" rx="8"/><rect x="258" y="30" width="112" height="76" rx="8"/><rect x="384" y="30" width="122" height="76" rx="8"/><rect x="520" y="30" width="114" height="76" rx="8"/>
+        </g>
+        <g font-size="12" font-weight="700" text-anchor="middle" fill="var(--accent)"><text x="62" y="52">1 · ZONES</text><text x="188" y="52">2 · CLASSES</text><text x="314" y="52">3 · POLICY</text><text x="445" y="52">4 · ZONE PAIR</text><text x="577" y="52">5 · INTERFACES</text></g>
+        <g font-size="10.5" text-anchor="middle" fill="var(--text)" font-family="var(--mono)"><text x="62" y="76">zone security</text><text x="188" y="76">class-map</text><text x="188" y="90">type inspect</text><text x="314" y="76">policy-map</text><text x="314" y="90">type inspect</text><text x="445" y="76">zone-pair security</text><text x="445" y="90">service-policy</text><text x="577" y="76">zone-member</text><text x="577" y="90">security</text></g>
+        <g stroke="var(--muted)" stroke-width="1.5"><path d="M118 68 H132"/><path d="M244 68 H258"/><path d="M370 68 H384"/><path d="M506 68 H520"/></g>
+      </svg>
+      <figcaption>Each step refers back to something you named in an earlier step, which is why the order matters.</figcaption>
+    </figure>
+
+    <h3>Step 1: Create the zones</h3>
+<pre class="log">R1(config)# zone security PRIVATE
+R1(config-sec-zone)# exit
+R1(config)# zone security PUBLIC
+R1(config-sec-zone)# exit</pre>
+    <p>The self zone already exists, so you never create it.</p>
+
+    <h3>Step 2: Identify traffic with a class map</h3>
+    <p>A class map sorts traffic into a named class. <code>match-any</code> means a packet only has to meet one of the match conditions. <code>match-all</code> means it has to meet every one.</p>
+<pre class="log">R1(config)# class-map type inspect match-any HTTP-TRAFFIC
+R1(config-cmap)# match protocol http
+R1(config-cmap)# match protocol https
+R1(config-cmap)# match protocol dns
+R1(config-cmap)# exit</pre>
+    <p>Besides <code>match protocol</code>, a class map can use <code>match access-group</code> to match an ACL, or <code>match class-map</code> to nest another class map.</p>
+
+    <h3>Step 3: Define the action with a policy map</h3>
+    <p>A policy map lists classes and gives each one an action: <code>inspect</code>, <code>drop</code>, or <code>pass</code>.</p>
+<pre class="log">R1(config)# policy-map type inspect PRIV-TO-PUB
+R1(config-pmap)# class type inspect HTTP-TRAFFIC
+R1(config-pmap-c)# inspect
+R1(config-pmap-c)# exit
+R1(config-pmap)# exit</pre>
+    <p>Every inspect policy map also ends with a built-in <code>class class-default</code>, which catches anything that matched no other class. Its default action is drop, so traffic you didn't name is discarded, the same idea as an ACL's implicit deny.</p>
+
+    <h3>Step 4: Apply the policy to a zone pair</h3>
+<pre class="log">R1(config)# zone-pair security PRIV-PUB source PRIVATE destination PUBLIC
+R1(config-sec-zone-pair)# service-policy type inspect PRIV-TO-PUB
+R1(config-sec-zone-pair)# exit</pre>
+    <p>The policy is applied to the <b>zone pair</b>, not to a zone and not to an interface. Use <code>self</code> as the source or destination for a policy that covers traffic to or from the router.</p>
+
+    <h3>Step 5: Assign interfaces to zones</h3>
+<pre class="log">R1(config)# interface GigabitEthernet0/0/1
+R1(config-if)# zone-member security PRIVATE
+R1(config-if)# interface GigabitEthernet0/0/0
+R1(config-if)# zone-member security PUBLIC</pre>
+    <p>This step goes last on purpose. The moment an interface joins a zone, the transit rules apply to it. If you did this first, traffic would start dropping before the policies that allow it existed.</p>
+
+    <h3>Verify</h3>
+    <table class="model-table">
+      <thead><tr><th>Command</th><th>Shows</th></tr></thead>
+      <tbody>
+        <tr><td><code>show run | begin class-map</code></td><td>The ZPF section of the running configuration</td></tr>
+        <tr><td><code>show class-map type inspect</code></td><td>The configured traffic classes and their match conditions</td></tr>
+        <tr><td><code>show policy-map type inspect</code></td><td>The policy maps and the action for each class</td></tr>
+        <tr><td><code>show zone security</code></td><td>The zones and which interfaces belong to each</td></tr>
+        <tr><td><code>show zone-pair security</code></td><td>The zone pairs, their direction, and the policy applied</td></tr>
+        <tr><td><code>show policy-map type inspect zone-pair sessions</code></td><td>Live sessions the firewall is inspecting, with packet counts per class</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Configuration considerations</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Things to remember</b>
+        <ul>
+          <li>An interface can belong to only one security zone.</li>
+          <li>Traffic between interfaces in the same zone isn't filtered by any policy.</li>
+          <li>Traffic between a zone member and an interface that isn't in any zone is dropped.</li>
+          <li>An interface can't be a zone member and use classic IP inspection at the same time.</li>
+          <li>Traffic to and from the router itself (the self zone) passes until you write a self-zone policy.</li>
+        </ul>
+      </div>
+      <div class="fcard dont"><b>Common mistakes</b>
+        <ul>
+          <li>Using <code>pass</code> for outbound web traffic, then wondering why replies never arrive.</li>
+          <li>Adding a new interface and forgetting <code>zone-member security</code>. It can't talk to any zoned interface.</li>
+          <li>Writing the zone pair in the wrong direction.</li>
+          <li>Assigning interfaces to zones before the policies exist, and cutting off traffic (including your own remote session).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout xref">
+      ACLs and the implicit deny, which <code>class-default</code> echoes, are in <a href="IT121_Session09.html#aclintro">Session 9</a>. The official Packet Tracer ZPF activity is the hands-on practice for this section.
+    </div>
+  </section>
+
+  <!-- ── VIRTUALIZATION AND CLOUD (17.1) ── -->
+  <section id="virtcloud">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 17.1</p>
+      <h2>Virtualization and Cloud Computing</h2>
+      <p>Cloud computing runs on virtualization. Start with how one physical server becomes many, then how those servers get rented out.</p>
+    </div>
+
+    <h3>Virtualization</h3>
+    <p><b>Virtualization</b> separates the operating system from the hardware. A <b>hypervisor</b> is the software, firmware, or hardware that creates and runs <b>virtual machines (VMs)</b>, letting several independent operating systems share one physical computer. Each VM thinks it has its own CPU, memory, disk, and network card.</p>
+    <div class="fcards">
+      <div class="fcard"><b>Type 1 hypervisor ("bare metal")</b><span>Installed directly on the hardware, with no host OS underneath. Used in data centers and clouds because it's efficient. Examples: VMware ESXi, Microsoft Hyper-V, Xen, KVM.</span></div>
+      <div class="fcard"><b>Type 2 hypervisor ("hosted")</b><span>Runs as an application on top of an existing OS. Used on desktops for testing and labs. Examples: Oracle VirtualBox, VMware Workstation. The course's lab VM runs on one of these.</span></div>
+    </div>
+
+    <h3>Cloud computing</h3>
+    <p><b>Cloud computing</b> delivers computing resources (servers, storage, applications) on demand over a network, usually paid for by use. The provider owns the data centers. NIST defines three service models and four deployment models:</p>
+    <table class="model-table">
+      <thead><tr><th>Service model</th><th>What you rent</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Software as a Service (SaaS)</td><td>A finished application. The provider runs everything underneath it.</td><td>Web email, an online office suite, a hosted patient-records app</td></tr>
+        <tr><td style="font-weight:700;">Platform as a Service (PaaS)</td><td>A platform to build and run your own apps on, without managing the servers or OS.</td><td>A managed web-app hosting platform or managed database</td></tr>
+        <tr><td style="font-weight:700;">Infrastructure as a Service (IaaS)</td><td>Virtual machines, storage, and networks. You install and manage the OS and everything above it.</td><td>Renting VMs to run your own web servers</td></tr>
+      </tbody>
+    </table>
+    <table class="model-table">
+      <thead><tr><th>Deployment model</th><th>Who it's for</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Public cloud</td><td>Services offered to the general public over the internet by a provider</td></tr>
+        <tr><td style="font-weight:700;">Private cloud</td><td>Used by one organization only. Can be run in-house or by a third party</td></tr>
+        <tr><td style="font-weight:700;">Hybrid cloud</td><td>Two or more clouds (for example, part private and part public) connected so data and apps can move between them</td></tr>
+        <tr><td style="font-weight:700;">Community cloud</td><td>Shared by organizations with common needs, such as several healthcare providers with the same compliance rules</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Shared responsibility</h3>
+    <div class="split">
+      <div>
+        <p>In the cloud, security is split between the provider and the customer. The provider always secures the physical data center and the hardware. How much more it covers depends on the service model. The further up the stack you rent, the less you manage, but you <em>always</em> own your data and who has access to it.</p>
+        <p>Many cloud breaches happen in the customer's share: a storage bucket left public, an admin account without multifactor authentication, or a VM nobody patched.</p>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 270" role="img" aria-label="Shared responsibility by service model. Rows from top: data and access, application, operating system, virtualization, physical hardware and facility. In IaaS the customer manages data, application, and OS, and the provider manages virtualization and hardware. In PaaS the customer manages data and application. In SaaS the customer manages only data and access.">
+          <g font-size="11.5" fill="var(--text)"><text x="10" y="58">Data &amp; access</text><text x="10" y="98">Application</text><text x="10" y="138">Operating system</text><text x="10" y="178">Virtualization</text><text x="10" y="218">Hardware &amp; facility</text></g>
+          <g font-size="12" font-weight="700" text-anchor="middle" fill="var(--text)"><text x="200" y="22">IaaS</text><text x="300" y="22">PaaS</text><text x="400" y="22">SaaS</text></g>
+          <g stroke="var(--surface)" stroke-width="3">
+            <rect x="155" y="36" width="90" height="38" fill="var(--accent-2-soft)"/><rect x="155" y="76" width="90" height="38" fill="var(--accent-2-soft)"/><rect x="155" y="116" width="90" height="38" fill="var(--accent-2-soft)"/><rect x="155" y="156" width="90" height="38" fill="var(--surface-2)"/><rect x="155" y="196" width="90" height="38" fill="var(--surface-2)"/>
+            <rect x="255" y="36" width="90" height="38" fill="var(--accent-2-soft)"/><rect x="255" y="76" width="90" height="38" fill="var(--accent-2-soft)"/><rect x="255" y="116" width="90" height="38" fill="var(--surface-2)"/><rect x="255" y="156" width="90" height="38" fill="var(--surface-2)"/><rect x="255" y="196" width="90" height="38" fill="var(--surface-2)"/>
+            <rect x="355" y="36" width="90" height="38" fill="var(--accent-2-soft)"/><rect x="355" y="76" width="90" height="38" fill="var(--surface-2)"/><rect x="355" y="116" width="90" height="38" fill="var(--surface-2)"/><rect x="355" y="156" width="90" height="38" fill="var(--surface-2)"/><rect x="355" y="196" width="90" height="38" fill="var(--surface-2)"/>
+          </g>
+          <g font-size="10.5" text-anchor="middle"><g fill="var(--accent-2)" font-weight="700"><text x="200" y="59">you</text><text x="200" y="99">you</text><text x="200" y="139">you</text><text x="300" y="59">you</text><text x="300" y="99">you</text><text x="400" y="59">you</text></g><g fill="var(--muted)"><text x="200" y="179">provider</text><text x="200" y="219">provider</text><text x="300" y="139">provider</text><text x="300" y="179">provider</text><text x="300" y="219">provider</text><text x="400" y="99">provider</text><text x="400" y="139">provider</text><text x="400" y="179">provider</text><text x="400" y="219">provider</text></g></g>
+          <text x="300" y="258" font-size="11" text-anchor="middle" fill="var(--muted)">Data and access stay yours in every model</text>
+        </svg>
+        <figcaption>The more of the stack you rent, the less you manage. The top row never moves.</figcaption>
+      </figure>
+    </div>
+
+    <p>The split confuses people because the provider is clearly guarding something. It's easy to assume that means it's guarding everything. A picture from the castle town makes the line easier to see.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… renting space in the merchant's storehouse</span>
+      A merchant house in the castle town rents out space in its <b>kura</b>, the thick-walled fireproof storehouses along the canal. The owner keeps the walls sound, the roof tiled, and a watchman at the outer door. That's the provider's share. But what goes inside your section, who you give a key to, and whether you lock your own chests is on you. If you hand a key to a stranger or leave your chest open, the watchman at the door won't save it. Rent more (a fully staffed shop instead of bare floor) and the house takes on more of the work. That's IaaS versus SaaS. It never takes over your keys.
+    </div>
+
+    <h3>Threats to the cloud</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Cloud misconfiguration</b><span>A cloud resource is set up incorrectly, leaving it open to attack. Example: a storage container shared publicly by mistake.</span></div>
+      <div class="fcard"><b>Compromised account credentials</b><span>User accounts or access privileges aren't secured, and threat actors hijack them.</span></div>
+      <div class="fcard"><b>Inside threat</b><span>An employee, contractor, or business partner compromises the cloud service, on purpose or by accident.</span></div>
+      <div class="fcard"><b>Poor cloud security architecture strategy</b><span>The shared security responsibilities between customer and provider aren't understood or implemented correctly.</span></div>
+      <div class="fcard"><b>Limited cloud usage visibility</b><span>The customer can't fully see how the cloud service is used, so it's harder to tell safe activity and files from malicious ones.</span></div>
+      <div class="fcard"><b>Data breaches</b><span>Protected or sensitive data is accessed by someone not authorized to see it. Often the end result of the threats above.</span></div>
+    </div>
+
+    <div class="callout xref">
+      Insider threats as a category of threat actor are in <a href="IT121_Session01.html">Session 1</a>. Multifactor authentication and the principle of least privilege are in <a href="IT121_Session07.html">Session 7</a>.
+    </div>
+  </section>
+
+  <!-- ── DOMAINS OF CLOUD SECURITY (17.2) ── -->
+  <section id="domains">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 17.2</p>
+      <h2>The Domains of Cloud Security</h2>
+      <p>A standard map of everything cloud security has to cover.</p>
+    </div>
+    <p>The <b>Cloud Security Alliance (CSA)</b> is a nonprofit that publishes cloud security best practices. Its document <i>Security Guidance for Critical Areas of Focus in Cloud Computing v4</i> organizes cloud security into <b>14 domains</b>. The course uses version 4. (CSA has since published a fifth edition that regroups the domains, so you may see a different list elsewhere.)</p>
+    <table class="model-table">
+      <thead><tr><th>#</th><th>Domain</th><th>What it covers</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td style="font-weight:700;">Cloud Computing Concepts and Architectures</td><td>Definitions and reference models: service and deployment models</td></tr>
+        <tr><td>2</td><td style="font-weight:700;">Governance and Enterprise Risk Management</td><td>How the organization governs and measures risk when it uses the cloud</td></tr>
+        <tr><td>3</td><td style="font-weight:700;">Legal Issues, Contracts, and Electronic Discovery</td><td>Contracts with providers, data laws in different countries, and producing records for legal cases</td></tr>
+        <tr><td>4</td><td style="font-weight:700;">Compliance and Audit Management</td><td>Keeping and proving compliance when moving from a traditional data center to the cloud</td></tr>
+        <tr><td>5</td><td style="font-weight:700;">Information Governance</td><td>Making sure data use follows the organization's policies, standards, and regulatory, contractual, and business goals</td></tr>
+        <tr><td>6</td><td style="font-weight:700;">Management Plane and Business Continuity</td><td>Securing the cloud management console and APIs, plus business continuity and disaster recovery</td></tr>
+        <tr><td>7</td><td style="font-weight:700;">Infrastructure Security</td><td>Cloud-specific infrastructure security, the foundation for operating securely in the cloud</td></tr>
+        <tr><td>8</td><td style="font-weight:700;">Virtualization and Containers</td><td>Security of the hypervisors, VMs, and containers clouds are built on</td></tr>
+        <tr><td>9</td><td style="font-weight:700;">Incident Response</td><td>Detecting and responding to incidents when part of the environment belongs to the provider</td></tr>
+        <tr><td>10</td><td style="font-weight:700;">Application Security</td><td>Building and deploying applications securely in the cloud, especially on PaaS and IaaS</td></tr>
+        <tr><td>11</td><td style="font-weight:700;">Data Security and Encryption</td><td>Controls that protect the data itself, with encryption one of the most important</td></tr>
+        <tr><td>12</td><td style="font-weight:700;">Identity, Entitlement, and Access Management</td><td>Managing identities and permissions across cloud services</td></tr>
+        <tr><td>13</td><td style="font-weight:700;">Security as a Service</td><td>Security tools themselves delivered from the cloud</td></tr>
+        <tr><td>14</td><td style="font-weight:700;">Related Technologies</td><td>Technologies closely tied to cloud, such as big data, IoT, and mobile</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>For the quiz:</b> you don't need all 14 by number. Know what the most-tested ones cover: <b>Infrastructure Security</b>, <b>Information Governance</b>, <b>Compliance and Audit Management</b>, <b>Management Plane and Business Continuity</b>, <b>Application Security</b>, and <b>Data Security and Encryption</b>. Each of the next four sections lines up with one of them.
+    </div>
+  </section>
+
+  <!-- ── CLOUD INFRASTRUCTURE SECURITY (17.3) ── -->
+  <section id="infra">
+    <div class="section-head">
+      <p class="kicker">Concept 6 · Module 17.3</p>
+      <h2>Cloud Infrastructure Security</h2>
+      <p>The cloud still has networks, firewalls, and admin consoles. They're just virtual.</p>
+    </div>
+    <h3>Mitigating threats to the cloud platform</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Microsegmentation</b><span>Also called <b>hypersegregation</b>. Uses virtual network topologies to run many smaller, isolated networks without buying extra hardware. Gives finer-grained control over traffic and workflows between workloads, so one compromised VM can't freely reach the rest.</span></div>
+      <div class="fcard"><b>Virtual security appliances</b><span>Firewalls and IPSs that run as VMs inside the cloud, filtering traffic between virtual networks the same way physical ones do between physical networks.</span></div>
+      <div class="fcard"><b>Site-to-site VPN for hybrid clouds</b><span>A hybrid cloud links a private cloud to a public one. A site-to-site VPN between them protects the confidentiality of the traffic crossing the internet.</span></div>
+      <div class="fcard"><b>Securing the management plane</b><span>The cloud console and its APIs can create, change, or delete everything. Protect admin accounts with multifactor authentication and least privilege, and log what they do.</span></div>
+      <div class="fcard"><b>Configuration management</b><span>Use reviewed, consistent configurations and check them regularly, because misconfiguration is one of the most common cloud threats.</span></div>
+      <div class="fcard"><b>Monitoring and visibility</b><span>Collect the provider's logs and watch them, to counter limited cloud usage visibility.</span></div>
+    </div>
+    <p>Microsegmentation is the ZPF idea from the first half of this session carried into the cloud: draw small zones and allow only the traffic that has a reason to cross.</p>
+    <div class="callout xref">
+      Network segmentation and zones of risk on premises are in <a href="IT121_Session07.html#segmentation">Session 7</a>. VPNs as a security device are in <a href="IT121_Session04.html#secdevices">Session 4</a>.
+    </div>
+  </section>
+
+  <!-- ── CLOUD APPLICATION SECURITY (17.4) ── -->
+  <section id="appsec">
+    <div class="section-head">
+      <p class="kicker">Concept 7 · Module 17.4</p>
+      <h2>Cloud Application Security</h2>
+      <p>Security gets built into an application as it moves through development, not bolted on afterward.</p>
+    </div>
+    <p>With SaaS, the provider owns the application. With PaaS and IaaS, the customer builds and deploys its own applications, so application security is mostly the customer's job. Cloud apps typically move through separate environments on their way to users:</p>
+    <table class="model-table">
+      <thead><tr><th>Environment</th><th>Purpose</th><th>Security focus</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Development</td><td>Developers write and change the code</td><td>Secure coding practices, input validation, no secrets (passwords, keys) written into the code</td></tr>
+        <tr><td style="font-weight:700;">Testing</td><td>Check that the code works and find bugs</td><td>Code review and vulnerability scanning before anything moves on</td></tr>
+        <tr><td style="font-weight:700;">Staging</td><td>A copy that matches production as closely as possible</td><td>Verify the application runs correctly under the required security settings before release</td></tr>
+        <tr><td style="font-weight:700;">Production</td><td>The live system real users depend on</td><td>Monitoring, patching, and change control</td></tr>
+      </tbody>
+    </table>
+    <p>The <b>staging</b> environment is the one most often tested: it's where you confirm the software works with production's real security settings, such as the same firewall rules, permissions, and encryption, so nothing surprises you after go-live. Keeping the environments separate also means a mistake in development can't touch live data.</p>
+    <div class="callout">
+      <b>Cloud security applications.</b> Beyond building apps securely, organizations add security services delivered from the cloud, the CSA's "Security as a Service" domain: cloud-hosted email and web filtering, identity services with multifactor authentication, and vulnerability scanning. Session 9's firewall types also come in cloud-hosted form.
+    </div>
+  </section>
+
+  <!-- ── CLOUD DATA SECURITY (17.5) ── -->
+  <section id="datasec">
+    <div class="section-head">
+      <p class="kicker">Concept 8 · Module 17.5</p>
+      <h2>Cloud Data Security</h2>
+      <p>Data is the one thing the customer always owns. Protect it in every state it's in.</p>
+    </div>
+    <h3>States of data</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Data at rest</b><span>Stored on a disk, in a database, or in cloud storage. <span class="k">Protect with:</span> encryption at rest, access controls, backups.</span></div>
+      <div class="fcard"><b>Data in transit</b><span>Moving between devices, networks, or components. <span class="k">Protect with:</span> encrypted protocols such as TLS (HTTPS) and VPNs.</span></div>
+      <div class="fcard"><b>Data in process</b><span>Being used or changed by an application. Also called data in use. <span class="k">Protect with:</span> access controls, input validation, and keeping processing on trusted systems.</span></div>
+    </div>
+
+    <h3>Encryption and integrity</h3>
+    <p>Encryption turns readable <b>plaintext</b> into unreadable <b>ciphertext</b>. There are two classes of encryption algorithm. <b>Symmetric</b> algorithms use one pre-shared key to encrypt and decrypt. <b>Asymmetric</b> algorithms use a pair of keys, one to encrypt and the other to decrypt. Cryptography gets a full session of its own in Module 18.</p>
+    <p>Encryption protects confidentiality. For integrity, compare a <b>checksum</b> or hash of the original file with one of the copy you received. If the two match, the file wasn't changed in transit.</p>
+
+    <h3>Governing the data</h3>
+    <ul>
+      <li><b>Classify</b> data by sensitivity, so the most sensitive data gets the strongest controls.</li>
+      <li>Know <b>where</b> the data is stored. Laws differ between countries, and some data (patient records, for example) has strict rules about where it can be stored and who can see it.</li>
+      <li>Control and review <b>who has access</b>, and remove access when it's no longer needed.</li>
+      <li>Plan for <b>deletion</b>: know how data is removed when you leave a provider.</li>
+    </ul>
+    <div class="callout xref">
+      The CIA triad, and hashing for integrity, are in <a href="IT121_Session06.html">Session 6</a>. Encryption in depth is Session 11 (Module 18).
+    </div>
+  </section>
+
+  <!-- ── PROTECTING VMS (17.6) ── -->
+  <section id="vms">
+    <div class="section-head">
+      <p class="kicker">Concept 9 · Module 17.6</p>
+      <h2>Protecting VMs</h2>
+      <p>Every VM is a full computer that needs the same care as a physical one, and the hypervisor under them needs more.</p>
+    </div>
+    <h3>Threats to virtual machines</h3>
+    <div class="fcards">
+      <div class="fcard dont"><b>VM sprawl</b><span>An organization has more VMs than it can effectively control and manage. VMs are easy to spin up and easy to forget. Forgotten ones go unpatched and unmonitored.</span></div>
+      <div class="fcard dont"><b>VM escape</b><span>A process breaks out of a VM's isolation and interacts with the host or hypervisor directly, which can expose every other VM on that host.</span></div>
+      <div class="fcard dont"><b>Hyperjacking</b><span>An attacker takes control of the hypervisor itself, and then can see or attack every VM it runs, and other data center devices.</span></div>
+      <div class="fcard dont"><b>Insecure VM images</b><span>A template with an old, unpatched OS gets copied into every new VM built from it.</span></div>
+      <div class="fcard dont"><b>Invisible VM-to-VM traffic</b><span>Traffic between VMs on the same host never crosses a physical wire, so physical firewalls and IDSs never see it.</span></div>
+    </div>
+
+    <h3>Protecting them</h3>
+    <ul>
+      <li><b>Harden and patch the hypervisor</b>, and tightly restrict who can manage it.</li>
+      <li><b>Patch the VMs and the images</b> they're built from, not just the running machines.</li>
+      <li>Keep an <b>inventory</b> of VMs with owners, and delete the ones nobody needs, to stop sprawl.</li>
+      <li>Use <b>microsegmentation</b> and virtual firewalls so VM-to-VM traffic is filtered and visible.</li>
+      <li>Run endpoint protection inside each VM, the same as on a physical host.</li>
+    </ul>
+    <div class="callout">
+      <b>The trade-off with virtual security appliances.</b> A virtual firewall or IPS, or a security agent inside every VM, uses the same CPU and memory as the workloads it protects. It can become a <b>traffic bottleneck</b> or <b>overload the processor</b>. Evaluate the performance cost before adding one.
+    </div>
+    <div class="callout xref">
+      Endpoint protection (antimalware, host-based firewalls, patching) is in <a href="IT121_Session05.html">Session 5</a>.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">ZPF actions</span>
+      <h3>The web pages that never load</h3>
+      <p>A technician at Tsukimi Sweets set up a ZPF on the shop's router: a PRIVATE&nbsp;→&nbsp;PUBLIC zone pair with a policy that matches HTTP, HTTPS, and DNS and gives the class the <code>pass</code> action. Staff can't load any website. The firewall log shows outbound requests leaving. What's wrong, and what's the fix?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Cause:</strong> <code>pass</code> is stateless and one-way. The requests go out, but nothing allows the replies back from PUBLIC to PRIVATE, and with no zone pair in that direction they're dropped.</p>
+          <p><strong>Fix:</strong> change the action to <code>inspect</code>. The router then tracks each outbound session and lets its replies back in automatically. A second PUBLIC&nbsp;→&nbsp;PRIVATE <code>pass</code> policy would also work, but it would let in any matching traffic, not just replies, so <code>inspect</code> is the right choice.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Transit rules</span>
+      <h3>The new interface</h3>
+      <p>Kiriyama General Hospital's branch clinic router already runs a working ZPF with PRIVATE and PUBLIC zones. An admin connects a new lab network to GigabitEthernet0/0/2, gives it an IP address, and doesn't touch the firewall configuration. The lab can't reach the clinic LAN or the internet. Why?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>G0/0/2 isn't a member of any zone, and every other interface is. Under the transit rules, traffic between a zone member and a non-member is <b>always dropped</b>, whatever policies exist.</p>
+          <p><strong>Fix:</strong> decide which zone the lab belongs in. If it should be treated like the clinic LAN, add <code>zone-member security PRIVATE</code> on G0/0/2. If it should be kept apart, create a LAB zone and write zone pairs and policies for the traffic it actually needs.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">ZPF design</span>
+      <h3>Opening the DMZ web server</h3>
+      <p>Kaidō Freight's edge router has three zones: PRIVATE, PUBLIC, and DMZ, where its shipment-tracking web server sits. Customers on the internet must reach the server on HTTPS. Staff must reach it too. Nothing in the DMZ should ever start a connection into PRIVATE. Which zone pairs do you configure?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>PUBLIC&nbsp;→&nbsp;DMZ:</strong> a policy that inspects HTTPS only. Customers start the sessions, and inspect lets the server's replies back out.</p>
+          <p><strong>PRIVATE&nbsp;→&nbsp;DMZ:</strong> a policy that inspects the traffic staff need (HTTPS, plus management protocols for admins).</p>
+          <p><strong>DMZ&nbsp;→&nbsp;PRIVATE:</strong> configure <em>nothing</em>. With no zone pair, every new connection from the DMZ into PRIVATE is dropped by default. That's the safety net if the web server is ever compromised. A PRIVATE&nbsp;→&nbsp;PUBLIC inspect policy for staff internet access would round out the design.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Shared responsibility</span>
+      <h3>Whose job is the patient portal?</h3>
+      <p>Kiriyama General Hospital moves its patient portal to a SaaS product. A manager says, "Great, security is the vendor's problem now." Which parts still belong to the hospital?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>With SaaS the provider secures the facility, hardware, hypervisor, OS, and the application itself. The hospital still owns its <b>data and access</b>: who gets accounts, removing accounts when staff leave, requiring multifactor authentication, configuring sharing settings correctly, and checking that the vendor's data storage meets patient-privacy rules (the CSA's Compliance and Audit Management and Information Governance domains).</p>
+          <p>Believing otherwise is the "poor cloud security architecture strategy" threat: the shared responsibilities aren't understood or carried out.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Protecting VMs</span>
+      <h3>Forty forgotten servers</h3>
+      <p>During an audit of Kaidō Freight's IaaS account, Bastion finds 40 running VMs that nobody on the current IT team recognizes. Most were built for a project two years ago, from an image that hasn't been patched since. Name the problem and three actions to take.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Problem:</strong> <b>VM sprawl</b>, more VMs than the organization can control and manage, made worse by an <b>insecure image</b>.</p>
+          <p><strong>Actions:</strong> (1) inventory every VM and assign an owner; (2) shut down and delete the ones nobody needs, after checking for data that must be kept; (3) patch the image and rebuild or patch the VMs that stay; and put a rule in place that new VMs need an owner and an end date.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Cloud infrastructure</span>
+      <h3>Linking the two clouds</h3>
+      <p>Tsukimi Sweets runs its order database in a private cloud and its online shop front end in a public cloud. Order data crosses the internet between them. What protects the confidentiality of that traffic, and what would limit the damage if the public shop's web server were compromised?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Confidentiality:</strong> a <b>site-to-site VPN</b> between the public and private clouds, the standard protection for a hybrid cloud link.</p>
+          <p><strong>Containment:</strong> <b>microsegmentation</b>. Put the web server in its own small segment, with rules allowing it to reach only the database port it needs. A compromised web server then can't freely explore the rest of the environment.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 10 reference. More sessions are added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+      {
+            "t": "Application Security (CSA domain)",
+            "d": "The cloud security domain about building and deploying applications securely in the cloud, especially on PaaS and IaaS, where the customer owns the application."
+      },
+      {
+            "t": "C3PL",
+            "d": "Cisco Common Classification Policy Language. The structured class-map / policy-map language ZPF policies are written in, which makes them easy to read and troubleshoot."
+      },
+      {
+            "t": "class class-default",
+            "d": "The built-in last class in every inspect policy map. It catches traffic that matched no other class. Its default action is drop."
+      },
+      {
+            "t": "class-map type inspect",
+            "d": "Step 2 of ZPF configuration. Defines a traffic class with match statements such as match protocol, match access-group, or match class-map."
+      },
+      {
+            "t": "Classic Firewall",
+            "d": "The older Cisco IOS firewall model that applies inspection rules and ACLs interface by interface. It can run on the same router as a ZPF, but not on the same interface."
+      },
+      {
+            "t": "Cloud computing",
+            "d": "Computing resources such as servers, storage, and applications delivered on demand over a network, usually paid for by use, from a provider's data centers."
+      },
+      {
+            "t": "Cloud misconfiguration",
+            "d": "A cloud threat: a resource is set up incorrectly, leaving it exposed to attack."
+      },
+      {
+            "t": "Cloud Security Alliance (CSA)",
+            "d": "A nonprofit that publishes cloud security best practices, including Security Guidance for Critical Areas of Focus in Cloud Computing v4 and its 14 domains."
+      },
+      {
+            "t": "Community cloud",
+            "d": "A cloud deployment shared by organizations with common needs, such as the same compliance requirements."
+      },
+      {
+            "t": "Compliance and Audit Management",
+            "d": "The CSA domain about keeping and proving compliance when moving from a traditional data center to the cloud."
+      },
+      {
+            "t": "Compromised account credentials",
+            "d": "A cloud threat: user accounts or access privileges aren't secured and are hijacked by threat actors."
+      },
+      {
+            "t": "Data at rest",
+            "d": "Data stored on a disk, in a database, or in cloud storage. Protected with encryption at rest, access controls, and backups."
+      },
+      {
+            "t": "Data in process",
+            "d": "Data being used or changed by an application. Also called data in use."
+      },
+      {
+            "t": "Data in transit",
+            "d": "Data moving between devices, networks, or components. Protected with encrypted protocols such as TLS and with VPNs."
+      },
+      {
+            "t": "Data Security and Encryption",
+            "d": "The CSA domain about controls that protect the data itself, with encryption one of the most important."
+      },
+      {
+            "t": "Drop (ZPF action)",
+            "d": "Discards matching traffic, like an ACL deny statement. Can optionally log what was dropped."
+      },
+      {
+            "t": "Hybrid cloud",
+            "d": "Two or more clouds, such as a private and a public cloud, connected so data and applications can move between them. Often linked by a site-to-site VPN."
+      },
+      {
+            "t": "Hyperjacking",
+            "d": "An attack in which a threat actor takes control of a hypervisor, then uses it to reach every VM it runs and other data center devices."
+      },
+      {
+            "t": "Hypervisor",
+            "d": "Software, firmware, or hardware that creates and runs virtual machines, letting multiple independent operating systems share one physical system."
+      },
+      {
+            "t": "Information Governance",
+            "d": "The CSA domain about making sure data use follows the organization's policies, standards, and regulatory, contractual, and business goals."
+      },
+      {
+            "t": "Infrastructure as a Service (IaaS)",
+            "d": "A cloud service model where the customer rents VMs, storage, and networks and manages the OS and everything above it."
+      },
+      {
+            "t": "Infrastructure Security (CSA domain)",
+            "d": "The CSA domain covering cloud-specific infrastructure security, the foundation for operating securely in the cloud."
+      },
+      {
+            "t": "Inside threat",
+            "d": "A cloud threat: an employee, contractor, or business partner compromises the cloud service, on purpose or by accident."
+      },
+      {
+            "t": "Inspect (ZPF action)",
+            "d": "Stateful inspection. Tracks each session and automatically allows its return traffic. Similar to the classic ip inspect command."
+      },
+      {
+            "t": "Limited cloud usage visibility",
+            "d": "A cloud threat: the customer can't fully see how the cloud service is used, so safe and malicious activity are hard to tell apart."
+      },
+      {
+            "t": "Management Plane and Business Continuity",
+            "d": "The CSA domain about securing the cloud management console and APIs, plus business continuity and disaster recovery."
+      },
+      {
+            "t": "Microsegmentation",
+            "d": "Using virtual network topologies to run many smaller, isolated networks without extra hardware, for finer control of traffic between workloads. Also called hypersegregation."
+      },
+      {
+            "t": "Pass (ZPF action)",
+            "d": "Forwards matching traffic without tracking the connection, like an ACL permit statement. Return traffic needs its own policy in the other direction."
+      },
+      {
+            "t": "Plaintext",
+            "d": "Readable data, before encryption. Encrypted data is ciphertext."
+      },
+      {
+            "t": "Platform as a Service (PaaS)",
+            "d": "A cloud service model where the customer builds and runs its own applications on a provider-managed platform, without managing servers or the OS."
+      },
+      {
+            "t": "policy-map type inspect",
+            "d": "Step 3 of ZPF configuration. Lists traffic classes and gives each an action: inspect, drop, or pass."
+      },
+      {
+            "t": "Poor cloud security architecture strategy",
+            "d": "A cloud threat: the shared security responsibilities between customer and provider aren't understood or implemented correctly."
+      },
+      {
+            "t": "Private cloud",
+            "d": "A cloud used by one organization only, run in-house or by a third party."
+      },
+      {
+            "t": "Public cloud",
+            "d": "Cloud services offered to the general public over the internet by a provider."
+      },
+      {
+            "t": "Self zone",
+            "d": "The system-defined ZPF zone for the router itself, covering traffic to and from the router. It has no interfaces. Its traffic passes until a self-zone policy is configured."
+      },
+      {
+            "t": "Shared responsibility",
+            "d": "The split of cloud security duties between provider and customer. The provider always secures the physical facility. The customer always owns its data and access."
+      },
+      {
+            "t": "Software as a Service (SaaS)",
+            "d": "A cloud service model where the customer uses a finished application and the provider runs everything underneath it."
+      },
+      {
+            "t": "Staging environment",
+            "d": "A copy of production used to verify that software runs correctly under the required security settings before release."
+      },
+      {
+            "t": "Type 1 hypervisor",
+            "d": "A bare-metal hypervisor installed directly on the hardware, used in data centers. Examples: VMware ESXi, Hyper-V."
+      },
+      {
+            "t": "Type 2 hypervisor",
+            "d": "A hosted hypervisor that runs as an application on an existing OS. Examples: VirtualBox, VMware Workstation."
+      },
+      {
+            "t": "Virtual machine (VM)",
+            "d": "A software computer, with its own OS and virtual hardware, run by a hypervisor."
+      },
+      {
+            "t": "Virtual security appliance",
+            "d": "A firewall or IPS running as a VM. Useful for filtering virtual networks, but it can become a traffic bottleneck or overload the processor."
+      },
+      {
+            "t": "VM escape",
+            "d": "An attack in which a process breaks out of a VM's isolation and interacts directly with the host or hypervisor."
+      },
+      {
+            "t": "VM sprawl",
+            "d": "When an organization has more VMs than it can effectively control and manage, leaving forgotten VMs unpatched and unmonitored."
+      },
+      {
+            "t": "Zone",
+            "d": "A group of one or more router interfaces with similar functions or security requirements. Traffic between interfaces in the same zone passes freely."
+      },
+      {
+            "t": "Zone pair",
+            "d": "A source zone and a destination zone, in one direction, that a ZPF policy is applied to. Created with zone-pair security and bound to a policy with service-policy type inspect."
+      },
+      {
+            "t": "zone security",
+            "d": "Step 1 of ZPF configuration. Creates a named security zone."
+      },
+      {
+            "t": "Zone-based policy firewall (ZPF)",
+            "d": "A Cisco IOS firewall model that groups interfaces into zones and applies inspection policies to traffic between zones. Not dependent on ACLs. Blocks unless explicitly allowed."
+      },
+      {
+            "t": "zone-member security",
+            "d": "Step 5 of ZPF configuration. An interface command that assigns the interface to a zone. An interface can belong to only one zone."
+      }
+];
+
+  const QUIZ = [
+      {
+            "q": "Which three actions can a ZPF policy apply to a traffic class?",
+            "choices": [
+                  "inspect, drop, pass",
+                  "permit, deny, log",
+                  "inspect, queue, shape",
+                  "allow, reroute, drop"
+            ],
+            "correct": 0,
+            "explain": "A ZPF class can be inspected (stateful), dropped (like an ACL deny), or passed (like an ACL permit, without tracking state)."
+      },
+      {
+            "q": "What is the first step in configuring a ZPF with the CLI?",
+            "choices": [
+                  "Define traffic classes",
+                  "Assign interfaces to zones",
+                  "Create the zones",
+                  "Apply policy maps to zone pairs"
+            ],
+            "correct": 2,
+            "explain": "The order is: create zones, define traffic classes, define firewall policies, apply policies to zone pairs, assign interfaces to zones."
+      },
+      {
+            "q": "Where is a ZPF inspection policy applied?",
+            "choices": [
+                  "To an interface",
+                  "To a zone",
+                  "To a zone pair",
+                  "To a global service policy"
+            ],
+            "correct": 2,
+            "explain": "Policies apply to traffic flowing between a pair of zones, configured with zone-pair security and service-policy type inspect."
+      },
+      {
+            "q": "Which zone is system-defined and covers traffic to or from the router itself?",
+            "choices": [
+                  "Inside zone",
+                  "Self zone",
+                  "Local zone",
+                  "System zone"
+            ],
+            "correct": 1,
+            "explain": "The self zone is the router. It has no interfaces assigned and is the exception to the ZPF default deny."
+      },
+      {
+            "q": "A packet travels between two interfaces that are both members of the PRIVATE zone. What happens?",
+            "choices": [
+                  "It's dropped unless a policy permits it",
+                  "It passes freely",
+                  "It's inspected by class-default",
+                  "It's sent to the self zone"
+            ],
+            "correct": 1,
+            "explain": "Traffic between interfaces in the same zone isn't subject to any policy and passes freely."
+      },
+      {
+            "q": "An interface in the PUBLIC zone sends traffic to an interface that isn't a member of any zone. What happens?",
+            "choices": [
+                  "It passes",
+                  "It's inspected",
+                  "It's dropped",
+                  "It's passed to the self zone"
+            ],
+            "correct": 2,
+            "explain": "Traffic between a zone member and a non-member is always dropped."
+      },
+      {
+            "q": "Which statement about Classic Firewall and ZPF is true?",
+            "choices": [
+                  "Both require ACLs, and ZPF must be enabled first",
+                  "They can run on the same router, but not on the same interface",
+                  "Classic must be enabled before ZPF",
+                  "They can be combined on a single interface"
+            ],
+            "correct": 1,
+            "explain": "Both models can be enabled concurrently on a router, but they can't be combined on one interface. ZPF isn't dependent on ACLs."
+      },
+      {
+            "q": "Why might outbound web traffic work with inspect but fail with pass?",
+            "choices": [
+                  "Pass encrypts the traffic",
+                  "Pass doesn't track sessions, so the replies aren't allowed back",
+                  "Pass only works in the self zone",
+                  "Inspect uses less memory"
+            ],
+            "correct": 1,
+            "explain": "Pass is stateless and one-way. Inspect remembers the outbound session and allows its return traffic automatically."
+      },
+      {
+            "q": "What term describes having more VMs than can be effectively managed?",
+            "choices": [
+                  "VM escape",
+                  "VM sprawl",
+                  "VM exhaustion",
+                  "Hyperjacking"
+            ],
+            "correct": 1,
+            "explain": "VM sprawl: VMs are easy to create and easy to forget, so unmanaged ones go unpatched."
+      },
+      {
+            "q": "Which technique uses virtual network topologies to run smaller, more isolated networks without extra hardware?",
+            "choices": [
+                  "Shadow IT",
+                  "Fog computing",
+                  "Microsegmentation",
+                  "Edge computing"
+            ],
+            "correct": 2,
+            "explain": "Microsegmentation, also called hypersegregation, gives granular control over traffic between cloud workloads."
+      },
+      {
+            "q": "What should protect the confidentiality of traffic between a private cloud and a public cloud?",
+            "choices": [
+                  "A proxy",
+                  "An IPS",
+                  "A site-to-site VPN",
+                  "A firewall"
+            ],
+            "correct": 2,
+            "explain": "A hybrid cloud's link crosses the internet. A site-to-site VPN encrypts the traffic between the two clouds."
+      },
+      {
+            "q": "In which environment do developers verify that software runs under the required security settings before release?",
+            "choices": [
+                  "Development",
+                  "Sandbox",
+                  "Staging",
+                  "Production"
+            ],
+            "correct": 2,
+            "explain": "Staging closely matches production, so it's where you confirm the app works with the real security settings."
+      },
+      {
+            "q": "Which CSA domain covers delivering and proving compliance when moving from a traditional data center to the cloud?",
+            "choices": [
+                  "Infrastructure Security",
+                  "Information Governance",
+                  "Compliance and Audit Management",
+                  "Management Plane and Business Continuity"
+            ],
+            "correct": 2,
+            "explain": "Compliance and Audit Management covers keeping and proving compliance in the cloud."
+      },
+      {
+            "q": "Which cloud threat describes a resource set up incorrectly so it's exposed to attack?",
+            "choices": [
+                  "Inside threat",
+                  "Cloud misconfiguration",
+                  "Data breach",
+                  "Limited cloud usage visibility"
+            ],
+            "correct": 1,
+            "explain": "Cloud misconfiguration. A classic example is a storage container accidentally shared publicly."
+      },
+      {
+            "q": "Which component of virtualization lets multiple independent operating systems run on one physical system?",
+            "choices": [
+                  "Container",
+                  "VDI",
+                  "Hypervisor",
+                  "Virtual switch"
+            ],
+            "correct": 2,
+            "explain": "The hypervisor creates and runs the VMs that share the physical hardware."
+      },
+      {
+            "q": "What are two possible downsides of adding a virtual firewall and IPS to a cloud deployment?",
+            "choices": [
+                  "Routing loops and VM escape",
+                  "A traffic bottleneck and processor overload",
+                  "OS incompatibility and VM sprawl",
+                  "Higher licensing and lower uptime"
+            ],
+            "correct": 1,
+            "explain": "Virtual security appliances and agents share CPU and memory with the workloads they protect, so they can bottleneck traffic or overload the processor."
+      }
+];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
