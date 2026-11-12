@@ -1,0 +1,1223 @@
+<title>IT121 Session 13 – Evaluating Alerts &amp; Governance and Compliance</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.3rem,4.6vw,3.4rem); line-height:1.02; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:62ch; font-size:1.1rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.6rem,2.8vw,2.2rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  figure{ margin:36px 0 0; }
+  figure svg{ width:100%; height:auto; display:block; background:var(--surface); border:1px solid var(--border); }
+  figcaption{ font-size:.85rem; color:var(--muted); margin-top:.6em; }
+  .diagram-grid{ display:grid; gap:32px; grid-template-columns:1fr; }
+  @media(min-width:860px){ .diagram-grid{ grid-template-columns:1fr 1fr; } }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+  .callout.xref{ font-family:var(--mono); font-size:.85rem; }
+  .callout.xref a{ font-weight:600; }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  button.btn{ font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:.6em 1.1em; cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); color:var(--accent); }
+  button.btn:focus-visible, a:focus-visible, .flashcard:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  #cardProgress{ font-family:var(--mono); font-size:.95rem; color:var(--muted); }
+
+  .card-grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .flashcard{ perspective:1200px; height:220px; cursor:pointer; border:none; background:none; padding:0; font-family:inherit; text-align:left; width:100%; color:var(--text); }
+  .flashcard-inner{ position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; -webkit-transform-style:preserve-3d; will-change:transform; }
+  .flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+  .flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; border:1px solid var(--border); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; }
+  .flashcard-face.front{ background:var(--surface); transform:translateZ(.5px); }
+  .flashcard-face.back{ background:var(--accent-soft); transform:rotateY(180deg) translateZ(.5px); overflow-y:auto; }
+  .flashcard-face .lbl{ font-family:var(--mono); font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; color:var(--accent-2); margin-bottom:.4em; }
+  .flashcard-face.front .term{ font-family:var(--mono); font-weight:700; font-size:1.15rem; letter-spacing:.01em; }
+  .flashcard-face.back .def{ font-size:.86rem; }
+  .flashcard.known .flashcard-face.front{ border-color:var(--correct); }
+
+  .quiz-q{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .quiz-q .qtext{ font-weight:700; margin:0 0 14px; }
+  .quiz-q .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:.5em; }
+  .choices{ display:grid; gap:8px; }
+  .choice{ text-align:left; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); padding:.7em .9em; cursor:pointer; color:var(--text); }
+  .choice:hover{ border-color:var(--accent); }
+  .choice.correct{ background:var(--correct-soft); border-color:var(--correct); }
+  .choice.incorrect{ background:var(--danger-soft); border-color:var(--danger); }
+  .choice[disabled]{ cursor:default; }
+  .explain{ margin-top:12px; font-size:.88rem; color:var(--muted); border-left:3px solid var(--accent-2); padding-left:12px; display:none; }
+  .explain.show{ display:block; }
+  #quizScore{ font-family:var(--mono); font-size:1rem; color:var(--muted); margin-bottom:16px; }
+
+  .example{ background:var(--surface); border:1px solid var(--border); padding:20px 22px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .example h3{ font-family:var(--mono); font-weight:700; font-size:1.2rem; margin:0 0 8px; }
+  .example .tag{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); background:var(--accent-2-soft); padding:.25em .6em; margin-bottom:10px; }
+  details.solution{ margin-top:12px; }
+  details.solution summary{ cursor:pointer; font-family:var(--mono); font-weight:600; letter-spacing:.03em; text-transform:uppercase; font-size:.85rem; color:var(--accent); list-style:none; display:inline-flex; align-items:center; gap:.4em; }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  details.solution summary::before{ content:"▸"; transition:transform .15s; }
+  details.solution[open] summary::before{ transform:rotate(90deg); }
+  details.solution .solbody{ margin-top:10px; padding:14px 16px; background:var(--surface-2); font-size:.92rem; }
+
+  #glossarySearch{ width:100%; max-width:420px; font-family:var(--sans); font-size:.95rem; padding:.7em .9em; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:16px; }
+  .alpha-nav{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; }
+  .alpha-nav a{ font-family:var(--mono); font-weight:600; font-size:.9rem; width:1.9em; height:1.9em; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); text-decoration:none; color:var(--muted); }
+  .alpha-nav a.has{ color:var(--text); }
+  .alpha-nav a.has:hover{ border-color:var(--accent); color:var(--accent); }
+  .glossary-letter{ font-family:var(--mono); font-weight:700; color:var(--accent); font-size:1.3rem; margin:22px 0 8px; }
+  dl.glossary{ margin:0; }
+  dl.glossary .gitem{ border-top:1px solid var(--border); padding:12px 0; }
+  dl.glossary dt{ font-family:var(--mono); font-weight:700; font-size:1.05rem; }
+  dl.glossary dd{ margin:.3em 0 0; color:var(--muted); font-size:.92rem; }
+  .gitem.hidden{ display:none; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .card-grid{ grid-template-columns:1fr; }
+    .obj-list{ grid-template-columns:1fr; }
+    .diagram-grid{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+  .callout.analogy{ border-left-color:var(--correct); }
+  .callout.analogy b{ color:var(--correct); }
+  .callout.analogy .lbl{ display:block; font-family:var(--mono); font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--correct); margin-bottom:.5em; }
+  .callout .src{ display:block; margin-top:.8em; font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+  pre.log{ color-scheme:dark; scrollbar-color:#6a5d50 #2b2420; font-family:var(--mono); font-size:.72rem; line-height:1.5; background:#2b2420; color:#c9e0a8; border:1px solid var(--border); padding:14px 16px; overflow-x:auto; margin:12px 0; }
+  pre.log code{ background:none; padding:0; }
+  /* Visual pass (pilot 2026-10-16): fact cards, text + figure splits, inline diagrams */
+  .fcards{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); margin:18px 0; }
+  .fcard{ background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--accent-2); box-shadow:var(--shadow); padding:12px 14px; font-size:.9rem; line-height:1.45; }
+  .fcard > b{ display:block; font-family:var(--mono); font-size:.8rem; letter-spacing:.03em; color:var(--accent-2); margin-bottom:.35em; }
+  .fcard.do{ border-top-color:var(--correct); } .fcard.do > b{ color:var(--correct); }
+  .fcard.dont{ border-top-color:var(--danger); } .fcard.dont > b{ color:var(--danger); }
+  .fcard ul{ margin:.2em 0 0; padding-left:1.1em; } .fcard li{ margin:.3em 0; }
+  .fcards.wide{ grid-template-columns:repeat(auto-fit, minmax(min(300px,100%), 1fr)); }
+  .fcard .k{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .fcard > span{ display:block; } .fcard > span + span{ margin-top:.45em; }
+  .split{ display:grid; gap:24px; grid-template-columns:1fr; align-items:start; }
+  @media(min-width:860px){ .split{ grid-template-columns:1fr 1fr; } }
+  .split > figure{ margin-top:4px; }
+  figure.fig{ margin:22px 0; max-width:620px; }
+  figure svg text{ font-family:var(--mono); }
+  /* Phones: keep diagram labels readable; the figure scrolls sideways instead of shrinking */
+  @media(max-width:640px){
+    figure.fig, .split > figure{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    figure.fig svg, .split > figure svg{ min-width:500px; }
+    figure.fig.wide svg{ min-width:640px; }
+    figure.fig figcaption::before, .split > figure figcaption::before{ content:"Swipe the diagram sideways to see all of it. "; font-weight:700; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">IT121 · Session 13</p>
+    <h1>Evaluating Alerts &amp; Governance and Compliance</h1>
+    <p class="lede">A Tier-1 analyst's shift is a queue of alerts, and every one needs an answer: real or not? This session covers where those alerts come from, how to read the rule that fired, and how to classify what you find. Then it zooms out to the rules the whole organization works under: who is accountable for security decisions, the laws and ethics that bind a security professional, and the frameworks used to judge whether the controls are good enough.</p>
+    <div class="factrow">
+      <span class="fact"><b>Covers</b> Module 21 (21.1–21.2) &middot; Module 22 (22.1–22.3)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="index.html" class="toc-link">↩ Contents</a>
+    <a href="#overview">Overview</a>
+    <a href="#sources">Sources of Alerts</a>
+    <a href="#evaluation">Alert Evaluation</a>
+    <a href="#governance">Governance</a>
+    <a href="#ethics">Ethics &amp; Law</a>
+    <a href="#frameworks">Frameworks</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#examples">Examples</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-head">
+      <p class="kicker">Overview</p>
+      <h2>What Session 13 covers</h2>
+      <p>Module 21 is the analyst's core task: the tools in Security Onion that generate and organize alerts, how a Snort rule is built, and how each alert is classified as a true or false positive or negative. Module 22 covers governance and compliance: who owns security decisions and data, the policies that control people's access, the laws and ethics a cybersecurity professional works under, and the frameworks organizations use to choose and evaluate security controls.</p>
+    </div>
+    <ul class="obj-list">
+      <li>Identify the structure of alerts</li>
+      <li>Explain how alerts are classified</li>
+      <li>Create cybersecurity policy documents</li>
+      <li>Create a personal code of ethical conduct</li>
+      <li>Evaluate security controls</li>
+    </ul>
+  </section>
+
+  <!-- ── SOURCES OF ALERTS (21.1) ── -->
+  <section id="sources">
+    <div class="section-head">
+      <p class="kicker">Concept 1 · Module 21.1</p>
+      <h2>Sources of Alerts</h2>
+      <p>Alerts come from many detectors, land in one queue, and every one traces back to a rule someone wrote.</p>
+    </div>
+
+    <h3>Security Onion</h3>
+    <p><b>Security Onion</b> is an open-source suite of network security monitoring (NSM) tools that runs on Linux. It combines full packet capture, network-based and host-based intrusion detection, and tools for analysts to investigate alerts. It can run as a single standalone system or as separate sensors and a central server.</p>
+    <h3>Detection tools: where alerts are generated</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Snort</b><span>A network IDS (NIDS) that uses rules and signatures to generate alerts. A tool called <b>PulledPork</b> downloads new Snort rules automatically. Both are open source and sponsored by Cisco.</span></div>
+      <div class="fcard"><b>Suricata</b><span>A signature-based NIDS similar to Snort that can also work inline as an IPS. It uses multithreading to spread work across CPU cores.</span></div>
+      <div class="fcard"><b>Zeek</b><span>Formerly called Bro. A NIDS that takes a behavior-based approach, using policy scripts to decide what to log and when to alert. It also records detailed HTTP, DNS, and TCP transaction logs.</span></div>
+      <div class="fcard"><b>OSSEC and Wazuh</b><span>Host-based IDS (HIDS): file integrity monitoring, local log monitoring, process monitoring, and rootkit detection. Each host needs an agent. Wazuh is replacing OSSEC in Security Onion.</span></div>
+    </div>
+    <h3>Analysis tools: where alerts are investigated</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Sguil</b><span>The analyst's console and starting point. It gathers alerts from every source into one timestamped queue, where the analyst can investigate, classify, escalate, or retire each one, and pivot to the other tools.</span></div>
+      <div class="fcard"><b>Kibana</b><span>An interactive dashboard over data stored in Elasticsearch, for searching, visualizing, and exploring logs. You can pivot to it from Sguil by IP address.</span></div>
+      <div class="fcard"><b>Wireshark</b><span>Opens the full packet capture behind an alert, so you can see exactly what was sent.</span></div>
+      <div class="fcard"><b>Zeek logs</b><span>Transaction records, file content, and other details about the same traffic.</span></div>
+    </div>
+
+    <h3>What an alert contains</h3>
+    <p>Alerts generally include the <b>5-tuple</b> (source IP and port, destination IP and port, and protocol), a timestamp, and which device or sensor generated the alert. Some add whether traffic was permitted or denied, payload data, or file hashes. In Sguil's real-time queue, each row shows:</p>
+    <table class="model-table">
+      <thead><tr><th>Sguil column</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">ST</td><td>Status. RT means real time. Color-coded by priority, from light yellow (very low) to red (high)</td></tr>
+        <tr><td style="font-weight:700;">CNT</td><td>Count: how many times this alert has fired for the same source and destination. A very high count may mean a serious problem, or a rule that needs tuning</td></tr>
+        <tr><td style="font-weight:700;">Sensor</td><td>The agent that reported the event, such as Snort or OSSEC</td></tr>
+        <tr><td style="font-weight:700;">Alert ID</td><td>Two numbers: the sensor, then the event number</td></tr>
+        <tr><td style="font-weight:700;">Date/Time</td><td>When the first of the correlated events happened</td></tr>
+        <tr><td style="font-weight:700;">Event Message</td><td>The text from the rule that fired. Tick "Show Rule" to see the rule itself</td></tr>
+      </tbody>
+    </table>
+    <p>Alerts can be rule-based, signature-based, anomaly-based, or behavior-based, but in every case the conditions that trigger them were defined ahead of time.</p>
+
+    <h3>Snort rule structure</h3>
+    <p>A Snort rule has two parts: the <b>rule header</b>, which says what traffic to look at, and the <b>rule options</b>, in parentheses, which say what to look for and how to describe it.</p>
+    <figure class="fig wide">
+      <svg viewBox="0 0 640 196" role="img" aria-label="A Snort rule broken into parts. Header: action alert, protocol tcp, source $EXTERNAL_NET any, direction arrow, destination $HOME_NET 23. Options in parentheses: msg with the alert text, content to match, sid unique rule ID, and rev revision number.">
+        <rect x="10" y="14" width="620" height="84" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+        <text x="22" y="46" font-size="15" font-weight="700"><tspan fill="var(--danger)">alert</tspan> <tspan fill="var(--accent-2)">tcp</tspan> <tspan fill="var(--text)">$EXTERNAL_NET any</tspan> <tspan fill="var(--muted)">-&gt;</tspan> <tspan fill="var(--correct)">$HOME_NET 23</tspan></text>
+        <text x="22" y="78" font-size="15" font-weight="700" fill="var(--accent)">(msg:"Inbound Telnet"; content:"login"; sid:1000001; rev:1;)</text>
+        <g font-size="11" font-weight="700">
+          <rect x="20" y="118" width="12" height="12" fill="var(--danger)"/><text x="40" y="128" fill="var(--danger)">action</text>
+          <rect x="110" y="118" width="12" height="12" fill="var(--accent-2)"/><text x="130" y="128" fill="var(--accent-2)">protocol</text>
+          <rect x="210" y="118" width="12" height="12" fill="var(--text)"/><text x="230" y="128" fill="var(--text)">source IP + port</text>
+          <rect x="370" y="118" width="12" height="12" fill="var(--muted)"/><text x="390" y="128" fill="var(--muted)">direction</text>
+          <rect x="470" y="118" width="12" height="12" fill="var(--correct)"/><text x="490" y="128" fill="var(--correct)">dest IP + port</text>
+          <rect x="20" y="148" width="12" height="12" fill="var(--accent)"/><text x="40" y="158" fill="var(--accent)">rule options, in parentheses</text>
+        </g>
+        <text x="20" y="184" font-size="11" fill="var(--muted)">Line 1: rule header. Line 2: rule options. A real rule is all one line.</text>
+      </svg>
+      <figcaption>Header first: what traffic to watch. Options second: what to match and what to call it.</figcaption>
+    </figure>
+    <table class="model-table">
+      <thead><tr><th>Part</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Action</td><td><code>alert</code> generates an alert. Other actions include <code>log</code> and <code>pass</code></td></tr>
+        <tr><td style="font-weight:700;">Protocol</td><td><code>tcp</code>, <code>udp</code>, <code>icmp</code>, or <code>ip</code></td></tr>
+        <tr><td style="font-weight:700;">Source and destination</td><td>Address and port. <code>any</code> matches all. Variables such as <code>$HOME_NET</code> and <code>$EXTERNAL_NET</code> are set in the Snort configuration file. Port ranges use a colon, such as <code>1:1024</code></td></tr>
+        <tr><td style="font-weight:700;">Direction</td><td><code>-&gt;</code> means from source to destination</td></tr>
+        <tr><td style="font-weight:700;">msg</td><td>The text shown in the alert</td></tr>
+        <tr><td style="font-weight:700;">content</td><td>Text or bytes to match in the packet's payload</td></tr>
+        <tr><td style="font-weight:700;">reference</td><td>A link to more information about the threat</td></tr>
+        <tr><td style="font-weight:700;">classtype</td><td>The attack category, which sets the alert's priority</td></tr>
+        <tr><td style="font-weight:700;">sid / rev</td><td>The rule's unique ID number, and its revision number</td></tr>
+      </tbody>
+    </table>
+    <p>Rules come from several sources: <b>GPL</b> (older Sourcefire rules), <b>ET</b> (Emerging Threats, a community collection), and <b>VRT</b> (rules maintained by Cisco Talos, released to subscribers first). Organizations also write custom <b>local rules</b>, conventionally with sid numbers of 1,000,000 and up.</p>
+    <div class="callout xref">
+      IDS and IPS as security devices are in <a href="IT121_Session04.html#secdevices">Session 4</a>. Alert data, the 5-tuple, and SIEMs are in <a href="IT121_Session12.html#datatypes">Session 12</a>.
+    </div>
+  </section>
+
+  <!-- ── OVERVIEW OF ALERT EVALUATION (21.2) ── -->
+  <section id="evaluation">
+    <div class="section-head">
+      <p class="kicker">Concept 2 · Module 21.2</p>
+      <h2>Overview of Alert Evaluation</h2>
+      <p>The alert says an exploit happened. Your job is to decide whether that's true.</p>
+    </div>
+
+    <h3>Why alerts need a human</h3>
+    <p>Attackers constantly change their exploits to get past detection, and no prevention catches everything. So detection rules are written to be <b>conservative</b>: it's better to raise an alert that turns out to be harmless than to miss a real attack. That means a lot of alerts aren't real, and a skilled analyst has to check them. A Tier-1 analyst works the queue in Sguil and pivots to Zeek, Wireshark, and Kibana to confirm or rule out each one.</p>
+
+    <h3>The four classifications</h3>
+    <div class="split">
+      <div>
+        <p>Every alert, and every attack, lands in one of four boxes, depending on whether an alert fired and whether an attack really happened:</p>
+        <ul>
+          <li><b>True positive</b>: an alert, and a real incident. The rules worked.</li>
+          <li><b>False positive</b>: an alert, but no real incident. The harmless activity that set it off is a <b>benign trigger</b>. False positives cost analyst time.</li>
+          <li><b>True negative</b>: no alert, and nothing happened. Normal traffic correctly ignored.</li>
+          <li><b>False negative</b>: a real incident with <b>no alert</b>. The most dangerous outcome, because the attack goes unnoticed, sometimes for a long time.</li>
+        </ul>
+      </div>
+      <figure>
+        <svg viewBox="0 0 480 260" role="img" aria-label="Two by two grid. Columns: attack happened, no attack. Rows: alert fired, no alert. Alert and attack is a true positive. Alert and no attack is a false positive. No alert and attack is a false negative, the most dangerous. No alert and no attack is a true negative.">
+          <g font-size="11.5" font-weight="700" text-anchor="middle" fill="var(--muted)"><text x="225" y="22">attack happened</text><text x="395" y="22">no attack</text></g>
+          <g font-size="11.5" font-weight="700" fill="var(--muted)"><text x="8" y="94">alert</text><text x="8" y="110">fired</text><text x="8" y="194">no</text><text x="8" y="210">alert</text></g>
+          <rect x="140" y="36" width="168" height="104" fill="var(--correct-soft)" stroke="var(--correct)" stroke-width="2"/>
+          <rect x="312" y="36" width="160" height="104" fill="var(--accent-2-soft)" stroke="var(--accent-2)" stroke-width="2"/>
+          <rect x="140" y="144" width="168" height="104" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="2.5"/>
+          <rect x="312" y="144" width="160" height="104" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/>
+          <g font-size="13" font-weight="700" text-anchor="middle"><text x="224" y="84" fill="var(--correct)">TRUE</text><text x="224" y="100" fill="var(--correct)">POSITIVE</text><text x="392" y="84" fill="var(--accent-2)">FALSE</text><text x="392" y="100" fill="var(--accent-2)">POSITIVE</text><text x="224" y="192" fill="var(--danger)">FALSE</text><text x="224" y="208" fill="var(--danger)">NEGATIVE</text><text x="392" y="192" fill="var(--muted)">TRUE</text><text x="392" y="208" fill="var(--muted)">NEGATIVE</text></g>
+          <g font-size="10.5" text-anchor="middle"><text x="224" y="124" fill="var(--muted)">escalate it</text><text x="392" y="124" fill="var(--muted)">wasted time · tune</text><text x="224" y="232" fill="var(--danger)">missed attack</text><text x="392" y="232" fill="var(--muted)">all quiet</text></g>
+        </svg>
+        <figcaption>"Positive" and "negative" describe the alert. "True" and "false" describe whether the alert was right.</figcaption>
+      </figure>
+    </div>
+
+    <h3>What happens next</h3>
+    <div class="fcards">
+      <div class="fcard do"><b>Suspected true positive</b><span>Escalated to a higher tier. Investigators confirm the incident and find what was damaged. Senior staff then contain it, fix the vulnerability, and handle reporting.</span></div>
+      <div class="fcard"><b>Many false positives</b><span>Reported, because they waste analyst time and bury real alerts. They signal that rules need <b>tuning</b>. A sudden spike often follows a configuration change or newly downloaded rules.</span></div>
+      <div class="fcard dont"><b>False negatives</b><span>Often found only later, through <b>retrospective security analysis (RSA)</b>: running new rules or new threat intelligence against archived network data. Then the analyst assesses the damage and decides what mitigation is needed.</span></div>
+    </div>
+
+    <p>The four boxes are easy to mix up on a quiz, because the words describe two different things at once. A picture from the castle walls helps keep them apart.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the fire bell in the watchtower</span>
+      In a town of wood and paper, the watchman in the fire tower rings the bell when he sees smoke. Bell, and a house really is burning: <b>true positive</b>, and the fire brigade runs. Bell, but it was a merchant's charcoal brazier: <b>false positive</b>. The brigade wasted a trip, and the brazier is the benign trigger. No bell, no fire: <b>true negative</b>, a quiet night. No bell, but a storehouse is burning behind a wall the watchman can't see: <b>false negative</b>, the one that burns down a ward. A town would rather put up with a few wasted trips than miss a fire. That's why detection rules are written conservatively.
+    </div>
+
+    <h3>Deterministic and probabilistic analysis</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Deterministic analysis</b><span>Judges risk from what's known about a vulnerability, assuming every step an attacker needs succeeds. It describes the worst case. It relies on known facts, such as an exploit always using a standard, well-known port.</span></div>
+      <div class="fcard"><b>Probabilistic analysis</b><span>Estimates how likely each next step of an exploit is to succeed, given the previous one did. Used in real time, when many variables are unknown, to predict the most likely paths. Needed for exploits that use dynamic ports, which static rules can miss.</span></div>
+    </div>
+    <div class="callout xref">
+      You've been on the watch as a Tier-1 analyst since <a href="IT121_Session01.html">Session 1</a>. Logs used to verify alerts are in <a href="IT121_Session12.html#endlogs">Session 12</a>.
+    </div>
+  </section>
+
+  <!-- ── GOVERNANCE (22.1) ── -->
+  <section id="governance">
+    <div class="section-head">
+      <p class="kicker">Concept 3 · Module 22.1</p>
+      <h2>Governance</h2>
+      <p>Who is accountable for security decisions, who owns the data, and what the written rules say.</p>
+    </div>
+
+    <h3>IT security governance</h3>
+    <p><b>Governance</b> is the oversight that makes sure risks are adequately mitigated. It shows accountability, aligns the security strategy with business goals and regulatory compliance, and decides <b>who</b> in the organization may make cybersecurity risk decisions. Governance doesn't pick individual controls itself. It makes sure someone accountable does, and checks the results. Senior leadership, often through a chief information security officer (CISO), is ultimately accountable.</p>
+
+    <h3>Data governance roles</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Data owner</b><span>Ensures data follows policies and procedures, assigns its <b>classification</b>, and decides the criteria for who gets access. Usually a business manager, not IT.</span></div>
+      <div class="fcard"><b>Data custodian</b><span>Implements the classification and security controls according to the owner's rules: backups, permissions, encryption. Usually IT staff.</span></div>
+      <div class="fcard"><b>Data controller</b><span>Decides the purposes for which, and the ways in which, personal data is processed.</span></div>
+      <div class="fcard"><b>Data processor</b><span>Processes personal data on the controller's behalf, such as a cloud payroll service.</span></div>
+      <div class="fcard"><b>Data steward</b><span>Makes sure data supports the business's needs and meets regulatory requirements.</span></div>
+      <div class="fcard"><b>Data protection officer (DPO)</b><span>Oversees the organization's overall data protection strategy and compliance.</span></div>
+    </div>
+
+    <p>The owner/custodian split trips people up, because the custodian is the one with hands on the data every day. Think about who decides versus who carries the decision out.</p>
+    <div class="callout analogy">
+      <span class="lbl">Think of it like… the lord's rice storehouse</span>
+      The rice in the castle storehouse belongs to the lord. The lord, through his chief retainer, decides how precious each store is and who may draw from it. That's the <b>data owner</b>. The storehouse keeper holds the keys, keeps the roof sound, counts the bales, and opens the doors only for those on the approved list. That's the <b>data custodian</b>. The keeper does all the daily work, but doesn't decide who's on the list. If the keeper started handing rice to his friends, he'd be overstepping, however well he guarded the doors.
+    </div>
+
+    <h3>Cybersecurity policy documents</h3>
+    <p>Governance is written down in a hierarchy of documents, from broad to specific:</p>
+    <table class="model-table">
+      <thead><tr><th>Document</th><th>What it is</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Policy</td><td>A high-level statement of goals and rules, approved by leadership. Mandatory</td><td>"All remote access must use multifactor authentication."</td></tr>
+        <tr><td style="font-weight:700;">Standard</td><td>Specific, mandatory requirements that support a policy</td><td>"Passwords must be at least 14 characters."</td></tr>
+        <tr><td style="font-weight:700;">Procedure</td><td>Step-by-step instructions for carrying out a task</td><td>The steps to onboard a new employee's accounts</td></tr>
+        <tr><td style="font-weight:700;">Guideline</td><td>Recommendations and best practices. Not mandatory</td><td>Tips for spotting phishing emails</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Policies that manage people</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Need to know</b><span>People get access only to the information required for their job. The principle the U.S. government uses in its access control models.</span></div>
+      <div class="fcard"><b>Separation of duties</b><span>A critical task is split between people, so no one person can complete it alone, such as one person approving a payment and another sending it.</span></div>
+      <div class="fcard"><b>Job rotation</b><span>Moving staff between roles periodically, so no one person holds a role long enough to hide fraud, and so more people know each job.</span></div>
+      <div class="fcard"><b>Mandatory vacations</b><span>Requiring people to take time off, so someone else does their work and any irregularities surface.</span></div>
+      <div class="fcard"><b>Acceptable use policy (AUP)</b><span>Defines what users may and may not do with the organization's systems and network. Enforced with tools such as content filtering.</span></div>
+      <div class="fcard"><b>Security awareness training</b><span>Teaches staff to recognize threats such as phishing, and what the policies require of them.</span></div>
+    </div>
+    <p>Technical measures back up the policies: content filtering to enforce the AUP, disabling USB ports and CD drives where they aren't needed, automatic antimalware scans of media, files, and attachments, and write and delete permissions granted only by the data owner.</p>
+    <div class="callout xref">
+      Business and security policies, and BYOD policies, are in <a href="IT121_Session06.html#policies">Session 6</a>. Least privilege and account management are in <a href="IT121_Session07.html#accounts">Session 7</a>.
+    </div>
+  </section>
+
+  <!-- ── ETHICS OF CYBERSECURITY (22.2) ── -->
+  <section id="ethics">
+    <div class="section-head">
+      <p class="kicker">Concept 4 · Module 22.2</p>
+      <h2>The Ethics of Cybersecurity</h2>
+      <p>Security professionals hold powerful access. Law sets the minimum. Ethics covers the rest.</p>
+    </div>
+
+    <h3>Why ethics matters here</h3>
+    <p>A security analyst can often read email, see personal files, watch network traffic, and reach systems most employees can't. <b>Professional ethics</b> are the standards of conduct that govern how you use that access. To make informed ethical decisions, a cybersecurity professional needs to understand two things: <b>the laws governing the data</b> they handle, and the organization's legitimate interests. Something can be legal and still be wrong, like browsing a coworker's medical claims out of curiosity because your role happens to allow it.</p>
+
+    <h3>Liability</h3>
+    <div class="fcards">
+      <div class="fcard"><b>Personal</b><span>Individuals are legally responsible for their own actions. "My account had access" isn't a defense for misusing it.</span></div>
+      <div class="fcard"><b>Corporate</b><span>Organizations can be held liable, and fined, for failing to protect data or for breaking laws and regulations.</span></div>
+      <div class="fcard"><b>International</b><span>Data and attacks cross borders. An organization may be bound by the laws of every country where it operates or whose residents' data it holds.</span></div>
+    </div>
+
+    <h3>Laws and regulations to know</h3>
+    <p>Session 6 introduced HIPAA and PCI DSS and promised a fuller look at compliance. Here it is. Most of these are U.S. federal laws.</p>
+    <table class="model-table">
+      <thead><tr><th>Law or standard</th><th>Protects or covers</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">HIPAA</td><td>Health Insurance Portability and Accountability Act. Patients' health information held by healthcare providers, insurers, and their partners</td></tr>
+        <tr><td style="font-weight:700;">GLBA</td><td>Gramm-Leach-Bliley Act. Customers' personal financial information at financial institutions. Requires privacy notices and lets people opt out of having their information shared with third parties</td></tr>
+        <tr><td style="font-weight:700;">SOX</td><td>Sarbanes-Oxley Act. The accuracy of public companies' financial records, and the controls that protect them</td></tr>
+        <tr><td style="font-weight:700;">FERPA</td><td>Family Educational Rights and Privacy Act. Students' education records. Rights pass from parents to the student at 18 or on entering college</td></tr>
+        <tr><td style="font-weight:700;">PCI DSS</td><td>Payment Card Industry Data Security Standard. Cardholder data, for anyone who accepts card payments. An industry standard enforced by contract, not a law</td></tr>
+        <tr><td style="font-weight:700;">CFAA</td><td>Computer Fraud and Abuse Act (1986). Makes it a crime to knowingly access a computer without authorization, including government computers and those used in interstate commerce</td></tr>
+        <tr><td style="font-weight:700;">ECPA</td><td>Electronic Communications Privacy Act. Restricts intercepting electronic communications such as email and phone calls</td></tr>
+        <tr><td style="font-weight:700;">CIPA</td><td>Children's Internet Protection Act. Requires schools and libraries that receive certain federal funding to filter harmful internet content</td></tr>
+        <tr><td style="font-weight:700;">COPPA</td><td>Children's Online Privacy Protection Act. Limits collecting personal information online from children under 13</td></tr>
+        <tr><td style="font-weight:700;">FISMA</td><td>Federal Information Security Modernization Act. Information security programs at federal agencies</td></tr>
+        <tr><td style="font-weight:700;">GDPR</td><td>The European Union's General Data Protection Regulation. Personal data of people in the EU, wherever the organization handling it is located</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Making an ethical decision</h3>
+    <p>When a situation isn't clear, a few questions help:</p>
+    <ul>
+      <li>Is it <b>legal</b>, under every law that applies to this data?</li>
+      <li>Does it follow the organization's <b>policy</b>, and is it within my authorization?</li>
+      <li>Who could be <b>harmed</b>, and how?</li>
+      <li>Would I be comfortable if my manager, the people affected, or the public <b>saw</b> what I did and why?</li>
+      <li>Have I <b>asked</b> someone accountable before acting, rather than deciding alone?</li>
+    </ul>
+
+    <h3>A personal code of ethical conduct</h3>
+    <p>The module asks you to write your own code of conduct. Professional bodies offer models. The ISC2 Code of Ethics, which every ISC2 certification holder agrees to, has four canons:</p>
+    <div class="fcards">
+      <div class="fcard"><b>1</b><span>Protect society, the common good, necessary public trust and confidence, and the infrastructure.</span></div>
+      <div class="fcard"><b>2</b><span>Act honorably, honestly, justly, responsibly, and legally.</span></div>
+      <div class="fcard"><b>3</b><span>Provide diligent and competent service to principals.</span></div>
+      <div class="fcard"><b>4</b><span>Advance and protect the profession.</span></div>
+    </div>
+    <div class="callout">
+      <b>Write your own.</b> A useful personal code is short and concrete. For example: "I use my access only for the task I was assigned. I don't look at personal data out of curiosity. I report what I find, including my own mistakes. I don't test or scan anything without written permission. I keep what I learn on the job confidential."
+    </div>
+    <div class="callout xref">
+      Compliance as a driver of security policy is in <a href="IT121_Session06.html#policies">Session 6</a>. Kiriyama General Hospital's patient data is the HIPAA case throughout the examples.
+    </div>
+  </section>
+
+  <!-- ── IT SECURITY MANAGEMENT FRAMEWORK (22.3) ── -->
+  <section id="frameworks">
+    <div class="section-head">
+      <p class="kicker">Concept 5 · Module 22.3</p>
+      <h2>IT Security Management Frameworks</h2>
+      <p>Frameworks give organizations a tested structure for choosing controls, and a yardstick for evaluating them.</p>
+    </div>
+
+    <div class="fcards">
+      <div class="fcard"><b>ISO/IEC 27000 family</b><span>International standards for an <b>information security management system (ISMS)</b>. <b>ISO 27001</b> sets the requirements for an ISMS, and organizations can be certified against it. <b>ISO 27002</b> is a catalog of security controls. A <b>statement of applicability (SOA)</b> lists which controls the organization applies and why others don't apply.</span></div>
+      <div class="fcard"><b>CIS Critical Security Controls</b><span>From the Center for Internet Security. A prioritized set of controls based on the latest information about common cyber attacks, scaled for organizations with different resources and expertise. CIS also publishes configuration <b>benchmarks</b> for specific platforms.</span></div>
+      <div class="fcard"><b>Cloud Security Alliance (CSA)</b><span>Provides security guidance for any organization using cloud computing, and helps assess a cloud provider's overall security risk. Session 10 covered its domains.</span></div>
+      <div class="fcard"><b>NICE Workforce Framework</b><span>NIST's National Cybersecurity Workforce Framework organizes cybersecurity work into seven categories, so organizations can describe the roles and skills they need.</span></div>
+    </div>
+
+    <h3>The seven workforce categories</h3>
+    <table class="model-table">
+      <thead><tr><th>Category</th><th>Work it covers</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Securely Provision</td><td>Designing and building secure IT systems</td></tr>
+        <tr><td style="font-weight:700;">Operate and Maintain</td><td>Supporting and administering systems so they perform securely</td></tr>
+        <tr><td style="font-weight:700;">Oversee and Govern</td><td>Leadership, management, and direction of cybersecurity work</td></tr>
+        <tr><td style="font-weight:700;">Protect and Defend</td><td>Identifying, analyzing, and mitigating threats to systems and networks. Where SOC analysts work</td></tr>
+        <tr><td style="font-weight:700;">Analyze</td><td>Highly specialized review and evaluation of incoming cybersecurity information to determine its usefulness for intelligence</td></tr>
+        <tr><td style="font-weight:700;">Collect and Operate</td><td>Specialized denial and deception operations, and collecting cybersecurity information for intelligence</td></tr>
+        <tr><td style="font-weight:700;">Investigate</td><td>Investigating cybersecurity events and crimes, including digital forensics</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Evaluating the controls</h3>
+    <p>A framework says which controls an organization should have. Checking that they actually work takes testing. Organizations with the resources and expertise run <b>penetration tests</b> and <b>red team exercises</b>, simulated attacks that measure how well the organization's defenses and people hold up. Audits compare actual practice against the chosen framework, and the gaps they find go back to governance to decide what to fix first. Session 15 covers network security testing and risk management in depth.</p>
+    <div class="callout xref">
+      The CSA's 14 domains are in <a href="IT121_Session10.html#domains">Session 10</a>. Defense in depth is in <a href="IT121_Session06.html#depth">Session 6</a>.
+    </div>
+  </section>
+
+  <!-- ── FLASHCARDS ── -->
+  <section id="flashcards">
+    <div class="section-head">
+      <p class="kicker">Study</p>
+      <h2>Flashcards</h2>
+      <p>Click a card to flip it. Double-click to mark it known once you can define it without peeking.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="resetKnownBtn">Reset progress</button>
+      <span id="cardProgress"></span>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz">
+    <div class="section-head">
+      <p class="kicker">Check yourself</p>
+      <h2>Sample questions</h2>
+      <p>Same style as the module quizzes. Pick an answer to see whether you're right and why.</p>
+    </div>
+    <div id="quizScore"></div>
+    <div id="quizList"></div>
+    <button class="btn" id="resetQuizBtn">Reset quiz</button>
+  </section>
+
+  <!-- ── EXAMPLES ── -->
+  <section id="examples">
+    <div class="section-head">
+      <p class="kicker">Applied</p>
+      <h2>Worked examples</h2>
+      <p>Real-ish cases from Bastion's clients. Think each one through before you expand the answer.</p>
+    </div>
+
+    <div class="example">
+      <span class="tag">Classifying alerts</span>
+      <h3>Four from the morning queue</h3>
+      <p>Classify each as a true positive, false positive, true negative, or false negative:</p>
+      <p>(a) An alert for "SQL injection attempt" against Tsukimi Sweets' shop. The packet capture shows a real injection string, and the database log shows the query ran. (b) An alert for "possible port scan" from a Kaidō Freight address. It's the IT team's scheduled vulnerability scanner. (c) A week later, threat intelligence reveals a new malware family. Searching archived DNS logs shows a Kiriyama workstation contacted its CnC domain days ago, with no alert at the time. (d) A normal login to the hospital portal that raised no alert.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>(a) <b>True positive</b>: escalate. (b) <b>False positive</b>, with the scanner as the benign trigger. The rule should be tuned to exclude the authorized scanner's address. (c) <b>False negative</b>, found through <b>retrospective security analysis</b>. Investigate the workstation now. (d) <b>True negative</b>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Reading a rule</span>
+      <h3>What does this rule catch?</h3>
+<pre class="log">alert tcp $HOME_NET any -&gt; $EXTERNAL_NET 21 (msg:"Outbound FTP login"; content:"USER"; sid:1000042; rev:2;)</pre>
+      <p>Explain each part of the header. What traffic triggers it, and what will the analyst see in Sguil?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p><strong>Header:</strong> action <code>alert</code>; protocol <code>tcp</code>; source any port on the inside network (<code>$HOME_NET any</code>); direction outbound (<code>-&gt;</code>); destination port 21 (FTP) on any outside network.</p>
+          <p><strong>Triggers:</strong> TCP traffic from inside to an outside FTP server whose payload contains <code>USER</code>, the command that sends an FTP username. FTP sends credentials in plaintext, so this catches staff logging into outside FTP servers.</p>
+          <p><strong>In Sguil:</strong> the event message "Outbound FTP login." It's a locally written rule (sid of 1,000,000 or more), now on its second revision.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Tuning</span>
+      <h3>CNT 4,812</h3>
+      <p>Bastion's Sguil queue shows one Kaidō Freight alert with a CNT of 4,812 since a new rule set was downloaded last night. Every event is from the same printer to the same file server. What does the count suggest, and what should the analyst do?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>A huge count of identical, correlated events that started right after a rule update most likely means a <b>false positive</b> from a rule that doesn't fit this environment. The printer's normal behavior is the benign trigger.</p>
+          <p><strong>Do:</strong> verify a sample with the packet capture to be sure, then report it so the rule can be <b>tuned</b>: adjusted or suppressed for that source. Don't just retire alerts silently. Unreported false positives keep burying real alerts.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Data roles</span>
+      <h3>Who decides who sees the records?</h3>
+      <p>At Kiriyama General Hospital, a new research team asks the database administrator for read access to patient records. The DBA has the technical ability to grant it right away. Who should decide, and what is the DBA's role?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>The <b>data owner</b> decides: the business leader responsible for patient records, such as the head of health information management. They set the access criteria, under the hospital's policies and HIPAA. The DBA is the <b>data custodian</b>: they carry out the owner's decision and the security controls, but don't make the access decision.</p>
+          <p>The decision should also follow <b>need to know</b>. The researchers may get a masked or limited data set rather than full records.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Laws</span>
+      <h3>Which rules apply?</h3>
+      <p>Match each Bastion client situation to the law or standard most directly involved: (a) Tsukimi Sweets takes credit cards on its website. (b) Kiriyama General Hospital stores patient diagnoses. (c) A former Kaidō Freight contractor logs in to the company's systems after their contract ended, using an account that was never disabled. (d) Kiriyama runs a small school for nursing students and keeps their grades.</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>(a) <b>PCI DSS</b>, the industry standard for cardholder data. (b) <b>HIPAA</b>. (c) <b>CFAA</b>: knowingly accessing a computer without authorization. Note the governance failure too: offboarding should have disabled the account. (d) <b>FERPA</b>, for student education records.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="example">
+      <span class="tag">Ethics</span>
+      <h3>"Just take a quick look"</h3>
+      <p>While investigating a phishing alert, a Bastion analyst has access to a Tsukimi Sweets manager's mailbox. A Tsukimi supervisor, a friend of the analyst, messages: "While you're in there, can you see if they mentioned my raise?" Nothing technical stops the analyst from looking. What should they do, and why?</p>
+      <details class="solution">
+        <summary>Show answer</summary>
+        <div class="solbody">
+          <p>Decline, and limit the mailbox review to what the phishing investigation needs. Run it through the decision questions: it's outside the analyst's authorization and the investigation's scope, so it breaks policy. It may violate privacy law. It harms the manager. And it's not something the analyst could explain to the client.</p>
+          <p>Access granted for one purpose isn't permission for another. This is exactly the situation a personal code of conduct is for. The analyst should also consider whether the request itself needs to be reported to their lead.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── GLOSSARY ── -->
+  <section id="glossary">
+    <div class="section-head">
+      <p class="kicker">Reference</p>
+      <h2>Glossary &amp; index</h2>
+      <p>Every term from this session, searchable and indexed A–Z.</p>
+    </div>
+    <input type="text" id="glossarySearch" placeholder="Search terms…" aria-label="Search glossary">
+    <div class="alpha-nav" id="alphaNav"></div>
+    <dl class="glossary" id="glossaryList"></dl>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Session 13 reference. More sessions are added as the course progresses.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const TERMS = [
+      {
+            "t": "Acceptable use policy (AUP)",
+            "d": "Defines what users may and may not do with the organization's systems and network. Often enforced with content filtering."
+      },
+      {
+            "t": "Alert",
+            "d": "A notification from a detection tool, system, or security device that a predefined condition was met. Usually includes the 5-tuple, a timestamp, and the source sensor."
+      },
+      {
+            "t": "Benign trigger",
+            "d": "The harmless activity that caused a false positive alert."
+      },
+      {
+            "t": "CFAA",
+            "d": "Computer Fraud and Abuse Act (1986). Makes knowingly accessing a computer without authorization a federal crime."
+      },
+      {
+            "t": "CIPA",
+            "d": "Children's Internet Protection Act. Requires schools and libraries receiving certain federal funds to filter harmful internet content."
+      },
+      {
+            "t": "CIS Critical Security Controls",
+            "d": "A prioritized set of controls from the Center for Internet Security, based on current attack information. CIS also publishes platform benchmarks."
+      },
+      {
+            "t": "COPPA",
+            "d": "Children's Online Privacy Protection Act. Limits online collection of personal information from children under 13."
+      },
+      {
+            "t": "Data controller",
+            "d": "Decides the purposes and manner in which personal data is processed."
+      },
+      {
+            "t": "Data custodian",
+            "d": "Implements the classification and security controls for data according to the data owner's rules. Usually IT staff."
+      },
+      {
+            "t": "Data owner",
+            "d": "Assigns data's classification, decides access criteria, and ensures it follows policy. Usually a business manager."
+      },
+      {
+            "t": "Data processor",
+            "d": "Processes personal data on behalf of a data controller."
+      },
+      {
+            "t": "Data protection officer (DPO)",
+            "d": "Oversees an organization's data protection strategy and compliance."
+      },
+      {
+            "t": "Data steward",
+            "d": "Ensures data supports business needs and meets regulatory requirements."
+      },
+      {
+            "t": "Deterministic analysis",
+            "d": "Evaluating risk from what is known about a vulnerability, assuming every step of an exploit succeeds. Describes the worst case."
+      },
+      {
+            "t": "ECPA",
+            "d": "Electronic Communications Privacy Act. Restricts interception of electronic communications."
+      },
+      {
+            "t": "False negative",
+            "d": "A real incident that produced no alert. The most dangerous classification."
+      },
+      {
+            "t": "False positive",
+            "d": "An alert with no real incident behind it. Costs analyst time and signals that rules need tuning."
+      },
+      {
+            "t": "FERPA",
+            "d": "Family Educational Rights and Privacy Act. Protects students' education records."
+      },
+      {
+            "t": "FISMA",
+            "d": "Federal Information Security Modernization Act. Governs information security programs at U.S. federal agencies."
+      },
+      {
+            "t": "GDPR",
+            "d": "The EU's General Data Protection Regulation, covering personal data of people in the EU wherever it's processed."
+      },
+      {
+            "t": "GLBA",
+            "d": "Gramm-Leach-Bliley Act. Protects customers' personal financial information at financial institutions and lets people opt out of sharing with third parties."
+      },
+      {
+            "t": "Guideline",
+            "d": "A recommended practice. Not mandatory."
+      },
+      {
+            "t": "HIDS",
+            "d": "Host-based intrusion detection system, such as OSSEC or Wazuh. Monitors file integrity, logs, processes, and rootkits on a host."
+      },
+      {
+            "t": "HIPAA",
+            "d": "Health Insurance Portability and Accountability Act. Protects patients' health information."
+      },
+      {
+            "t": "ISO/IEC 27001",
+            "d": "The international standard setting requirements for an information security management system (ISMS). Organizations can be certified against it."
+      },
+      {
+            "t": "ISO/IEC 27002",
+            "d": "The international catalog of information security controls that supports ISO 27001."
+      },
+      {
+            "t": "IT security governance",
+            "d": "Oversight ensuring risks are adequately mitigated. Shows accountability, aligns security with business goals and compliance, and decides who may make risk decisions."
+      },
+      {
+            "t": "Job rotation",
+            "d": "Moving staff between roles periodically, so no one can hide fraud in a role and knowledge is shared."
+      },
+      {
+            "t": "Kibana",
+            "d": "A dashboard for searching and visualizing data stored in Elasticsearch. Used in Security Onion to investigate alerts."
+      },
+      {
+            "t": "Mandatory vacations",
+            "d": "Requiring staff to take time off so others do their work and irregularities surface."
+      },
+      {
+            "t": "Need to know",
+            "d": "Granting access only to information required for a person's job. Used in U.S. government access control models."
+      },
+      {
+            "t": "NICE Workforce Framework",
+            "d": "NIST's National Cybersecurity Workforce Framework. Seven categories: Securely Provision, Operate and Maintain, Oversee and Govern, Protect and Defend, Analyze, Collect and Operate, Investigate."
+      },
+      {
+            "t": "PCI DSS",
+            "d": "Payment Card Industry Data Security Standard. An industry standard, enforced by contract, for protecting cardholder data."
+      },
+      {
+            "t": "Penetration test",
+            "d": "An authorized, simulated attack that measures how well an organization's defenses hold up."
+      },
+      {
+            "t": "Policy",
+            "d": "A high-level, mandatory statement of security goals and rules approved by leadership."
+      },
+      {
+            "t": "Probabilistic analysis",
+            "d": "Estimating the likelihood that each step of an exploit succeeds, given the previous one did. Used in real time and for exploits using dynamic ports."
+      },
+      {
+            "t": "Procedure",
+            "d": "Step-by-step instructions for carrying out a task."
+      },
+      {
+            "t": "Professional ethics",
+            "d": "Standards of conduct governing how a professional uses their knowledge and access."
+      },
+      {
+            "t": "PulledPork",
+            "d": "A tool that automatically downloads updated Snort rules."
+      },
+      {
+            "t": "Red team exercise",
+            "d": "A realistic simulated attack by a team acting as adversaries, to test an organization's defenses and response."
+      },
+      {
+            "t": "Retrospective security analysis (RSA)",
+            "d": "Running new rules or threat intelligence against archived network data to find attacks missed at the time."
+      },
+      {
+            "t": "Rule header",
+            "d": "The first part of a Snort rule: action, protocol, source address and port, direction, and destination address and port."
+      },
+      {
+            "t": "Rule options",
+            "d": "The second part of a Snort rule, in parentheses: msg, content, reference, classtype, sid, rev, and more."
+      },
+      {
+            "t": "Security Onion",
+            "d": "An open-source Linux suite of network security monitoring tools: full packet capture, network and host intrusion detection, and analyst tools."
+      },
+      {
+            "t": "Separation of duties",
+            "d": "Splitting a critical task between people so no one can complete it alone."
+      },
+      {
+            "t": "Sguil",
+            "d": "Security Onion's analyst console. Collects alerts into one queue where they're investigated, classified, escalated, or retired."
+      },
+      {
+            "t": "sid",
+            "d": "A Snort rule's unique ID number. Locally written rules conventionally use 1,000,000 and up."
+      },
+      {
+            "t": "Snort",
+            "d": "An open-source, rule-based network IDS sponsored by Cisco."
+      },
+      {
+            "t": "SOX",
+            "d": "Sarbanes-Oxley Act. Requires accurate financial records and supporting controls at public companies."
+      },
+      {
+            "t": "Standard",
+            "d": "Specific, mandatory requirements that support a policy."
+      },
+      {
+            "t": "Statement of applicability (SOA)",
+            "d": "An ISO 27001 document listing which controls an organization applies and why others don't apply."
+      },
+      {
+            "t": "Suricata",
+            "d": "A signature-based NIDS that can also act inline as an IPS. Uses multithreading."
+      },
+      {
+            "t": "True negative",
+            "d": "No alert and no incident: normal traffic correctly ignored."
+      },
+      {
+            "t": "True positive",
+            "d": "An alert confirmed as a real incident."
+      },
+      {
+            "t": "Tuning",
+            "d": "Adjusting detection rules to reduce false positives without creating false negatives."
+      },
+      {
+            "t": "Wazuh",
+            "d": "A HIDS replacing OSSEC in Security Onion: log analysis, file integrity monitoring, vulnerability detection, and configuration assessment."
+      },
+      {
+            "t": "Zeek",
+            "d": "Formerly Bro. A behavior-based network security monitor that uses policy scripts and records detailed transaction logs."
+      }
+];
+
+  const QUIZ = [
+      {
+            "q": "Which Security Onion tool is the analyst's console for investigating, classifying, escalating, or retiring alerts?",
+            "choices": [
+                  "Kibana",
+                  "Sguil",
+                  "Wireshark",
+                  "PulledPork"
+            ],
+            "correct": 1,
+            "explain": "Sguil collects alerts from all sources into one queue and is the starting point for investigation."
+      },
+      {
+            "q": "Which tool automatically downloads new Snort rules?",
+            "choices": [
+                  "Zeek",
+                  "OSSEC",
+                  "PulledPork",
+                  "CapME"
+            ],
+            "correct": 2,
+            "explain": "PulledPork retrieves updated Snort rules automatically."
+      },
+      {
+            "q": "Which Security Onion component is a host-based IDS?",
+            "choices": [
+                  "Snort",
+                  "Suricata",
+                  "OSSEC",
+                  "Zeek"
+            ],
+            "correct": 2,
+            "explain": "OSSEC (and its replacement, Wazuh) runs on hosts. Snort, Suricata, and Zeek are network-based."
+      },
+      {
+            "q": "What are the two sections of a Snort rule?",
+            "choices": [
+                  "Header and options",
+                  "Source and destination",
+                  "Signature and payload",
+                  "Action and priority"
+            ],
+            "correct": 0,
+            "explain": "The rule header defines what traffic to inspect. The rule options, in parentheses, define what to match and how to describe it."
+      },
+      {
+            "q": "In a Snort rule header, what does -> indicate?",
+            "choices": [
+                  "The alert priority",
+                  "The direction from source to destination",
+                  "A port range",
+                  "The rule revision"
+            ],
+            "correct": 1,
+            "explain": "The arrow shows direction: source on the left, destination on the right."
+      },
+      {
+            "q": "What does the sid option in a Snort rule identify?",
+            "choices": [
+                  "The sensor",
+                  "The rule's unique ID number",
+                  "The session",
+                  "The signature's author"
+            ],
+            "correct": 1,
+            "explain": "sid is the rule's unique numeric ID. rev is its revision number."
+      },
+      {
+            "q": "A Sguil alert has a very high CNT value. What does that show?",
+            "choices": [
+                  "The alert's priority",
+                  "How many times the same alert fired for the same source and destination",
+                  "The sensor number",
+                  "The rule revision"
+            ],
+            "correct": 1,
+            "explain": "CNT counts correlated repeat events. A very high count may be a real problem or a rule needing tuning."
+      },
+      {
+            "q": "An alert fires, and investigation confirms it was harmless traffic. How is it classified?",
+            "choices": [
+                  "True positive",
+                  "False positive",
+                  "True negative",
+                  "False negative"
+            ],
+            "correct": 1,
+            "explain": "An alert with no real incident is a false positive. The harmless activity is the benign trigger."
+      },
+      {
+            "q": "Which classification is the most dangerous?",
+            "choices": [
+                  "True positive",
+                  "False positive",
+                  "True negative",
+                  "False negative"
+            ],
+            "correct": 3,
+            "explain": "A false negative is a real attack with no alert, so it can go undetected for a long time."
+      },
+      {
+            "q": "What is retrospective security analysis?",
+            "choices": [
+                  "Re-running old alerts",
+                  "Applying new rules or threat intelligence to archived network data",
+                  "Deleting old logs",
+                  "Writing new policies"
+            ],
+            "correct": 1,
+            "explain": "RSA can uncover attacks that were missed when they happened."
+      },
+      {
+            "q": "Which analysis assumes every step of an exploit succeeds and describes the worst case?",
+            "choices": [
+                  "Probabilistic",
+                  "Deterministic",
+                  "Statistical",
+                  "Heuristic"
+            ],
+            "correct": 1,
+            "explain": "Deterministic analysis is based on what's known about a vulnerability and assumes each step succeeds."
+      },
+      {
+            "q": "What is the primary goal of IT security governance?",
+            "choices": [
+                  "To write firewall rules",
+                  "To provide oversight to ensure risks are adequately mitigated",
+                  "To make every risk decision personally",
+                  "To install security controls"
+            ],
+            "correct": 1,
+            "explain": "Governance provides accountability and oversight, aligning security with business goals and compliance."
+      },
+      {
+            "q": "Which role assigns data's classification and decides who may access it?",
+            "choices": [
+                  "Data custodian",
+                  "Data owner",
+                  "Data processor",
+                  "Database administrator"
+            ],
+            "correct": 1,
+            "explain": "The data owner sets classification and access criteria. The custodian implements them."
+      },
+      {
+            "q": "Which principle does the U.S. government use in its access control models?",
+            "choices": [
+                  "Job rotation",
+                  "Separation of duties",
+                  "Need to know",
+                  "Mandatory vacations"
+            ],
+            "correct": 2,
+            "explain": "Access is granted only to the information a person needs to do their job."
+      },
+      {
+            "q": "Which act protects students' personal information in schools?",
+            "choices": [
+                  "HIPAA",
+                  "FERPA",
+                  "CIPA",
+                  "COPPA"
+            ],
+            "correct": 1,
+            "explain": "FERPA protects education records."
+      },
+      {
+            "q": "Which law protects people's personal financial information from being shared with third parties?",
+            "choices": [
+                  "PCI DSS",
+                  "SOX",
+                  "GLBA",
+                  "FERPA"
+            ],
+            "correct": 2,
+            "explain": "GLBA requires financial institutions to give privacy notices and lets people opt out of sharing."
+      },
+      {
+            "q": "Which federal law applies to someone who knowingly accesses a government computer without permission?",
+            "choices": [
+                  "GLBA",
+                  "ECPA",
+                  "CFAA",
+                  "SOX"
+            ],
+            "correct": 2,
+            "explain": "The Computer Fraud and Abuse Act makes unauthorized computer access a crime."
+      },
+      {
+            "q": "What should a cybersecurity professional understand to make informed ethical decisions about sensitive data?",
+            "choices": [
+                  "Potential bonuses",
+                  "The laws governing the data",
+                  "Cloud provider pricing",
+                  "Third-party partnerships"
+            ],
+            "correct": 1,
+            "explain": "Ethical decisions start with knowing the laws that apply, along with the organization's interests."
+      },
+      {
+            "q": "Which framework identifies controls based on the latest information about common cyber attacks and provides platform benchmarks?",
+            "choices": [
+                  "CIS",
+                  "CSA",
+                  "ISO 27001",
+                  "NICE"
+            ],
+            "correct": 0,
+            "explain": "The Center for Internet Security publishes the CIS Critical Security Controls and configuration benchmarks."
+      },
+      {
+            "q": "Which NICE Workforce Framework category covers specialized review of incoming cybersecurity information to determine its usefulness for intelligence?",
+            "choices": [
+                  "Protect and Defend",
+                  "Oversee and Govern",
+                  "Securely Provision",
+                  "Analyze"
+            ],
+            "correct": 3,
+            "explain": "Analyze covers the specialized evaluation of cybersecurity information for intelligence."
+      },
+      {
+            "q": "What do penetration tests and red team exercises achieve?",
+            "choices": [
+                  "They audit every TCP connection",
+                  "They simulate attacks to gauge an organization's security capabilities",
+                  "They list malware that passed the firewall",
+                  "They replace security policies"
+            ],
+            "correct": 1,
+            "explain": "They are simulated attacks that measure how well defenses and people hold up."
+      }
+];
+
+  const grid = document.getElementById('cardGrid');
+  TERMS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'flashcard';
+    card.setAttribute('aria-label', 'Flashcard: ' + item.t + '. Press to flip.');
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="flashcard-inner">
+        <div class="flashcard-face front"><div class="lbl">Term</div><div class="term">${item.t}</div></div>
+        <div class="flashcard-face back"><div class="lbl">Definition</div><div class="def">${item.d}</div></div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('dblclick', () => { card.classList.toggle('known'); updateProgress(); });
+    grid.appendChild(card);
+  });
+  function updateProgress(){
+    const known = document.querySelectorAll('.flashcard.known').length;
+    document.getElementById('cardProgress').textContent = `${known} / ${TERMS.length} marked known (double-click a card to mark it)`;
+  }
+  updateProgress();
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    const cards = Array.from(grid.children);
+    cards.sort(() => Math.random() - 0.5);
+    cards.forEach(c => { c.classList.remove('flipped'); grid.appendChild(c); });
+  });
+  document.getElementById('resetKnownBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flashcard.known').forEach(c => c.classList.remove('known'));
+    updateProgress();
+  });
+
+  const quizList = document.getElementById('quizList');
+  let score = 0, answered = 0;
+  function renderQuiz(){
+    quizList.innerHTML = ''; score = 0; answered = 0;
+    QUIZ.forEach((item, qi) => {
+      const box = document.createElement('div');
+      box.className = 'quiz-q';
+      box.innerHTML = `<p class="qtext"><span class="qnum">Q${qi+1}.</span>${item.q}</p><div class="choices"></div><p class="explain"></p>`;
+      const choicesEl = box.querySelector('.choices');
+      item.choices.forEach((c, ci) => {
+        const b = document.createElement('button');
+        b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', () => {
+          if (box.dataset.done) return;
+          box.dataset.done = '1'; answered++;
+          if (ci === item.correct) score++;
+          Array.from(choicesEl.children).forEach((el, ei) => {
+            el.disabled = true;
+            if (ei === item.correct) el.classList.add('correct');
+            else if (ei === ci) el.classList.add('incorrect');
+          });
+          box.querySelector('.explain').textContent = item.explain;
+          box.querySelector('.explain').classList.add('show');
+          updateScore();
+        });
+        choicesEl.appendChild(b);
+      });
+      quizList.appendChild(box);
+    });
+    updateScore();
+  }
+  function updateScore(){
+    document.getElementById('quizScore').textContent =
+      answered === 0 ? `${QUIZ.length} questions — click an answer to check yourself` : `Score: ${score} / ${answered} answered`;
+  }
+  renderQuiz();
+  document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+
+  const glossaryList = document.getElementById('glossaryList');
+  const alphaNav = document.getElementById('alphaNav');
+  const letters = [...new Set(TERMS.map(t => t.t[0].toUpperCase()))];
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => {
+    const a = document.createElement('a');
+    a.textContent = L;
+    if (letters.includes(L)) { a.href = '#g-' + L; a.className = 'has'; }
+    else { a.href = 'javascript:void(0)'; }
+    alphaNav.appendChild(a);
+  });
+  let currentLetter = '';
+  TERMS.forEach(item => {
+    const L = item.t[0].toUpperCase();
+    if (L !== currentLetter) {
+      currentLetter = L;
+      const h = document.createElement('div');
+      h.className = 'glossary-letter'; h.id = 'g-' + L; h.textContent = L;
+      glossaryList.appendChild(h);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'gitem';
+    wrap.innerHTML = `<dt>${item.t}</dt><dd>${item.d}</dd>`;
+    wrap.dataset.search = (item.t + ' ' + item.d).toLowerCase();
+    glossaryList.appendChild(wrap);
+  });
+  document.getElementById('glossarySearch').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.gitem').forEach(el => {
+      el.classList.toggle('hidden', q && !el.dataset.search.includes(q));
+    });
+  });
+
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+
