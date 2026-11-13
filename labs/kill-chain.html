@@ -1,0 +1,435 @@
+<title>IT121 Lab – Kill Chain Reconstruction</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  a.back-link{ display:inline-block; margin-bottom:14px; font-family:var(--mono); font-size:.85rem; font-weight:600; color:var(--accent); text-decoration:none; border-bottom:1.5px solid var(--accent); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,4.4vw,3.1rem); line-height:1.05; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:64ch; font-size:1.08rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.1rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  .res-list{ margin:0; padding-left:1.3em; font-size:.95rem; }
+  .res-list li{ margin-bottom:.5em; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+  .fillin{ width:100%; min-width:140px; font-family:var(--mono); font-size:.85rem; padding:.45em .6em; background:var(--surface-2); border:1px solid var(--border); color:var(--text); }
+  .fillin:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  .fillin::placeholder{ color:var(--muted); opacity:.6; }
+
+  .steps{ counter-reset:step; list-style:none; margin:20px 0; padding:0; }
+  .steps li{ position:relative; padding:10px 0 16px 48px; border-bottom:1px dashed var(--border); font-size:.95rem; }
+  .steps li:last-child{ border-bottom:none; }
+  .steps li::before{ counter-increment:step; content:counter(step); position:absolute; left:0; top:8px; width:30px; height:30px;
+    border:1px solid var(--accent); color:var(--accent); font-family:var(--mono); font-weight:700; font-size:.85rem;
+    display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); }
+  .steps code{ font-family:var(--mono); background:var(--surface-2); border:1px solid var(--border); padding:1px 6px; font-size:.88em; color:var(--accent); }
+
+  .ws-pane{ background:var(--surface-2); border:1px solid var(--border); box-shadow:var(--shadow); font-family:var(--mono); font-size:.82rem; padding:18px 20px; margin:20px 0; overflow-x:auto; line-height:1.7; }
+  .ws-pane .i1{ padding-left:1.6em; }
+  .ws-pane .i2{ padding-left:3.2em; }
+  .ws-pane .field{ color:var(--accent); }
+  .ws-pane .value{ color:var(--text); }
+  .ws-pane .note{ color:var(--muted); font-style:italic; }
+  .ws-pane .hdr{ color:var(--accent-2); font-weight:700; }
+
+  .reflect{ background:var(--surface); border:1px solid var(--border); padding:18px 20px; margin-bottom:14px; box-shadow:var(--shadow); }
+  .reflect .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent-2); margin-right:.5em; }
+  .reflect textarea{ width:100%; margin-top:10px; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:.7em .9em; resize:vertical; min-height:64px; }
+  .reflect textarea:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .obj-list{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+
+  @media print{
+    body{ background:#fff; color:#111; background-image:none; }
+    nav.index, .back-to-top, a.back-link{ display:none; }
+    .callout, .obj-list li, .model-table, .ws-pane, .reflect, .fact{ box-shadow:none; }
+    section{ break-inside:avoid; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html">↩ Contents</a>
+    <p class="eyebrow">IT121 · Hands-On Lab</p>
+    <h1>Kill Chain Reconstruction</h1>
+    <p class="lede">Session 15 lists the seven steps of the Cyber Kill Chain in order. Real incidents don't arrive that way. They arrive as a pile of log lines from different tools, out of order, with some noise mixed in. In this lab you get the evidence pack from one Bastion case, sort it into the Kill Chain, rebuild what the attacker did, and decide where the chain should have been broken.</p>
+    <div class="factrow">
+      <span class="fact"><b>Companion to</b> Session 15 · Module 27.2–27.3</span>
+      <span class="fact"><b>Time</b> ~45 min</span>
+      <span class="fact"><b>Difficulty</b> Intermediate</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="../index.html" class="toc-link">↩ Contents</a>
+    <a href="#objectives">Objectives</a>
+    <a href="#case">The Case</a>
+    <a href="#part1">Part 1</a>
+    <a href="#part2">Part 2</a>
+    <a href="#part3">Part 3</a>
+    <a href="#part4">Part 4</a>
+    <a href="#reflect">Reflection</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OBJECTIVES ── -->
+  <section id="objectives">
+    <div class="section-head">
+      <p class="kicker">Objectives</p>
+      <h2>What you'll do</h2>
+    </div>
+    <ul class="obj-list">
+      <li>Identify which Cyber Kill Chain step each piece of evidence shows</li>
+      <li>Tell attack evidence apart from normal activity</li>
+      <li>Rebuild an attack timeline from logs produced by different tools</li>
+      <li>Choose a control, and its type, that would break the chain at each step</li>
+      <li>Describe one intrusion event with the Diamond Model</li>
+    </ul>
+
+    <h3>Required resources</h3>
+    <ul class="res-list">
+      <li>This worksheet (on screen or printed)</li>
+      <li><a href="../IT121_Session15.html#killchain">Session 15: The Cyber Kill Chain</a> and <a href="../IT121_Session15.html#diamond">the Diamond Model</a></li>
+      <li>Optional: <a href="../IT121_Session12.html">Session 12</a> for reading log formats, and <a href="../IT121_Session15.html#controls">Session 15's control types</a></li>
+    </ul>
+
+    <table class="model-table">
+      <thead><tr><th>Step</th><th>Name</th><th>In one line</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1</td><td style="font-weight:700;">Reconnaissance</td><td>Research the target</td></tr>
+        <tr><td style="font-weight:700;">2</td><td style="font-weight:700;">Weaponization</td><td>Build the exploit and payload</td></tr>
+        <tr><td style="font-weight:700;">3</td><td style="font-weight:700;">Delivery</td><td>Get the weapon to the target</td></tr>
+        <tr><td style="font-weight:700;">4</td><td style="font-weight:700;">Exploitation</td><td>The exploit runs</td></tr>
+        <tr><td style="font-weight:700;">5</td><td style="font-weight:700;">Installation</td><td>Install a way to stay in</td></tr>
+        <tr><td style="font-weight:700;">6</td><td style="font-weight:700;">Command and control (C2)</td><td>Open a channel to control the host</td></tr>
+        <tr><td style="font-weight:700;">7</td><td style="font-weight:700;">Actions on objectives</td><td>Do what they came to do</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── THE CASE ── -->
+  <section id="case">
+    <div class="section-head">
+      <p class="kicker">The case</p>
+      <h2>The dispatch office incident</h2>
+      <p>Everything below is fictional. Addresses use the ranges reserved for documentation, and domains use <code>example.net</code>.</p>
+    </div>
+    <p>Kaidō Freight's dispatch office runs on about forty Windows PCs on the 10.20.4.0/24 network, behind a firewall Bastion monitors. Early on Day 9, Bastion's proxy logs flagged an unusually large upload from the dispatch lead's PC, <code>DISP-07</code> (10.20.4.57). You're the Tier-1 analyst on shift. The Tier-2 investigator has pulled the evidence pack below from six different sources and handed it to you in the order it came off the tools, <b>not</b> in the order things happened.</p>
+    <div class="callout">
+      <b>One artifact is not part of the attack.</b> Real evidence packs always include normal activity that looks suspicious at first glance. Part of your job is to recognize it.
+    </div>
+
+    <h3>Evidence pack</h3>
+
+    <p><b>Artifact A</b> · Endpoint protection process log, DISP-07</p>
+    <div class="ws-pane">
+      <div><span class="hdr">Day 5 09:41:07</span> <span class="field">parent:</span> <span class="value">WINWORD.EXE</span> <span class="field">child:</span> <span class="value">powershell.exe -nop -w hidden -enc SQBFAFgAIAAoA…</span></div>
+      <div class="i1"><span class="note">user: k.morita · action: allowed (no matching signature)</span></div>
+    </div>
+
+    <p><b>Artifact B</b> · Proxy log</p>
+    <div class="ws-pane">
+      <div><span class="hdr">Day 9 02:14:33</span> <span class="field">src</span> <span class="value">10.20.4.57</span> <span class="field">dst</span> <span class="value">203.0.113.80:443</span> <span class="field">method</span> <span class="value">POST</span> <span class="field">bytes_out</span> <span class="value">2,147,483,648</span> <span class="field">duration</span> <span class="value">00:41:12</span></div>
+      <div class="i1"><span class="note">category: uncategorized · destination first seen: Day 9</span></div>
+    </div>
+
+    <p><b>Artifact C</b> · Firewall log (summarized)</p>
+    <div class="ws-pane">
+      <div><span class="hdr">Day 1 22:03–22:19</span> <span class="field">src</span> <span class="value">198.51.100.23</span> <span class="field">dst</span> <span class="value">Kaidō public range, 14 addresses</span> <span class="field">dports</span> <span class="value">21,22,23,25,80,443,3389,8080…</span></div>
+      <div class="i1"><span class="note">1,812 connection attempts · mostly SYN with no handshake completed · action: dropped</span></div>
+    </div>
+
+    <p><b>Artifact D</b> · Email security appliance log</p>
+    <div class="ws-pane">
+      <div><span class="hdr">Day 5 09:38:52</span> <span class="field">from</span> <span class="value">billing@kaido-freight-invoices.example.net</span> <span class="field">to</span> <span class="value">k.morita@kaido-freight.example</span></div>
+      <div class="i1"><span class="field">subject</span> <span class="value">"Overdue: fuel invoice 4471"</span> <span class="field">attachment</span> <span class="value">Invoice_4471.docm</span> <span class="field">verdict</span> <span class="value">delivered (clean)</span></div>
+    </div>
+
+    <p><b>Artifact E</b> · Windows Security and System logs, DISP-07</p>
+    <div class="ws-pane">
+      <div><span class="hdr">Day 5 09:41:30</span> <span class="field">Event 4698</span> <span class="value">Scheduled task created: \Microsoft\UpdateCheck</span></div>
+      <div class="i1"><span class="note">runs at logon: C:\Users\k.morita\AppData\Roaming\svchost32.exe</span></div>
+      <div><span class="hdr">Day 5 09:41:29</span> <span class="field">File created</span> <span class="value">C:\Users\k.morita\AppData\Roaming\svchost32.exe</span></div>
+    </div>
+
+    <p><b>Artifact F</b> · DNS server log, DISP-07 (excerpt)</p>
+    <div class="ws-pane">
+      <div><span class="hdr">Day 5 09:42:00</span> <span class="field">query</span> <span class="value">A cdn-sync.example.net</span> <span class="field">answer</span> <span class="value">203.0.113.80</span></div>
+      <div><span class="hdr">Day 5 09:43:00</span> <span class="field">query</span> <span class="value">A cdn-sync.example.net</span> <span class="field">answer</span> <span class="value">203.0.113.80</span></div>
+      <div><span class="hdr">Day 5 09:44:00</span> <span class="field">query</span> <span class="value">A cdn-sync.example.net</span> <span class="field">answer</span> <span class="value">203.0.113.80</span></div>
+      <div class="i1"><span class="note">…repeats every 60 seconds through Day 9, each followed by a short HTTPS session to 203.0.113.80</span></div>
+    </div>
+
+    <p><b>Artifact G</b> · Web server access log, kaido-freight.example</p>
+    <div class="ws-pane">
+      <div><span class="value">198.51.100.23 - - [Day 2 14:02:11] "GET /about/our-team.html HTTP/1.1" 200 18204</span></div>
+      <div><span class="value">198.51.100.23 - - [Day 2 14:03:40] "GET /about/dispatch.html HTTP/1.1" 200 9611</span></div>
+      <div><span class="value">198.51.100.23 - - [Day 2 14:05:02] "GET /vendors/fuel-billing.html HTTP/1.1" 200 7340</span></div>
+    </div>
+
+    <p><b>Artifact H</b> · Threat intelligence report on <code>Invoice_4471.docm</code></p>
+    <div class="ws-pane">
+      <div><span class="field">SHA-256</span> <span class="value">9f2c…e41b</span> <span class="field">first seen</span> <span class="value">Day 5 (only at Kaidō)</span></div>
+      <div class="i1"><span class="note">Document metadata: created Day 3, from a template matching a known macro-dropper builder kit. The macro was customized with Kaidō's logo and a real fuel vendor's name.</span></div>
+    </div>
+
+    <p><b>Artifact I</b> · Proxy log, many hosts</p>
+    <div class="ws-pane">
+      <div><span class="hdr">Day 6 03:00–03:25</span> <span class="field">src</span> <span class="value">10.20.4.0/24, 38 hosts</span> <span class="field">dst</span> <span class="value">Microsoft update servers:443</span> <span class="field">bytes_in</span> <span class="value">~410 MB per host</span></div>
+      <div class="i1"><span class="note">category: software updates · scheduled maintenance window</span></div>
+    </div>
+
+    <p><b>Artifact J</b> · Endpoint protection file log, DISP-07</p>
+    <div class="ws-pane">
+      <div><span class="hdr">Day 8 23:50–Day 9 01:58</span> <span class="field">process</span> <span class="value">svchost32.exe</span> <span class="field">read</span> <span class="value">\\FILESRV\Dispatch\Contracts\*, \\FILESRV\Dispatch\Rates\*</span></div>
+      <div class="i1"><span class="note">3,204 files read · 2.0 GB · then wrote C:\Users\k.morita\AppData\Local\Temp\a.7z</span></div>
+    </div>
+  </section>
+
+  <!-- ── PART 1 ── -->
+  <section id="part1">
+    <div class="section-head">
+      <p class="kicker">Part 1</p>
+      <h2>Classify the evidence</h2>
+      <p>Decide which Kill Chain step each artifact shows, or mark it "not part of the attack."</p>
+    </div>
+    <ol class="steps">
+      <li>Read every artifact once before you classify any of them. Some only make sense next to another one.</li>
+      <li>For each artifact, write the Kill Chain step number and name. If it isn't part of the attack, write "none."</li>
+      <li>In the last column, write the specific detail in the artifact that convinced you. "It's suspicious" isn't evidence. "WINWORD.EXE started PowerShell with a hidden, encoded command" is.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Artifact</th><th>Kill Chain step</th><th>The detail that shows it</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">A</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">B</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">C</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">D</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">E</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">F</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">G</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">H</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">I</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+        <tr><td style="font-weight:700;">J</td><td><input class="fillin" type="text" placeholder="step #, name"></td><td><input class="fillin" type="text" placeholder="key detail"></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>Hint.</b> Two of the steps each show up in two artifacts, from different angles. One step has no direct log evidence at all. Weaponization happens on the attacker's own computer, so you can only see it indirectly, through what the weapon looks like when it arrives.
+    </div>
+  </section>
+
+  <!-- ── PART 2 ── -->
+  <section id="part2">
+    <div class="section-head">
+      <p class="kicker">Part 2</p>
+      <h2>Rebuild the timeline</h2>
+      <p>Put the attack back in the order it happened.</p>
+    </div>
+    <ol class="steps">
+      <li>List the attack artifacts (leave out the one you marked "none") in time order, using their timestamps.</li>
+      <li>Check that your time order matches the Kill Chain order. Where it doesn't seem to, look again. One artifact's own timestamp is Day 5, but the activity it describes happened earlier.</li>
+      <li>Calculate the attacker's <b>dwell time</b>: how long from the first successful compromise (exploitation) to when Bastion noticed (the flagged upload).</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Order</th><th>Artifact(s)</th><th>When</th><th>What the attacker did, in your own words</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1</td><td><input class="fillin" type="text" placeholder="letter(s)"></td><td><input class="fillin" type="text" placeholder="day / time"></td><td><input class="fillin" type="text" placeholder="what happened"></td></tr>
+        <tr><td style="font-weight:700;">2</td><td><input class="fillin" type="text" placeholder="letter(s)"></td><td><input class="fillin" type="text" placeholder="day / time"></td><td><input class="fillin" type="text" placeholder="what happened"></td></tr>
+        <tr><td style="font-weight:700;">3</td><td><input class="fillin" type="text" placeholder="letter(s)"></td><td><input class="fillin" type="text" placeholder="day / time"></td><td><input class="fillin" type="text" placeholder="what happened"></td></tr>
+        <tr><td style="font-weight:700;">4</td><td><input class="fillin" type="text" placeholder="letter(s)"></td><td><input class="fillin" type="text" placeholder="day / time"></td><td><input class="fillin" type="text" placeholder="what happened"></td></tr>
+        <tr><td style="font-weight:700;">5</td><td><input class="fillin" type="text" placeholder="letter(s)"></td><td><input class="fillin" type="text" placeholder="day / time"></td><td><input class="fillin" type="text" placeholder="what happened"></td></tr>
+        <tr><td style="font-weight:700;">6</td><td><input class="fillin" type="text" placeholder="letter(s)"></td><td><input class="fillin" type="text" placeholder="day / time"></td><td><input class="fillin" type="text" placeholder="what happened"></td></tr>
+        <tr><td style="font-weight:700;">7</td><td><input class="fillin" type="text" placeholder="letter(s)"></td><td><input class="fillin" type="text" placeholder="day / time"></td><td><input class="fillin" type="text" placeholder="what happened"></td></tr>
+      </tbody>
+    </table>
+    <table class="model-table">
+      <thead><tr><th>Item</th><th>Your answer</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Dwell time (exploitation to detection)</td><td><input class="fillin" type="text" placeholder="about how many days and hours?"></td></tr>
+        <tr><td style="font-weight:700;">Which artifact is "not part of the attack," and why</td><td><input class="fillin" type="text" placeholder="letter and reason"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── PART 3 ── -->
+  <section id="part3">
+    <div class="section-head">
+      <p class="kicker">Part 3</p>
+      <h2>Break the chain</h2>
+      <p>Every step was a chance to stop this attack. Find them.</p>
+    </div>
+    <ol class="steps">
+      <li>For each step, name one control that could have <b>stopped</b> or <b>detected</b> it at Kaidō. Be specific to this case: "email filtering" is weaker than "quarantine macro-enabled Office attachments from outside senders."</li>
+      <li>Give the control's type: preventive, deterrent, detective, corrective, recovery, or compensative.</li>
+      <li>Star (★) the single step where you think breaking the chain would have been <b>cheapest and most effective</b> for Kaidō. You'll defend that choice in the reflection.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Step</th><th>Control that would have broken it</th><th>Control type</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1 · Reconnaissance</td><td><input class="fillin" type="text" placeholder="control"></td><td><input class="fillin" type="text" placeholder="type"></td></tr>
+        <tr><td style="font-weight:700;">2 · Weaponization</td><td><input class="fillin" type="text" placeholder="hint: threat intelligence"></td><td><input class="fillin" type="text" placeholder="type"></td></tr>
+        <tr><td style="font-weight:700;">3 · Delivery</td><td><input class="fillin" type="text" placeholder="control"></td><td><input class="fillin" type="text" placeholder="type"></td></tr>
+        <tr><td style="font-weight:700;">4 · Exploitation</td><td><input class="fillin" type="text" placeholder="control"></td><td><input class="fillin" type="text" placeholder="type"></td></tr>
+        <tr><td style="font-weight:700;">5 · Installation</td><td><input class="fillin" type="text" placeholder="control"></td><td><input class="fillin" type="text" placeholder="type"></td></tr>
+        <tr><td style="font-weight:700;">6 · Command and control</td><td><input class="fillin" type="text" placeholder="control"></td><td><input class="fillin" type="text" placeholder="type"></td></tr>
+        <tr><td style="font-weight:700;">7 · Actions on objectives</td><td><input class="fillin" type="text" placeholder="control"></td><td><input class="fillin" type="text" placeholder="type"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── PART 4 ── -->
+  <section id="part4">
+    <div class="section-head">
+      <p class="kicker">Part 4</p>
+      <h2>One event in the Diamond Model</h2>
+      <p>Zoom in on the command-and-control event (Artifact F) and describe it with the Diamond Model.</p>
+    </div>
+    <ol class="steps">
+      <li>Fill in each core feature for the C2 event. If the evidence doesn't tell you, write "unknown." That's an honest and common answer for the adversary.</li>
+      <li>Fill in the meta-features you can support from the artifacts.</li>
+      <li>Describe one <b>pivot</b>: starting from a feature you know, what would you search for next, and where?</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Diamond feature</th><th>For the C2 event</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Adversary</td><td><input class="fillin" type="text" placeholder="who, if known"></td></tr>
+        <tr><td style="font-weight:700;">Capability</td><td><input class="fillin" type="text" placeholder="the tool in use"></td></tr>
+        <tr><td style="font-weight:700;">Infrastructure</td><td><input class="fillin" type="text" placeholder="domains, addresses"></td></tr>
+        <tr><td style="font-weight:700;">Victim</td><td><input class="fillin" type="text" placeholder="host, user, organization"></td></tr>
+        <tr><td style="font-weight:700;">Meta-feature: phase</td><td><input class="fillin" type="text" placeholder="Kill Chain step"></td></tr>
+        <tr><td style="font-weight:700;">Meta-feature: direction</td><td><input class="fillin" type="text" placeholder="e.g. victim-to-infrastructure"></td></tr>
+        <tr><td style="font-weight:700;">Meta-feature: result</td><td><input class="fillin" type="text" placeholder="success / failure / unknown"></td></tr>
+        <tr><td style="font-weight:700;">Your pivot</td><td><input class="fillin" type="text" placeholder="from ___, search ___ in ___"></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>Bastion runs the SOC for three clients.</b> Think about what a good pivot from the infrastructure could reveal at Kiriyama General Hospital or Tsukimi Sweets, and why a managed SOC is well placed to make that pivot.
+    </div>
+  </section>
+
+  <!-- ── REFLECTION ── -->
+  <section id="reflect">
+    <div class="section-head">
+      <p class="kicker">Reflection</p>
+      <h2>Write it up</h2>
+      <p>Short answers, in your own words. These aren't auto-graded. This is where you show you understand the attack, not just the labels.</p>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">1.</span>Which step did you star in Part 3 as the cheapest and most effective place to break the chain? Defend it, and explain why defenders generally want to stop attacks as early in the chain as possible.</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">2.</span>The email appliance marked Artifact D "clean," and endpoint protection allowed Artifact A because no signature matched. What does that tell you about relying on signature-based detection? Which Session 5 detection approach would have had a better chance, and why?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">3.</span>The C2 beacon in Artifact F ran every 60 seconds for about four days before anyone noticed. What made it hard to spot, and what kind of security data (from Session 12) would have revealed the pattern sooner?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">4.</span>Artifact I looked like a lot of data moving at 3 a.m. How did you rule it out? What would have made you treat it as suspicious instead?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">5.</span>Now it's Day 9 and you've confirmed this is a true positive. Using the NIST incident response life cycle, list the first three things that should happen next, and say which evidence you'd collect first from DISP-07 according to the order of volatility.</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Hands-on lab — companion to Session 15. All names, addresses, and domains are fictional.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
