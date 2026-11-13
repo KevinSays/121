@@ -1,0 +1,384 @@
+<title>IT121 Lab – Scoring Vulnerabilities with CVSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4eee1; --surface:#fbf8f0; --surface-2:#ebe3d2;
+    --text:#2b2420; --muted:#6a5d50; --border:#d6c9b1;
+    --accent:#b23a1e; --accent-soft:rgba(178,58,30,.10);
+    --accent-2:#7d590d; --accent-2-soft:rgba(125,89,13,.10);
+    --danger:#b0213d; --danger-soft:rgba(176,33,61,.10);
+    --correct:#406826; --correct-soft:rgba(64,104,38,.10);
+    --shadow:0 1px 0 rgba(60,40,20,.06), 0 6px 18px rgba(60,40,20,.08);
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Shippori Mincho B1', 'Times New Roman', serif;
+    --sans:'Zen Kaku Gothic New', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; font-size:112.5%;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16'><g fill='none' stroke='%232b2420' stroke-opacity='.06' stroke-width='1'><circle cx='16' cy='-8' r='16' fill='%23f4eee1'/><circle cx='16' cy='-8' r='15'/><circle cx='16' cy='-8' r='10.88'/><circle cx='16' cy='-8' r='5.76'/><circle cx='0' cy='0' r='16' fill='%23f4eee1'/><circle cx='0' cy='0' r='15'/><circle cx='0' cy='0' r='10.88'/><circle cx='0' cy='0' r='5.76'/><circle cx='32' cy='0' r='16' fill='%23f4eee1'/><circle cx='32' cy='0' r='15'/><circle cx='32' cy='0' r='10.88'/><circle cx='32' cy='0' r='5.76'/><circle cx='16' cy='8' r='16' fill='%23f4eee1'/><circle cx='16' cy='8' r='15'/><circle cx='16' cy='8' r='10.88'/><circle cx='16' cy='8' r='5.76'/><circle cx='0' cy='16' r='16' fill='%23f4eee1'/><circle cx='0' cy='16' r='15'/><circle cx='0' cy='16' r='10.88'/><circle cx='0' cy='16' r='5.76'/><circle cx='32' cy='16' r='16' fill='%23f4eee1'/><circle cx='32' cy='16' r='15'/><circle cx='32' cy='16' r='10.88'/><circle cx='32' cy='16' r='5.76'/><circle cx='16' cy='24' r='16' fill='%23f4eee1'/><circle cx='16' cy='24' r='15'/><circle cx='16' cy='24' r='10.88'/><circle cx='16' cy='24' r='5.76'/></g></svg>"); }
+  a{ color:var(--accent); }
+  ::selection{ background:var(--accent-soft); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header.hero{ border-bottom:2px solid var(--border); padding:56px 0 40px; }
+  a.back-link{ display:inline-block; margin-bottom:14px; font-family:var(--mono); font-size:.85rem; font-weight:600; color:var(--accent); text-decoration:none; border-bottom:1.5px solid var(--accent); }
+  .eyebrow{ font-family:var(--mono); font-weight:600; font-size:.95rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,4.4vw,3.1rem); line-height:1.05; margin:.25em 0 .3em; text-wrap:balance; letter-spacing:-.01em; }
+  .hero p.lede{ max-width:64ch; font-size:1.08rem; color:var(--muted); margin:0 0 1.6em; }
+  .factrow{ display:flex; flex-wrap:wrap; gap:10px; }
+  .fact{ font-family:var(--mono); font-size:.9rem; letter-spacing:.02em; background:var(--surface); border:1px solid var(--border); padding:.4em .8em; display:flex; gap:.5em; }
+  .fact b{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+
+  nav.index{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--accent); box-shadow:var(--shadow); }
+  nav.index .wrap{ display:flex; gap:4px; overflow-x:auto; padding:10px 24px; scrollbar-width:none; }
+  nav.index .wrap::-webkit-scrollbar{ display:none; }
+  nav.index a{ font-family:var(--mono); font-weight:600; letter-spacing:.04em; font-size:1rem; text-decoration:none; color:var(--muted); padding:.4em .9em; white-space:nowrap; border:1px solid transparent; text-transform:uppercase; }
+  nav.index a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+  nav.index a.toc-link{ color:var(--accent); border-right:1.5px solid var(--border); margin-right:8px; padding-right:16px; }
+  nav.index a.toc-link:hover{ background:var(--accent-soft); }
+
+  .back-to-top{ position:fixed; bottom:22px; right:22px; z-index:40; width:50px; height:50px;
+    background:var(--surface); border:1.5px solid var(--text); box-shadow:var(--shadow);
+    font-family:var(--display); font-size:1.4rem; color:var(--text); line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; text-decoration:none;
+    opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .back-to-top.show{ opacity:1; visibility:visible; transform:translateY(0); transition:opacity .25s ease, transform .25s ease, visibility 0s; }
+  .back-to-top:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .back-to-top:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:28px; max-width:70ch; }
+  .kicker{ font-family:var(--mono); font-weight:600; font-size:.9rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin:0 0 .3em; }
+  h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.1rem); margin:0 0 .2em; text-wrap:balance; letter-spacing:-.005em; }
+  .section-head p{ color:var(--muted); margin:.4em 0 0; }
+  h3{ font-family:var(--sans); font-weight:700; font-size:1.08rem; margin:26px 0 10px; }
+
+  .obj-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); list-style:none; margin:0; padding:0; }
+  .obj-list li{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; box-shadow:var(--shadow); font-size:.95rem; }
+  .obj-list li::before{ content:"▹"; color:var(--accent); margin-right:.6em; font-weight:700; }
+
+  .res-list{ margin:0; padding-left:1.3em; font-size:.95rem; }
+  .res-list li{ margin-bottom:.5em; }
+
+  .callout{ background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent-2); box-shadow:var(--shadow); padding:16px 20px; margin:22px 0; font-size:.92rem; }
+  .callout b{ color:var(--accent-2); }
+
+  .model-table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:.92rem; }
+  .model-table th{ font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; color:var(--muted); text-align:left; padding:10px 12px; border-bottom:2px solid var(--border); }
+  .model-table td{ padding:10px 12px; border-bottom:1px dashed var(--border); vertical-align:top; }
+  .model-table tr:last-child td{ border-bottom:none; }
+  .fillin{ width:100%; min-width:140px; font-family:var(--mono); font-size:.85rem; padding:.45em .6em; background:var(--surface-2); border:1px solid var(--border); color:var(--text); }
+  .fillin:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  .fillin::placeholder{ color:var(--muted); opacity:.6; }
+
+  .steps{ counter-reset:step; list-style:none; margin:20px 0; padding:0; }
+  .steps li{ position:relative; padding:10px 0 16px 48px; border-bottom:1px dashed var(--border); font-size:.95rem; }
+  .steps li:last-child{ border-bottom:none; }
+  .steps li::before{ counter-increment:step; content:counter(step); position:absolute; left:0; top:8px; width:30px; height:30px;
+    border:1px solid var(--accent); color:var(--accent); font-family:var(--mono); font-weight:700; font-size:.85rem;
+    display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); }
+  .steps code{ font-family:var(--mono); background:var(--surface-2); border:1px solid var(--border); padding:1px 6px; font-size:.88em; color:var(--accent); }
+
+  .ws-pane{ background:var(--surface-2); border:1px solid var(--border); box-shadow:var(--shadow); font-family:var(--mono); font-size:.82rem; padding:18px 20px; margin:20px 0; overflow-x:auto; line-height:1.7; }
+  .ws-pane .i1{ padding-left:1.6em; }
+  .ws-pane .i2{ padding-left:3.2em; }
+  .ws-pane .field{ color:var(--accent); }
+  .ws-pane .value{ color:var(--text); }
+  .ws-pane .note{ color:var(--muted); font-style:italic; }
+  .ws-pane .hdr{ color:var(--accent-2); font-weight:700; }
+
+  .reflect{ background:var(--surface); border:1px solid var(--border); padding:18px 20px; margin-bottom:14px; box-shadow:var(--shadow); }
+  .reflect .qnum{ font-family:var(--mono); font-weight:700; color:var(--accent-2); margin-right:.5em; }
+  .reflect textarea{ width:100%; margin-top:10px; font-family:var(--sans); font-size:.95rem; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:.7em .9em; resize:vertical; min-height:64px; }
+  .reflect textarea:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  footer{ padding:32px 0 60px; }
+  footer p{ color:var(--muted); font-size:.9rem; font-family:var(--mono); letter-spacing:.02em; }
+
+  @media(max-width:600px){
+    .obj-list{ grid-template-columns:1fr; }
+    .factrow{ flex-direction:column; }
+  }
+
+  @media print{
+    body{ background:#fff; color:#111; background-image:none; }
+    nav.index, .back-to-top, a.back-link{ display:none; }
+    .callout, .obj-list li, .model-table, .ws-pane, .reflect, .fact{ box-shadow:none; }
+    section{ break-inside:avoid; }
+  }
+  code{ font-family:var(--mono); font-size:.88em; color:var(--accent); background:var(--accent-soft); padding:.05em .35em; }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html">↩ Contents</a>
+    <p class="eyebrow">IT121 · Hands-On Lab</p>
+    <h1>Scoring Vulnerabilities with CVSS</h1>
+    <p class="lede">A vulnerability scan of a real network can return hundreds of findings, and nobody can fix them all at once. CVSS is how a SOC decides what to fix first. In this lab you read vector strings, score six vulnerabilities found at Bastion's clients with the official calculator, see how the same flaw matters more in one place than another, and look up two famous real ones.</p>
+    <div class="factrow">
+      <span class="fact"><b>Companion to</b> Session 15 · Module 25.2–25.3</span>
+      <span class="fact"><b>Time</b> ~45 min</span>
+      <span class="fact"><b>Difficulty</b> Beginner–Intermediate</span>
+    </div>
+  </div>
+</header>
+
+<nav class="index" aria-label="Section index">
+  <div class="wrap">
+    <a href="../index.html" class="toc-link">↩ Contents</a>
+    <a href="#objectives">Objectives</a>
+    <a href="#part1">Part 1</a>
+    <a href="#part2">Part 2</a>
+    <a href="#part3">Part 3</a>
+    <a href="#part4">Part 4</a>
+    <a href="#part5">Part 5</a>
+    <a href="#reflect">Reflection</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ── OBJECTIVES ── -->
+  <section id="objectives">
+    <div class="section-head">
+      <p class="kicker">Objectives</p>
+      <h2>What you'll do</h2>
+    </div>
+    <ul class="obj-list">
+      <li>Translate a CVSS vector string into plain language</li>
+      <li>Choose the correct base metric values from a vulnerability description</li>
+      <li>Calculate base scores with the official CVSS 3.1 calculator</li>
+      <li>Use environmental metrics to adjust a score for one organization</li>
+      <li>Prioritize remediation using scores and business context</li>
+      <li>Look up real vulnerabilities in the National Vulnerability Database</li>
+    </ul>
+
+    <h3>Required resources</h3>
+    <ul class="res-list">
+      <li>An internet connection and a web browser</li>
+      <li>The FIRST CVSS v3.1 calculator: <a href="https://www.first.org/cvss/calculator/3.1">first.org/cvss/calculator/3.1</a>. Use version 3.1, the version the course teaches, even though a newer CVSS 4.0 also exists</li>
+      <li>The National Vulnerability Database: <a href="https://nvd.nist.gov/">nvd.nist.gov</a></li>
+      <li><a href="../IT121_Session15.html#cvss">Session 15: CVSS</a> for reference</li>
+    </ul>
+
+    <h3>Base metric quick reference</h3>
+    <table class="model-table">
+      <thead><tr><th>Metric</th><th>Values (abbreviation)</th><th>Ask yourself</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">Attack Vector (AV)</td><td>Network (N) · Adjacent (A) · Local (L) · Physical (P)</td><td>How close must the attacker be? Internet, same local network, logged in to the device, or physically touching it?</td></tr>
+        <tr><td style="font-weight:700;">Attack Complexity (AC)</td><td>Low (L) · High (H)</td><td>Does it work reliably, or only when conditions outside the attacker's control line up?</td></tr>
+        <tr><td style="font-weight:700;">Privileges Required (PR)</td><td>None (N) · Low (L) · High (H)</td><td>Does the attacker need an account first? An ordinary one, or an admin one?</td></tr>
+        <tr><td style="font-weight:700;">User Interaction (UI)</td><td>None (N) · Required (R)</td><td>Does someone other than the attacker have to do something, like open a file or a page?</td></tr>
+        <tr><td style="font-weight:700;">Scope (S)</td><td>Unchanged (U) · Changed (C)</td><td>Does the damage stay in the vulnerable component, or reach a different one, such as the victim's browser?</td></tr>
+        <tr><td style="font-weight:700;">Confidentiality, Integrity, Availability (C, I, A)</td><td>High (H) · Low (L) · None (N), each</td><td>How much can the attacker read, change, or shut down?</td></tr>
+      </tbody>
+    </table>
+    <table class="model-table">
+      <thead><tr><th>Score</th><th>0.0</th><th>0.1–3.9</th><th>4.0–6.9</th><th>7.0–8.9</th><th>9.0–10.0</th></tr></thead>
+      <tbody><tr><td style="font-weight:700;">Rating</td><td>None</td><td>Low</td><td>Medium</td><td>High</td><td style="font-weight:700;color:var(--danger);">Critical</td></tr></tbody>
+    </table>
+  </section>
+
+  <!-- ── PART 1 ── -->
+  <section id="part1">
+    <div class="section-head">
+      <p class="kicker">Part 1</p>
+      <h2>Read a vector string</h2>
+      <p>Scanners and databases report CVSS as a compact vector string. Learn to read it at a glance.</p>
+    </div>
+    <ol class="steps">
+      <li>For each vector, write every metric out in words, such as "AV:N = network: the attacker can be anywhere on the internet."</li>
+      <li>Open the calculator and click the matching value for each metric. You can also paste the vector after the calculator's address: <code>https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/…</code>. Record the base score and rating.</li>
+      <li>In one sentence, describe the kind of attack the vector suggests.</li>
+    </ol>
+    <div class="ws-pane">
+      <div><span class="hdr">D1</span> <span class="value">CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H</span></div>
+      <div><span class="hdr">D2</span> <span class="value">CVSS:3.1/AV:P/AC:H/PR:H/UI:N/S:U/C:L/I:N/A:N</span></div>
+      <div><span class="hdr">D3</span> <span class="value">CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:N/I:N/A:H</span></div>
+    </div>
+    <table class="model-table">
+      <thead><tr><th>Vector</th><th>Metrics in words</th><th>Score and rating</th><th>What kind of attack?</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">D1</td><td><input class="fillin" type="text" placeholder="AV:N = …"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="one sentence"></td></tr>
+        <tr><td style="font-weight:700;">D2</td><td><input class="fillin" type="text" placeholder="AV:P = …"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="one sentence"></td></tr>
+        <tr><td style="font-weight:700;">D3</td><td><input class="fillin" type="text" placeholder="AV:A = …"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="one sentence"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── PART 2 ── -->
+  <section id="part2">
+    <div class="section-head">
+      <p class="kicker">Part 2</p>
+      <h2>Score the findings</h2>
+      <p>Bastion's quarterly vulnerability scans found six issues across its three clients. All of them are fictional. Score each one.</p>
+    </div>
+    <ol class="steps">
+      <li>Read each description and choose a value for every base metric. Every metric's answer is in the description, though sometimes in everyday words.</li>
+      <li>Build the vector string, enter it in the calculator, and record the base score and rating.</li>
+      <li>If you're unsure between two values, pick one, and note your reasoning in the last column.</li>
+    </ol>
+
+    <div class="reflect">
+      <p><span class="qnum">V1</span><b>Kiriyama General Hospital · patient portal.</b> An attacker anywhere on the internet can send a specially crafted request to the portal's login page and run any command on the server. It works every time, no account is needed, and nobody else has to do anything. The attacker could read, change, or delete every record on the server and shut the portal down. The damage stays on the portal server.</p>
+    </div>
+    <div class="reflect">
+      <p><span class="qnum">V2</span><b>Tsukimi Sweets · point-of-sale register.</b> Someone standing at the counter can plug a USB stick into the register's exposed port and copy the card numbers it has cached. No login or special conditions are required, and no staff member has to do anything. They can read the data, but can't change it or stop the register from working. Only the register is affected.</p>
+    </div>
+    <div class="reflect">
+      <p><span class="qnum">V3</span><b>Kaidō Freight · dispatch web app.</b> Any driver with an ordinary dispatch account can post a delivery note containing a malicious script. When a dispatcher later opens that note, the script runs in the dispatcher's web browser, a different component from the vulnerable app, and can read or change a small amount of the dispatcher's session information. It doesn't affect whether anything stays available.</p>
+    </div>
+    <div class="reflect">
+      <p><span class="qnum">V4</span><b>Tsukimi Sweets · guest Wi-Fi router.</b> Anyone connected to the shop's open guest Wi-Fi can send one malformed packet that crashes the router until someone power-cycles it. It works reliably, needs no account, and no one else has to act. No data is exposed or changed. It only knocks the router offline.</p>
+    </div>
+    <div class="reflect">
+      <p><span class="qnum">V5</span><b>Kiriyama General Hospital · nursing-station workstations.</b> A user who is already logged in to a workstation with a standard, non-admin account can run a small program that gives them full administrator control of that workstation. It works reliably and needs no one else's help. The effect is limited to that workstation.</p>
+    </div>
+    <div class="reflect">
+      <p><span class="qnum">V6</span><b>Kaidō Freight · VPN gateway.</b> An attacker on the internet, with no account, can take complete control of the VPN gateway, with full ability to read, change, or shut it down. But the attack only works if they win a timing race that depends on conditions they can't control, so it usually takes many attempts. The damage stays on the gateway.</p>
+    </div>
+
+    <table class="model-table">
+      <thead><tr><th>Finding</th><th>Vector string</th><th>Score and rating</th><th>Notes on your choices</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">V1</td><td><input class="fillin" type="text" placeholder="AV:_/AC:_/PR:_/…"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="anything you weren't sure of"></td></tr>
+        <tr><td style="font-weight:700;">V2</td><td><input class="fillin" type="text" placeholder="AV:_/AC:_/PR:_/…"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="anything you weren't sure of"></td></tr>
+        <tr><td style="font-weight:700;">V3</td><td><input class="fillin" type="text" placeholder="AV:_/AC:_/PR:_/…"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="anything you weren't sure of"></td></tr>
+        <tr><td style="font-weight:700;">V4</td><td><input class="fillin" type="text" placeholder="AV:_/AC:_/PR:_/…"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="anything you weren't sure of"></td></tr>
+        <tr><td style="font-weight:700;">V5</td><td><input class="fillin" type="text" placeholder="AV:_/AC:_/PR:_/…"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="anything you weren't sure of"></td></tr>
+        <tr><td style="font-weight:700;">V6</td><td><input class="fillin" type="text" placeholder="AV:_/AC:_/PR:_/…"></td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="anything you weren't sure of"></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>Check yourself:</b> V1 should match the 9.8 Critical example in Session 15, since it has the same vector. If a score seems surprisingly high or low, change one metric at a time in the calculator and watch which one moves it most.
+    </div>
+  </section>
+
+  <!-- ── PART 3 ── -->
+  <section id="part3">
+    <div class="section-head">
+      <p class="kicker">Part 3</p>
+      <h2>Same flaw, different stakes</h2>
+      <p>The base score describes the vulnerability. The environmental score describes what it means to <em>you</em>.</p>
+    </div>
+    <p>The flaw in V3 actually lives in a popular comment widget, and two other clients use it too. Kiriyama General Hospital uses it on its patient portal, where patient information must stay confidential and accurate. Tsukimi Sweets uses it on its public recipe blog, where nothing sensitive is stored.</p>
+    <ol class="steps">
+      <li>Load your V3 vector into the calculator.</li>
+      <li>Scroll to the <b>Environmental Score Metrics</b>. Leave every "Modified" base metric as "Not Defined," and set only the three <b>Security Requirements</b>.</li>
+      <li>For Kiriyama, set Confidentiality Requirement <b>High</b>, Integrity Requirement <b>High</b>, Availability Requirement <b>Medium</b>. Record the environmental score.</li>
+      <li>For Tsukimi, set all three requirements to <b>Low</b>. Record the environmental score.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Item</th><th>Your result</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">V3 base score</td><td><input class="fillin" type="text" placeholder="from Part 2"></td></tr>
+        <tr><td style="font-weight:700;">Kiriyama environmental score</td><td><input class="fillin" type="text" placeholder="score, rating"></td></tr>
+        <tr><td style="font-weight:700;">Tsukimi environmental score</td><td><input class="fillin" type="text" placeholder="score, rating"></td></tr>
+        <tr><td style="font-weight:700;">In one sentence: why did the scores move apart?</td><td><input class="fillin" type="text" placeholder="your explanation"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── PART 4 ── -->
+  <section id="part4">
+    <div class="section-head">
+      <p class="kicker">Part 4</p>
+      <h2>Decide what to fix first</h2>
+      <p>Scores inform priorities, but they don't set them on their own. This is the Prioritize and Remediate work of the vulnerability management life cycle.</p>
+    </div>
+    <ol class="steps">
+      <li>Rank V1–V6 in the order you'd remediate them, 1 being first.</li>
+      <li>For each, note the context that moved it up or down from where its score alone would put it: internet exposure, what data is at risk, laws such as HIPAA or PCI DSS, how hard a quick workaround is.</li>
+      <li>For at least one finding, name a fast <b>compensating control</b> you could put in place today while you wait for the real fix.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>Rank</th><th>Finding</th><th>Why here?</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">1</td><td><input class="fillin" type="text" placeholder="V_"></td><td><input class="fillin" type="text" placeholder="your reason"></td></tr>
+        <tr><td style="font-weight:700;">2</td><td><input class="fillin" type="text" placeholder="V_"></td><td><input class="fillin" type="text" placeholder="your reason"></td></tr>
+        <tr><td style="font-weight:700;">3</td><td><input class="fillin" type="text" placeholder="V_"></td><td><input class="fillin" type="text" placeholder="your reason"></td></tr>
+        <tr><td style="font-weight:700;">4</td><td><input class="fillin" type="text" placeholder="V_"></td><td><input class="fillin" type="text" placeholder="your reason"></td></tr>
+        <tr><td style="font-weight:700;">5</td><td><input class="fillin" type="text" placeholder="V_"></td><td><input class="fillin" type="text" placeholder="your reason"></td></tr>
+        <tr><td style="font-weight:700;">6</td><td><input class="fillin" type="text" placeholder="V_"></td><td><input class="fillin" type="text" placeholder="your reason"></td></tr>
+        <tr><td style="font-weight:700;">Compensating control</td><td><input class="fillin" type="text" placeholder="for V_"></td><td><input class="fillin" type="text" placeholder="what you'd do today"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── PART 5 ── -->
+  <section id="part5">
+    <div class="section-head">
+      <p class="kicker">Part 5</p>
+      <h2>Look up the real thing</h2>
+      <p>Two of the most famous vulnerabilities of the last decade, and how CVSS scored them.</p>
+    </div>
+    <ol class="steps">
+      <li>On <a href="https://nvd.nist.gov/">nvd.nist.gov</a>, search for <code>CVE-2014-0160</code> (Heartbleed, a flaw in the OpenSSL encryption library) and <code>CVE-2021-44228</code> (Log4Shell, a flaw in the Log4j logging library used by countless Java applications).</li>
+      <li>On each page, find the <b>CVSS 3.x</b> score from NVD (not version 2.0 or 4.0). Record the base score, rating, and vector string.</li>
+      <li>Compare the two vectors metric by metric, and mark every metric where they differ.</li>
+    </ol>
+    <table class="model-table">
+      <thead><tr><th>CVE</th><th>Base score and rating</th><th>Vector string</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;">CVE-2014-0160 (Heartbleed)</td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="AV:_/AC:_/…"></td></tr>
+        <tr><td style="font-weight:700;">CVE-2021-44228 (Log4Shell)</td><td><input class="fillin" type="text" placeholder="score, rating"></td><td><input class="fillin" type="text" placeholder="AV:_/AC:_/…"></td></tr>
+        <tr><td style="font-weight:700;">Metrics that differ</td><td colspan="2"><input class="fillin" type="text" placeholder="which ones, and what each difference means"></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── REFLECTION ── -->
+  <section id="reflect">
+    <div class="section-head">
+      <p class="kicker">Reflection</p>
+      <h2>Write it up</h2>
+      <p>Short answers, in your own words. These aren't auto-graded.</p>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">1.</span>V1 and V6 can both give an attacker complete control from the internet. Why does V6 score lower, and should that lower score make you much less worried about it? Explain.</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">2.</span>V2 scored only Medium, but it exposes credit card numbers. What did the base score not capture, and which law or standard from Session 13 makes it more urgent than its number suggests?</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">3.</span>Heartbleed only exposed data (confidentiality), but Log4Shell scored a perfect 10.0. Using the metrics that differed in Part 5, explain why.</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+
+    <div class="reflect">
+      <p><span class="qnum">4.</span>A manager says, "Just fix everything rated High or Critical and ignore the rest." Using your Part 3 and Part 4 results, give one reason that rule could leave the organization exposed.</p>
+      <textarea placeholder="Type your answer…"></textarea>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>IT121 · Cybersecurity Essentials · Hands-on lab — companion to Session 15. The six findings (V1–V6) are fictional.</p>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  function toggleBackToTop(){ backToTop.classList.toggle('show', window.scrollY > 480); }
+  window.addEventListener('scroll', toggleBackToTop, {passive:true});
+  toggleBackToTop();
+  backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
